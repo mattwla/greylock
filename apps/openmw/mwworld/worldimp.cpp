@@ -1044,7 +1044,7 @@ namespace MWWorld
             float activationDistance = getActivationDistancePlusTelekinesis();
 
             facedObject = getFacedObject(activationDistance, true);
-			//MWX, if NPC we can activate from afar
+			//MWX, here is where we check if item is too far... unless it is NPC in which it passes.
 			if (!facedObject.isEmpty() && !facedObject.getClass().isNpc() && /*!facedObject.getClass().allowTelekinesis(facedObject)
                 && */ mDistanceToFacedObject > getMaxActivationDistance() && !MWBase::Environment::get().getWindowManager()->isGuiMode())
                 return 0;

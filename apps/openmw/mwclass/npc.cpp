@@ -893,7 +893,15 @@ namespace MWClass
         if(ptr.getClass().isNpc() && ptr.getClass().getNpcStats(ptr).isWerewolf())
             return std::shared_ptr<MWWorld::Action> (new MWWorld::FailedAction(""));
 
-        return std::shared_ptr<MWWorld::Action>(new MWWorld::ActionTalk(ptr));
+		//MWX, if player is far away from NPC do something different
+		if (actor == MWBase::Environment::get().getWorld()->getPlayerPtr() &&
+			MWBase::Environment::get().getWorld()->getDistanceToFacedObject() >
+			MWBase::Environment::get().getWorld()->getMaxActivationDistance())
+		{
+			return std::shared_ptr<MWWorld::Action>(new MWWorld::FailedAction(""));
+			
+		}
+		return std::shared_ptr<MWWorld::Action>(new MWWorld::ActionTalk(ptr));
     }
 
     MWWorld::ContainerStore& Npc::getContainerStore (const MWWorld::Ptr& ptr)
