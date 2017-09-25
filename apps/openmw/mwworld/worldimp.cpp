@@ -1044,9 +1044,9 @@ namespace MWWorld
             float activationDistance = getActivationDistancePlusTelekinesis();
 
             facedObject = getFacedObject(activationDistance, true);
-
-            if (!facedObject.isEmpty() && !facedObject.getClass().allowTelekinesis(facedObject)
-                && mDistanceToFacedObject > getMaxActivationDistance() && !MWBase::Environment::get().getWindowManager()->isGuiMode())
+			//MWX, if NPC we can activate from afar
+			if (!facedObject.isEmpty() && !facedObject.getClass().isNpc() && /*!facedObject.getClass().allowTelekinesis(facedObject)
+                && */ mDistanceToFacedObject > getMaxActivationDistance() && !MWBase::Environment::get().getWindowManager()->isGuiMode())
                 return 0;
         }
         return facedObject;
@@ -1775,7 +1775,8 @@ namespace MWWorld
     MWWorld::Ptr World::getFacedObject(float maxDistance, bool ignorePlayer)
     {
         const float camDist = mRendering->getCameraDistance();
-        maxDistance += camDist;
+        //maxDistance += camDist;
+		maxDistance = 6000; //MWX, over ride max distance so we can talk to distant NPCs, logic for preventing distant items in getFacedObject()
         MWWorld::Ptr facedObject;
         MWRender::RenderingManager::RayResult rayToObject;
 
