@@ -29,6 +29,7 @@
 
 #include "../mwworld/ptr.hpp"
 #include "../mwworld/actiontalk.hpp"
+#include "../mwworld/actiondistanttalk.hpp"
 #include "../mwworld/actionopen.hpp"
 #include "../mwworld/failedaction.hpp"
 #include "../mwworld/inventorystore.hpp"
@@ -898,7 +899,7 @@ namespace MWClass
 			MWBase::Environment::get().getWorld()->getDistanceToFacedObject() >
 			MWBase::Environment::get().getWorld()->getMaxActivationDistance())
 		{
-			return std::shared_ptr<MWWorld::Action>(new MWWorld::FailedAction(""));
+			return std::shared_ptr<MWWorld::Action>(new MWWorld::ActionDistantTalk(ptr));
 			
 		}
 		return std::shared_ptr<MWWorld::Action>(new MWWorld::ActionTalk(ptr));

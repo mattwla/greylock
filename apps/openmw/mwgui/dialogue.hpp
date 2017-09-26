@@ -174,5 +174,7 @@ namespace MWGui
 
         MyGUI::IntSize mCurrentWindowSize;
     };
+
+
 }
 #endif

@@ -1,0 +1,16 @@
+#include "actiondistanttalk.hpp"
+
+#include "../mwbase/environment.hpp"
+#include "../mwbase/dialoguemanager.hpp"
+
+namespace MWWorld
+{
+	ActionDistantTalk::ActionDistantTalk(const Ptr& actor) : Action(false, actor) {}
+
+
+
+	void ActionDistantTalk::executeImp(const Ptr& actor)
+	{
+		MWBase::Environment::get().getDialogueManager()->startDialogue(getTarget());
+	}
+}
