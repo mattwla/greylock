@@ -44,6 +44,8 @@ namespace MWBase
 
             virtual void startDialogue (const MWWorld::Ptr& actor) = 0;
 
+			virtual void startDistantDialogue(const MWWorld::Ptr& actor) = 0;
+
             virtual void addTopic (const std::string& topic) = 0;
 
             virtual void askQuestion (const std::string& question,int choice) = 0;

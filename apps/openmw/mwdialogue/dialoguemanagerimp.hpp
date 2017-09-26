@@ -66,6 +66,8 @@ namespace MWDialogue
 
             virtual void startDialogue (const MWWorld::Ptr& actor);
 
+			virtual void startDistantDialogue(const MWWorld::Ptr& actor);
+
             virtual void addTopic (const std::string& topic);
 
             virtual void askQuestion (const std::string& question,int choice);

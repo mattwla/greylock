@@ -190,6 +190,11 @@ namespace MWDialogue
             MWBase::Environment::get().getWindowManager()->showCompanionWindow(mActor);
     }
 
+	void DialogueManager::startDistantDialogue(const MWWorld::Ptr& actor) {
+
+	}
+
+
     bool DialogueManager::compile (const std::string& cmd, std::vector<Interpreter::Type_Code>& code, const MWWorld::Ptr& actor)
     {
         bool success = true;
