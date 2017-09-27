@@ -66,6 +66,7 @@ namespace MWGui
     class DialogueWindow;
     class WindowModal;
     class JailScreen;
+	class DistantDialogueWindow; //MWX
 
     enum ShowInDialogueMode {
         ShowInDialogueMode_IfPossible,
@@ -145,6 +146,7 @@ namespace MWBase
 
             /// \todo investigate, if we really need to expose every single lousy UI element to the outside world
             virtual MWGui::DialogueWindow* getDialogueWindow() = 0;
+			virtual MWGui::DistantDialogueWindow* getDistantDialogueWindow() = 0;
             virtual MWGui::InventoryWindow* getInventoryWindow() = 0;
             virtual MWGui::CountDialog* getCountDialog() = 0;
             virtual MWGui::ConfirmationDialog* getConfirmationDialog() = 0;

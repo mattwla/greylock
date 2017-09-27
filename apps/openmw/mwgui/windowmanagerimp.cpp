@@ -112,6 +112,8 @@
 #include "controllers.hpp"
 #include "jailscreen.hpp"
 #include "itemchargeview.hpp"
+#include "distantdialogue.hpp" //MWX
+
 
 namespace
 {
@@ -206,6 +208,7 @@ namespace MWGui
       , mFallbackMap(fallbackMap)
       , mShowOwned(0)
       , mVersionDescription(versionDescription)
+	  , mDistantDialogueWindow(NULL) //MWX
     {
         float uiScale = Settings::Manager::getFloat("scaling factor", "GUI");
         mGuiPlatform = new osgMyGUI::Platform(viewer, guiRoot, resourceSystem->getImageManager(), uiScale);
@@ -336,6 +339,8 @@ namespace MWGui
         mSpellBuyingWindow = new SpellBuyingWindow();
         mTravelWindow = new TravelWindow();
         mDialogueWindow = new DialogueWindow();
+		mDistantDialogueWindow = new DistantDialogueWindow(); //MWX
+		//trackWindow(mDistantDialogueWindow, "distantdialogue");
         trackWindow(mDialogueWindow, "dialogue");
         mContainerWindow = new ContainerWindow(mDragAndDrop);
         trackWindow(mContainerWindow, "container");
@@ -481,6 +486,7 @@ namespace MWGui
         delete mBlindnessFader;
         delete mDebugWindow;
         delete mJailScreen;
+		delete mDistantDialogueWindow;
 
         delete mCursorManager;
 
@@ -556,6 +562,7 @@ namespace MWGui
         mRecharge->setVisible(false);
         mVideoBackground->setVisible(false);
         mJailScreen->setVisible(false);
+		mDistantDialogueWindow->setVisible(false); //MWX
 
         mHud->setVisible(mHudEnabled && mGuiEnabled);
         mToolTips->setVisible(mGuiEnabled);
@@ -668,6 +675,9 @@ namespace MWGui
                 case GM_Dialogue:
                     mDialogueWindow->setVisible(true);
                     break;
+				case GM_DistantDialogue:
+					mDistantDialogueWindow->setVisible(true);
+					break;
                 case GM_Barter:
                     mInventoryWindow->setVisible(true);
                     mInventoryWindow->setTrading(true);
@@ -1412,6 +1422,8 @@ namespace MWGui
     }
 
     MWGui::DialogueWindow* WindowManager::getDialogueWindow() { return mDialogueWindow;  }
+	//MWX
+	MWGui::DistantDialogueWindow* WindowManager::getDistantDialogueWindow() { return mDistantDialogueWindow; }
     MWGui::InventoryWindow* WindowManager::getInventoryWindow() { return mInventoryWindow; }
     MWGui::CountDialog* WindowManager::getCountDialog() { return mCountDialog; }
     MWGui::ConfirmationDialog* WindowManager::getConfirmationDialog() { return mConfirmationDialog; }

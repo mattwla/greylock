@@ -25,3 +25,77 @@
 #include "textcolours.hpp"
 
 #include "journalbooks.hpp" // to_utf8_span
+namespace MWGui
+{
+	DistantDialogueWindow::DistantDialogueWindow() 
+		: WindowBase("openmw_distant_dialogue_window.layout")
+		, mEnabled(false)
+		, mGoodbye(false)
+	{
+		MyGUI::Button* byeButton;
+		getWidget(byeButton, "ByeButton");
+		byeButton->eventMouseButtonClick += MyGUI::newDelegate(this, &DistantDialogueWindow::onByeClicked);
+
+		mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DistantDialogueWindow::onWindowResize);
+	}
+
+	void DistantDialogueWindow::startDistantDialogue(MWWorld::Ptr actor, std::string npcName)
+	{
+		//mGoodbye = false;
+		//mEnabled = true;
+		//bool sameActor = (mPtr == actor);
+		//mPtr = actor;
+		//mTopicsList->setEnabled(true);
+		//setTitle(npcName);
+
+		//clearChoices();
+
+		//mTopicsList->clear();
+
+		/*if (resetHistory || !sameActor)
+		{
+			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
+				delete (*it);
+			mHistoryContents.clear();
+		}*/
+
+		/*for (std::vector<Link*>::iterator it = mLinks.begin(); it != mLinks.end(); ++it)
+			delete (*it);
+		mLinks.clear();*/
+
+		//updateOptions();
+
+		//restock();
+	}
+
+	void DistantDialogueWindow::exit()
+	{
+		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);
+			MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
+			//mTopicsList->scrollToTop();
+		
+	}
+
+	
+	void DistantDialogueWindow::onByeClicked(MyGUI::Widget* _sender)
+	{
+		exit();
+	}
+
+	void DistantDialogueWindow::onWindowResize(MyGUI::Window* _sender)
+	{
+		// if the window has only been moved, not resized, we don't need to update
+		if (mCurrentWindowSize == _sender->getSize()) return;
+
+		//mTopicsList->adjustSize();
+		//updateHistory();
+		mCurrentWindowSize = _sender->getSize();
+	}
+	void DistantDialogueWindow::onReferenceUnavailable()
+	{
+		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);
+	}
+
+
+}
+

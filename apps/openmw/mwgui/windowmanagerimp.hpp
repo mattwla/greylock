@@ -185,6 +185,8 @@ namespace MWGui
 
     /// \todo investigate, if we really need to expose every single lousy UI element to the outside world
     virtual MWGui::DialogueWindow* getDialogueWindow();
+	//MWX
+	virtual MWGui::DistantDialogueWindow* getDistantDialogueWindow();
     virtual MWGui::InventoryWindow* getInventoryWindow();
     virtual MWGui::CountDialog* getCountDialog();
     virtual MWGui::ConfirmationDialog* getConfirmationDialog();
@@ -432,6 +434,7 @@ namespace MWGui
     Console *mConsole;
     JournalWindow* mJournal;
     DialogueWindow *mDialogueWindow;
+	DistantDialogueWindow *mDistantDialogueWindow; //MWX
     ContainerWindow *mContainerWindow;
     DragAndDrop* mDragAndDrop;
     InventoryWindow *mInventoryWindow;

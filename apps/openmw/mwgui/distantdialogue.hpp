@@ -31,9 +31,21 @@ namespace MWGui
 
 		void startDistantDialogue(MWWorld::Ptr actor, std::string npcName);
 
+	protected:
+		
+		void onByeClicked(MyGUI::Widget* _sender);
+		
+		void onWindowResize(MyGUI::Window* _sender);
+		
+		virtual void onReferenceUnavailable();
+
 	private:
 		
 		MyGUI::IntSize mCurrentWindowSize;
+
+		bool mEnabled;
+
+		bool mGoodbye;
 
 	};
 }
