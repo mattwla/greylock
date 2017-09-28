@@ -24,6 +24,8 @@
 #include "bookpage.hpp"
 #include "textcolours.hpp"
 
+#include "../mwmechanics/aifollow.hpp"
+
 #include "journalbooks.hpp" // to_utf8_span
 namespace MWGui
 {
@@ -47,6 +49,7 @@ namespace MWGui
 
 	void DistantDialogueWindow::startDistantDialogue(MWWorld::Ptr actor, std::string npcName)
 	{
+		mPtr = actor;
 		setTitle(npcName);
 		//mGoodbye = false;
 		//mEnabled = true;
@@ -91,6 +94,16 @@ namespace MWGui
 
 	void DistantDialogueWindow::onCallOverClicked(MyGUI::Widget* _sender)
 	{
+		
+		MWMechanics::AiSequence& seq = mPtr.getClass().getCreatureStats(mPtr).getAiSequence();
+
+
+
+		
+		seq.stack(MWMechanics::AiFollow("player"), mPtr);
+
+		
+		
 		exit();
 	}
 

@@ -49,6 +49,8 @@ namespace MWGui
 
 		bool mGoodbye;
 
+		MWWorld::Ptr mActor;
+
 	};
 }
 
