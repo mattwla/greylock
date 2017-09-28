@@ -36,6 +36,12 @@ namespace MWGui
 		getWidget(byeButton, "ByeButton");
 		byeButton->eventMouseButtonClick += MyGUI::newDelegate(this, &DistantDialogueWindow::onByeClicked);
 
+		//mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DistantDialogueWindow::onWindowResize);
+
+		MyGUI::Button* calloverButton;
+		getWidget(calloverButton, "CallOverButton");
+		calloverButton->eventMouseButtonClick += MyGUI::newDelegate(this, &DistantDialogueWindow::onCallOverClicked);
+
 		mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DistantDialogueWindow::onWindowResize);
 	}
 
@@ -79,6 +85,11 @@ namespace MWGui
 
 	
 	void DistantDialogueWindow::onByeClicked(MyGUI::Widget* _sender)
+	{
+		exit();
+	}
+
+	void DistantDialogueWindow::onCallOverClicked(MyGUI::Widget* _sender)
 	{
 		exit();
 	}

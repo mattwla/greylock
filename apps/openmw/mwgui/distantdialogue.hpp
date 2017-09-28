@@ -35,6 +35,8 @@ namespace MWGui
 		
 		void onByeClicked(MyGUI::Widget* _sender);
 		
+		void onCallOverClicked(MyGUI::Widget* _sender);
+
 		void onWindowResize(MyGUI::Window* _sender);
 		
 		virtual void onReferenceUnavailable();
