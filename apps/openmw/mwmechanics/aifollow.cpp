@@ -97,7 +97,7 @@ bool AiFollow::execute (const MWWorld::Ptr& actor, CharacterController& characte
         if (storage.mTimer < 0)
         {
             if ((actor.getRefData().getPosition().asVec3() - target.getRefData().getPosition().asVec3()).length2()
-                    < 500*500
+                    < 10000*10000 //500*500
                     && MWBase::Environment::get().getWorld()->getLOS(actor, target))
                 mActive = true;
             storage.mTimer = 0.5f;
