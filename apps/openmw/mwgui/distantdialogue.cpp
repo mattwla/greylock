@@ -41,6 +41,7 @@ namespace MWGui
 
 	void DistantDialogueWindow::startDistantDialogue(MWWorld::Ptr actor, std::string npcName)
 	{
+		setTitle(npcName);
 		//mGoodbye = false;
 		//mEnabled = true;
 		//bool sameActor = (mPtr == actor);

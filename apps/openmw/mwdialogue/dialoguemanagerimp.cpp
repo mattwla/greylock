@@ -213,7 +213,7 @@ namespace MWDialogue
 		// If the dialogue window was already open, keep the existing history
 		
 
-		//win->startDistantDialogue(actor, actor.getClass().getName(actor)); //IMPORTANT
+		win->startDistantDialogue(actor, actor.getClass().getName(actor)); //IMPORTANT
 
 		//greeting
 		//const MWWorld::Store<ESM::Dialogue> &dialogs =
