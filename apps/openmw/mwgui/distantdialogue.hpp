@@ -51,6 +51,8 @@ namespace MWGui
 
 		bool mGoodbye;
 
+		int mDisposition;
+
 		MWWorld::Ptr mActor;
 
 	};

@@ -25,6 +25,7 @@
 #include "textcolours.hpp"
 
 #include "../mwmechanics/aifollow.hpp"
+#include "../mwmechanics/npcstats.hpp"
 
 #include "journalbooks.hpp" // to_utf8_span
 namespace MWGui
@@ -57,6 +58,7 @@ namespace MWGui
 	{
 		mPtr = actor;
 		setTitle(npcName);
+		mDisposition = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
 		//mGoodbye = false;
 		//mEnabled = true;
 		//bool sameActor = (mPtr == actor);
@@ -87,7 +89,7 @@ namespace MWGui
 	void DistantDialogueWindow::exit()
 	{
 		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);
-			MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
+		//MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
 			//mTopicsList->scrollToTop();
 		
 	}
@@ -116,8 +118,18 @@ namespace MWGui
 	void DistantDialogueWindow::onWaveClicked(MyGUI::Widget* _sender)
 	{
 
-		MWBase::Environment::get().getWindowManager()->messageBox(mPtr.getClass().getName(mPtr) + " waves back.");
+		//if (mDisposition > 50)
+		//{
+			MWBase::Environment::get().getWindowManager()->messageBox(mPtr.getClass().getName(mPtr) + " waves back.");
+			MWMechanics::NpcStats& npcStats = mPtr.getClass().getNpcStats(mPtr);
+			npcStats.setBaseDisposition(static_cast<int>(npcStats.getBaseDisposition() + 10));
+		//}
+		//else
+		//	MWBase::Environment::get().getWindowManager()->messageBox(mPtr.getClass().getName(mPtr) + " ignores you.");
 
+	
+
+		//Maybe each NPC has their own calculations? Example, some will wave no matter what. Some will not wave because they are focused. This works for now MWX
 
 
 		exit();

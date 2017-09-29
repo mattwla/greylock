@@ -871,6 +871,9 @@ namespace MWGui
             case GM_Dialogue:
                 mDialogueWindow->exit();
                 break;
+			case GM_DistantDialogue:
+				mDistantDialogueWindow->exit();
+				break;
             case GM_Barter:
                 mTradeWindow->exit();
                 break;
