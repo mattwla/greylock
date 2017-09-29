@@ -34,6 +34,8 @@ namespace MWGui
 		, mEnabled(false)
 		, mGoodbye(false)
 	{
+		center();
+		
 		MyGUI::Button* byeButton;
 		getWidget(byeButton, "ByeButton");
 		byeButton->eventMouseButtonClick += MyGUI::newDelegate(this, &DistantDialogueWindow::onByeClicked);
@@ -114,7 +116,7 @@ namespace MWGui
 	void DistantDialogueWindow::onWaveClicked(MyGUI::Widget* _sender)
 	{
 
-	
+		MWBase::Environment::get().getWindowManager()->messageBox(mPtr.getClass().getName(mPtr) + " waves back.");
 
 
 
