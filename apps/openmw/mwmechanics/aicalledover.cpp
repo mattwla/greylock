@@ -14,6 +14,9 @@
 #include "movement.hpp"
 #include "steering.hpp"
 
+#include "../mwworld/ptr.hpp"
+#include "../mwworld/actiontalk.hpp"
+
 namespace MWMechanics
 {
 
@@ -127,8 +130,18 @@ namespace MWMechanics
 			}
 		}
 
-		if (!mAlwaysFollow) //Update if you only follow for a bit
+		if (true) //Update if you only follow for a bit
 		{
+			//We are near player, time to chat
+			if ((actor.getRefData().getPosition().asVec3() - target.getRefData().getPosition().asVec3()).length2()
+				< 200 * 200
+				&& MWBase::Environment::get().getWorld()->getLOS(actor, target))
+			{
+				MWBase::Environment::get().getWorld()->activate(target, actor);
+				return true;
+				}
+			
+			
 			//Check if we've run out of time
 			if (mDuration > 0)
 			{
@@ -136,6 +149,7 @@ namespace MWMechanics
 				if (mRemainingDuration <= 0)
 				{
 					mRemainingDuration = mDuration;
+					
 					return true;
 				}
 			}
