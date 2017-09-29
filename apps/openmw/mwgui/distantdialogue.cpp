@@ -24,7 +24,8 @@
 #include "bookpage.hpp"
 #include "textcolours.hpp"
 
-#include "../mwmechanics/aifollow.hpp"
+//#include "../mwmechanics/aifollow.hpp"
+#include "../mwmechanics/aicalledover.hpp"
 #include "../mwmechanics/npcstats.hpp"
 
 #include "journalbooks.hpp" // to_utf8_span
@@ -108,7 +109,7 @@ namespace MWGui
 
 
 		
-		seq.stack(MWMechanics::AiFollow("player"), mPtr);
+		seq.stack(MWMechanics::AiCalledOver("player"), mPtr);
 
 		
 		

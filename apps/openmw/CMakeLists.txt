@@ -85,7 +85,7 @@ add_openmw_dir (mwmechanics
     drawstate spells activespells npcstats aipackage aisequence aipursue alchemy aiwander aitravel aifollow aiavoiddoor aibreathe
     aiescort aiactivate aicombat repair enchanting pathfinding pathgrid security spellsuccess spellcasting
     disease pickpocket levelledlist combat steering obstacle autocalcspell difficultyscaling aicombataction actor summoning
-    character actors objects aistate coordinateconverter trading aiface weaponpriority spellpriority
+    character actors objects aistate coordinateconverter trading aiface weaponpriority spellpriority aicalledover
     )
 
 add_openmw_dir (mwstate

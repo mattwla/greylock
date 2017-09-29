@@ -114,6 +114,23 @@ namespace ESM
         void save(ESMWriter &esm) const;
     };
 
+	struct AiCalledOver : AiPackage //MWX
+	{
+		AiEscortData mData;
+
+		std::string mTargetId;
+		std::string mCellId;
+		float mRemainingDuration;
+
+		bool mAlwaysFollow;
+		bool mCommanded;
+
+		bool mActive;
+
+		void load(ESMReader &esm);
+		void save(ESMWriter &esm) const;
+	};
+
     struct AiActivate : AiPackage
     {
         std::string mTargetId;
