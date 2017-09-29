@@ -37,6 +37,8 @@ namespace MWGui
 		
 		void onCallOverClicked(MyGUI::Widget* _sender);
 
+		void onWaveClicked(MyGUI::Widget* _sender);
+
 		void onWindowResize(MyGUI::Window* _sender);
 		
 		virtual void onReferenceUnavailable();
