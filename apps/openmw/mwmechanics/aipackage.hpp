@@ -33,22 +33,23 @@ namespace MWMechanics
     {
         public:
             ///Enumerates the various AITypes available
-            enum TypeId {
-                TypeIdNone = -1,
-                TypeIdWander = 0,
-                TypeIdTravel = 1,
-                TypeIdEscort = 2,
-                TypeIdFollow = 3,
-                TypeIdActivate = 4,
+			enum TypeId {
+				TypeIdNone = -1,
+				TypeIdWander = 0,
+				TypeIdTravel = 1,
+				TypeIdEscort = 2,
+				TypeIdFollow = 3,
+				TypeIdActivate = 4,
 
-                // These 5 are not really handled as Ai Packages in the MW engine
-                // For compatibility do *not* return these in the getCurrentAiPackage script function..
-                TypeIdCombat = 5,
-                TypeIdPursue = 6,
-                TypeIdAvoidDoor = 7,
-                TypeIdFace = 8,
-                TypeIdBreathe = 9,
-				TypeIdCalledOver = 10 //MWX
+				// These 5 are not really handled as Ai Packages in the MW engine
+				// For compatibility do *not* return these in the getCurrentAiPackage script function..
+				TypeIdCombat = 5,
+				TypeIdPursue = 6,
+				TypeIdAvoidDoor = 7,
+				TypeIdFace = 8,
+				TypeIdBreathe = 9,
+				TypeIdCalledOver = 10, //MWX
+				TypeIdWave = 11
             };
 
             ///Default constructor

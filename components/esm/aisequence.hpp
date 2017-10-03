@@ -131,6 +131,23 @@ namespace ESM
 		void save(ESMWriter &esm) const;
 	};
 
+	struct AiWave : AiPackage //MWX
+	{
+		AiEscortData mData;
+
+		std::string mTargetId;
+		std::string mCellId;
+		float mRemainingDuration;
+
+		bool mAlwaysFollow;
+		bool mCommanded;
+
+		bool mActive;
+
+		void load(ESMReader &esm); //MWX
+		void save(ESMWriter &esm) const;
+	};
+
     struct AiActivate : AiPackage
     {
         std::string mTargetId;
