@@ -130,8 +130,7 @@ namespace MWMechanics
 			}
 		}
 
-		if (true) //Update if you only follow for a bit
-		{
+		
 			//We are near player, time to chat
 			if ((actor.getRefData().getPosition().asVec3() - target.getRefData().getPosition().asVec3()).length2()
 				< 200 * 200
@@ -139,37 +138,12 @@ namespace MWMechanics
 			{
 				MWBase::Environment::get().getWorld()->activate(target, actor);
 				return true;
-				}
+			}
 			
 			
-			//Check if we've run out of time
-			if (mDuration > 0)
-			{
-				mRemainingDuration -= ((duration*MWBase::Environment::get().getWorld()->getTimeScaleFactor()) / 3600);
-				if (mRemainingDuration <= 0)
-				{
-					mRemainingDuration = mDuration;
-					
-					return true;
-				}
-			}
-
-			if ((pos.pos[0] - mX)*(pos.pos[0] - mX) +
-				(pos.pos[1] - mY)*(pos.pos[1] - mY) +
-				(pos.pos[2] - mZ)*(pos.pos[2] - mZ) < followDistance*followDistance) //Close-ish to final position
-			{
-				if (actor.getCell()->isExterior()) //Outside?
-				{
-					if (mCellId == "") //No cell to travel to
-						return true;
-				}
-				else
-				{
-					if (mCellId == actor.getCell()->getCell()->mName) //Cell to travel to
-						return true;
-				}
-			}
-		}
+		
+			
+		
 
 		//Set the target destination from the actor
 		ESM::Pathgrid::Point dest = target.getRefData().getPosition().pos;

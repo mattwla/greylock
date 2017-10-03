@@ -24,7 +24,6 @@
 #include "bookpage.hpp"
 #include "textcolours.hpp"
 
-//#include "../mwmechanics/aifollow.hpp"
 #include "../mwmechanics/aicalledover.hpp"
 #include "../mwmechanics/npcstats.hpp"
 
@@ -60,38 +59,13 @@ namespace MWGui
 		mPtr = actor;
 		setTitle(npcName);
 		mDisposition = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
-		//mGoodbye = false;
-		//mEnabled = true;
-		//bool sameActor = (mPtr == actor);
-		//mPtr = actor;
-		//mTopicsList->setEnabled(true);
-		//setTitle(npcName);
-
-		//clearChoices();
-
-		//mTopicsList->clear();
-
-		/*if (resetHistory || !sameActor)
-		{
-			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
-				delete (*it);
-			mHistoryContents.clear();
-		}*/
-
-		/*for (std::vector<Link*>::iterator it = mLinks.begin(); it != mLinks.end(); ++it)
-			delete (*it);
-		mLinks.clear();*/
-
-		//updateOptions();
-
-		//restock();
+		
 	}
 
 	void DistantDialogueWindow::exit()
 	{
 		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);
-		//MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
-			//mTopicsList->scrollToTop();
+		
 		
 	}
 
@@ -105,15 +79,10 @@ namespace MWGui
 	{
 		
 		MWMechanics::AiSequence& seq = mPtr.getClass().getCreatureStats(mPtr).getAiSequence();
-
-
-
-		
 		seq.stack(MWMechanics::AiCalledOver("player"), mPtr);
-
-		
-		
 		exit();
+
+		//Again, make this code in  npc logic?
 	}
 
 	void DistantDialogueWindow::onWaveClicked(MyGUI::Widget* _sender)
@@ -128,11 +97,7 @@ namespace MWGui
 		//else
 		//	MWBase::Environment::get().getWindowManager()->messageBox(mPtr.getClass().getName(mPtr) + " ignores you.");
 
-	
-
 		//Maybe each NPC has their own calculations? Example, some will wave no matter what. Some will not wave because they are focused. This works for now MWX
-
-
 		exit();
 	}
 
@@ -140,11 +105,9 @@ namespace MWGui
 	{
 		// if the window has only been moved, not resized, we don't need to update
 		if (mCurrentWindowSize == _sender->getSize()) return;
-
-		//mTopicsList->adjustSize();
-		//updateHistory();
 		mCurrentWindowSize = _sender->getSize();
 	}
+	
 	void DistantDialogueWindow::onReferenceUnavailable()
 	{
 		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);

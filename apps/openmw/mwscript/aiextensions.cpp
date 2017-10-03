@@ -347,7 +347,7 @@ namespace MWScript
                     ptr.getClass().getCreatureStats (ptr).getAiSequence().stack(followPackage, ptr);
                     std::cout << "AiFollow: " << actorID << ", " << x << ", " << y << ", " << z << ", " << duration
                         << std::endl;
-                }
+                } //MWX do I need calledover version of this?
         };
 
         template<class R>

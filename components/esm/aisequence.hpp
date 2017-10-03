@@ -127,7 +127,7 @@ namespace ESM
 
 		bool mActive;
 
-		void load(ESMReader &esm);
+		void load(ESMReader &esm); //MWX
 		void save(ESMWriter &esm) const;
 	};
 
