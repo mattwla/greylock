@@ -101,7 +101,7 @@ namespace MWGui
 		//Maybe each NPC has their own calculations? Example, some will wave no matter what. Some will not wave because they are focused. This works for now MWX
 			MWMechanics::AiSequence& seq = mPtr.getClass().getCreatureStats(mPtr).getAiSequence();
 			seq.stack(MWMechanics::AiWave("player"), mPtr);
-			exit();
+		
 
 		exit();
 	}

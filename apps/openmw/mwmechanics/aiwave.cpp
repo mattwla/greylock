@@ -71,10 +71,6 @@ namespace MWMechanics
 	{
 		
 
-		MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "idle3", 0, 1);
-		actor.getClass().getMovementSettings(actor).mPosition[1] = 0;
-		return true;
-
 		//MXW
 		
 		MWWorld::Ptr target = getTarget();
@@ -87,15 +83,25 @@ namespace MWMechanics
 		actor.getClass().getCreatureStats(actor).setDrawState(DrawState_Nothing);
 
 		AiFollowStorage& storage = state.get<AiFollowStorage>();
+		osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
+		osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
 
+		osg::Vec3f dir = targetPos - actorPos;
+
+		float faceAngleRadians = std::atan2(dir.x(), dir.y());
 		bool& rotate = storage.mTurnActorToTarget;
-		if (rotate)
+		if (true)
 		{
-			if (zTurn(actor, storage.mTargetAngleRadians))
+			if (zTurn(actor, faceAngleRadians))
 				rotate = false;
-
-			return false;
+			else
+				return false;
 		}
+		//MWX wow.
+
+		MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "idle3", 0, 1);
+		actor.getClass().getMovementSettings(actor).mPosition[1] = 0;
+		return true;
 
 		
 		
@@ -180,10 +186,10 @@ namespace MWMechanics
 		else
 			followDistance += threshold;
 
-		osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
-		osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
+		//osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
+		//osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
 
-		osg::Vec3f dir = targetPos - actorPos;
+//		osg::Vec3f dir = targetPos - actorPos;
 		float targetDistSqr = dir.length2();
 
 		if (targetDistSqr <= followDistance * followDistance)
