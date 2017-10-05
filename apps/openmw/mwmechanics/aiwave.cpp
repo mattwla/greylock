@@ -99,7 +99,7 @@ namespace MWMechanics
 		}
 		//MWX wow.
 
-		MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "idle3", 0, 1);
+		MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "idle7", 0, 1);
 		actor.getClass().getMovementSettings(actor).mPosition[1] = 0;
 		return true;
 
