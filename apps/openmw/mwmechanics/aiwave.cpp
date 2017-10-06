@@ -18,14 +18,14 @@ namespace MWMechanics
 {
 
 
-	struct AiFollowStorage : AiTemporaryBase
+	struct AiWaveStorage : AiTemporaryBase
 	{
 		float mTimer;
 		bool mMoving;
 		float mTargetAngleRadians;
 		bool mTurnActorToTarget;
 
-		AiFollowStorage() :
+		AiWaveStorage() :
 			mTimer(0.f),
 			mMoving(false),
 			mTargetAngleRadians(0.f),
@@ -82,7 +82,7 @@ namespace MWMechanics
 
 		actor.getClass().getCreatureStats(actor).setDrawState(DrawState_Nothing);
 
-		AiFollowStorage& storage = state.get<AiFollowStorage>();
+		AiWaveStorage& storage = state.get<AiWaveStorage>();
 		osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
 		osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
 
@@ -112,125 +112,9 @@ namespace MWMechanics
 			
 	
 		return false;
-
-		
 		
 		//MWX
-		// AiFollow requires the target to be in range and within sight for the initial activation
-		if (!mActive)
-		{
-			storage.mTimer -= duration;
 
-			if (storage.mTimer < 0)
-			{
-				if ((actor.getRefData().getPosition().asVec3() - target.getRefData().getPosition().asVec3()).length2()
-					< 10000 * 10000 //500*500
-					&& MWBase::Environment::get().getWorld()->getLOS(actor, target))
-					mActive = true;
-				storage.mTimer = 0.5f;
-			}
-		}
-		if (!mActive)
-			return false;
-
-		ESM::Position pos = actor.getRefData().getPosition(); //position of the actor
-
-															  // The distances below are approximations based on observations of the original engine.
-															  // If only one actor is following the target, it uses 186.
-															  // If there are multiple actors following the same target, they form a group with each group member at 313 + (130 * i) distance to the target.
-
-		short followDistance = 186;
-		std::list<int> followers = MWBase::Environment::get().getMechanicsManager()->getActorsFollowingIndices(target);
-		if (followers.size() >= 2)
-		{
-			followDistance = 313;
-			short i = 0;
-			followers.sort();
-			for (std::list<int>::iterator it = followers.begin(); it != followers.end(); ++it)
-			{
-				if (*it == mFollowIndex)
-					followDistance += 130 * i;
-				++i;
-			}
-		}
-
-		if (!mAlwaysFollow) //Update if you only follow for a bit
-		{
-			//Check if we've run out of time
-			if (mDuration > 0)
-			{
-				mRemainingDuration -= ((duration*MWBase::Environment::get().getWorld()->getTimeScaleFactor()) / 3600);
-				if (mRemainingDuration <= 0)
-				{
-					mRemainingDuration = mDuration;
-					return true;
-				}
-			}
-
-			if ((pos.pos[0] - mX)*(pos.pos[0] - mX) +
-				(pos.pos[1] - mY)*(pos.pos[1] - mY) +
-				(pos.pos[2] - mZ)*(pos.pos[2] - mZ) < followDistance*followDistance) //Close-ish to final position
-			{
-				if (actor.getCell()->isExterior()) //Outside?
-				{
-					if (mCellId == "") //No cell to travel to
-						return true;
-				}
-				else
-				{
-					if (mCellId == actor.getCell()->getCell()->mName) //Cell to travel to
-						return true;
-				}
-			}
-
-			
-		}
-
-		//Set the target destination from the actor
-		ESM::Pathgrid::Point dest = target.getRefData().getPosition().pos;
-
-		short baseFollowDistance = followDistance;
-		short threshold = 30; // to avoid constant switching between moving/stopping
-		if (storage.mMoving)
-			followDistance -= threshold;
-		else
-			followDistance += threshold;
-
-		//osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
-		//osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
-
-//		osg::Vec3f dir = targetPos - actorPos;
-		float targetDistSqr = dir.length2();
-
-		if (targetDistSqr <= followDistance * followDistance)
-		{
-			float faceAngleRadians = std::atan2(dir.x(), dir.y());
-
-			if (!zTurn(actor, faceAngleRadians, osg::DegreesToRadians(45.f)))
-			{
-				storage.mTargetAngleRadians = faceAngleRadians;
-				storage.mTurnActorToTarget = true;
-			}
-
-			return false;
-		}
-
-		storage.mMoving = !pathTo(actor, dest, duration, baseFollowDistance); // Go to the destination
-
-		if (storage.mMoving)
-		{
-			//Check if you're far away
-			float dist = distance(dest, pos.pos[0], pos.pos[1], pos.pos[2]);
-
-			if (dist > 450)
-				actor.getClass().getCreatureStats(actor).setMovementFlag(MWMechanics::CreatureStats::Flag_Run, true); //Make NPC run
-			else if (dist < 325) //Have a bit of a dead zone, otherwise npc will constantly flip between running and not when right on the edge of the running threshold
-				actor.getClass().getCreatureStats(actor).setMovementFlag(MWMechanics::CreatureStats::Flag_Run, false); //make NPC walk
-		}
-		
-
-
-		return false;
 	}
 
 	std::string AiWave::getFollowedActor()

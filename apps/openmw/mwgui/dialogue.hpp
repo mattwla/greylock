@@ -7,6 +7,7 @@
 #include "bookpage.hpp"
 
 #include "../mwdialogue/keywordsearch.hpp"
+#include <MyGUI_ImageBox.h>
 
 namespace Gui
 {
@@ -166,6 +167,8 @@ namespace MWGui
 
         BookPage* mHistory;
         Gui::MWList*   mTopicsList;
+		MyGUI::Widget* mPlayerPortraitBox;
+		MyGUI::ImageBox* mPlayerPortrait;
         MyGUI::ScrollBar* mScrollBar;
         MyGUI::ProgressBar* mDispositionBar;
         MyGUI::TextBox*     mDispositionText;

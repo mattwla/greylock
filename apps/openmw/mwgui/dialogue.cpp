@@ -257,6 +257,8 @@ namespace MWGui
 
         //Topics list
         getWidget(mTopicsList, "TopicsList");
+		getWidget(mPlayerPortrait, "PlayerPortrait");
+		//getWidget(mPlayerPortraitBox, "PlayerPortraitBox");
         mTopicsList->eventItemSelected += MyGUI::newDelegate(this, &DialogueWindow::onSelectTopic);
 
         MyGUI::Button* byeButton;
@@ -297,6 +299,8 @@ namespace MWGui
         if (mCurrentWindowSize == _sender->getSize()) return;
 
         mTopicsList->adjustSize();
+		mPlayerPortrait->setRealSize(.2, .3);
+		//mPlayerPortraitBox->setRealSize(.2, .3);
         updateHistory();
         mCurrentWindowSize = _sender->getSize();
     }

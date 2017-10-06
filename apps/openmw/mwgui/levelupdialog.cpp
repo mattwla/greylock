@@ -60,7 +60,8 @@ namespace MWGui
             MyGUI::ImageBox* image = mCoinBox->createWidget<MyGUI::ImageBox>("ImageBox", MyGUI::IntCoord(0,0,16,16), MyGUI::Align::Default);
             image->setImageTexture ("icons\\tx_goldicon.dds");
             mCoins.push_back(image);
-        }
+        //MWX
+		}
 
         center();
     }
