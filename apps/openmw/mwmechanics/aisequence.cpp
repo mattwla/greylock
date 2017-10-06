@@ -186,6 +186,7 @@ bool isActualAiPackage(int packageTypeId)
                    && packageTypeId != AiPackage::TypeIdFace
                    && packageTypeId != AiPackage::TypeIdBreathe
 				   && packageTypeId != AiPackage::TypeIdCalledOver
+				   && packageTypeId != AiPackage::TypeIdWave
 		);
 }
 

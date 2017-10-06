@@ -99,9 +99,19 @@ namespace MWMechanics
 		}
 		//MWX wow.
 
-		MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "idle7", 0, 1);
+		//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "wave", 0, 1);
 		actor.getClass().getMovementSettings(actor).mPosition[1] = 0;
-		return true;
+		
+		if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave") && storage.mTimer == 0.f)
+		{
+			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "wave", 0, 1);
+			storage.mTimer = 1.0f;
+		}
+		else if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave"))
+			return true;
+			
+	
+		return false;
 
 		
 		

@@ -27,6 +27,7 @@
 #include "../mwmechanics/aicalledover.hpp"
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
+//#include "../mwmechanics/aiwander.hpp"
 
 #include "journalbooks.hpp" // to_utf8_span
 namespace MWGui
@@ -101,6 +102,8 @@ namespace MWGui
 		//Maybe each NPC has their own calculations? Example, some will wave no matter what. Some will not wave because they are focused. This works for now MWX
 			MWMechanics::AiSequence& seq = mPtr.getClass().getCreatureStats(mPtr).getAiSequence();
 			seq.stack(MWMechanics::AiWave("player"), mPtr);
+			
+
 		
 
 		exit();
