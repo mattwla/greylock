@@ -188,6 +188,8 @@ namespace MWGui
             if (i != text.end ())
                 addTopicLink (typesetter, 0, i - text.begin (), text.size ());
         }
+
+
     }
 
     void Response::addTopicLink(BookTypesetter::Ptr typesetter, intptr_t topicId, size_t begin, size_t end) const
@@ -277,6 +279,11 @@ namespace MWGui
         mHistory->adviseLinkClicked(callback);
 
         mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DialogueWindow::onWindowResize);
+		mNpcPortrait->setImageTexture("textures\\face.dds");
+		mPlayerPortrait->setImageTexture("textures\\face.dds");
+		mNpcPortrait->setVisible(true);
+		mNpcPortrait->setPosition(0, 0);
+		mPlayerPortrait->setVisible(true);
 		
     }
 
@@ -322,8 +329,9 @@ namespace MWGui
 		int leftPadding = std::max(0, static_cast<int>(screenSize.width - screenSize.height * mAspect) / 2);
 		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
 
-		mPlayerPortrait->setCoord(0, 0, screenSize.width/3, screenSize.height/2);
-		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, screenSize.width / 3, screenSize.height / 2);
+		
+		mPlayerPortrait->setCoord(0, 0, screenSize.width/4, screenSize.height/3);
+		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, screenSize.width / 4, screenSize.height / 3);
 
 	}
 
@@ -501,8 +509,18 @@ namespace MWGui
 
         BookTypesetter::Ptr typesetter = BookTypesetter::create (mHistory->getWidth(), std::numeric_limits<int>::max());
 
-        for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
-            (*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+        
+		if (mHistoryContents.size() > 1)
+		{
+			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
+				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+		}
+		else
+		{
+			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
+				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+		}
+		//Exceptions for when journal updates, and for choices? MWX
 
 
         BookTypesetter::Style* body = typesetter->createStyle("", MyGUI::Colour::White);
