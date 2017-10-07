@@ -258,6 +258,7 @@ namespace MWGui
         //Topics list
         getWidget(mTopicsList, "TopicsList");
 		getWidget(mPlayerPortrait, "PlayerPortrait");
+		getWidget(mNpcPortrait, "NPCPortrait");
 		//getWidget(mPlayerPortraitBox, "PlayerPortraitBox");
         mTopicsList->eventItemSelected += MyGUI::newDelegate(this, &DialogueWindow::onSelectTopic);
 
@@ -276,6 +277,7 @@ namespace MWGui
         mHistory->adviseLinkClicked(callback);
 
         mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DialogueWindow::onWindowResize);
+		
     }
 
     void DialogueWindow::exit()
@@ -299,11 +301,31 @@ namespace MWGui
         if (mCurrentWindowSize == _sender->getSize()) return;
 
         mTopicsList->adjustSize();
-		mPlayerPortrait->setRealSize(.2, .3);
+		//_sender->setRealSize(1, 1);
+		//mPlayerPortrait->setRealSize(.3, .4);
+		adjustPortraitSize(_sender);
+		//mNpcPortrait->setRealSize(.3, .4);
 		//mPlayerPortraitBox->setRealSize(.2, .3);
         updateHistory();
         mCurrentWindowSize = _sender->getSize();
     }
+
+	void DialogueWindow::adjustPortraitSize(MyGUI::Window* _sender)
+	{
+		double mAspect = 3.0 / 4.0;
+
+		if (mAspect == 0)
+			return;
+
+		MyGUI::IntSize screenSize = _sender->getSize();
+
+		int leftPadding = std::max(0, static_cast<int>(screenSize.width - screenSize.height * mAspect) / 2);
+		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
+
+		mPlayerPortrait->setCoord(0, 0, screenSize.width/3, screenSize.height/2);
+		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, screenSize.width / 3, screenSize.height / 2);
+
+	}
 
     void DialogueWindow::onMouseWheel(MyGUI::Widget* _sender, int _rel)
     {

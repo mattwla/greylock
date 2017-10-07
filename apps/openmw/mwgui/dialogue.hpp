@@ -151,11 +151,15 @@ namespace MWGui
         void updateOptions();
         void restock();
 
+
+		void adjustPortraitSize(MyGUI::Window* _sender);
+
         int mServices;
 
         bool mEnabled;
 
         bool mGoodbye;
+
 
         std::vector<DialogueText*> mHistoryContents;
         std::vector<std::pair<std::string, int> > mChoices;
@@ -169,9 +173,11 @@ namespace MWGui
         Gui::MWList*   mTopicsList;
 		MyGUI::Widget* mPlayerPortraitBox;
 		MyGUI::ImageBox* mPlayerPortrait;
+		MyGUI::ImageBox* mNpcPortrait;
         MyGUI::ScrollBar* mScrollBar;
         MyGUI::ProgressBar* mDispositionBar;
         MyGUI::TextBox*     mDispositionText;
+		
 
         PersuasionDialog mPersuasionDialog;
 
