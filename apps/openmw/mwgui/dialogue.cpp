@@ -13,6 +13,7 @@
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/dialoguemanager.hpp"
+#include "../mwbase/inputmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/containerstore.hpp"
@@ -301,6 +302,9 @@ namespace MWGui
 		mNpcPortrait->setVisible(true);
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(true);
+		mTopicsList->setVisible(true);
+		
+		
 		
 		
     }
@@ -348,7 +352,7 @@ namespace MWGui
 		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
 
 		
-		mPlayerPortrait->setCoord(0, 0, screenSize.width/4, screenSize.height/3);
+		mPlayerPortrait->setCoord(0, 0, screenSize.width/5, screenSize.height/4);
 		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, screenSize.width / 4, screenSize.height / 3);
 
 	}
@@ -439,6 +443,7 @@ namespace MWGui
         updateOptions();
 
         restock();
+		
     }
 
     void DialogueWindow::restock()
@@ -566,6 +571,8 @@ namespace MWGui
 				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
 				{
 					//(*it)->mCurrent_chunk += 1;
+					
+					mTopicsList->setVisible(false);
 					pair_link = std::make_pair("continue", -1);
 					NextChunk* link = new NextChunk();
 					const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
@@ -574,6 +581,12 @@ namespace MWGui
 					textColours.answerPressed,
 					TypesetBook::InteractiveId(link));
 					typesetter->write(questionStyle, to_utf8_span(pair_link.first.c_str()));
+					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
+					
+				}
+				else {
+					mTopicsList->setVisible(true);
+					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
 				}
 			}
 		}

@@ -18,6 +18,8 @@
 
 #include "../mwbase/world.hpp"
 #include "../mwbase/windowmanager.hpp"
+#include "../mwbase/dialoguemanager.hpp"
+#include "../mwgui/dialogue.hpp"
 #include "../mwbase/statemanager.hpp"
 #include "../mwbase/environment.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
@@ -69,6 +71,7 @@ namespace MWInput
         , mAttemptJump(false)
         , mInvUiScalingFactor(1.f)
         , mFakeDeviceID(1)
+		, mInChunkMode(false)
     {
         mInputManager = new SDLUtil::InputWrapper(window, viewer, grab);
         mInputManager->setMouseEventCallback (this);
@@ -593,6 +596,18 @@ namespace MWInput
         // if not in gui mode, the camera decides whether to show crosshair or not.
     }
 
+	void InputManager::dialogueChunkMode(bool chunk)
+	{
+		mGuiCursorEnabled = !chunk;
+		//mMouseLookEnabled = !guiMode;
+		if (chunk)
+			MWBase::Environment::get().getWindowManager()->showCrosshair(false);
+		
+		MWBase::Environment::get().getWindowManager()->setCursorVisible(!chunk);
+		mInChunkMode = chunk;
+		// if not in gui mode, the camera decides whether to show crosshair or not.
+	}
+
     void InputManager::processChangedSettings(const Settings::CategorySettingVector& changed)
     {
         bool changeRes = false;
@@ -703,7 +718,10 @@ namespace MWInput
 
     void InputManager::mousePressed( const SDL_MouseButtonEvent &arg, Uint8 id )
     {
-        mJoystickLastUsed = false;
+        if (mInChunkMode == true)
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->nextChunk();
+		
+		mJoystickLastUsed = false;
         bool guiMode = false;
 
         if (id == SDL_BUTTON_LEFT || id == SDL_BUTTON_RIGHT) // MyGUI only uses these mouse events

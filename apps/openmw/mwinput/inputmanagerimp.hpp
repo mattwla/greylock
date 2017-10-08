@@ -89,6 +89,7 @@ namespace MWInput
         void setPlayer (MWWorld::Player* player) { mPlayer = player; }
 
         virtual void changeInputMode(bool guiMode);
+		virtual void dialogueChunkMode(bool chunk);
 
         virtual void processChangedSettings(const Settings::CategorySettingVector& changed);
 
@@ -201,6 +202,8 @@ namespace MWInput
         std::map<std::string, bool> mControlSwitch;
 
         float mInvUiScalingFactor;
+
+		bool mInChunkMode;
 
     private:
         void convertMousePosForMyGUI(int& x, int& y);

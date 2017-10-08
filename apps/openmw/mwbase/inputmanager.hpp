@@ -43,6 +43,7 @@ namespace MWBase
             virtual void update(float dt, bool disableControls, bool disableEvents=false) = 0;
 
             virtual void changeInputMode(bool guiMode) = 0;
+			virtual void dialogueChunkMode(bool chunk) = 0;
 
             virtual void processChangedSettings(const std::set< std::pair<std::string, std::string> >& changed) = 0;
 
@@ -73,6 +74,7 @@ namespace MWBase
             virtual int countSavedGameRecords() const = 0;
             virtual void write(ESM::ESMWriter& writer, Loading::Listener& progress) = 0;
             virtual void readRecord(ESM::ESMReader& reader, uint32_t type) = 0;
+			
     };
 }
 
