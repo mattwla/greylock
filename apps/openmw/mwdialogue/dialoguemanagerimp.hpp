@@ -80,7 +80,8 @@ namespace MWDialogue
 
             //calbacks for the GUI
             virtual void keywordSelected (const std::string& keyword);
-            virtual void goodbyeSelected();
+			virtual void nextChunkSelected();
+			virtual void goodbyeSelected();
             virtual void questionAnswered (int answer);
 
             virtual void persuade (int type);

@@ -477,6 +477,11 @@ namespace MWDialogue
         return mIsInChoice;
     }
 
+	void DialogueManager::nextChunkSelected()
+	{
+
+	}
+
     void DialogueManager::goodbyeSelected()
     {
         MWBase::Environment::get().getWindowManager()->removeGuiMode(MWGui::GM_Dialogue);
@@ -499,6 +504,12 @@ namespace MWDialogue
     void DialogueManager::questionAnswered (int answer)
     {
         mChoice = answer;
+
+		if (mChoice = -1)
+		{
+			
+		}
+
 
         if (mDialogueMap.find(mLastTopic) != mDialogueMap.end())
         {

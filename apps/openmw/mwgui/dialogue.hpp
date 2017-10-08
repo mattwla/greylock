@@ -67,6 +67,11 @@ namespace MWGui
         virtual void activated ();
     };
 
+	struct NextChunk : Link
+	{
+		virtual void activated ();
+	};
+
     struct Goodbye : Link
     {
         virtual void activated ();
@@ -79,6 +84,8 @@ namespace MWGui
         virtual ~DialogueText() {}
         virtual void write (BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const = 0;
         std::string mText;
+		std::vector<std::string> mSplitText;
+		unsigned int mCurrent_chunk = 0;
     };
 
     struct Response : DialogueText
