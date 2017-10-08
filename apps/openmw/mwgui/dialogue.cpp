@@ -3,6 +3,7 @@
 #include <MyGUI_LanguageManager.h>
 #include <MyGUI_Window.h>
 #include <MyGUI_ProgressBar.h>
+#include <MyGUI_FontManager.h>
 
 #include <components/widgets/list.hpp>
 #include <components/translation/translation.hpp>
@@ -121,8 +122,10 @@ namespace MWGui
 		std::string text;
 		if (mSplitText.size() > 1)
 			text = mSplitText[mCurrent_chunk];
+			//+ std::to_string(mCurrent_chunk) + "/" + std::to_string(mSplitText.size());
 		else
 			text = mText;
+		//MWX
 
         size_t pos_end;
         for(;;)
@@ -298,6 +301,7 @@ namespace MWGui
 		mNpcPortrait->setVisible(true);
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(true);
+		
 		
     }
 
@@ -523,7 +527,7 @@ namespace MWGui
 			end = text.find(delim, start);
 		}
 
-		split.push_back(text.substr(start, end) + ".");
+		//split.push_back(text.substr(start, end) + ".");
 
 		return split;
 		//Thanks to Moswald at stack overflow.
@@ -559,7 +563,7 @@ namespace MWGui
 
 				std::pair<std::string, int> pair_link;
 			
-				if ((*it)->mCurrent_chunk != (*it)->mSplitText.size())
+				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
 				{
 					//(*it)->mCurrent_chunk += 1;
 					pair_link = std::make_pair("continue", -1);

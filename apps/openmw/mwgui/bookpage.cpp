@@ -264,7 +264,7 @@ struct TypesetBookImpl::Typesetter : BookTypesetter
     Style * createStyle (char const * fontName, const Colour& fontColour)
     {
         if (strcmp(fontName, "") == 0)
-            return createStyle(MyGUI::FontManager::getInstance().getDefaultFont().c_str(), fontColour);
+            return createStyle("Magic Cards Big", fontColour);
 
         for (Styles::iterator i = mBook->mStyles.begin (); i != mBook->mStyles.end (); ++i)
             if (i->match (fontName, fontColour, fontColour, fontColour, 0))
