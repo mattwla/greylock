@@ -120,6 +120,8 @@ namespace MWGui
 
         void addResponse (const std::string& text, const std::string& title="", bool needMargin = true);
 
+		void nextChunk(); 
+
         void addMessageBox(const std::string& text);
 
         void addChoice(const std::string& choice, int id);

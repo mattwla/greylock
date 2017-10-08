@@ -479,7 +479,11 @@ namespace MWDialogue
 
 	void DialogueManager::nextChunkSelected()
 	{
+		//executeTopic(mLastTopic);
+		MWBase::Environment::get().getWindowManager()->getDialogueWindow()->nextChunk();
 
+		//MWX
+		
 	}
 
     void DialogueManager::goodbyeSelected()

@@ -117,7 +117,12 @@ namespace MWGui
         std::map<Range, intptr_t> hyperLinks;
 
         // We need this copy for when @# hyperlinks are replaced
-        std::string text = mText;
+		//std::string chunk = mSplitText[mCurrent_chunk];
+		std::string text;
+		if (mSplitText.size() > 1)
+			text = mSplitText[mCurrent_chunk];
+		else
+			text = mText;
 
         size_t pos_end;
         for(;;)
@@ -236,7 +241,7 @@ namespace MWGui
 	void NextChunk::activated()
 	{
 
-		MWBase::Environment::get().getWindowManager()->playSound("Menu Click");
+		MWBase::Environment::get().getWindowManager()->playSound("Menu Click"); 
 		MWBase::Environment::get().getDialogueManager()->nextChunkSelected();
 	}
 
@@ -549,15 +554,16 @@ namespace MWGui
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
 			{
 				(*it)->mSplitText = splitText((*it)->mText);
-				(*it)->mText = (*it)->mSplitText[(*it)->mCurrent_chunk];
+				//(*it)->mText = (*it)->mSplitText[(*it)->mCurrent_chunk];
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
 
 				std::pair<std::string, int> pair_link;
 			
 				if ((*it)->mCurrent_chunk != (*it)->mSplitText.size())
 				{
+					//(*it)->mCurrent_chunk += 1;
 					pair_link = std::make_pair("continue", -1);
-					Choice* link = new Choice(pair_link.second);
+					NextChunk* link = new NextChunk();
 					const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
 					BookTypesetter::Style* body = typesetter->createStyle("", MyGUI::Colour::White);
 					BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
@@ -665,6 +671,12 @@ namespace MWGui
         mHistoryContents.push_back(new Response(text, realTitle, needMargin));
         updateHistory();
     }
+
+	void DialogueWindow::nextChunk()
+	{
+		mHistoryContents.back()->mCurrent_chunk += 1;
+		updateHistory();
+	}
 
     void DialogueWindow::addMessageBox(const std::string& text)
     {
