@@ -335,6 +335,8 @@ namespace MWGui
 
 	}
 
+	
+
     void DialogueWindow::onMouseWheel(MyGUI::Widget* _sender, int _rel)
     {
         if (!mScrollBar->getVisible())
@@ -493,6 +495,29 @@ namespace MWGui
 
         updateHistory();
     }
+	
+	std::vector<std::string> DialogueWindow::splitText(std::string text)
+	{
+		std::vector<std::string> split;
+		std::string delim = ".";
+		auto start = 0U;
+		auto end = text.find(delim);
+		while (end != std::string::npos)
+		{
+			split.push_back(text.substr(start, end - start));
+			start = end + delim.length();
+			end = text.find(delim, start);
+		}
+
+		split.push_back(text.substr(start, end));
+
+		return split;
+		//Thanks to Moswald at stack overflow.
+
+	}
+
+	
+
 
     void DialogueWindow::updateHistory(bool scrollbar)
     {
@@ -513,7 +538,22 @@ namespace MWGui
 		if (mHistoryContents.size() > 1)
 		{
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
-				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+			{
+			std::vector<std::string> split = splitText((*it)->mText);
+			(*it)->mText = split[0];
+			(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+
+			std::pair<std::string, int> pair_link;
+			
+			pair_link = std::make_pair("continue", 10);
+			Choice* link = new Choice(pair_link.second);
+			const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
+			BookTypesetter::Style* body = typesetter->createStyle("", MyGUI::Colour::White);
+			BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
+				textColours.answerPressed,
+				TypesetBook::InteractiveId(link));
+			typesetter->write(questionStyle, to_utf8_span(pair_link.first.c_str()));
+			}
 		}
 		else
 		{

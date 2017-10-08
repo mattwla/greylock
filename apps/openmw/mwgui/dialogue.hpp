@@ -150,9 +150,12 @@ namespace MWGui
     private:
         void updateOptions();
         void restock();
+	
 
 
 		void adjustPortraitSize(MyGUI::Window* _sender);
+		std::vector<std::string> splitText(std::string text);
+
 
         int mServices;
 
@@ -161,7 +164,8 @@ namespace MWGui
         bool mGoodbye;
 
 
-        std::vector<DialogueText*> mHistoryContents;
+       
+		std::vector<DialogueText*> mHistoryContents;
         std::vector<std::pair<std::string, int> > mChoices;
 
         std::vector<Link*> mLinks;
