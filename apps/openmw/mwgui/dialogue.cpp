@@ -573,6 +573,7 @@ namespace MWGui
 					//(*it)->mCurrent_chunk += 1;
 					
 					mTopicsList->setVisible(false);
+					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
 					pair_link = std::make_pair("continue", -1);
 					NextChunk* link = new NextChunk();
 					const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
@@ -580,13 +581,14 @@ namespace MWGui
 					BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
 					textColours.answerPressed,
 					TypesetBook::InteractiveId(link));
-					typesetter->write(questionStyle, to_utf8_span(pair_link.first.c_str()));
-					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
+					//typesetter->write(questionStyle, to_utf8_span(pair_link.first.c_str()));
+					
 					
 				}
 				else {
-					mTopicsList->setVisible(true);
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
+					mTopicsList->setVisible(true);
+					
 				}
 			}
 		}
