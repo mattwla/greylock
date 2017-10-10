@@ -286,8 +286,8 @@ namespace MWGui
         getWidget(byeButton, "ByeButton");
         byeButton->eventMouseButtonClick += MyGUI::newDelegate(this, &DialogueWindow::onByeClicked);
 
-        getWidget(mDispositionBar, "Disposition");
-        getWidget(mDispositionText,"DispositionText");
+        //getWidget(mDispositionBar, "Disposition");
+        //getWidget(mDispositionText,"DispositionText");
         getWidget(mScrollBar, "VScroll");
 
         mScrollBar->eventScrollChangePosition += MyGUI::newDelegate(this, &DialogueWindow::onScrollbarMoved);
@@ -477,8 +477,9 @@ namespace MWGui
         const MWWorld::Store<ESM::GameSetting> &gmst =
             MWBase::Environment::get().getWorld()->getStore().get<ESM::GameSetting>();
 
-        if (mPtr.getTypeName() == typeid(ESM::NPC).name())
-            mTopicsList->addItem(gmst.find("sPersuasion")->getString());
+        //if (mPtr.getTypeName() == typeid(ESM::NPC).name())
+           // mTopicsList->addItem(gmst.find("sPersuasion")->getString());
+			//MWX no more persuasion tab
 
         if (mServices & Service_Trade)
             mTopicsList->addItem(gmst.find("sBarter")->getString());
@@ -727,12 +728,12 @@ namespace MWGui
         if (mPtr.getClass().isNpc())
         {
             dispositionVisible = true;
-            mDispositionBar->setProgressRange(100);
-            mDispositionBar->setProgressPosition(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr));
-            mDispositionText->setCaption(MyGUI::utility::toString(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr))+std::string("/100"));
+            //mDispositionBar->setProgressRange(100);
+            //mDispositionBar->setProgressPosition(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr));
+            //mDispositionText->setCaption(MyGUI::utility::toString(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr))+std::string("/100"));
         }
 
-        bool dispositionWasVisible = mDispositionBar->getVisible();
+       /* bool dispositionWasVisible = mDispositionBar->getVisible();
 
         if (dispositionVisible && !dispositionWasVisible)
         {
@@ -747,7 +748,7 @@ namespace MWGui
             int offset = mDispositionBar->getHeight()+5;
             mTopicsList->setCoord(mTopicsList->getCoord() - MyGUI::IntCoord(0,offset,0,-offset));
             mTopicsList->adjustSize();
-        }
+        }*/
     }
 
     void DialogueWindow::goodbye()
@@ -767,9 +768,9 @@ namespace MWGui
         if(mMainWidget->getVisible() && mPtr.getTypeName() == typeid(ESM::NPC).name())
         {
             int disp = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
-            mDispositionBar->setProgressRange(100);
+            /*mDispositionBar->setProgressRange(100);
             mDispositionBar->setProgressPosition(disp);
-            mDispositionText->setCaption(MyGUI::utility::toString(disp)+std::string("/100"));
+            mDispositionText->setCaption(MyGUI::utility::toString(disp)+std::string("/100"));*/
         }
     }
 }

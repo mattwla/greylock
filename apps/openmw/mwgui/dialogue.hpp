@@ -188,8 +188,8 @@ namespace MWGui
 		MyGUI::ImageBox* mPlayerPortrait;
 		MyGUI::ImageBox* mNpcPortrait;
         MyGUI::ScrollBar* mScrollBar;
-        MyGUI::ProgressBar* mDispositionBar;
-        MyGUI::TextBox*     mDispositionText;
+        //MyGUI::ProgressBar* mDispositionBar;
+        //MyGUI::TextBox*     mDispositionText;
 		
 
         PersuasionDialog mPersuasionDialog;
