@@ -351,9 +351,12 @@ namespace MWGui
 		int leftPadding = std::max(0, static_cast<int>(screenSize.width - screenSize.height * mAspect) / 2);
 		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
 
+		int portraitWidth = screenSize.width / 7;
+		int portraitHeight = portraitWidth * 1.333333333;
 		
-		mPlayerPortrait->setCoord(0, 0, screenSize.width/5, screenSize.height/4);
-		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, screenSize.width / 4, screenSize.height / 3);
+		//mPlayerPortrait->setCoord(0, 0, screenSize.width/5, screenSize.height/4);
+		mPlayerPortrait->setCoord(0, 0, portraitWidth, portraitHeight);
+		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
 
 	}
 
@@ -522,17 +525,17 @@ namespace MWGui
 	std::vector<std::string> DialogueWindow::splitText(std::string text)
 	{
 		std::vector<std::string> split;
-		std::string delim = ".";
+		std::string delim = "|";
 		auto start = 0U;
 		auto end = text.find(delim);
 		while (end != std::string::npos)
 		{
-			split.push_back(text.substr(start, end - start) + ".");
+			split.push_back(text.substr(start, end - start));
 			start = end + delim.length();
 			end = text.find(delim, start);
 		}
 
-		//split.push_back(text.substr(start, end) + ".");
+		split.push_back(text.substr(start, end));
 
 		return split;
 		//Thanks to Moswald at stack overflow.
