@@ -332,21 +332,21 @@ namespace MWGui
         mTopicsList->adjustSize();
 		//_sender->setRealSize(1, 1);
 		//mPlayerPortrait->setRealSize(.3, .4);
-		adjustPortraitSize(_sender);
+		adjustPortraitSize();
 		//mNpcPortrait->setRealSize(.3, .4);
 		//mPlayerPortraitBox->setRealSize(.2, .3);
         updateHistory();
         mCurrentWindowSize = _sender->getSize();
     }
 
-	void DialogueWindow::adjustPortraitSize(MyGUI::Window* _sender)
+	void DialogueWindow::adjustPortraitSize()
 	{
 		double mAspect = 3.0 / 4.0;
 
 		if (mAspect == 0)
 			return;
 
-		MyGUI::IntSize screenSize = _sender->getSize();
+		MyGUI::IntSize screenSize = mMainWidget->getSize();
 
 		int leftPadding = std::max(0, static_cast<int>(screenSize.width - screenSize.height * mAspect) / 2);
 		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
@@ -421,12 +421,18 @@ namespace MWGui
 
     void DialogueWindow::startDialogue(MWWorld::Ptr actor, std::string npcName, bool resetHistory)
     {
-        mGoodbye = false;
+		mMainWidget->setRealSize(1, 1);
+		mMainWidget->setPosition(0, 0);
+		adjustPortraitSize();
+		
+
+		mGoodbye = false;
         mEnabled = true;
         bool sameActor = (mPtr == actor);
         mPtr = actor;
         mTopicsList->setEnabled(true);
-        setTitle(npcName);
+        setTitle("");
+		
 
         clearChoices();
 

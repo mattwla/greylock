@@ -162,7 +162,7 @@ namespace MWGui
 	
 
 
-		void adjustPortraitSize(MyGUI::Window* _sender);
+		void adjustPortraitSize();
 		std::vector<std::string> splitText(std::string text);
 
 
