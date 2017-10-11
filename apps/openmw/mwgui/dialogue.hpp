@@ -188,6 +188,8 @@ namespace MWGui
 		MyGUI::ImageBox* mPlayerPortrait;
 		MyGUI::ImageBox* mNpcPortrait;
         MyGUI::ScrollBar* mScrollBar;
+		MyGUI::Widget* mHistoryBox;
+		MyGUI::Widget* mNPCPortraitBox;
         //MyGUI::ProgressBar* mDispositionBar;
         //MyGUI::TextBox*     mDispositionText;
 		

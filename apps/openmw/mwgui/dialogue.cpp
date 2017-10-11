@@ -279,6 +279,7 @@ namespace MWGui
         getWidget(mTopicsList, "TopicsList");
 		getWidget(mPlayerPortrait, "PlayerPortrait");
 		getWidget(mNpcPortrait, "NPCPortrait");
+		getWidget(mHistoryBox, "HistoryBox");
 		//getWidget(mPlayerPortraitBox, "PlayerPortraitBox");
         mTopicsList->eventItemSelected += MyGUI::newDelegate(this, &DialogueWindow::onSelectTopic);
 
@@ -297,11 +298,11 @@ namespace MWGui
         mHistory->adviseLinkClicked(callback);
 
         mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DialogueWindow::onWindowResize);
-		mNpcPortrait->setImageTexture("textures\\face.dds");
+		mNpcPortrait->setImageTexture("textures\\jacob.dds");
 		mPlayerPortrait->setImageTexture("textures\\face.dds");
 		mNpcPortrait->setVisible(true);
 		mNpcPortrait->setPosition(0, 0);
-		mPlayerPortrait->setVisible(true);
+		mPlayerPortrait->setVisible(false);
 		mTopicsList->setVisible(true);
 		
 		
@@ -337,6 +338,7 @@ namespace MWGui
 		//mPlayerPortraitBox->setRealSize(.2, .3);
         updateHistory();
         mCurrentWindowSize = _sender->getSize();
+		//mHistory->setRealSize(.8, .8);
     }
 
 	void DialogueWindow::adjustPortraitSize()
@@ -357,6 +359,7 @@ namespace MWGui
 		//mPlayerPortrait->setCoord(0, 0, screenSize.width/5, screenSize.height/4);
 		mPlayerPortrait->setCoord(0, 0, portraitWidth, portraitHeight);
 		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
+		
 
 	}
 
@@ -421,9 +424,14 @@ namespace MWGui
 
     void DialogueWindow::startDialogue(MWWorld::Ptr actor, std::string npcName, bool resetHistory)
     {
-		mMainWidget->setRealSize(1, 1);
-		mMainWidget->setPosition(0, 0);
+		mMainWidget->setRealSize(.9, .9);
+		//mHistoryBox->setRealSize(.8, .8);
+		//mHistoryBox->setRealCoord(.1, .4, .8, .4);
+		center();
 		adjustPortraitSize();
+
+		
+		
 		
 
 		mGoodbye = false;
@@ -554,7 +562,9 @@ namespace MWGui
 
     void DialogueWindow::updateHistory(bool scrollbar)
     {
-        if (!scrollbar && mScrollBar->getVisible())
+		
+		bool inChunk;
+		if (!scrollbar && mScrollBar->getVisible())
         {
             mHistory->setSize(mHistory->getSize()+MyGUI::IntSize(mScrollBar->getWidth(),0));
             mScrollBar->setVisible(false);
@@ -573,31 +583,24 @@ namespace MWGui
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
 			{
 				(*it)->mSplitText = splitText((*it)->mText);
-				//(*it)->mText = (*it)->mSplitText[(*it)->mCurrent_chunk];
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
 
-				std::pair<std::string, int> pair_link;
+			
 			
 				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
 				{
 					//(*it)->mCurrent_chunk += 1;
-					
+					inChunk = true;
 					mTopicsList->setVisible(false);
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
-					pair_link = std::make_pair("continue", -1);
-					NextChunk* link = new NextChunk();
-					const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
-					BookTypesetter::Style* body = typesetter->createStyle("", MyGUI::Colour::White);
-					BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
-					textColours.answerPressed,
-					TypesetBook::InteractiveId(link));
-					//typesetter->write(questionStyle, to_utf8_span(pair_link.first.c_str()));
+					
 					
 					
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
 					mTopicsList->setVisible(true);
+					inChunk = false;
 					
 				}
 			}
@@ -614,19 +617,23 @@ namespace MWGui
 
         typesetter->sectionBreak(9);
         // choices
-        const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
-        for (std::vector<std::pair<std::string, int> >::iterator it = mChoices.begin(); it != mChoices.end(); ++it)
-        {
-            Choice* link = new Choice(it->second);
-            mLinks.push_back(link);
+		const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
+		if (!inChunk)
+		{
+			
 
-            typesetter->lineBreak();
-            BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
-                                                                              textColours.answerPressed,
-                                                                              TypesetBook::InteractiveId(link));
-            typesetter->write(questionStyle, to_utf8_span(it->first.c_str()));
-        }
+			for (std::vector<std::pair<std::string, int> >::iterator it = mChoices.begin(); it != mChoices.end(); ++it)
+			{
+				Choice* link = new Choice(it->second);
+				mLinks.push_back(link);
 
+				typesetter->lineBreak();
+				BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
+					textColours.answerPressed,
+					TypesetBook::InteractiveId(link));
+				typesetter->write(questionStyle, to_utf8_span(it->first.c_str()));
+			}
+		}
         if (mGoodbye)
         {
             Goodbye* link = new Goodbye();

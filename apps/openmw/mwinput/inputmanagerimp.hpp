@@ -154,6 +154,8 @@ namespace MWInput
         virtual void write(ESM::ESMWriter& writer, Loading::Listener& progress);
         virtual void readRecord(ESM::ESMReader& reader, uint32_t type);
 
+		bool mInChunkMode;
+
     private:
         SDL_Window* mWindow;
         bool mWindowVisible;
@@ -203,7 +205,7 @@ namespace MWInput
 
         float mInvUiScalingFactor;
 
-		bool mInChunkMode;
+		
 
     private:
         void convertMousePosForMyGUI(int& x, int& y);

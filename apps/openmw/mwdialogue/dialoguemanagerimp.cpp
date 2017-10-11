@@ -509,10 +509,7 @@ namespace MWDialogue
     {
         mChoice = answer;
 
-		if (mChoice = -1)
-		{
-			
-		}
+	
 
 
         if (mDialogueMap.find(mLastTopic) != mDialogueMap.end())
