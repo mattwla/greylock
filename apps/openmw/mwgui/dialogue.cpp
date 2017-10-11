@@ -119,14 +119,13 @@ namespace MWGui
         std::map<Range, intptr_t> hyperLinks;
 
         // We need this copy for when @# hyperlinks are replaced
-		//std::string chunk = mSplitText[mCurrent_chunk];
 		std::string text;
+		//split text is generated in the updatehistory function, splits the dialogue by a dividing marker and stores it as a member vector variable MWX
+		//mCurrent_chunk iteration done by next chunk action, which is called by input manager when player clicks.
 		if (mSplitText.size() > 1)
 			text = mSplitText[mCurrent_chunk];
-			//+ std::to_string(mCurrent_chunk) + "/" + std::to_string(mSplitText.size());
 		else
 			text = mText;
-		//MWX
 
         size_t pos_end;
         for(;;)
@@ -230,7 +229,6 @@ namespace MWGui
 
     void Choice::activated()
     {
-
         MWBase::Environment::get().getWindowManager()->playSound("Menu Click");
         MWBase::Environment::get().getDialogueManager()->questionAnswered(mChoiceId);
     }
@@ -242,7 +240,7 @@ namespace MWGui
         MWBase::Environment::get().getDialogueManager()->keywordSelected(Misc::StringUtils::lowerCase(mTopicId));
     }
 
-	void NextChunk::activated()
+	void NextChunk::activated() //MWX, when a player is being presented with sequential chunked dialogue, input manager takes over the mouse control, runs this function when mouse is pressed.
 	{
 
 		MWBase::Environment::get().getWindowManager()->playSound("Menu Click"); 
@@ -275,13 +273,19 @@ namespace MWGui
         //History view
         getWidget(mHistory, "History");
 
+		//A box around history, used for graphical effect.
+		getWidget(mHistoryBox, "HistoryBox");
+
         //Topics list
         getWidget(mTopicsList, "TopicsList");
+		
+		//The player portrait, currently not in use.
 		getWidget(mPlayerPortrait, "PlayerPortrait");
+
+		//The NPC portrait
 		getWidget(mNpcPortrait, "NPCPortrait");
-		getWidget(mHistoryBox, "HistoryBox");
-		//getWidget(mPlayerPortraitBox, "PlayerPortraitBox");
-        mTopicsList->eventItemSelected += MyGUI::newDelegate(this, &DialogueWindow::onSelectTopic);
+
+		mTopicsList->eventItemSelected += MyGUI::newDelegate(this, &DialogueWindow::onSelectTopic);
 
         MyGUI::Button* byeButton;
         getWidget(byeButton, "ByeButton");
@@ -289,6 +293,7 @@ namespace MWGui
 
         //getWidget(mDispositionBar, "Disposition");
         //getWidget(mDispositionText,"DispositionText");
+		//Disposition not shown in Greylock for immersion sake MWX
         getWidget(mScrollBar, "VScroll");
 
         mScrollBar->eventScrollChangePosition += MyGUI::newDelegate(this, &DialogueWindow::onScrollbarMoved);
@@ -304,11 +309,8 @@ namespace MWGui
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(false);
 		mTopicsList->setVisible(true);
-		
-		
-		
-		
-    }
+		//Player portrait not used thus hidden, NPC portrait is used. Image textures are placeholders for now. MWX
+	}
 
     void DialogueWindow::exit()
     {
@@ -331,36 +333,23 @@ namespace MWGui
         if (mCurrentWindowSize == _sender->getSize()) return;
 
         mTopicsList->adjustSize();
-		//_sender->setRealSize(1, 1);
-		//mPlayerPortrait->setRealSize(.3, .4);
 		adjustPortraitSize();
-		//mNpcPortrait->setRealSize(.3, .4);
-		//mPlayerPortraitBox->setRealSize(.2, .3);
         updateHistory();
         mCurrentWindowSize = _sender->getSize();
-		//mHistory->setRealSize(.8, .8);
     }
 
 	void DialogueWindow::adjustPortraitSize()
 	{
-		double mAspect = 3.0 / 4.0;
-
-		if (mAspect == 0)
-			return;
-
 		MyGUI::IntSize screenSize = mMainWidget->getSize();
-
-		int leftPadding = std::max(0, static_cast<int>(screenSize.width - screenSize.height * mAspect) / 2);
-		int topPadding = std::max(0, static_cast<int>(screenSize.height - screenSize.width / mAspect) / 2);
 
 		int portraitWidth = screenSize.width / 7;
 		int portraitHeight = portraitWidth * 1.333333333;
-		
-		//mPlayerPortrait->setCoord(0, 0, screenSize.width/5, screenSize.height/4);
-		mPlayerPortrait->setCoord(0, 0, portraitWidth, portraitHeight);
-		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
-		
+		//3:4 ratio for portrait width to height
+	
+		//mPlayerPortrait->setCoord(0, 0, portraitWidth, portraitHeight);
+		//Player portrait unused for now. MWX
 
+		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
 	}
 
 	
@@ -425,24 +414,19 @@ namespace MWGui
     void DialogueWindow::startDialogue(MWWorld::Ptr actor, std::string npcName, bool resetHistory)
     {
 		mMainWidget->setRealSize(.9, .9);
-		//mHistoryBox->setRealSize(.8, .8);
-		//mHistoryBox->setRealCoord(.1, .4, .8, .4);
+		//Make sure we use our static almost full screen dialogue concept MWX
 		center();
 		adjustPortraitSize();
-
+		//Make sure portraits are right size in case player changed resolution MWX
 		
-		
-		
-
 		mGoodbye = false;
         mEnabled = true;
         bool sameActor = (mPtr == actor);
         mPtr = actor;
         mTopicsList->setEnabled(true);
-        setTitle("");
+        setTitle(""); //Empty title as dialogue screens will be used for multiple speakers now. MWX
 		
-
-        clearChoices();
+		clearChoices();
 
         mTopicsList->clear();
 
@@ -460,8 +444,7 @@ namespace MWGui
         updateOptions();
 
         restock();
-		
-    }
+	}
 
     void DialogueWindow::restock()
     {
@@ -493,7 +476,7 @@ namespace MWGui
 
         //if (mPtr.getTypeName() == typeid(ESM::NPC).name())
            // mTopicsList->addItem(gmst.find("sPersuasion")->getString());
-			//MWX no more persuasion tab
+			//MWX no more persuasion tab, that is not how we woo NPCs in Greylock (Woo with player action and player sharing experiences/values)
 
         if (mServices & Service_Trade)
             mTopicsList->addItem(gmst.find("sBarter")->getString());
@@ -539,6 +522,8 @@ namespace MWGui
 	
 	std::vector<std::string> DialogueWindow::splitText(std::string text)
 	{
+		//This function takes a string (the response of NPC) and splits it by the pipe | character, returns a vector.
+		
 		std::vector<std::string> split;
 		std::string delim = "|";
 		auto start = 0U;
@@ -554,16 +539,11 @@ namespace MWGui
 
 		return split;
 		//Thanks to Moswald at stack overflow.
-
 	}
 
-	
-
-
-    void DialogueWindow::updateHistory(bool scrollbar)
+	void DialogueWindow::updateHistory(bool scrollbar)
     {
-		
-		bool inChunk;
+		bool inChunk; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
 		if (!scrollbar && mScrollBar->getVisible())
         {
             mHistory->setSize(mHistory->getSize()+MyGUI::IntSize(mScrollBar->getWidth(),0));
@@ -578,24 +558,17 @@ namespace MWGui
         BookTypesetter::Ptr typesetter = BookTypesetter::create (mHistory->getWidth(), std::numeric_limits<int>::max());
 
         
-		if (mHistoryContents.size() > 1)
+		if (mHistoryContents.size() > 1) //Different logic depending on if this is greeting or deeper in dialogue.
 		{
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
 			{
-				(*it)->mSplitText = splitText((*it)->mText);
+				(*it)->mSplitText = splitText((*it)->mText); //take our mSplitText member variable, store the split dialogue in it.
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
-
-			
-			
 				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
 				{
-					//(*it)->mCurrent_chunk += 1;
 					inChunk = true;
 					mTopicsList->setVisible(false);
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
-					
-					
-					
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
@@ -610,7 +583,7 @@ namespace MWGui
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
 		}
-		//Exceptions for when journal updates, and for choices? MWX
+		//There is still a bug here, when journal updates player sees only that notification.
 
 
         BookTypesetter::Style* body = typesetter->createStyle("", MyGUI::Colour::White);
@@ -618,7 +591,7 @@ namespace MWGui
         typesetter->sectionBreak(9);
         // choices
 		const TextColours& textColours = MWBase::Environment::get().getWindowManager()->getTextColours();
-		if (!inChunk)
+		if (!inChunk) //Only show player dialogue choices when we reach the end of all chunks.
 		{
 			
 
@@ -710,6 +683,7 @@ namespace MWGui
 
 	void DialogueWindow::nextChunk()
 	{
+		//We look at the most recent dialogue added to history, and iterate its current_chunk tracker. current_chunk is used to show player pieces of dialogue at a time. MWX
 		mHistoryContents.back()->mCurrent_chunk += 1;
 		updateHistory();
 	}
@@ -744,6 +718,7 @@ namespace MWGui
             //mDispositionBar->setProgressRange(100);
             //mDispositionBar->setProgressPosition(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr));
             //mDispositionText->setCaption(MyGUI::utility::toString(MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr))+std::string("/100"));
+			//Disposition display not used in Greylock MWX
         }
 
        /* bool dispositionWasVisible = mDispositionBar->getVisible();
@@ -780,10 +755,11 @@ namespace MWGui
     {
         if(mMainWidget->getVisible() && mPtr.getTypeName() == typeid(ESM::NPC).name())
         {
-            int disp = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
+            //int disp = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
             /*mDispositionBar->setProgressRange(100);
             mDispositionBar->setProgressPosition(disp);
             mDispositionText->setCaption(MyGUI::utility::toString(disp)+std::string("/100"));*/
+			//Disposition view not used in Greylock
         }
     }
 }
