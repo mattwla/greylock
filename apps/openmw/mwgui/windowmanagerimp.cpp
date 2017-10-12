@@ -520,45 +520,61 @@ namespace MWGui
 
     WindowManager::~WindowManager()
     {
-        mKeyboardNavigation.reset();
+		mKeyboardNavigation.reset();
 
-        MyGUI::LanguageManager::getInstance().eventRequestTag.clear();
-        MyGUI::PointerManager::getInstance().eventChangeMousePointer.clear();
-        MyGUI::InputManager::getInstance().eventChangeKeyFocus.clear();
-        MyGUI::ClipboardManager::getInstance().eventClipboardChanged.clear();
-        MyGUI::ClipboardManager::getInstance().eventClipboardRequested.clear();
 
-        for (WindowBase* window : mWindows)
-            delete window;
-        mWindows.clear();
 
-        delete mMessageBoxManager;
-        delete mLocalMapRender;
-        delete mCharGen;
-        delete mDragAndDrop;
-        delete mSoulgemDialog;
+		MyGUI::LanguageManager::getInstance().eventRequestTag.clear();
 
-       
-        
-        delete mHitFader;
-        delete mWerewolfFader;
-        delete mScreenFader;
-        delete mBlindnessFader;
-        delete mDebugWindow;
-        delete mJailScreen;
-		delete mDistantDialogueWindow;
+		MyGUI::PointerManager::getInstance().eventChangeMousePointer.clear();
 
-        delete mCursorManager;
+		MyGUI::InputManager::getInstance().eventChangeKeyFocus.clear();
 
-        cleanupGarbage();
+		MyGUI::ClipboardManager::getInstance().eventClipboardChanged.clear();
 
-        mFontLoader.reset();
+		MyGUI::ClipboardManager::getInstance().eventClipboardRequested.clear();
 
-        mGui->shutdown();
-        delete mGui;
 
-        mGuiPlatform->shutdown();
-        delete mGuiPlatform;
+
+		for (WindowBase* window : mWindows)
+
+			delete window;
+
+		mWindows.clear();
+
+
+
+		delete mMessageBoxManager;
+
+		delete mLocalMapRender;
+
+		delete mCharGen;
+
+		delete mDragAndDrop;
+
+		delete mSoulgemDialog;
+
+		delete mCursorManager;
+
+
+
+		cleanupGarbage();
+
+
+
+		mFontLoader.reset();
+
+
+
+		mGui->shutdown();
+
+		delete mGui;
+
+
+
+		mGuiPlatform->shutdown();
+
+		delete mGuiPlatform;
     }
 
     void WindowManager::setStore(const MWWorld::ESMStore &store)
@@ -581,115 +597,167 @@ namespace MWGui
 
     void WindowManager::updateVisible()
     {
-        if (!mMap)
-            return; // UI not created yet
+		if (!mMap)
 
-        // Start out by hiding everything except the HUD
-        mMap->setVisible(false);
-       
-        mStatsWindow->setVisible(false);
-        mConsole->setVisible(false);
-      
-        mDialogueWindow->setVisible(false);
-        mContainerWindow->setVisible(false);
-        mInventoryWindow->setVisible(false);
-        mScrollWindow->setVisible(false);
-        mBookWindow->setVisible(false);
-        mTradeWindow->setVisible(false);
-     
-        mSettingsWindow->setVisible(false);
- 
-        mSpellWindow->setVisible(false);
-        mQuickKeysMenu->setVisible(false);
-      
-        mWaitDialog->setVisible(false);
-       
-        mInventoryWindow->setTrading(false);
-      
-        mVideoBackground->setVisible(false);
-        mJailScreen->setVisible(false);
-		mDistantDialogueWindow->setVisible(false); //MWX
+			return; // UI not created yet
 
 
-        bool loading = (getMode() == GM_Loading || getMode() == GM_LoadingWallpaper);
 
-        mHud->setVisible(mHudEnabled && !loading);
-        mToolTips->setVisible(mHudEnabled && !loading);
+		bool loading = (getMode() == GM_Loading || getMode() == GM_LoadingWallpaper);
 
-        bool gameMode = !isGuiMode();
 
-        MWBase::Environment::get().getInputManager()->changeInputMode(!gameMode);
 
-        mInputBlocker->setVisible (gameMode);
+		mHud->setVisible(mHudEnabled && !loading);
 
-        if (loading)
-            setCursorVisible(mMessageBoxManager && mMessageBoxManager->isInteractiveMessageBox());
-        else
-            setCursorVisible(!gameMode);
+		mToolTips->setVisible(mHudEnabled && !loading);
 
-        if (gameMode)
-            setKeyFocusWidget (NULL);
 
-        // Icons of forced hidden windows are displayed
-        setMinimapVisibility((mAllowed & GW_Map) && (!mMap->pinned() || (mForceHidden & GW_Map)));
-        setWeaponVisibility((mAllowed & GW_Inventory) && (!mInventoryWindow->pinned() || (mForceHidden & GW_Inventory)));
-        setSpellVisibility((mAllowed & GW_Magic) && (!mSpellWindow->pinned() || (mForceHidden & GW_Magic)));
-        setHMSVisibility((mAllowed & GW_Stats) && (!mStatsWindow->pinned() || (mForceHidden & GW_Stats)));
 
-        mInventoryWindow->setGuiMode(getMode());
+		bool gameMode = !isGuiMode();
 
-        // If in game mode (or interactive messagebox), show the pinned windows
-        if (mGuiModes.empty())
-        {
-            mMap->setVisible(mMap->pinned() && !(mForceHidden & GW_Map) && (mAllowed & GW_Map));
-            mStatsWindow->setVisible(mStatsWindow->pinned() && !(mForceHidden & GW_Stats) && (mAllowed & GW_Stats));
-            mInventoryWindow->setVisible(mInventoryWindow->pinned() && !(mForceHidden & GW_Inventory) && (mAllowed & GW_Inventory));
-            mSpellWindow->setVisible(mSpellWindow->pinned() && !(mForceHidden & GW_Magic) && (mAllowed & GW_Magic));
-            return;
-        }
-        else if (getMode() != GM_Inventory)
-        {
-            mMap->setVisible(false);
-            mStatsWindow->setVisible(false);
-            mSpellWindow->setVisible(false);
-            mInventoryWindow->setVisible(getMode() == GM_Container || getMode() == GM_Barter || getMode() == GM_Companion);
-        }
 
-        GuiMode mode = mGuiModes.back();
 
-        mInventoryWindow->setTrading(mode == GM_Barter);
+		MWBase::Environment::get().getInputManager()->changeInputMode(!gameMode);
 
-        if (getMode() == GM_Inventory)
-        {
 
-            // For the inventory mode, compute the effective set of windows to show.
-            // This is controlled both by what windows the
-            // user has opened/closed (the 'shown' variable) and by what
-            // windows we are allowed to show (the 'allowed' var.)
-            int eff = mShown & mAllowed & ~mForceHidden;
-            mMap->setVisible(eff & GW_Map);
-            mInventoryWindow->setVisible(eff & GW_Inventory);
-            mSpellWindow->setVisible(eff & GW_Magic);
-            mStatsWindow->setVisible(eff & GW_Stats);
-        }
 
-        switch (mode)
-        {
-        // FIXME: refactor chargen windows to use modes properly (or not use them at all)
-        case GM_Name:
-        case GM_Race:
-        case GM_Class:
-        case GM_ClassPick:
-        case GM_ClassCreate:
-        case GM_Birth:
-        case GM_ClassGenerate:
-        case GM_Review:
-            mCharGen->spawnDialog(mode);
-            break;
-        default:
-            break;
+		mInputBlocker->setVisible(gameMode);
 
-        }
+
+
+		if (loading)
+
+			setCursorVisible(mMessageBoxManager && mMessageBoxManager->isInteractiveMessageBox());
+
+		else
+
+			setCursorVisible(!gameMode);
+
+
+
+		if (gameMode)
+
+			setKeyFocusWidget(NULL);
+
+
+
+		// Icons of forced hidden windows are displayed
+
+		setMinimapVisibility((mAllowed & GW_Map) && (!mMap->pinned() || (mForceHidden & GW_Map)));
+
+		setWeaponVisibility((mAllowed & GW_Inventory) && (!mInventoryWindow->pinned() || (mForceHidden & GW_Inventory)));
+
+		setSpellVisibility((mAllowed & GW_Magic) && (!mSpellWindow->pinned() || (mForceHidden & GW_Magic)));
+
+		setHMSVisibility((mAllowed & GW_Stats) && (!mStatsWindow->pinned() || (mForceHidden & GW_Stats)));
+
+
+
+		mInventoryWindow->setGuiMode(getMode());
+
+
+
+		// If in game mode (or interactive messagebox), show the pinned windows
+
+		if (mGuiModes.empty())
+
+		{
+
+			mMap->setVisible(mMap->pinned() && !(mForceHidden & GW_Map) && (mAllowed & GW_Map));
+
+			mStatsWindow->setVisible(mStatsWindow->pinned() && !(mForceHidden & GW_Stats) && (mAllowed & GW_Stats));
+
+			mInventoryWindow->setVisible(mInventoryWindow->pinned() && !(mForceHidden & GW_Inventory) && (mAllowed & GW_Inventory));
+
+			mSpellWindow->setVisible(mSpellWindow->pinned() && !(mForceHidden & GW_Magic) && (mAllowed & GW_Magic));
+
+			return;
+
+		}
+
+		else if (getMode() != GM_Inventory)
+
+		{
+
+			mMap->setVisible(false);
+
+			mStatsWindow->setVisible(false);
+
+			mSpellWindow->setVisible(false);
+
+			mInventoryWindow->setVisible(getMode() == GM_Container || getMode() == GM_Barter || getMode() == GM_Companion);
+
+		}
+
+
+
+		GuiMode mode = mGuiModes.back();
+
+
+
+		mInventoryWindow->setTrading(mode == GM_Barter);
+
+
+
+		if (getMode() == GM_Inventory)
+
+		{
+
+			// For the inventory mode, compute the effective set of windows to show.
+
+			// This is controlled both by what windows the
+
+			// user has opened/closed (the 'shown' variable) and by what
+
+			// windows we are allowed to show (the 'allowed' var.)
+
+			int eff = mShown & mAllowed & ~mForceHidden;
+
+			mMap->setVisible(eff & GW_Map);
+
+			mInventoryWindow->setVisible(eff & GW_Inventory);
+
+			mSpellWindow->setVisible(eff & GW_Magic);
+
+			mStatsWindow->setVisible(eff & GW_Stats);
+
+		}
+
+
+
+		switch (mode)
+
+		{
+
+			// FIXME: refactor chargen windows to use modes properly (or not use them at all)
+
+		case GM_Name:
+
+		case GM_Race:
+
+		case GM_Class:
+
+		case GM_ClassPick:
+
+		case GM_ClassCreate:
+
+		case GM_Birth:
+
+		case GM_ClassGenerate:
+
+		case GM_Review:
+
+			mCharGen->spawnDialog(mode);
+
+			break;
+
+		default:
+
+			break;
+
+		}
+
+	
     }
 
     void WindowManager::setValue (const std::string& id, const MWMechanics::AttributeValue& value)
