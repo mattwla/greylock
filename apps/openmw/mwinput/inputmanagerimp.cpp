@@ -598,14 +598,11 @@ namespace MWInput
 
 	void InputManager::dialogueChunkMode(bool chunk)
 	{
-		
-		//mMouseLookEnabled = !guiMode;
-		if (chunk)
+		if (chunk) //Hide crosshair, necessary?
 			MWBase::Environment::get().getWindowManager()->showCrosshair(false);
 		
-		//MWBase::Environment::get().getWindowManager()->setCursorVisible(!chunk);
-		mInChunkMode = chunk;
-		//mGuiCursorEnabled = !chunk;
+		
+		mInChunkMode = chunk; //Set member var to track we are in chunk mode, used in other functions
 		// if not in gui mode, the camera decides whether to show crosshair or not.
 	}
 
@@ -719,7 +716,7 @@ namespace MWInput
 
     void InputManager::mousePressed( const SDL_MouseButtonEvent &arg, Uint8 id )
     {
-		if (mInChunkMode == true)
+		if (mInChunkMode == true) //If we are in chunk mode, activate the next chunk dialogue function
 		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->nextChunk();
 			return;

@@ -84,7 +84,7 @@ namespace MWGui
         virtual ~DialogueText() {}
         virtual void write (BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const = 0;
         std::string mText;
-		std::vector<std::string> mSplitText;
+		std::vector<std::string> mSplitText; //MWX a vector to hold the split strings, an int to hold which chunk we are dealing with
 		unsigned int mCurrent_chunk = 0;
     };
 
@@ -159,9 +159,6 @@ namespace MWGui
     private:
         void updateOptions();
         void restock();
-	
-
-
 		void adjustPortraitSize();
 		std::vector<std::string> splitText(std::string text);
 
