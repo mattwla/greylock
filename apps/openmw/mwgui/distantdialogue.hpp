@@ -25,7 +25,7 @@ namespace MWGui
 	public:
 		DistantDialogueWindow();
 
-		virtual void exit();
+		virtual bool exit();
 
 		typedef MyGUI::delegates::CMultiDelegate0 EventHandle_Void;
 

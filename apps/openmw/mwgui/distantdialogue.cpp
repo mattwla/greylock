@@ -64,9 +64,12 @@ namespace MWGui
 		
 	}
 
-	void DistantDialogueWindow::exit()
+	bool DistantDialogueWindow::exit()
 	{
 		MWBase::Environment::get().getWindowManager()->removeGuiMode(GM_DistantDialogue);
+
+		
+		return true;
 	}
 
 	
