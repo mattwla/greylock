@@ -29,7 +29,8 @@ namespace MWGui
 
 		typedef MyGUI::delegates::CMultiDelegate0 EventHandle_Void;
 
-		void startDistantDialogue(MWWorld::Ptr actor, std::string npcName);
+		//void startDistantDialogue(MWWorld::Ptr actor, std::string npcName);
+		void setPtr(const MWWorld::Ptr& actor);
 
 	protected:
 		

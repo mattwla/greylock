@@ -36,6 +36,7 @@ namespace MWGui
 		: WindowBase("openmw_distant_dialogue_window.layout")
 		, mEnabled(false)
 		, mGoodbye(false)
+		
 	{
 		center();
 		
@@ -56,11 +57,16 @@ namespace MWGui
 		mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DistantDialogueWindow::onWindowResize);
 	}
 
-	void DistantDialogueWindow::startDistantDialogue(MWWorld::Ptr actor, std::string npcName)
+	//void DistantDialogueWindow::startDistantDialogue(MWWorld::Ptr actor, std::string npcName)
+	void DistantDialogueWindow::setPtr(const MWWorld::Ptr& actor)
 	{
+		setVisible(true);
+		this->setCoord(0, 0, 100, 100);
 		mPtr = actor;
-		setTitle(npcName);
+		
+		setTitle("Bob");
 		mDisposition = MWBase::Environment::get().getMechanicsManager()->getDerivedDisposition(mPtr);
+		MWBase::Environment::get().getDialogueManager()->startDistantDialogue(actor);
 		
 	}
 

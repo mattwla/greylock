@@ -171,7 +171,9 @@ namespace MWDialogue
 
 	void DialogueManager::startDistantDialogue(const MWWorld::Ptr& actor)
 	{
+	
 		updateGlobals();
+	
 		// Dialogue with dead actor (e.g. through script) should not be allowed.
 		if (actor.getClass().getCreatureStats(actor).isDead())
 			return;
@@ -182,7 +184,7 @@ namespace MWDialogue
 		mActor = actor;
 		MWGui::DistantDialogueWindow* win = MWBase::Environment::get().getWindowManager()->getDistantDialogueWindow(); //IMPORTANT
 		// If the dialogue window was already open, keep the existing history
-		win->startDistantDialogue(actor, actor.getClass().getName(actor)); //IMPORTANT
+		//win->startDistantDialogue(actor, actor.getClass().getName(actor)); //IMPORTANT
 		//greeting
 		//const MWWorld::Store<ESM::Dialogue> &dialogs =
 		//MWBase::Environment::get().getWorld()->getStore().get<ESM::Dialogue>();
@@ -191,7 +193,7 @@ namespace MWDialogue
 
 		
 				
-		MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_DistantDialogue);
+		//MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_DistantDialogue);
 
 		return;
 	}

@@ -371,9 +371,11 @@ namespace MWGui
 		//trackWindow(mDistantDialogueWindow, "distantdialogue");
 
         mWindows.push_back(mDialogueWindow); //MWX
+		mWindows.push_back(mDistantDialogueWindow); //MWX
 
         trackWindow(mDialogueWindow, "dialogue");
         mGuiModeStates[GM_Dialogue] = GuiModeState(mDialogueWindow);
+		mGuiModeStates[GM_DistantDialogue] = GuiModeState(mDistantDialogueWindow);
         mTradeWindow->eventTradeDone += MyGUI::newDelegate(mDialogueWindow, &DialogueWindow::onTradeComplete);
 
         ContainerWindow* containerWindow = new ContainerWindow(mDragAndDrop);
