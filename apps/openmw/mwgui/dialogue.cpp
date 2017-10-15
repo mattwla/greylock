@@ -107,6 +107,16 @@ namespace MWGui
         mText = text;
     }
 
+	void Response::parseEmotion(std::string text) const
+	{
+		
+	char chunk = text.at(0);
+		if (chunk == *"a")
+		{
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion("A");
+		}
+	}
+
     void Response::write(BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const
     {
         typesetter->sectionBreak(mNeedMargin ? 9 : 0);
@@ -131,6 +141,7 @@ namespace MWGui
 		else
 			text = mText;
 
+		parseEmotion(text);
         size_t pos_end;
         for(;;)
         {
@@ -618,6 +629,8 @@ namespace MWGui
 		//Thanks to Moswald at stack overflow.
 	}
 
+
+
 	void DialogueWindow::updateHistory(bool scrollbar)
     {
 		bool inChunk; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
@@ -641,6 +654,7 @@ namespace MWGui
 			{
 				(*it)->mSplitText = splitText((*it)->mText); //take our mSplitText member variable, store the split dialogue in it.
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+				
 				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
 				{
 					inChunk = true;
@@ -760,6 +774,11 @@ namespace MWGui
 		//We look at the most recent dialogue added to history, and iterate its current_chunk tracker. current_chunk is used to show player pieces of dialogue at a time. MWX
 		mHistoryContents.back()->mCurrent_chunk += 1;
 		updateHistory();
+	}
+
+	void DialogueWindow::setPortraitEmotion(std::string emotion)
+	{
+		mNpcPortrait->setImageTexture("textures\\jacobangry.dds");
 	}
 
 
