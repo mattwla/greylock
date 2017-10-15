@@ -8,6 +8,8 @@
 
 #include "../mwdialogue/keywordsearch.hpp"
 
+#include <MyGUI_Delegate.h>
+
 namespace Gui
 {
 	class MWList;

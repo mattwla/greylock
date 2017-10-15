@@ -1075,7 +1075,7 @@ namespace MWGui
 
     void WindowManager::setMinimapVisibility(bool visible)
     {
-        mHud->setMinimapVisible (visible);
+        mHud->setMinimapVisible (false); //MWX
     }
 
     bool WindowManager::toggleFogOfWar()

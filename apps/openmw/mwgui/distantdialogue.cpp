@@ -3,6 +3,9 @@
 #include <MyGUI_LanguageManager.h>
 #include <MyGUI_Window.h>
 #include <MyGUI_ProgressBar.h>
+#include <MyGUI_FontManager.h>
+#include <MyGUI_ScrollBar.h>
+#include <MyGUI_Button.h>
 
 #include <components/widgets/list.hpp>
 #include <components/translation/translation.hpp>
@@ -12,6 +15,7 @@
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/dialoguemanager.hpp"
+#include "../mwbase/inputmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/containerstore.hpp"
@@ -36,6 +40,7 @@ namespace MWGui
 		: WindowBase("openmw_distant_dialogue_window.layout")
 		, mEnabled(false)
 		, mGoodbye(false)
+		
 		
 	{
 		center();

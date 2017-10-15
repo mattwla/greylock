@@ -309,12 +309,13 @@ namespace MWGui
 
         mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DialogueWindow::onWindowResize);
 		mNpcPortrait->setImageTexture("textures\\jacob.dds");
-		mPlayerPortrait->setImageTexture("textures\\face.dds");
+		//mPlayerPortrait->setImageTexture("textures\\face.dds");
 		mNpcPortrait->setVisible(true);
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(false);
 		mTopicsList->setVisible(true);
 		//Player portrait not used thus hidden, NPC portrait is used. Image textures are placeholders for now. MWX
+		
 	}
 
     DialogueWindow::~DialogueWindow()

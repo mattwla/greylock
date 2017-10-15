@@ -182,7 +182,7 @@ namespace MWDialogue
 		//MWMechanics::CreatureStats& creatureStats = actor.getClass().getCreatureStats(actor);
 		//mTalkedTo = creatureStats.hasTalkedToPlayer();
 		mActor = actor;
-		MWGui::DistantDialogueWindow* win = MWBase::Environment::get().getWindowManager()->getDistantDialogueWindow(); //IMPORTANT
+//		MWGui::DistantDialogueWindow* win = MWBase::Environment::get().getWindowManager()->getDistantDialogueWindow(); //IMPORTANT
 		// If the dialogue window was already open, keep the existing history
 		//win->startDistantDialogue(actor, actor.getClass().getName(actor)); //IMPORTANT
 		//greeting

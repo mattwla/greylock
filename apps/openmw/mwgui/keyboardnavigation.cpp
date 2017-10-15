@@ -1,5 +1,7 @@
 #include "keyboardnavigation.hpp"
 
+#include <iostream>
+
 #include <MyGUI_InputManager.h>
 #include <MyGUI_WidgetManager.h>
 #include <MyGUI_Button.h>
@@ -20,19 +22,26 @@ bool shouldAcceptKeyFocus(MyGUI::Widget* w)
 /// Recursively get all child widgets that accept keyboard input
 void getKeyFocusWidgets(MyGUI::Widget* parent, std::vector<MyGUI::Widget*>& results)
 {
-    if (!parent->getVisible() || !parent->getEnabled())
+	std::string name = parent->getName();
+	
+	if (!parent->getVisible() || !parent->getEnabled())
         return;
 
     MyGUI::EnumeratorWidgetPtr enumerator = parent->getEnumerator();
     while (enumerator.next())
     {
         MyGUI::Widget* w = enumerator.current();
+		std::cout << w->getName();
         if (!w->getVisible() || !w->getEnabled())
             continue;
         if (w->getNeedKeyFocus() && shouldAcceptKeyFocus(w))
             results.push_back(w);
-        else
-            getKeyFocusWidgets(w, results);
+		else
+		{
+			std::cout << w->getName();
+			getKeyFocusWidgets(w, results);
+			
+		}
     }
 }
 
@@ -249,14 +258,22 @@ bool KeyboardNavigation::switchFocus(int direction, bool wrap)
 
 bool KeyboardNavigation::selectFirstWidget()
 {
-    MyGUI::VectorWidgetPtr keyFocusList;
+    
+	MyGUI::VectorWidgetPtr keyFocusList;
     MyGUI::EnumeratorWidgetPtr enumerator = MyGUI::Gui::getInstance().getEnumerator();
     if (mModalWindow)
         enumerator = mModalWindow->getEnumerator();
-    while (enumerator.next())
-        getKeyFocusWidgets(enumerator.current(), keyFocusList);
-
-    if (!keyFocusList.empty())
+	
+	while (enumerator.next())
+	{
+		getKeyFocusWidgets(enumerator.current(), keyFocusList);
+		
+	}
+	
+	std::cout << "We here now";
+	//std::string name = keyFocusList[0]->getName();
+    
+	if (!keyFocusList.empty())
     {
         MWBase::Environment::get().getWindowManager()->setKeyFocusWidget(keyFocusList[0]);
         return true;
@@ -269,6 +286,8 @@ bool KeyboardNavigation::accept()
     MyGUI::Widget* focus = MyGUI::InputManager::getInstance().getKeyFocusWidget();
     if (!focus)
         return false;
+
+	
     //MyGUI::Button* button = focus->castType<MyGUI::Button>(false);
     //if (button && button->getEnabled())
     if (focus->getTypeName().find("Button") != std::string::npos && focus->getEnabled())
