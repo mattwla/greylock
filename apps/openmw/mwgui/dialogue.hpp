@@ -105,7 +105,7 @@ namespace MWGui
 
     struct Response : DialogueText
     {
-		std::string parseEmotion(std::string) const;
+		std::string parsePortraitTags(std::string) const;
 		Response(const std::string& text, const std::string& title = "", bool needMargin = true);
         virtual void write (BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const;
         void addTopicLink (BookTypesetter::Ptr typesetter, intptr_t topicId, size_t begin, size_t end) const;
@@ -144,7 +144,7 @@ namespace MWGui
 
 		void nextChunk(); 
 
-		void setPortraitEmotion(std::string id, std::string emotion = "n");
+		void setPortraitImage(std::string id, std::string emotion = "n");
 
         void addMessageBox(const std::string& text);
 

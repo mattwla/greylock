@@ -108,8 +108,10 @@ namespace MWGui
         mText = text;
     }
 
-	std::string Response::parseEmotion(std::string text) const
+	std::string Response::parsePortraitTags(std::string text) const
 	{
+		//Takes in text chunk, scans for emotional tag at start and if found sends request to setPortrait to alter image, also strips tag from text and returns the clean text.
+		
 		MWWorld::Ptr ptr = MWBase::Environment::get().getWindowManager()->getDialogueWindow()->getDialogueHost();
 		std::string name = ptr.getCellRef().getRefId();
 
@@ -118,11 +120,11 @@ namespace MWGui
 		char chunk = text.at(0);
 		if (chunk == *"a")
 		{
-			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name, "A");
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name, "A");
 			return text.substr(2);
 		}
 		else
-			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name);
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name);
 		return text;
 
 	}
@@ -151,7 +153,7 @@ namespace MWGui
 		else
 			text = mText;
 
-		text = parseEmotion(text);
+		text = parsePortraitTags(text);
         size_t pos_end;
         for(;;)
         {
@@ -799,7 +801,7 @@ namespace MWGui
 		updateHistory();
 	}
 
-	void DialogueWindow::setPortraitEmotion(std::string id, std::string emotion)
+	void DialogueWindow::setPortraitImage(std::string id, std::string emotion)
 	{
 		
 		if (MWBase::Environment::get().getWindowManager()->portraitExists(id + "/"+emotion+".dds"))
