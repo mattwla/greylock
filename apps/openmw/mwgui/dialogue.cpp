@@ -319,7 +319,7 @@ namespace MWGui
         mHistory->adviseLinkClicked(callback);
 
         mMainWidget->castType<MyGUI::Window>()->eventWindowChangeCoord += MyGUI::newDelegate(this, &DialogueWindow::onWindowResize);
-		mNpcPortrait->setImageTexture("textures\\jacob.dds");
+		mNpcPortrait->setImageTexture("textures\\portraits\\unknownportrait.dds");
 		//mPlayerPortrait->setImageTexture("textures\\face.dds");
 		mNpcPortrait->setVisible(true);
 		mNpcPortrait->setPosition(0, 0);
