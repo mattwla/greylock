@@ -709,7 +709,23 @@ namespace MWGui
 		else
 		{
 			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin(); it != mHistoryContents.end(); ++it)
+			{//(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+				(*it)->mSplitText = splitText((*it)->mText); //take our mSplitText member variable, store the split dialogue in it.
 				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+
+				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
+				{
+					inChunk = true;
+					mTopicsList->setVisible(false);
+					MWBase::Environment::get().getInputManager()->dialogueChunkMode(true);
+				}
+				else {
+					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
+					mTopicsList->setVisible(true);
+					inChunk = false;
+
+				}
+			}
 		}
 		//There is still a bug here, when journal updates player sees only that notification.
 
