@@ -115,11 +115,13 @@ namespace MWGui
 
 		
 		
-		//char chunk = text.at(0);
-		//if (chunk == *"a")
-		//{
+		char chunk = text.at(0);
+		if (chunk == *"a")
+		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name, "A");
-		//}
+		}
+		else
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name);
 	}
 
     void Response::write(BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const
@@ -797,7 +799,9 @@ namespace MWGui
 	void DialogueWindow::setPortraitEmotion(std::string id, std::string emotion)
 	{
 		
-		if (MWBase::Environment::get().getWindowManager()->portraitExists(id+"/default.dds"))
+		if (MWBase::Environment::get().getWindowManager()->portraitExists(id + "/"+emotion+".dds"))
+			mNpcPortrait->setImageTexture("textures\\portraits\\" + id + "\\"+emotion+".dds");
+		else if (MWBase::Environment::get().getWindowManager()->portraitExists(id+"/default.dds"))
 			mNpcPortrait->setImageTexture("textures\\portraits\\"+id+"\\default.dds");
 		else
 			mNpcPortrait->setImageTexture("textures\\portraits\\default.dds");
