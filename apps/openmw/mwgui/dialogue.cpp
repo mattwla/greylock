@@ -114,10 +114,22 @@ namespace MWGui
 		
 		MWWorld::Ptr ptr = MWBase::Environment::get().getWindowManager()->getDialogueWindow()->getDialogueHost();
 		std::string name = ptr.getCellRef().getRefId();
-
+		
 		
 		
 		char chunk = text.at(0);
+		if (chunk == *"=")
+		{
+			text = text.substr(1);
+			std::size_t pos = text.find("=");
+			name = text.substr(0, pos);
+			text = text.substr(pos+1);
+		}
+		//If we want to change characters, type in their id between 2 equal marks such as |=arx=a/I AM ANGRY
+		chunk = text.at(0);
+		
+		
+		
 		if (chunk == *"a")
 		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name, "A");
