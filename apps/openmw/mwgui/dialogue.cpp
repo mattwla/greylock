@@ -17,6 +17,7 @@
 #include "../mwbase/world.hpp"
 #include "../mwbase/dialoguemanager.hpp"
 #include "../mwbase/inputmanager.hpp"
+#include <components/resource/resourcesystem.hpp>
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/containerstore.hpp"
@@ -109,12 +110,16 @@ namespace MWGui
 
 	void Response::parseEmotion(std::string text) const
 	{
+		MWWorld::Ptr ptr = MWBase::Environment::get().getWindowManager()->getDialogueWindow()->getDialogueHost();
+		std::string name = ptr.getCellRef().getRefId();
+
 		
-	char chunk = text.at(0);
-		if (chunk == *"a")
-		{
-			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion("A");
-		}
+		
+		//char chunk = text.at(0);
+		//if (chunk == *"a")
+		//{
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name, "A");
+		//}
 	}
 
     void Response::write(BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const
@@ -275,6 +280,8 @@ namespace MWGui
         : WindowBase("openmw_dialogue_window.layout")
         , mIsCompanion(false)
         , mGoodbye(false)
+		, mDialogueHost()
+		//, mResourceSystem(Resource::ResourceSystem)
         //, mPersuasionDialog()
     {
         // Centre dialog
@@ -325,6 +332,8 @@ namespace MWGui
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(false);
 		mTopicsList->setVisible(true);
+		
+		
 		//Player portrait not used thus hidden, NPC portrait is used. Image textures are placeholders for now. MWX
 		
 	}
@@ -361,6 +370,14 @@ namespace MWGui
             return true;
         }
     }
+
+	MWWorld::Ptr DialogueWindow::getDialogueHost() const
+	{
+		return mDialogueHost;
+
+		
+		// TODO: insert return statement here
+	}
 
     void DialogueWindow::onWindowResize(MyGUI::Window* _sender)
     {
@@ -461,6 +478,7 @@ namespace MWGui
 		//Make sure we use our static almost full screen dialogue concept MWX
 		center();
 		adjustPortraitSize();
+		mDialogueHost = actor;
 		//Make sure portraits are right size in case player changed resolution MWX
 		
 		mGoodbye = false;
@@ -489,7 +507,7 @@ namespace MWGui
         //bool sameActor = (mPtr == actor);
         mPtr = actor;
         mTopicsList->setEnabled(true);
-        setTitle(mPtr.getClass().getName(mPtr));
+      
 
 
         mTopicsList->clear();
@@ -776,9 +794,15 @@ namespace MWGui
 		updateHistory();
 	}
 
-	void DialogueWindow::setPortraitEmotion(std::string emotion)
+	void DialogueWindow::setPortraitEmotion(std::string id, std::string emotion)
 	{
-		mNpcPortrait->setImageTexture("textures\\jacobangry.dds");
+		
+		if (MWBase::Environment::get().getWindowManager()->portraitExists(id+"/default.dds"))
+			mNpcPortrait->setImageTexture("textures\\portraits\\"+id+"\\default.dds");
+		else
+			mNpcPortrait->setImageTexture("textures\\portraits\\default.dds");
+
+		
 	}
 
 

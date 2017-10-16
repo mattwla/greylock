@@ -2064,6 +2064,11 @@ namespace MWGui
         return mResourceSystem->getVFS()->exists(corrected);
     }
 
+	bool WindowManager::portraitExists(const std::string &path)
+	{
+		return mResourceSystem->getVFS()->exists("textures/portraits/"+path);
+	}
+
     void WindowManager::createCursors()
     {
         MyGUI::ResourceManager::EnumeratorPtr enumerator = MyGUI::ResourceManager::getInstance().getEnumerator();

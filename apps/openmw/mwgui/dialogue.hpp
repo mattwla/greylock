@@ -5,6 +5,7 @@
 #include "referenceinterface.hpp"
 
 #include "bookpage.hpp"
+//#include <components/resource/resourcesystem.hpp>
 
 #include "../mwdialogue/keywordsearch.hpp"
 #include <MyGUI_ImageBox.h>
@@ -19,6 +20,11 @@ namespace Gui
 namespace MWGui
 {
     class WindowManager;
+}
+
+namespace Resource
+{
+	class ResourceSystem;
 }
 
 namespace MWGui
@@ -123,6 +129,8 @@ namespace MWGui
 
         virtual bool exit();
 
+		MWWorld::Ptr getDialogueHost() const;
+
         // Events
         typedef MyGUI::delegates::CMultiDelegate0 EventHandle_Void;
 
@@ -136,7 +144,7 @@ namespace MWGui
 
 		void nextChunk(); 
 
-		void setPortraitEmotion(std::string emotion);
+		void setPortraitEmotion(std::string id, std::string emotion = "n");
 
         void addMessageBox(const std::string& text);
 
@@ -164,7 +172,9 @@ namespace MWGui
         virtual void onReferenceUnavailable();
 
     private:
-        void updateDisposition();
+		Resource::ResourceSystem* mResourceSystem;
+		
+		void updateDisposition();
         void restock();
 
 		void adjustPortraitSize();
@@ -206,6 +216,7 @@ namespace MWGui
 		MyGUI::Widget* mNPCPortraitBox;
         //MyGUI::ProgressBar* mDispositionBar;
         //MyGUI::TextBox*     mDispositionText;
+		MWWorld::Ptr mDialogueHost;
 		
 
         MyGUI::ProgressBar* mDispositionBar;

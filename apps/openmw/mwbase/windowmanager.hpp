@@ -156,7 +156,7 @@ namespace MWBase
 
             virtual void setConsoleSelectedObject(const MWWorld::Ptr& object) = 0;
 
-            /// Set value for the given ID.
+            /// Set value for the given ID. 
             virtual void setValue (const std::string& id, const MWMechanics::AttributeValue& value) = 0;
             virtual void setValue (int parSkill, const MWMechanics::SkillValue& value) = 0;
             virtual void setValue (const std::string& id, const MWMechanics::DynamicStat<float>& value) = 0;
@@ -348,6 +348,7 @@ namespace MWBase
             virtual std::string correctBookartPath(const std::string& path, int width, int height, bool* exists = nullptr) = 0;
             virtual std::string correctTexturePath(const std::string& path) = 0;
             virtual bool textureExists(const std::string& path) = 0;
+			virtual bool portraitExists(const std::string& path) = 0;
 
             virtual void removeCell(MWWorld::CellStore* cell) = 0;
             virtual void writeFog(MWWorld::CellStore* cell) = 0;

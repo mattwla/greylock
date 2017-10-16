@@ -380,12 +380,16 @@ namespace MWGui
     virtual std::string correctTexturePath(const std::string& path);
     virtual bool textureExists(const std::string& path);
 
+	virtual bool portraitExists(const std::string & path);
+
     void removeCell(MWWorld::CellStore* cell);
     void writeFog(MWWorld::CellStore* cell);
 
     virtual const MWGui::TextColours& getTextColours();
 
     virtual bool injectKeyPress(MyGUI::KeyCode key, unsigned int text);
+
+	
 
   private:
     const MWWorld::ESMStore* mStore;
