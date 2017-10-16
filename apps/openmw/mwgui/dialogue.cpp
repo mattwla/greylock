@@ -108,7 +108,7 @@ namespace MWGui
         mText = text;
     }
 
-	void Response::parseEmotion(std::string text) const
+	std::string Response::parseEmotion(std::string text) const
 	{
 		MWWorld::Ptr ptr = MWBase::Environment::get().getWindowManager()->getDialogueWindow()->getDialogueHost();
 		std::string name = ptr.getCellRef().getRefId();
@@ -119,9 +119,12 @@ namespace MWGui
 		if (chunk == *"a")
 		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name, "A");
+			return text.substr(2);
 		}
 		else
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitEmotion(name);
+		return text;
+
 	}
 
     void Response::write(BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const
@@ -148,7 +151,7 @@ namespace MWGui
 		else
 			text = mText;
 
-		parseEmotion(text);
+		text = parseEmotion(text);
         size_t pos_end;
         for(;;)
         {
