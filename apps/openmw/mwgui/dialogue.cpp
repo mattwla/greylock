@@ -322,6 +322,8 @@ namespace MWGui
 		//The player portrait, currently not in use.
 		getWidget(mPlayerPortrait, "PlayerPortrait");
 
+		getWidget(mPortraitBox, "PortraitBox");
+		
 		//The NPC portrait
 		getWidget(mNpcPortrait, "NPCPortrait");
 
@@ -413,14 +415,29 @@ namespace MWGui
 	{
 		MyGUI::IntSize screenSize = mMainWidget->getSize();
 
-		int portraitWidth = screenSize.width / 7;
+		
+		int portraitWidth = screenSize.width / 3.5;
 		int portraitHeight = portraitWidth * 1.333333333;
+
+		mPortraitBox->setCoord(screenSize.width/2-portraitWidth/2, screenSize.height/2-portraitHeight/2, portraitWidth, portraitHeight);
+		mNpcPortrait->setCoord( portraitWidth*.05, portraitHeight*.05, portraitWidth*.9, portraitHeight*.9);
 		//3:4 ratio for portrait width to height
 	
 		//mPlayerPortrait->setCoord(0, 0, portraitWidth, portraitHeight);
 		//Player portrait unused for now. MWX
 
-		mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
+		//mNpcPortrait->setCoord((screenSize.width/3) * 2, screenSize.height/2, portraitWidth, portraitHeight);
+		//mNpcPortrait->setCoord(-50, screenSize.height/2, portraitWidth, portraitHeight);
+		//mPortraitBox->setSize(portraitWidth, portraitHeight);
+		//mPortraitBox->setAlign(MyGUI::Align::Enum::Center);
+		//MyGUI::Align Center;
+		/*mNpcPortrait->setRealSize(.9, .9);
+		MyGUI::IntSize picSize = mNpcPortrait->getSize();
+		int picWidth = picSize.width;
+		int picHeight = picSize.height;*/
+		//mNpcPortrait->setCoord(((screenSize.width/2) - picWidth/2), screenSize.height/2, picWidth, picHeight);
+		
+		
 	}
 
 	
@@ -493,12 +510,15 @@ namespace MWGui
     void DialogueWindow::setPtr(const MWWorld::Ptr& actor)
     {
 
-		mMainWidget->setRealSize(.9, .9);
+		mMainWidget->setRealSize(1, 1);
+		mHistoryBox->setRealSize(.75, .2);
 		//Make sure we use our static almost full screen dialogue concept MWX
 		center();
 		adjustPortraitSize();
-		mDialogueHost = actor;
 		//Make sure portraits are right size in case player changed resolution MWX
+		mDialogueHost = actor;
+		//Keep track of which NPC is hosting this dialogue
+	
 		
 		mGoodbye = false;
         mEnabled = true;

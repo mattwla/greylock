@@ -209,6 +209,7 @@ namespace MWGui
         Gui::MWList*   mTopicsList;
 		MyGUI::Widget* mPlayerPortraitBox;
 		MyGUI::ImageBox* mPlayerPortrait;
+		MyGUI::Widget* mPortraitBox;
 		MyGUI::ImageBox* mNpcPortrait;
         MyGUI::ScrollBar* mScrollBar;
 
