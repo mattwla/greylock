@@ -114,6 +114,7 @@ namespace MWGui
 		
 		MWWorld::Ptr ptr = MWBase::Environment::get().getWindowManager()->getDialogueWindow()->getDialogueHost();
 		std::string name = ptr.getCellRef().getRefId();
+		bool speaker_changed = false;
 		
 		
 		
@@ -124,6 +125,7 @@ namespace MWGui
 			std::size_t pos = text.find("=");
 			name = text.substr(0, pos);
 			text = text.substr(pos+1);
+			speaker_changed = true;
 		}
 		//If we want to change characters, type in their id between 2 equal marks such as |=arx=a/I AM ANGRY
 		chunk = text.at(0);
@@ -137,7 +139,11 @@ namespace MWGui
 		}
 		else
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name);
-		return text;
+		
+		if (speaker_changed)
+			return name + ": " + text;
+		else
+			return text;
 
 	}
 
@@ -419,7 +425,7 @@ namespace MWGui
 		int portraitWidth = screenSize.width / 3.5;
 		int portraitHeight = portraitWidth * 1.333333333;
 
-		mPortraitBox->setCoord(screenSize.width/2-portraitWidth/2, screenSize.height/2-portraitHeight/2, portraitWidth, portraitHeight);
+		mPortraitBox->setCoord(screenSize.width/2-portraitWidth/2, 0, portraitWidth, portraitHeight);
 		mNpcPortrait->setCoord( portraitWidth*.05, portraitHeight*.05, portraitWidth*.9, portraitHeight*.9);
 		//3:4 ratio for portrait width to height
 	
@@ -511,7 +517,7 @@ namespace MWGui
     {
 
 		mMainWidget->setRealSize(1, 1);
-		mHistoryBox->setRealSize(.75, .2);
+		mHistoryBox->setRealSize(.75, .3);
 		//Make sure we use our static almost full screen dialogue concept MWX
 		center();
 		adjustPortraitSize();
