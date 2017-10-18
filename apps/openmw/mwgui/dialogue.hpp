@@ -207,6 +207,7 @@ namespace MWGui
 
         BookPage* mHistory;
         Gui::MWList*   mTopicsList;
+		MyGUI::Widget* mTopicsBox;
 		MyGUI::Widget* mPlayerPortraitBox;
 		MyGUI::ImageBox* mPlayerPortrait;
 		MyGUI::Widget* mPortraitBox;

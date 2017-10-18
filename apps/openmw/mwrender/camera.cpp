@@ -1,6 +1,7 @@
 #include "camera.hpp"
 
 #include <osg/Camera>
+#include <osg/PositionAttitudeTransform>
 
 #include <components/sceneutil/positionattitudetransform.hpp>
 
@@ -364,7 +365,7 @@ namespace MWRender
     {
         if(isFirstPerson())
         {
-            mAnimation->setViewMode(NpcAnimation::VM_FirstPerson);
+			mAnimation->setViewMode(NpcAnimation::VM_FirstPerson);
             mTrackingNode = mAnimation->getNode("Camera");
             if (!mTrackingNode)
                 mTrackingNode = mAnimation->getNode("Head");

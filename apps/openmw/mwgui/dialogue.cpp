@@ -322,7 +322,9 @@ namespace MWGui
 		getWidget(mHistoryBox, "HistoryBox");
 
         //Topics list
-        getWidget(mTopicsList, "TopicsList");
+		getWidget(mTopicsBox, "TopicsBox");
+		getWidget(mTopicsList, "TopicsList");
+		
 
 		
 		//The player portrait, currently not in use.
@@ -765,6 +767,13 @@ namespace MWGui
         mChoices = MWBase::Environment::get().getDialogueManager()->getChoices();
 		if (!inChunk) //Only show player dialogue choices when we reach the end of all chunks.
 		{
+			
+			if (mChoices.size() == 1 && mChoices[0].first == "GO")
+			{
+				onChoiceActivated(mChoices[0].second);
+			}
+
+			
 			for (std::vector<std::pair<std::string, int> >::const_iterator it = mChoices.begin(); it != mChoices.end(); ++it)
 			{
 				Choice* link = new Choice(it->second);
@@ -821,6 +830,8 @@ namespace MWGui
 
         bool topicsEnabled = !MWBase::Environment::get().getDialogueManager()->isInChoice() && !mGoodbye;
         mTopicsList->setEnabled(topicsEnabled);
+	
+
     }
 
     void DialogueWindow::notifyLinkClicked (TypesetBook::InteractiveId link)
