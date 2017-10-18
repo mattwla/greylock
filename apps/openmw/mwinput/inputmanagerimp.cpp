@@ -72,6 +72,7 @@ namespace MWInput
         , mInvUiScalingFactor(1.f)
         , mFakeDeviceID(1)
 		, mInChunkMode(false)
+		, mInGoMode(false)
     {
         mInputManager = new SDLUtil::InputWrapper(window, viewer, grab);
         mInputManager->setMouseEventCallback (this);
@@ -629,6 +630,12 @@ namespace MWInput
 		// if not in gui mode, the camera decides whether to show crosshair or not.
 	}
 
+
+	void InputManager::dialogueGoMode(bool go)
+	{
+		mInGoMode = go; 
+	}
+
     void InputManager::processChangedSettings(const Settings::CategorySettingVector& changed)
     {
         bool changeRes = false;
@@ -744,11 +751,21 @@ namespace MWInput
 
     void InputManager::mousePressed( const SDL_MouseButtonEvent &arg, Uint8 id )
     {
-		if (mInChunkMode == true) //If we are in chunk mode, activate the next chunk dialogue function
+		
+		if (mInGoMode)
+		{
+			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->go();
+			return;
+		}
+		
+		
+		if (mInChunkMode) //If we are in chunk mode, activate the next chunk dialogue function
 		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->nextChunk();
 			return;
 		}
+
+		
 		
 		mJoystickLastUsed = false;
         bool guiMode = false;

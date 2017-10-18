@@ -91,7 +91,9 @@ namespace MWInput
         virtual void changeInputMode(bool guiMode);
 		virtual void dialogueChunkMode(bool chunk);
 
-        virtual void processChangedSettings(const Settings::CategorySettingVector& changed);
+		virtual void dialogueGoMode(bool go);
+
+		virtual void processChangedSettings(const Settings::CategorySettingVector& changed);
 
         virtual void setDragDrop(bool dragDrop);
 
@@ -155,6 +157,7 @@ namespace MWInput
         virtual void readRecord(ESM::ESMReader& reader, uint32_t type);
 
 		bool mInChunkMode;
+		bool mInGoMode;
 
     private:
         SDL_Window* mWindow;

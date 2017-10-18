@@ -91,6 +91,8 @@ namespace MWDialogue
 
            
 			virtual void nextChunkSelected();
+
+			void goSelected();
 			
        
 

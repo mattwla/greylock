@@ -44,6 +44,7 @@ namespace MWBase
 
             virtual void changeInputMode(bool guiMode) = 0;
 			virtual void dialogueChunkMode(bool chunk) = 0;
+			virtual void dialogueGoMode(bool go) = 0;
 
             virtual void processChangedSettings(const std::set< std::pair<std::string, std::string> >& changed) = 0;
 

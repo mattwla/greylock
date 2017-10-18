@@ -415,6 +415,15 @@ namespace MWDialogue
 		
 	}
 
+	void DialogueManager::goSelected()
+	{
+		//executeTopic(mLastTopic);
+		MWBase::Environment::get().getWindowManager()->getDialogueWindow()->nextChunk();
+
+		//MWX
+
+	}
+
     void DialogueManager::goodbyeSelected()
     {
         // Apply disposition change to NPC's base disposition

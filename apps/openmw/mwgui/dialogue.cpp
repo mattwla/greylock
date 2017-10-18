@@ -292,6 +292,15 @@ namespace MWGui
 		MWBase::Environment::get().getDialogueManager()->nextChunkSelected();
 	}
 
+	void Go::activated() //MWX, when a player is being presented with sequential chunked dialogue, input manager takes over the mouse control, runs this function when mouse is pressed.
+	{
+
+		MWBase::Environment::get().getWindowManager()->playSound("Menu Click");
+		MWBase::Environment::get().getDialogueManager()->nextChunkSelected();
+	}
+
+
+
     void Goodbye::activated()
     {
         MWBase::Environment::get().getWindowManager()->playSound("Menu Click");
@@ -702,6 +711,7 @@ namespace MWGui
 	void DialogueWindow::updateHistory(bool scrollbar)
     {
 		bool inChunk; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
+		MWBase::Environment::get().getInputManager()->dialogueGoMode(false); //Assume we are not about to use GO work around unless we intentionally flip it on.
 		if (!scrollbar && mScrollBar->getVisible())
         {
             mHistory->setSize(mHistory->getSize()+MyGUI::IntSize(mScrollBar->getWidth(),0));
@@ -773,21 +783,24 @@ namespace MWGui
 			
 			if (mChoices.size() == 1 && mChoices[0].first == "GO")
 			{
-				onChoiceActivated(mChoices[0].second);
+				MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
 			}
-
-			
-			for (std::vector<std::pair<std::string, int> >::const_iterator it = mChoices.begin(); it != mChoices.end(); ++it)
+			else
 			{
-				Choice* link = new Choice(it->second);
-				link->eventChoiceActivated += MyGUI::newDelegate(this, &DialogueWindow::onChoiceActivated);
-				mLinks.push_back(link);
 
-				typesetter->lineBreak();
-				BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
-					textColours.answerPressed,
-					TypesetBook::InteractiveId(link));
-				typesetter->write(questionStyle, to_utf8_span(it->first.c_str()));
+
+				for (std::vector<std::pair<std::string, int> >::const_iterator it = mChoices.begin(); it != mChoices.end(); ++it)
+				{
+					Choice* link = new Choice(it->second);
+					link->eventChoiceActivated += MyGUI::newDelegate(this, &DialogueWindow::onChoiceActivated);
+					mLinks.push_back(link);
+
+					typesetter->lineBreak();
+					BookTypesetter::Style* questionStyle = typesetter->createHotStyle(body, textColours.answer, textColours.answerOver,
+						textColours.answerPressed,
+						TypesetBook::InteractiveId(link));
+					typesetter->write(questionStyle, to_utf8_span(it->first.c_str()));
+				}
 			}
 		}
         mGoodbye = MWBase::Environment::get().getDialogueManager()->isGoodbye();
@@ -875,6 +888,11 @@ namespace MWGui
 		//We look at the most recent dialogue added to history, and iterate its current_chunk tracker. current_chunk is used to show player pieces of dialogue at a time. MWX
 		mHistoryContents.back()->mCurrent_chunk += 1;
 		updateHistory();
+	}
+
+	void DialogueWindow::go()
+	{
+		onChoiceActivated(mChoices[0].second);
 	}
 
 	void DialogueWindow::setPortraitImage(std::string id, std::string emotion)

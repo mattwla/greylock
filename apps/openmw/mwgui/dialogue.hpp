@@ -85,6 +85,11 @@ namespace MWGui
 		virtual void activated ();
 	};
 
+	struct Go : Link
+	{
+		virtual void activated();
+	};
+
     struct Goodbye : Link
     {
         typedef MyGUI::delegates::CMultiDelegate0 Event_Activated;
@@ -142,7 +147,9 @@ namespace MWGui
 
         void addResponse (const std::string& title, const std::string& text, bool needMargin = true);
 
-		void nextChunk(); 
+		void nextChunk();
+
+		void go();
 
 		void setPortraitImage(std::string id, std::string emotion = "n");
 
