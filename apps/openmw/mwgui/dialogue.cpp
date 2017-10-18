@@ -151,7 +151,7 @@ namespace MWGui
     {
         typesetter->sectionBreak(mNeedMargin ? 9 : 0);
 
-        if (mTitle != "")
+        if (false) //(mTitle != "")
         {
             const MyGUI::Colour& headerColour = MWBase::Environment::get().getWindowManager()->getTextColours().header;
             BookTypesetter::Style* title = typesetter->createStyle("", headerColour);
@@ -225,7 +225,7 @@ namespace MWGui
         else
         {
             std::vector<KeywordSearchT::Match> matches;
-            keywordSearch->highlightKeywords(text.begin(), text.end(), matches);
+            //keywordSearch->highlightKeywords(text.begin(), text.end(), matches);
 
             std::string::const_iterator i = text.begin ();
             for (std::vector<KeywordSearchT::Match>::iterator it = matches.begin(); it != matches.end(); ++it)
@@ -254,7 +254,8 @@ namespace MWGui
 
         if (topicId)
             style = typesetter->createHotStyle (style, textColours.link, textColours.linkOver, textColours.linkPressed, topicId);
-        typesetter->write (style, begin, end);
+       
+		typesetter->write (style, begin, end);
     }
 
     Message::Message(const std::string& text)
@@ -361,6 +362,7 @@ namespace MWGui
 		mNpcPortrait->setPosition(0, 0);
 		mPlayerPortrait->setVisible(false);
 		mTopicsList->setVisible(true);
+		mTopicsBox->setVisible(false);
 		
 		
 		//Player portrait not used thus hidden, NPC portrait is used. Image textures are placeholders for now. MWX
@@ -533,6 +535,7 @@ namespace MWGui
         bool sameActor = (mPtr == actor);
         mPtr = actor;
         mTopicsList->setEnabled(true);
+		mTopicsBox->setVisible(false);
         setTitle(""); //Empty title as dialogue screens will be used for multiple speakers now. MWX
 		
 		//clearChoices();
@@ -841,14 +844,22 @@ namespace MWGui
 
     void DialogueWindow::onTopicActivated(const std::string &topicId)
     {
-        MWBase::DialogueManager::Response response = MWBase::Environment::get().getDialogueManager()->keywordSelected(topicId);
+		mTopicsBox->setVisible(false);
+		MWBase::DialogueManager::Response response = MWBase::Environment::get().getDialogueManager()->keywordSelected(topicId);
         addResponse(response.first, response.second);
     }
 
     void DialogueWindow::onChoiceActivated(int id)
     {
-        MWBase::DialogueManager::Response response = MWBase::Environment::get().getDialogueManager()->questionAnswered(id);
-        addResponse(response.first, response.second);
+		
+			MWBase::DialogueManager::Response response = MWBase::Environment::get().getDialogueManager()->questionAnswered(id);
+			addResponse(response.first, response.second);
+			if (id == 99)
+			{
+				mTopicsBox->setVisible(true);
+				mTopicsList->setVisible(true);
+			}
+		
     }
 
     void DialogueWindow::onGoodbyeActivated()
