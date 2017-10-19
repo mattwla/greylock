@@ -284,7 +284,7 @@ namespace ESMTerrain
                         if ((row == 0 || row == ESM::Land::LAND_SIZE-1) && (col == 0 || col == ESM::Land::LAND_SIZE-1))
                             averageNormal(normal, cellX, cellY, col, row, cache);
 
-                        assert(normal.z() > 0);
+                        //assert(normal.z() > 0);
 
                         (*normals)[static_cast<unsigned int>(vertX*numVerts + vertY)] = normal;
 

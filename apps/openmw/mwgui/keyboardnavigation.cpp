@@ -31,14 +31,14 @@ void getKeyFocusWidgets(MyGUI::Widget* parent, std::vector<MyGUI::Widget*>& resu
     while (enumerator.next())
     {
         MyGUI::Widget* w = enumerator.current();
-		std::cout << w->getName();
+		//std::cout << w->getName();
         if (!w->getVisible() || !w->getEnabled())
             continue;
         if (w->getNeedKeyFocus() && shouldAcceptKeyFocus(w))
             results.push_back(w);
 		else
 		{
-			std::cout << w->getName();
+			//std::cout << w->getName();
 			getKeyFocusWidgets(w, results);
 			
 		}
@@ -270,7 +270,7 @@ bool KeyboardNavigation::selectFirstWidget()
 		
 	}
 	
-	std::cout << "We here now";
+	//std::cout << "We here now";
 	//std::string name = keyFocusList[0]->getName();
     
 	if (!keyFocusList.empty())

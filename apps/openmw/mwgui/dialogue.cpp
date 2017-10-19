@@ -132,12 +132,12 @@ namespace MWGui
 		
 		
 		
-		if (chunk == *"a")
+		/*if (chunk == *"a")
 		{
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name, "A");
 			return text.substr(2);
-		}
-		else
+		}*/
+		/*else*/
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name);
 		
 		if (speaker_changed)
@@ -700,7 +700,8 @@ namespace MWGui
 			end = text.find(delim, start);
 		}
 
-		split.push_back(text.substr(start, end));
+		if (std::size(text.substr(start, end)) > 0) //Fix for accidental pipe usage at end of dialogue
+			split.push_back(text.substr(start, end));
 
 		return split;
 		//Thanks to Moswald at stack overflow.
@@ -710,7 +711,7 @@ namespace MWGui
 
 	void DialogueWindow::updateHistory(bool scrollbar)
     {
-		bool inChunk; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
+		bool inChunk = true; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
 		MWBase::Environment::get().getInputManager()->dialogueGoMode(false); //Assume we are not about to use GO work around unless we intentionally flip it on.
 		if (!scrollbar && mScrollBar->getVisible())
         {
