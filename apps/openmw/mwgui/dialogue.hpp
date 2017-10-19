@@ -194,7 +194,9 @@ namespace MWGui
         void deleteLater();
 
 
+
         bool mEnabled;
+
 
         bool mIsCompanion;
         std::list<std::string> mKeywords;
