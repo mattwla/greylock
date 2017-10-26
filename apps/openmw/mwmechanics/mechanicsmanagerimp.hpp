@@ -9,6 +9,7 @@
 #include "npcstats.hpp"
 #include "objects.hpp"
 #include "actors.hpp"
+#include "aischedule.hpp"
 
 namespace MWWorld
 {
