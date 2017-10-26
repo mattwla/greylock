@@ -96,6 +96,8 @@ namespace MWMechanics
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
+			virtual void updateSchedules();
+
             virtual int getHoursToRest() const;
             ///< Calculate how many hours the player needs to rest in order to be fully healed
 

@@ -94,6 +94,8 @@ namespace MWBase
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
+			virtual void updateSchedules() = 0;
+
             virtual int getHoursToRest() const = 0;
             ///< Calculate how many hours the player needs to rest in order to be fully healed
 

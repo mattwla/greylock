@@ -250,6 +250,8 @@ namespace MWGui
         {
             MWBase::Environment::get().getWindowManager()->pushGuiMode (GM_Levelup);
         }
+
+		MWBase::Environment::get().getMechanicsManager()->updateSchedules();
     }
 
     void WaitDialog::setCanRest (bool canRest)

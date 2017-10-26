@@ -12,7 +12,9 @@
 
 #include "../mwbase/world.hpp"
 
+
 #include "movement.hpp"
+
 
 
 namespace MWWorld
@@ -25,8 +27,7 @@ namespace MWMechanics {
 
 
 	void updateSchedules();
-
-
+	
 
 }
 

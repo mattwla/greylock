@@ -448,7 +448,17 @@ namespace MWMechanics
         mActors.rest(sleep);
     }
 
-    int MechanicsManager::getHoursToRest() const
+	void MechanicsManager::updateSchedules()
+	{
+		std::string schedule("data.csv");
+		std::ifstream in(schedule.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open" << std::endl;
+	}
+
+	int MechanicsManager::getHoursToRest() const
     {
         return mActors.getHoursToRest(mWatched);
     }

@@ -41,3 +41,14 @@
 #include "../mwrender/npcanimation.hpp"
 
 #include "../mwgui/tooltips.hpp"
+
+void MWMechanics::updateSchedules()
+{
+	std::string schedule("data.csv");
+	std::ifstream in(schedule.c_str());
+	if (!in.is_open())
+		std::cout << "Not open";
+	else
+		std::cout << "Open";
+
+}
