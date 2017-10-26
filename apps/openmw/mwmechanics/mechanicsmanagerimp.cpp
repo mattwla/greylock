@@ -27,6 +27,11 @@
 #include "npcstats.hpp"
 #include "actorutil.hpp"
 #include "combat.hpp"
+#include "aicalledover.hpp"
+
+#include <boost/tokenizer.hpp>
+#include <iterator>
+#include <algorithm>
 
 namespace
 {
@@ -450,12 +455,35 @@ namespace MWMechanics
 
 	void MechanicsManager::updateSchedules()
 	{
-		std::string schedule("data.csv");
+		std::string schedule("summerday.csv");
 		std::ifstream in(schedule.c_str());
 		if (!in.is_open())
 			std::cout << "Not open" << std::endl;
 		else
 			std::cout << "Open" << std::endl;
+
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		std::vector<std::string> vec;
+		std::string line;
+
+		while (getline(in, line))
+		{
+			Tokenizer tok(line);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+			{
+				vec.push_back(*it);
+			}
+		}
+
+		for (auto it = vec.begin(); it != vec.end(); ++it)
+		{
+			if (*it == "jacob")
+			{
+				MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(*it, false);
+				MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+				seq.stack(MWMechanics::AiCalledOver("player"), ptr);
+			}
+		}
 	}
 
 	int MechanicsManager::getHoursToRest() const
