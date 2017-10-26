@@ -463,26 +463,31 @@ namespace MWMechanics
 			std::cout << "Open" << std::endl;
 
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-		std::vector<std::string> vec;
+		std::vector<std::vector<std::string>> vecvec;
+		
 		std::string line;
 
 		while (getline(in, line))
 		{
+			std::vector<std::string> vec;
 			Tokenizer tok(line);
 			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
 			{
 				vec.push_back(*it);
 			}
+			vecvec.push_back(vec);
 		}
 
-		for (auto it = vec.begin(); it != vec.end(); ++it)
+		for (unsigned int i = 0; i < vecvec.size(); i++)
 		{
-			if (*it == "jacob")
-			{
-				MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(*it, false);
+			//if (vecvec[i][0] == "jacob")
+			//{
+
+				MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
 				MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
 				seq.stack(MWMechanics::AiCalledOver("player"), ptr);
-			}
+			//}
+		
 		}
 	}
 
