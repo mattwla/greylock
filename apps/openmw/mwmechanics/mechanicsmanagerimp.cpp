@@ -453,15 +453,32 @@ namespace MWMechanics
         mActors.rest(sleep);
     }
 
-	void MechanicsManager::updateSchedules()
+	std::ifstream MechanicsManager::fetchSchedule()
 	{
-		std::string schedule("summerday.csv");
+		std::string schedule;
+		int hour = static_cast<int>(MWBase::Environment::get().getWorld()->getTimeStamp().getHour());
+		bool pm = hour >= 12;
+		if (!pm)
+		{
+			schedule = ("summerday.csv");
+		}
+		else
+		{
+			schedule = ("summernight.csv");
+		}
 		std::ifstream in(schedule.c_str());
 		if (!in.is_open())
 			std::cout << "Not open" << std::endl;
 		else
 			std::cout << "Open" << std::endl;
 
+		return in;
+	}
+	
+	void MechanicsManager::updateSchedules()
+	{
+		
+		std::ifstream in = fetchSchedule();
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 		std::vector<std::vector<std::string>> vecvec;
 		

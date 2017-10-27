@@ -93,6 +93,8 @@ namespace MWMechanics
             ///< Set player class to custom class.
 
             virtual void rest(bool sleep);
+			
+			virtual std::ifstream fetchSchedule();
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
