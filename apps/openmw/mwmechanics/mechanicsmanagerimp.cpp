@@ -490,6 +490,9 @@ namespace MWMechanics
 		
 			split.push_back(global.substr(start, end));
 
+			int testg = MWBase::Environment::get().getWorld()->getGlobalInt(split[0]);
+			int testi = std::stoi(split[1]);
+
 		if ( MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) == std::stoi(split[1]))
 		{
 			return true;
@@ -514,7 +517,7 @@ namespace MWMechanics
 			{
 				bool passed = true;
 				
-				for (unsigned int i2 = 2; i < vecvec[i].size(); i++) //global requirements start at third element and go until end of vector
+				for (unsigned int i2 = 2; i2 < vecvec[i].size(); i2++) //global requirements start at third element and go until end of vector
 				{
 					if (!checkScheduleGlobal(vecvec[i][i2])) {
 						passed = false; //did not meet global requirements, don't check any more break.
@@ -558,7 +561,18 @@ namespace MWMechanics
 		}
 
 		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		mapSchedule(vecvec);
+		std::map<std::string, std::string> schedule = mapSchedule(vecvec);
+
+		for (auto const& x : schedule)
+		{
+			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
+			MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+
+			seq.stack(MWMechanics::AiCalledOver("player"), ptr);
+		}
+
+		
+
 
 
 		//if (vecvec[i][0] == "jacob")
