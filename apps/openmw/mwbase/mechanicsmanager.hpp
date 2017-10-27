@@ -6,6 +6,7 @@
 #include <list>
 #include <set>
 #include <stdint.h>
+#include <map>
 
 #include "../mwworld/ptr.hpp"
 
@@ -95,6 +96,10 @@ namespace MWBase
             /// @param sleep is the player sleeping or waiting?
 
 			virtual std::ifstream fetchSchedule() = 0;
+			
+			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
+
+			virtual bool checkScheduleGlobal(std::string global) = 0;
 
 			virtual void updateSchedules() = 0;
 

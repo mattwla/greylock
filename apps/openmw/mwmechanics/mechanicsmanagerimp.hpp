@@ -95,6 +95,10 @@ namespace MWMechanics
             virtual void rest(bool sleep);
 			
 			virtual std::ifstream fetchSchedule();
+
+			virtual bool checkScheduleGlobal(std::string global);
+			
+			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec);
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 

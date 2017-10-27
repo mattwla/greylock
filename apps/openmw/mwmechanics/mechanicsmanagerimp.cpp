@@ -474,11 +474,73 @@ namespace MWMechanics
 
 		return in;
 	}
+
+	bool MechanicsManager::checkScheduleGlobal(std::string global) {
+
+		std::vector<std::string> split;
+		std::string delim = "=";
+		auto start = 0U;
+		auto end = global.find(delim);
+		while (end != std::string::npos)
+		{
+			split.push_back(global.substr(start, end - start));
+			start = end + delim.length();
+			end = global.find(delim, start);
+		}
+		
+			split.push_back(global.substr(start, end));
+
+		if ( MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) == std::stoi(split[1]))
+		{
+			return true;
+		}
+
+		
+		return false;
+	}
+
+	std::map<std::string, std::string> MechanicsManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
+	{
+		
+		std::map<std::string, std::string> schedule;
+
+		for (unsigned int i = 0; i < vecvec.size(); i++)
+		{
+			if (schedule.count(vecvec[i][0]) == 1)
+			{
+				continue; //if we already have a task for this npc, skip to next line
+			}
+			else
+			{
+				bool passed = true;
+				
+				for (unsigned int i2 = 2; i < vecvec[i].size(); i++) //global requirements start at third element and go until end of vector
+				{
+					if (!checkScheduleGlobal(vecvec[i][i2])) {
+						passed = false; //did not meet global requirements, don't check any more break.
+						break;
+					}
+				}
+
+				if (passed)
+				{
+					schedule[vecvec[i][0]] = vecvec[i][1]; //We passed, store the npcs name and the npcs aipackage
+				}
+
+			}
+		}
+
+		return schedule;
+	}
+
+
 	
 	void MechanicsManager::updateSchedules()
 	{
 		
-		std::ifstream in = fetchSchedule();
+		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+		
+		//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 		std::vector<std::vector<std::string>> vecvec;
 		
@@ -495,17 +557,19 @@ namespace MWMechanics
 			vecvec.push_back(vec);
 		}
 
-		for (unsigned int i = 0; i < vecvec.size(); i++)
-		{
-			//if (vecvec[i][0] == "jacob")
-			//{
+		//parse our vector of vectors, get a map back of what each NPC should be doing.
+		mapSchedule(vecvec);
 
-				MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
-				MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
-				seq.stack(MWMechanics::AiCalledOver("player"), ptr);
-			//}
+
+		//if (vecvec[i][0] == "jacob")
+		//{
+
+		/*MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
+		MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+		seq.stack(MWMechanics::AiCalledOver("player"), ptr);*/
+		//}
+
 		
-		}
 	}
 
 	int MechanicsManager::getHoursToRest() const
