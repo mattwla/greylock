@@ -155,7 +155,9 @@ namespace MWGui
 
     void WaitDialog::startWaiting(int hoursToWait)
     {
-        if(Settings::Manager::getBool("autosave","Saves")) //autosaves when enabled
+		hoursToWait = hoursToWait * 6; //Time works in 6 hour chunks.
+		
+		if(Settings::Manager::getBool("autosave","Saves")) //autosaves when enabled
             MWBase::Environment::get().getStateManager()->quickSave("Autosave");
 
         MWBase::World* world = MWBase::Environment::get().getWorld();
@@ -203,7 +205,28 @@ namespace MWGui
 
     void WaitDialog::onHourSliderChangedPosition(MyGUI::ScrollBar* sender, size_t position)
     {
-        mHourText->setCaptionWithReplacing (MyGUI::utility::toString(position+1) + " #{sRestMenu2}");
+		
+		
+		std::vector<std::string> partsOfDay = { "night", "morning", "day", "evening" };
+		std::string currentPod = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
+		int podIdx;
+		for (unsigned int i = 0; i < partsOfDay.size(); i++)
+		{
+			if (partsOfDay[i] == currentPod)
+				podIdx = i;
+		}
+
+		podIdx = podIdx + position + 1;
+
+		if (podIdx > 3)
+		{
+			podIdx = podIdx - 3;
+		} //Wrap around if we got past the partsOfDay vector size
+
+
+		mHourText->setCaptionWithReplacing(partsOfDay[podIdx] + " #{sRestMenu2}");
+		
+		//mHourText->setCaptionWithReplacing (MyGUI::utility::toString(position+1) + " #{sRestMenu2}");
         mManualHours = position+1;
         MWBase::Environment::get().getWindowManager()->setKeyFocusWidget(mWaitButton);
     }
