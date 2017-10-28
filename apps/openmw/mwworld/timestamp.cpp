@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
 #include <components/esm/defs.hpp>
 
@@ -23,6 +24,25 @@ namespace MWWorld
     {
         return mDay;
     }
+
+	std::string TimeStamp::getPartOfDay() const
+	{
+		int hour = getHour();
+
+		if (hour == 0)
+			return "night";
+		else if (hour == 6)
+			return "morning";
+		else if (hour == 12)
+			return "day";
+		else if (hour == 18)
+			return "evening";
+		else
+		{
+			
+			return "INVALID";
+		}
+	}
 
     TimeStamp& TimeStamp::operator+= (double hours)
     {

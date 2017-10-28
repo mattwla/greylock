@@ -1,6 +1,8 @@
 #ifndef GAME_MWWORLD_TIMESTAMP_H
 #define GAME_MWWORLD_TIMESTAMP_H
 
+#include <string>
+
 namespace ESM
 {
     struct TimeStamp;
@@ -28,6 +30,8 @@ namespace MWWorld
             float getHour() const;
 
             int getDay() const;
+
+			std::string getPartOfDay() const;
 
             TimeStamp& operator+= (double hours);
             ///< \param hours >=0

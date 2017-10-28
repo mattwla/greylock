@@ -126,7 +126,8 @@ namespace MWGui
         onHourSliderChangedPosition(mHourSlider, 0);
         mHourSlider->setScrollPosition (0);
 
-        std::string month = MWBase::Environment::get().getWorld ()->getMonthName();
+        //std::string month = MWBase::Environment::get().getWorld ()->getMonthName();
+		std::string month = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
         int hour = static_cast<int>(MWBase::Environment::get().getWorld()->getTimeStamp().getHour());
         bool pm = hour >= 12;
         if (hour >= 13) hour -= 12;

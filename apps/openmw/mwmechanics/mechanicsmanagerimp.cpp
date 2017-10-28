@@ -456,21 +456,33 @@ namespace MWMechanics
 	std::ifstream MechanicsManager::fetchSchedule()
 	{
 		std::string schedule;
-		int hour = static_cast<int>(MWBase::Environment::get().getWorld()->getTimeStamp().getHour());
-		bool pm = hour >= 12;
-		if (!pm)
+		std::string pod = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
+
+		if (pod == "day")
 		{
-			schedule = ("summerday.csv");
+			schedule = ("schedules/summerday.csv");
+		}
+		else if (pod == "night")
+		{
+			schedule = ("schedules/summernight.csv");
+		}
+		else if (pod == "evening")
+		{
+			schedule = ("schedules/summerevening.csv");
+		}
+		else if (pod == "morning")
+		{
+			schedule = ("schedules/summermorning.csv");
 		}
 		else
 		{
-			schedule = ("summernight.csv");
+			schedule = "";
 		}
 		std::ifstream in(schedule.c_str());
 		if (!in.is_open())
 			std::cout << "Not open" << std::endl;
 		else
-			std::cout << "Open" << std::endl;
+			std::cout << "Open " << schedule <<  std::endl;
 
 		return in;
 	}
