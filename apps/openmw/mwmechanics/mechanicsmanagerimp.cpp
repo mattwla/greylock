@@ -476,7 +476,7 @@ namespace MWMechanics
 	}
 
 	bool MechanicsManager::checkScheduleGlobal(std::string global) {
-
+		//takes a string such as JacobIsAlive=1, splits it into the varname and value, evaluates if value specified in schedule is true.
 		std::vector<std::string> split;
 		std::string delim = "=";
 		auto start = 0U;
@@ -527,7 +527,7 @@ namespace MWMechanics
 
 				if (passed)
 				{
-					schedule[vecvec[i][0]] = vecvec[i][1]; //We passed, store the npcs name and the npcs aipackage
+					schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
 				}
 
 			}
@@ -570,20 +570,6 @@ namespace MWMechanics
 
 			seq.stack(MWMechanics::AiCalledOver("player"), ptr);
 		}
-
-		
-
-
-
-		//if (vecvec[i][0] == "jacob")
-		//{
-
-		/*MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
-		MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
-		seq.stack(MWMechanics::AiCalledOver("player"), ptr);*/
-		//}
-
-		
 	}
 
 	int MechanicsManager::getHoursToRest() const
