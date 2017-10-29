@@ -577,10 +577,22 @@ namespace MWMechanics
 
 		for (auto const& x : schedule)
 		{
+			
+			
+			
+			
+			
 			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
-			MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+			ESM::Position markerPos = marker.getRefData().getPosition();
+			MWWorld::CellStore* store = MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
+			MWBase::Environment::get().getWorld()->moveObject(ptr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 
-			seq.stack(MWMechanics::AiCalledOver("player"), ptr);
+				
+			
+			//MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+
+			//seq.stack(MWMechanics::AiCalledOver("player"), ptr);
 		}
 	}
 

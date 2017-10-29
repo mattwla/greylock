@@ -220,7 +220,7 @@ namespace MWGui
 
 		if (podIdx > 3)
 		{
-			podIdx = podIdx - 3;
+			podIdx = podIdx - 4;
 		} //Wrap around if we got past the partsOfDay vector size
 
 
