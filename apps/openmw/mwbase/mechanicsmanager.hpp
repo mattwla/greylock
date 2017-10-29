@@ -95,14 +95,6 @@ namespace MWBase
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
-			virtual std::ifstream fetchSchedule() = 0;
-			
-			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
-
-			virtual bool checkScheduleGlobal(std::string global) = 0;
-
-			virtual void updateSchedules() = 0;
-
             virtual int getHoursToRest() const = 0;
             ///< Calculate how many hours the player needs to rest in order to be fully healed
 

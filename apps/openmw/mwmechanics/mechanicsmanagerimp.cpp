@@ -453,7 +453,7 @@ namespace MWMechanics
         mActors.rest(sleep);
     }
 
-	std::ifstream MechanicsManager::fetchSchedule()
+	/*std::ifstream MechanicsManager::fetchSchedule()
 	{
 		std::string schedule;
 		std::string pod = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
@@ -485,116 +485,116 @@ namespace MWMechanics
 			std::cout << "Open " << schedule <<  std::endl;
 
 		return in;
-	}
+	}*/
 
-	bool MechanicsManager::checkScheduleGlobal(std::string global) {
-		//takes a string such as JacobIsAlive=1, splits it into the varname and value, evaluates if value specified in schedule is true.
-		std::vector<std::string> split;
-		std::string delim = "=";
-		auto start = 0U;
-		auto end = global.find(delim);
-		while (end != std::string::npos)
-		{
-			split.push_back(global.substr(start, end - start));
-			start = end + delim.length();
-			end = global.find(delim, start);
-		}
-		
-			split.push_back(global.substr(start, end));
+	//bool MechanicsManager::checkScheduleGlobal(std::string global) {
+	//	//takes a string such as JacobIsAlive=1, splits it into the varname and value, evaluates if value specified in schedule is true.
+	//	std::vector<std::string> split;
+	//	std::string delim = "=";
+	//	auto start = 0U;
+	//	auto end = global.find(delim);
+	//	while (end != std::string::npos)
+	//	{
+	//		split.push_back(global.substr(start, end - start));
+	//		start = end + delim.length();
+	//		end = global.find(delim, start);
+	//	}
+	//	
+	//		split.push_back(global.substr(start, end));
 
-			int testg = MWBase::Environment::get().getWorld()->getGlobalInt(split[0]);
-			int testi = std::stoi(split[1]);
+	//		int testg = MWBase::Environment::get().getWorld()->getGlobalInt(split[0]);
+	//		int testi = std::stoi(split[1]);
 
-		if ( MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) == std::stoi(split[1]))
-		{
-			return true;
-		}
+	//	if ( MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) == std::stoi(split[1]))
+	//	{
+	//		return true;
+	//	}
 
-		
-		return false;
-	}
+	//	
+	//	return false;
+	//}
 
-	std::map<std::string, std::string> MechanicsManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
-	{
-		
-		std::map<std::string, std::string> schedule;
+	//std::map<std::string, std::string> MechanicsManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
+	//{
+	//	
+	//	std::map<std::string, std::string> schedule;
 
-		for (unsigned int i = 0; i < vecvec.size(); i++)
-		{
-			if (schedule.count(vecvec[i][0]) == 1)
-			{
-				continue; //if we already have a task for this npc, skip to next line
-			}
-			else
-			{
-				bool passed = true;
-				
-				for (unsigned int i2 = 2; i2 < vecvec[i].size(); i2++) //global requirements start at third element and go until end of vector
-				{
-					if (!checkScheduleGlobal(vecvec[i][i2])) {
-						passed = false; //did not meet global requirements, don't check any more break.
-						break;
-					}
-				}
+	//	for (unsigned int i = 0; i < vecvec.size(); i++)
+	//	{
+	//		if (schedule.count(vecvec[i][0]) == 1)
+	//		{
+	//			continue; //if we already have a task for this npc, skip to next line
+	//		}
+	//		else
+	//		{
+	//			bool passed = true;
+	//			
+	//			for (unsigned int i2 = 2; i2 < vecvec[i].size(); i2++) //global requirements start at third element and go until end of vector
+	//			{
+	//				if (!checkScheduleGlobal(vecvec[i][i2])) {
+	//					passed = false; //did not meet global requirements, don't check any more break.
+	//					break;
+	//				}
+	//			}
 
-				if (passed)
-				{
-					schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
-				}
+	//			if (passed)
+	//			{
+	//				schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
+	//			}
 
-			}
-		}
+	//		}
+	//	}
 
-		return schedule;
-	}
+	//	return schedule;
+	//}
 
 
-	
-	void MechanicsManager::updateSchedules()
-	{
-		
-		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
-		
-		//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-		std::vector<std::vector<std::string>> vecvec;
-		
-		std::string line;
+	//
+	//void MechanicsManager::updateSchedules()
+	//{
+	//	
+	//	std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+	//	
+	//	//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
+	//	typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+	//	std::vector<std::vector<std::string>> vecvec;
+	//	
+	//	std::string line;
 
-		while (getline(in, line))
-		{
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
-		}
+	//	while (getline(in, line))
+	//	{
+	//		std::vector<std::string> vec;
+	//		Tokenizer tok(line);
+	//		for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+	//		{
+	//			vec.push_back(*it);
+	//		}
+	//		vecvec.push_back(vec);
+	//	}
 
-		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		std::map<std::string, std::string> schedule = mapSchedule(vecvec);
+	//	//parse our vector of vectors, get a map back of what each NPC should be doing.
+	//	std::map<std::string, std::string> schedule = mapSchedule(vecvec);
 
-		for (auto const& x : schedule)
-		{
-			
-			
-			
-			
-			
-			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
-			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
-			ESM::Position markerPos = marker.getRefData().getPosition();
-			MWWorld::CellStore* store = MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
-			MWBase::Environment::get().getWorld()->moveObject(ptr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+	//	for (auto const& x : schedule)
+	//	{
+	//		
+	//		
+	//		
+	//		
+	//		
+	//		MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
+	//		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+	//		ESM::Position markerPos = marker.getRefData().getPosition();
+	//		MWWorld::CellStore* store = MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
+	//		MWBase::Environment::get().getWorld()->moveObject(ptr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 
-				
-			
-			//MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
+	//			
+	//		
+	//		//MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
 
-			//seq.stack(MWMechanics::AiCalledOver("player"), ptr);
-		}
-	}
+	//		//seq.stack(MWMechanics::AiCalledOver("player"), ptr);
+	//	}
+	//}
 
 	int MechanicsManager::getHoursToRest() const
     {

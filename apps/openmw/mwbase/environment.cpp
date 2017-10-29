@@ -13,6 +13,7 @@
 #include "inputmanager.hpp"
 #include "windowmanager.hpp"
 #include "statemanager.hpp"
+#include "aischedulemanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -54,6 +55,11 @@ void MWBase::Environment::setWindowManager (WindowManager *windowManager)
 void MWBase::Environment::setMechanicsManager (MechanicsManager *mechanicsManager)
 {
     mMechanicsManager = mechanicsManager;
+}
+
+void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleManager)
+{
+	mAIScheduleManager = AIScheduleManager;
 }
 
 void MWBase::Environment::setDialogueManager (DialogueManager *dialogueManager)
@@ -134,6 +140,13 @@ MWBase::MechanicsManager *MWBase::Environment::getMechanicsManager() const
     return mMechanicsManager;
 }
 
+MWBase::AIScheduleManager *MWBase::Environment::getAIScheduleManager() const
+{
+	assert(mAIScheduleManager);
+	return mAIScheduleManager;
+}
+
+
 MWBase::DialogueManager *MWBase::Environment::getDialogueManager() const
 {
     assert (mDialogueManager);
@@ -191,6 +204,9 @@ void MWBase::Environment::cleanup()
 
     delete mStateManager;
     mStateManager = 0;
+
+	delete mAIScheduleManager;
+	mAIScheduleManager = 0;
 }
 
 const MWBase::Environment& MWBase::Environment::get()

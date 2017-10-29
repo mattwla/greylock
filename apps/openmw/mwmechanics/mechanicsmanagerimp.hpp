@@ -9,7 +9,8 @@
 #include "npcstats.hpp"
 #include "objects.hpp"
 #include "actors.hpp"
-#include "aischedule.hpp"
+
+
 
 namespace MWWorld
 {
@@ -94,7 +95,7 @@ namespace MWMechanics
 
             virtual void rest(bool sleep);
 			
-			virtual std::ifstream fetchSchedule();
+	/*		virtual std::ifstream fetchSchedule();
 
 			virtual bool checkScheduleGlobal(std::string global);
 			
@@ -103,7 +104,7 @@ namespace MWMechanics
             /// @param sleep is the player sleeping or waiting?
 
 			virtual void updateSchedules();
-
+*/
             virtual int getHoursToRest() const;
             ///< Calculate how many hours the player needs to rest in order to be fully healed
 

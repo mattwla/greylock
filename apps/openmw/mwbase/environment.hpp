@@ -12,6 +12,7 @@ namespace MWBase
     class InputManager;
     class WindowManager;
     class StateManager;
+	class AIScheduleManager;
 
     /// \brief Central hub for mw-subsystems
     ///
@@ -28,6 +29,7 @@ namespace MWBase
             ScriptManager *mScriptManager;
             WindowManager *mWindowManager;
             MechanicsManager *mMechanicsManager;
+			AIScheduleManager *mAIScheduleManager;
             DialogueManager *mDialogueManager;
             Journal *mJournal;
             InputManager *mInputManager;
@@ -57,6 +59,8 @@ namespace MWBase
 
             void setMechanicsManager (MechanicsManager *mechanicsManager);
 
+			void setAIScheduleManager(AIScheduleManager *AIScheduleManager);
+
             void setDialogueManager (DialogueManager *dialogueManager);
 
             void setJournal (Journal *journal);
@@ -81,6 +85,8 @@ namespace MWBase
             WindowManager *getWindowManager() const;
 
             MechanicsManager *getMechanicsManager() const;
+
+			AIScheduleManager *getAIScheduleManager() const;
 
             DialogueManager *getDialogueManager() const;
 

@@ -54,6 +54,8 @@
 
 #include "mwmechanics/mechanicsmanagerimp.hpp"
 
+#include "mwaischedule/aischedulemanagerimp.hpp"
+
 #include "mwstate/statemanagerimp.hpp"
 
 namespace
@@ -539,6 +541,11 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
     // Create dialog system
     mEnvironment.setJournal (new MWDialogue::Journal);
     mEnvironment.setDialogueManager (new MWDialogue::DialogueManager (mExtensions, mTranslationDataStorage));
+
+	//Create AI Schedule Manager
+	MWAISchedule::AIScheduleManager* aischedule = new MWAISchedule::AIScheduleManager;
+	mEnvironment.setAIScheduleManager(aischedule);
+	
 
     // scripts
     if (mCompileAll)

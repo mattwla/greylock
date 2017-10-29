@@ -14,6 +14,7 @@
 #include "../mwbase/environment.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/statemanager.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/cellstore.hpp"
@@ -275,7 +276,7 @@ namespace MWGui
             MWBase::Environment::get().getWindowManager()->pushGuiMode (GM_Levelup);
         }
 
-		MWBase::Environment::get().getMechanicsManager()->updateSchedules(); //MWX
+		MWBase::Environment::get().getAIScheduleManager()->updateSchedules(); //MWX
     }
 
     void WaitDialog::setCanRest (bool canRest)
