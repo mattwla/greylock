@@ -29,19 +29,20 @@ namespace Resource
 
 namespace MWGui
 {
+    class ResponseCallback;
+
     class PersuasionDialog : public WindowModal
     {
     public:
-        PersuasionDialog();
-
-        typedef MyGUI::delegates::CMultiDelegate2<const std::string&, const std::string&> EventHandle_Result;
-        EventHandle_Result eventPersuadeMsg;
+        PersuasionDialog(ResponseCallback* callback);
 
         virtual void onOpen();
 
         virtual MyGUI::Widget* getDefaultKeyFocus();
 
     private:
+        std::unique_ptr<ResponseCallback> mCallback;
+
         MyGUI::Button* mCancelButton;
         MyGUI::Button* mAdmireButton;
         MyGUI::Button* mIntimidateButton;
@@ -161,9 +162,9 @@ namespace MWGui
     protected:
         void updateTopics();
         void updateTopicsPane();
+        bool isCompanion(const MWWorld::Ptr& actor);
         bool isCompanion();
 
-        void onPersuadeResult(const std::string& title, const std::string& text);
         void onSelectListItem(const std::string& topic, int id);
         void onByeClicked(MyGUI::Widget* _sender);
         void onMouseWheel(MyGUI::Widget* _sender, int _rel);
@@ -238,6 +239,9 @@ namespace MWGui
         PersuasionDialog mPersuasionDialog;
 
         MyGUI::IntSize mCurrentWindowSize;
+
+        std::unique_ptr<ResponseCallback> mCallback;
+        std::unique_ptr<ResponseCallback> mGreetingCallback;
     };
 
 
