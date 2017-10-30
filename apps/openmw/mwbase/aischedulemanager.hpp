@@ -60,6 +60,8 @@ namespace MWBase
 
 			virtual void updateSchedules() = 0;
 
+			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc) = 0;
+
          
 
             enum OffenseType

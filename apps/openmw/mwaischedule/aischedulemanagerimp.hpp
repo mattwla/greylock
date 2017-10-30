@@ -35,6 +35,8 @@ namespace MWAISchedule
 
 			virtual void updateSchedules();
 
+			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);
+
 
     };
 }

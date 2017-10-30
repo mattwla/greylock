@@ -96,8 +96,8 @@ namespace MWAISchedule
 		
 			split.push_back(global.substr(start, end));
 
-			int testg = MWBase::Environment::get().getWorld()->getGlobalInt(split[0]);
-			int testi = std::stoi(split[1]);
+			//int testg = MWBase::Environment::get().getWorld()->getGlobalInt(split[0]);
+			//int testi = std::stoi(split[1]);
 
 		if ( MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) == std::stoi(split[1]))
 		{
@@ -172,22 +172,36 @@ namespace MWAISchedule
 		for (auto const& x : schedule)
 		{
 			
-			
+			//Loop through schedule, execute commands. Right now just sends people to xbarmarker
 			
 			
 			
 			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
-			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+			MWWorld::Ptr marker = getHome(ptr);
+				
+				//= MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
-			MWWorld::CellStore* store = MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
+			MWWorld::CellStore* store = marker.getCell();
+				//MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
 			MWBase::Environment::get().getWorld()->moveObject(ptr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
-
+			
+			
 				
 			
 			//MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
 
 			//seq.stack(MWMechanics::AiCalledOver("player"), ptr);
 		}
+	}
+
+	MWWorld::Ptr AIScheduleManager::getHome(MWWorld::Ptr npc)
+	{
+		//NPCs all have global variable called idhome where is their id. There are home markers all called homeint where int is a label for which home it is. NPC homes are looked up by checking the int registered under their id+home than looking up home+ the int found under their global var
+		
+		std::string name = npc.getCellRef().getRefId();
+		std::string houseNumber = std::to_string(MWBase::Environment::get().getWorld()->getGlobalInt(name+"home"));
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("home" + houseNumber, false);
+		return marker;
 	}
 
 	
