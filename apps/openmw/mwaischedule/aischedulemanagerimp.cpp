@@ -172,25 +172,19 @@ namespace MWAISchedule
 		for (auto const& x : schedule)
 		{
 			
-			//Loop through schedule, execute commands. Right now just sends people to xbarmarker
-			
-			
-			
 			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
-			MWWorld::Ptr marker = getHome(ptr);
+			
+			if (x.second == "home")
+			{
+				goHome(ptr);
+			}
+			else if (x.second == "bar")
+			{
+				goBar(ptr);
+			}
+			
 				
-				//= MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
-			ESM::Position markerPos = marker.getRefData().getPosition();
-			MWWorld::CellStore* store = marker.getCell();
-				//MWBase::Environment::get().getWorld()->getInterior("Seyda Neen, Arrille's Tradehouse");
-			MWBase::Environment::get().getWorld()->moveObject(ptr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 			
-			
-				
-			
-			//MWMechanics::AiSequence& seq = ptr.getClass().getCreatureStats(ptr).getAiSequence();
-
-			//seq.stack(MWMechanics::AiCalledOver("player"), ptr);
 		}
 	}
 
@@ -202,6 +196,27 @@ namespace MWAISchedule
 		std::string houseNumber = std::to_string(MWBase::Environment::get().getWorld()->getGlobalInt(name+"home"));
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("home" + houseNumber, false);
 		return marker;
+	}
+
+	bool AIScheduleManager::goHome(MWWorld::Ptr npc)
+	{
+		MWWorld::Ptr marker = getHome(npc);
+
+		//= MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+		ESM::Position markerPos = marker.getRefData().getPosition();
+		MWWorld::CellStore* store = marker.getCell();
+		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		return true;
+
+	}
+
+	bool AIScheduleManager::goBar(MWWorld::Ptr npc)
+	{
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+		ESM::Position markerPos = marker.getRefData().getPosition();
+		MWWorld::CellStore* store = marker.getCell();
+		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		return true;
 	}
 
 	

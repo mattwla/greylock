@@ -61,17 +61,19 @@ namespace MWBase
 			virtual void updateSchedules() = 0;
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc) = 0;
+			
+			virtual bool goHome(MWWorld::Ptr npc) = 0;
+			
+			virtual bool goBar(MWWorld::Ptr npc) = 0;
+
+
 
          
 
-            enum OffenseType
+            enum ScheduleTask
             {
-                OT_Theft, // Taking items owned by an NPC or a faction you are not a member of
-                OT_Assault, // Attacking a peaceful NPC
-                OT_Murder, // Murdering a peaceful NPC
-                OT_Trespassing, // Picking the lock of an owned door/chest
-                OT_SleepingInOwnedBed, // Sleeping in a bed owned by an NPC or a faction you are not a member of
-                OT_Pickpocket // Entering pickpocket mode, leaving it, and being detected. Any items stolen are a separate crime (Theft)
+                ST_Home,
+				ST_Bar
             };
             /**
              * @note victim may be empty
