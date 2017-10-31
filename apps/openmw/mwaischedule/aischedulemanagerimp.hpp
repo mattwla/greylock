@@ -41,6 +41,8 @@ namespace MWAISchedule
 
 			virtual bool goBar(MWWorld::Ptr npc);
 
+			virtual bool goOutside(MWWorld::Ptr npc);
+
 
     };
 }

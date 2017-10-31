@@ -182,6 +182,10 @@ namespace MWAISchedule
 			{
 				goBar(ptr);
 			}
+			else if (x.second == "outside")
+			{
+				goOutside(ptr);
+			}
 			
 				
 			
@@ -213,6 +217,15 @@ namespace MWAISchedule
 	bool AIScheduleManager::goBar(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+		ESM::Position markerPos = marker.getRefData().getPosition();
+		MWWorld::CellStore* store = marker.getCell();
+		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		return true;
+	}
+
+	bool AIScheduleManager::goOutside(MWWorld::Ptr npc)
+	{
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("eldafireoutside", false);
 		ESM::Position markerPos = marker.getRefData().getPosition();
 		MWWorld::CellStore* store = marker.getCell();
 		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);

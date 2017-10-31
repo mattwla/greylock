@@ -47,8 +47,8 @@ namespace MWMechanics
 	{
 	}
 
-	AiWave::AiWave(const std::string &actorId, bool commanded)
-		: mAlwaysFollow(true), mCommanded(commanded), mDuration(0), mRemainingDuration(0), mX(0), mY(0), mZ(0)
+	AiWave::AiWave(const std::string &actorId)
+		: mAlwaysFollow(true), mCommanded(false), mDuration(0), mRemainingDuration(0), mX(0), mY(0), mZ(0)
 		, mActorRefId(actorId), mActorId(-1), mCellId(""), mActive(false), mFollowIndex(mFollowIndexCounter++)
 	{
 	}

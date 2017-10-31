@@ -30,7 +30,7 @@ namespace MWMechanics
 		/// Follow Actor for duration or until you arrive at a position in a cell
 		AiWave(const std::string &ActorId, const std::string &CellId, float duration, float X, float Y, float Z);
 		/// Follow Actor indefinitively
-		AiWave(const std::string &ActorId, bool commanded = false);
+		AiWave(const std::string &ActorId);
 
 		AiWave(const ESM::AiSequence::AiWave* follow);
 

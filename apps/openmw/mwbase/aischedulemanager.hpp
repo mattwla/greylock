@@ -66,7 +66,7 @@ namespace MWBase
 			
 			virtual bool goBar(MWWorld::Ptr npc) = 0;
 
-
+			virtual bool goOutside(MWWorld::Ptr npc) = 0;
 
          
 
