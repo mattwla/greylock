@@ -89,6 +89,8 @@ namespace MWBase
 
 			virtual bool crossBalmora(MWWorld::Ptr npc) = 0;
 
+			virtual std::map<int, TravelNode> buildTravelNodes() = 0;
+
          
 
             enum ScheduleTask

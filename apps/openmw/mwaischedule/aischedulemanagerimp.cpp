@@ -49,6 +49,7 @@ namespace MWAISchedule
 	AIScheduleManager::AIScheduleManager()
 	{
 		ESM::Pathgrid travelNodeGrid;
+		buildTravelNodes();
 	}
 	
 
@@ -270,6 +271,55 @@ namespace MWAISchedule
 		seq.stack(MWMechanics::AiTravel(markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]), npc);
 		return true;
 	}
+
+	std::map<int, MWBase::AIScheduleManager::TravelNode> AIScheduleManager::buildTravelNodes()
+	{
+		std::map<int, TravelNode> nodeMap;
+		
+		std::string nodelist = ("schedules/travelnodes.csv");
+		std::ifstream in(nodelist.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open " << nodelist << std::endl;
+
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+
+		std::vector<std::vector<std::string>> vecvec;
+		
+		std::string line;
+
+		while (getline(in, line))
+		{
+			std::vector<std::string> vec;
+			Tokenizer tok(line);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+			{
+				vec.push_back(*it);
+			}
+			vecvec.push_back(vec);
+		}
+		
+		for (unsigned int i = 0; i < vecvec.size(); i++)
+		{
+			MWBase::AIScheduleManager::TravelNode travelnode;
+			travelnode.id = i;
+			travelnode.marker = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
+			ESM::Position markerPos = travelnode.marker.getRefData().getPosition();
+			ESM::Pathgrid::Point point;
+			point.mX = markerPos.pos[0];
+			point.mY = markerPos.pos[1];
+			point.mZ = markerPos.pos[2];
+			vecvec[i];
+			travelNodeMap[i] = travelnode;
+
+		}
+		
+		return travelNodeMap;
+	}
+	
+	
+
 
 	
 }

@@ -46,6 +46,9 @@ namespace MWAISchedule
 			virtual bool goBalmora(MWWorld::Ptr npc);
 
 			virtual bool crossBalmora(MWWorld::Ptr npc);
+			
+			virtual std::map<int, TravelNode> buildTravelNodes();
+
 
 
     };
