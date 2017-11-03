@@ -68,6 +68,10 @@ namespace MWBase
 
 			virtual bool goOutside(MWWorld::Ptr npc) = 0;
 
+			virtual bool goBalmora(MWWorld::Ptr npc) = 0;
+
+			virtual bool crossBalmora(MWWorld::Ptr npc) = 0;
+
          
 
             enum ScheduleTask

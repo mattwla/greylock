@@ -43,6 +43,10 @@ namespace MWAISchedule
 
 			virtual bool goOutside(MWWorld::Ptr npc);
 
+			virtual bool goBalmora(MWWorld::Ptr npc);
+
+			virtual bool crossBalmora(MWWorld::Ptr npc);
+
 
     };
 }

@@ -32,6 +32,8 @@ namespace MWMechanics
 		/// Follow Actor indefinitively
 		AiWave(const std::string &ActorId);
 
+		AiWave(const std::string & actorId, bool loop);
+
 		AiWave(const ESM::AiSequence::AiWave* follow);
 
 		MWWorld::Ptr getTarget() const;
@@ -61,6 +63,7 @@ namespace MWMechanics
 		/** Thus ignoring mDuration and mX,mY,mZ (used for summoned creatures). **/
 		bool mAlwaysFollow;
 		bool mCommanded;
+		bool mLoop;
 		float mDuration; // Hours
 		float mRemainingDuration; // Hours
 		float mX;

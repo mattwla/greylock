@@ -49,9 +49,15 @@ namespace MWMechanics
 
 	AiWave::AiWave(const std::string &actorId)
 		: mAlwaysFollow(true), mCommanded(false), mDuration(0), mRemainingDuration(0), mX(0), mY(0), mZ(0)
-		, mActorRefId(actorId), mActorId(-1), mCellId(""), mActive(false), mFollowIndex(mFollowIndexCounter++)
+		, mActorRefId(actorId), mActorId(-1), mCellId(""), mActive(false), mFollowIndex(mFollowIndexCounter++), mLoop(false)
 	{
 	}
+	AiWave::AiWave(const std::string &actorId, bool loop)
+		: mAlwaysFollow(true), mCommanded(false), mDuration(0), mRemainingDuration(0), mX(0), mY(0), mZ(0)
+		, mActorRefId(actorId), mActorId(-1), mCellId(""), mActive(false), mFollowIndex(mFollowIndexCounter++), mLoop(loop)
+	{
+	}
+
 
 	AiWave::AiWave(const ESM::AiSequence::AiWave *follow)
 		: mAlwaysFollow(follow->mAlwaysFollow), mCommanded(follow->mCommanded), mRemainingDuration(follow->mRemainingDuration)
@@ -102,12 +108,16 @@ namespace MWMechanics
 		//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "wave", 0, 1);
 		actor.getClass().getMovementSettings(actor).mPosition[1] = 0;
 		
-		if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave") && storage.mTimer == 0.f)
+		if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave") )
 		{
-			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "wave", 0, 1);
-			storage.mTimer = 1.0f;
+			
+			if (mLoop || storage.mTimer == 0.f)
+			{
+				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(actor, "wave", 0, 1);
+				storage.mTimer = 1.0f;
+			}
 		}
-		else if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave"))
+		else if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(actor, "wave") && !mLoop)
 			return true;
 			
 	

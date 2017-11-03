@@ -23,6 +23,10 @@
 #include "../mwbase/dialoguemanager.hpp"
 
 #include "../mwworld/timestamp.hpp"
+
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/aiwave.hpp"
+#include "../mwmechanics/aitravel.hpp"
 //
 //#include "aicombat.hpp"
 //#include "aipursue.hpp"
@@ -186,6 +190,14 @@ namespace MWAISchedule
 			{
 				goOutside(ptr);
 			}
+			else if (x.second == "balmora")
+			{
+				goBalmora(ptr);
+			}
+			else if (x.second == "crossbalmora")
+			{
+				crossBalmora(ptr);
+			}
 			
 				
 			
@@ -229,6 +241,29 @@ namespace MWAISchedule
 		ESM::Position markerPos = marker.getRefData().getPosition();
 		MWWorld::CellStore* store = marker.getCell();
 		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		
+		MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+		seq.stack(MWMechanics::AiWave("player", true), npc);
+		
+		return true;
+	}
+
+	bool AIScheduleManager::goBalmora(MWWorld::Ptr npc)
+	{
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
+		ESM::Position markerPos = marker.getRefData().getPosition();
+		MWWorld::CellStore* store = marker.getCell();
+		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		return true;
+	}
+
+	bool AIScheduleManager::crossBalmora(MWWorld::Ptr npc)
+	{
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora3", false);
+		ESM::Position markerPos = marker.getRefData().getPosition();
+
+		MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+		seq.stack(MWMechanics::AiTravel(markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]), npc);
 		return true;
 	}
 
