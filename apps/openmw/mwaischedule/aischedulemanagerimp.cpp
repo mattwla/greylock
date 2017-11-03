@@ -311,11 +311,12 @@ namespace MWAISchedule
 			point.mY = markerPos.pos[1];
 			point.mZ = markerPos.pos[2];
 			vecvec[i];
-			travelNodeMap[i] = travelnode;
+			nodeMap[i] = travelnode;
+			//id,index,num of connections, connected to
 
 		}
 		
-		return travelNodeMap;
+		return nodeMap;
 	}
 	
 	
