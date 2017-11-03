@@ -49,6 +49,10 @@ namespace MWAISchedule
 			
 			virtual std::map<int, TravelNode> buildTravelNodes();
 
+			virtual void buildPathGrid(ESM::Pathgrid *grid);
+
+			//virtual ESM::Pathgrid buildPathGrid();
+
 
 
     };

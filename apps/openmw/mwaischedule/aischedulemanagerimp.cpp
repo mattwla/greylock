@@ -27,6 +27,8 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
 #include "../mwmechanics/aitravel.hpp"
+#include "../mwmechanics/pathgrid.hpp"
+
 //
 //#include "aicombat.hpp"
 //#include "aipursue.hpp"
@@ -48,8 +50,11 @@ namespace MWAISchedule
 {
 	AIScheduleManager::AIScheduleManager()
 	{
-		ESM::Pathgrid travelNodeGrid;
-		buildTravelNodes();
+		mtravelNodeMap = buildTravelNodes();
+		buildPathGrid(&mtravelPathGrid);
+		
+		
+		
 	}
 	
 
@@ -209,6 +214,8 @@ namespace MWAISchedule
 		}
 	}
 
+
+
 	MWWorld::Ptr AIScheduleManager::getHome(MWWorld::Ptr npc)
 	{
 		//NPCs all have global variable called idhome where is their id. There are home markers all called homeint where int is a label for which home it is. NPC homes are looked up by checking the int registered under their id+home than looking up home+ the int found under their global var
@@ -318,7 +325,51 @@ namespace MWAISchedule
 		
 		return nodeMap;
 	}
+
+	void AIScheduleManager::buildPathGrid(ESM::Pathgrid * grid)
+	{
+		for (unsigned int i = 0; i < mtravelNodeMap.size(); i++)
+		{
+			grid->mPoints.push_back(mtravelNodeMap[i].point);
+		}
+
+		std::string nodelist = ("schedules/edges.csv");
+		std::ifstream in(nodelist.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open " << nodelist << std::endl;
+
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+
+		std::vector<std::vector<std::string>> vecvec;
+
+		std::string line;
+
+		while (getline(in, line))
+		{
+			std::vector<std::string> vec;
+			Tokenizer tok(line);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+			{
+				vec.push_back(*it);
+			}
+			vecvec.push_back(vec);
+		}
+
+
+		for (unsigned int i = 0; i < vecvec.size(); i++)
+		{
+			ESM::Pathgrid::Edge e;
+			e.mV0 = std::stoi(vecvec[i][0]);
+			e.mV1 = std::stoi(vecvec[i][1]);
+			grid->mEdges.push_back(e);
+		}
+
+		
+	}
 	
+
 	
 
 

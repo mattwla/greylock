@@ -62,7 +62,9 @@ namespace MWBase
 				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
 			};
 
-			std::map<int, TravelNode>  travelNodeMap;
+			std::map<int, TravelNode>  mtravelNodeMap;
+
+			ESM::Pathgrid mtravelPathGrid;
 			
 			
 			AIScheduleManager() {}
@@ -90,6 +92,8 @@ namespace MWBase
 			virtual bool crossBalmora(MWWorld::Ptr npc) = 0;
 
 			virtual std::map<int, TravelNode> buildTravelNodes() = 0;
+
+			virtual void buildPathGrid(ESM::Pathgrid *grid) = 0;
 
          
 
