@@ -8,6 +8,10 @@
 #include <stdint.h>
 #include <map>
 
+#include <list>
+
+#include <components/esm/loadpgrd.hpp>
+
 #include "../mwworld/ptr.hpp"
 
 namespace osg
@@ -37,7 +41,7 @@ namespace Loading
 
 namespace MWBase
 {
-    /// \brief Interface for game mechanics manager (implemented in MWMechanics)
+    
     class AIScheduleManager
     {
             AIScheduleManager (const AIScheduleManager&);
@@ -48,7 +52,20 @@ namespace MWBase
 
         public:
 
-            AIScheduleManager() {}
+			struct TravelNode
+			{
+				//ALL SUBJECT TO CHANGE
+
+				int id; //An id, static, must be used for astar to function. (use to make a map?)
+				MWWorld::Ptr marker; //An in game location, for spawning NPCs
+				ESM::Pathgrid::Point point; //A point for astar pathfinding
+				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
+			};
+
+			std::map<int, TravelNode>  travelNodeMap;
+			
+			
+			AIScheduleManager() {}
 
             virtual ~AIScheduleManager() {}
 

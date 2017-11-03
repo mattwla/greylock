@@ -37,6 +37,8 @@
 //#include "combat.hpp"
 //#include "aicalledover.hpp"
 
+//Should I include pathfinding?
+
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
@@ -46,11 +48,13 @@ namespace MWAISchedule
 {
 	AIScheduleManager::AIScheduleManager()
 	{
-
+		ESM::Pathgrid travelNodeGrid;
 	}
 	
+
 	
-	
+	//ESM::Pathgrid::Point dest = target.getRefData().getPosition().pos;
+
 	std::ifstream AIScheduleManager::fetchSchedule()
 	{
 		std::string schedule;
