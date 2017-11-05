@@ -51,7 +51,7 @@ namespace MWAISchedule
 
 			virtual bool crossBalmora(MWWorld::Ptr npc);
 			
-			virtual std::map<int, TravelNode> buildTravelNodes();
+			virtual std::map<int, TravelNode*> buildTravelNodes();
 
 			virtual void buildPathGrid(ESM::Pathgrid *grid);
 

@@ -58,14 +58,15 @@ namespace MWBase
 				//ALL SUBJECT TO CHANGE
 
 				int id; //An id, static, must be used for astar to function. (use to make a map?)
-				MWWorld::Ptr marker; //An in game location, for spawning NPCs
+				std::string marker; //An in game location, for spawning NPCs
 				ESM::Pathgrid::Point point; //A point for astar pathfinding
 				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
 			};
 
 			struct Journey
 			{
-				Journey(std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
+				Journey(MWWorld::Ptr mNpc, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
+				MWWorld::Ptr mNpc;
 				int mStep;
 				std::vector<int> mTravelNodeItinerary;
 				MWWorld::Ptr mDestination;
@@ -73,13 +74,13 @@ namespace MWBase
 				void update();
 			};
 
-			std::map<int, TravelNode>  mtravelNodeMap;
+			std::map<int, TravelNode*>  mtravelNodeMap;
 
 			ESM::Pathgrid mtravelPathGrid;
 			
 			MWMechanics::PathgridGraph mtravelPathGridGraph;
 
-			std::vector<Journey> mActiveJourneys;
+			std::vector<Journey*> mActiveJourneys;
 			
 			
 			AIScheduleManager() {}
@@ -106,7 +107,7 @@ namespace MWBase
 
 			virtual bool crossBalmora(MWWorld::Ptr npc) = 0;
 
-			virtual std::map<int, TravelNode> buildTravelNodes() = 0;
+			virtual std::map<int, TravelNode*> buildTravelNodes() = 0;
 
 			virtual void buildPathGrid(ESM::Pathgrid *grid) = 0;
 

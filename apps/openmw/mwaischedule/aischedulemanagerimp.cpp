@@ -45,17 +45,27 @@
 #include <iterator>
 #include <algorithm>
 
-MWBase::AIScheduleManager::Journey::Journey(std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination ) :
-	mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
+MWBase::AIScheduleManager::Journey::Journey(MWWorld::Ptr mNpc, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination) :
+	mNpc(mNpc), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
 {
-	
+	update();
 }
 
 
 
 void MWBase::AIScheduleManager::Journey::update()
 {
+	mStep = mStep + 1;
+	auto m = MWBase::Environment::get().getAIScheduleManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
 
+	MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
+
+	ESM::Position markerPos = markerPtr.getRefData().getPosition();
+	MWWorld::CellStore* store = markerPtr.getCell();
+
+	
+	MWBase::Environment::get().getWorld()->moveObject(mNpc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+	
 }
 
 
@@ -274,9 +284,9 @@ namespace MWAISchedule
 		}
 
 		//Make a journey.
-		MWBase::AIScheduleManager::Journey j(travelNodeList, dest);
+		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc, travelNodeList, dest);
 		
-		
+		mActiveJourneys.push_back(j); //Do I want to do this through a method?
 
 
 		return true;
@@ -341,9 +351,9 @@ namespace MWAISchedule
 		return true;
 	}
 
-	std::map<int, MWBase::AIScheduleManager::TravelNode> AIScheduleManager::buildTravelNodes()
+	std::map<int, MWBase::AIScheduleManager::TravelNode*> AIScheduleManager::buildTravelNodes()
 	{
-		std::map<int, TravelNode> nodeMap;
+		std::map<int, TravelNode*> nodeMap;
 		
 		std::string nodelist = ("schedules/travelnodes.csv");
 		std::ifstream in(nodelist.c_str());
@@ -371,18 +381,18 @@ namespace MWAISchedule
 		
 		for (unsigned int i = 0; i < vecvec.size(); i++)
 		{
-			MWBase::AIScheduleManager::TravelNode travelnode;
-			travelnode.id = i;
-			travelnode.marker = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
-			ESM::Position markerPos = travelnode.marker.getRefData().getPosition();
-			ESM::Pathgrid::Point point;
-			point.mUnknown = i; //mUnknown seems unused, being used here to store the idx of point so we can look it up in nodeMap
-			point.mX = markerPos.pos[0];
-			point.mY = markerPos.pos[1];
-			point.mZ = markerPos.pos[2];
-			travelnode.point = point;
+			MWBase::AIScheduleManager::TravelNode *tn = new MWBase::AIScheduleManager::TravelNode;
+			tn->id = i;
+			tn->marker = vecvec[i][0];
+			ESM::Position markerPos = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false).getRefData().getPosition();
+			ESM::Pathgrid::Point *point = new ESM::Pathgrid::Point;
+			point->mUnknown = i; //mUnknown seems unused, being used here to store the idx of point so we can look it up in nodeMap
+			point->mX = markerPos.pos[0];
+			point->mY = markerPos.pos[1];
+			point->mZ = markerPos.pos[2];
+			tn->point = *point;
 			vecvec[i];
-			nodeMap[i] = travelnode;
+			nodeMap[i] = tn;
 			//id,index,num of connections, connected to
 
 		}
@@ -394,7 +404,7 @@ namespace MWAISchedule
 	{
 		for (unsigned int i = 0; i < mtravelNodeMap.size(); i++)
 		{
-			grid->mPoints.push_back(mtravelNodeMap[i].point);
+			grid->mPoints.push_back(mtravelNodeMap[i]->point);
 		}
 
 		std::string nodelist = ("schedules/edges.csv");
