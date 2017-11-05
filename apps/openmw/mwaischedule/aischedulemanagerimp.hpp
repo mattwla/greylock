@@ -23,6 +23,8 @@ namespace MWAISchedule
 
             AIScheduleManager();
 
+			
+
           
 			
 			virtual std::ifstream fetchSchedule();

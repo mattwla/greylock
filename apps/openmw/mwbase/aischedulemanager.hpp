@@ -63,11 +63,23 @@ namespace MWBase
 				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
 			};
 
+			struct Journey
+			{
+				Journey(std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
+				int mStep;
+				std::vector<int> mTravelNodeItinerary;
+				MWWorld::Ptr mDestination;
+				
+				void update();
+			};
+
 			std::map<int, TravelNode>  mtravelNodeMap;
 
 			ESM::Pathgrid mtravelPathGrid;
 			
 			MWMechanics::PathgridGraph mtravelPathGridGraph;
+
+			std::vector<Journey> mActiveJourneys;
 			
 			
 			AIScheduleManager() {}

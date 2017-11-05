@@ -45,6 +45,19 @@
 #include <iterator>
 #include <algorithm>
 
+MWBase::AIScheduleManager::Journey::Journey(std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination ) :
+	mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
+{
+	
+}
+
+
+
+void MWBase::AIScheduleManager::Journey::update()
+{
+
+}
+
 
 namespace MWAISchedule
 {
@@ -56,6 +69,9 @@ namespace MWAISchedule
 		mtravelPathGridGraph.load();
 		
 	}
+
+
+	
 	
 
 	
@@ -234,16 +250,33 @@ namespace MWAISchedule
 		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(npc.getCellRef().getRefId(), true);
 		destInLive = MWBase::Environment::get().getWorld()->searchPtr(dest.getCellRef().getRefId(), true);
 
-		std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
-		std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
+		if (actorInLive && destInLive) //NPC can just walk there, so do that..... for now
+		{
+			ESM::Position destPos = dest.getRefData().getPosition();
+			MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+			seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), npc);
+			return true;
+		}
 
+		//std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
+		//std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
+
+
+		//We are here because NPC needs to traverse while outside of cell, so we will use the travelNode system
+		//Build a path through the nodes
 		auto path = mtravelPathGridGraph.aStarSearch(1, 0);
+		
+		//collect the ids of which nodes we will use
 		std::vector<int> travelNodeList;
-
 		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
 		{
 			travelNodeList.push_back(it->mUnknown);
 		}
+
+		//Make a journey.
+		MWBase::AIScheduleManager::Journey j(travelNodeList, dest);
+		
+		
 
 
 		return true;
@@ -291,9 +324,9 @@ namespace MWAISchedule
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
 		travel(npc, marker);
-		ESM::Position markerPos = marker.getRefData().getPosition();
-		MWWorld::CellStore* store = marker.getCell();
-		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		//ESM::Position markerPos = marker.getRefData().getPosition();
+		//MWWorld::CellStore* store = marker.getCell();
+		//MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 		return true;
 	}
 
