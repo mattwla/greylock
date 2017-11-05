@@ -11,6 +11,7 @@
 #include <list>
 
 #include <components/esm/loadpgrd.hpp>
+#include "../mwmechanics/pathgrid.hpp"
 
 #include "../mwworld/ptr.hpp"
 
@@ -66,6 +67,8 @@ namespace MWBase
 
 			ESM::Pathgrid mtravelPathGrid;
 			
+			MWMechanics::PathgridGraph mtravelPathGridGraph;
+			
 			
 			AIScheduleManager() {}
 
@@ -94,6 +97,8 @@ namespace MWBase
 			virtual std::map<int, TravelNode> buildTravelNodes() = 0;
 
 			virtual void buildPathGrid(ESM::Pathgrid *grid) = 0;
+
+			virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest) = 0;
 
          
 

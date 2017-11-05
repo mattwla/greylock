@@ -37,6 +37,8 @@ namespace MWAISchedule
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);
 
+			virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest);
+
 			virtual bool goHome(MWWorld::Ptr npc);
 
 			virtual bool goBar(MWWorld::Ptr npc);

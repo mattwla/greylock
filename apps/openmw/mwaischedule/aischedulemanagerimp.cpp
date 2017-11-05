@@ -52,8 +52,8 @@ namespace MWAISchedule
 	{
 		mtravelNodeMap = buildTravelNodes();
 		buildPathGrid(&mtravelPathGrid);
-		
-		
+	    mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
+		mtravelPathGridGraph.load();
 		
 	}
 	
@@ -226,9 +226,35 @@ namespace MWAISchedule
 		return marker;
 	}
 
+	bool AIScheduleManager::travel(MWWorld::Ptr npc, MWWorld::Ptr dest)
+	{
+		bool actorInLive;
+		bool destInLive;
+		
+		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(npc.getCellRef().getRefId(), true);
+		destInLive = MWBase::Environment::get().getWorld()->searchPtr(dest.getCellRef().getRefId(), true);
+
+		std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
+		std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
+
+		auto path = mtravelPathGridGraph.aStarSearch(1, 0);
+		std::vector<int> travelNodeList;
+
+		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
+		{
+			travelNodeList.push_back(it->mUnknown);
+		}
+
+
+		return true;
+	}
+
 	bool AIScheduleManager::goHome(MWWorld::Ptr npc)
 	{
+		
+		
 		MWWorld::Ptr marker = getHome(npc);
+		travel(npc, marker);
 
 		//= MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
 		ESM::Position markerPos = marker.getRefData().getPosition();
@@ -241,6 +267,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::goBar(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
+		travel(npc, marker);
 		ESM::Position markerPos = marker.getRefData().getPosition();
 		MWWorld::CellStore* store = marker.getCell();
 		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
@@ -263,6 +290,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::goBalmora(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
+		travel(npc, marker);
 		ESM::Position markerPos = marker.getRefData().getPosition();
 		MWWorld::CellStore* store = marker.getCell();
 		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
@@ -272,6 +300,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::crossBalmora(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora3", false);
+		travel(npc, marker);
 		ESM::Position markerPos = marker.getRefData().getPosition();
 
 		MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
@@ -314,9 +343,11 @@ namespace MWAISchedule
 			travelnode.marker = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
 			ESM::Position markerPos = travelnode.marker.getRefData().getPosition();
 			ESM::Pathgrid::Point point;
+			point.mUnknown = i; //mUnknown seems unused, being used here to store the idx of point so we can look it up in nodeMap
 			point.mX = markerPos.pos[0];
 			point.mY = markerPos.pos[1];
 			point.mZ = markerPos.pos[2];
+			travelnode.point = point;
 			vecvec[i];
 			nodeMap[i] = travelnode;
 			//id,index,num of connections, connected to

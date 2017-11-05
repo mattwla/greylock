@@ -22,7 +22,9 @@ namespace MWMechanics
         public:
             PathgridGraph();
 
-            bool load(const MWWorld::CellStore *cell);
+			PathgridGraph(ESM::Pathgrid * pg);
+
+            bool load(const MWWorld::CellStore *cell = NULL);
 
             // returns true if end point is strongly connected (i.e. reachable
             // from start point) both start and end are pathgrid point indexes

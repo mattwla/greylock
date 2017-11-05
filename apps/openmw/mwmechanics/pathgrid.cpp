@@ -59,6 +59,17 @@ namespace MWMechanics
         , mSCCIndex(0)
     {
     }
+	PathgridGraph::PathgridGraph(ESM::Pathgrid * pg)
+		: mCell(NULL)
+		, mPathgrid(pg)
+		, mIsExterior(0)
+		, mGraph(0)
+		, mIsGraphConstructed(false)
+		, mSCCId(0)
+		, mSCCIndex(0)
+	{
+	}
+
 
     /*
      * mGraph is populated with the cost of each allowed edge.
@@ -98,15 +109,21 @@ namespace MWMechanics
      */
     bool PathgridGraph::load(const MWWorld::CellStore *cell)
     {
-        if(!cell)
-            return false;
+        
+		
+			//MWX modified so function can run without being given a cell, as aischedulemanager utilizes a pathgrid without a cell
+            //return false;
 
         if(mIsGraphConstructed)
             return true;
 
-        mCell = cell->getCell();
-        mIsExterior = cell->getCell()->isExterior();
-        mPathgrid = MWBase::Environment::get().getWorld()->getStore().get<ESM::Pathgrid>().search(*cell->getCell());
+		if (cell)
+		{
+
+			mCell = cell->getCell();
+			mIsExterior = cell->getCell()->isExterior();
+			mPathgrid = MWBase::Environment::get().getWorld()->getStore().get<ESM::Pathgrid>().search(*cell->getCell());
+		}
         if(!mPathgrid)
             return false;
 
