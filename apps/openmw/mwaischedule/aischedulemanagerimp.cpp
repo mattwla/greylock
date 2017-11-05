@@ -67,6 +67,7 @@ void MWBase::AIScheduleManager::Journey::update()
 
 	
 	MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+	std::cout << mNpcId << " at " << m->marker << std::endl;;
 	
 }
 
