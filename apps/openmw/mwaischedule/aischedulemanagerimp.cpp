@@ -45,10 +45,10 @@
 #include <iterator>
 #include <algorithm>
 
-MWBase::AIScheduleManager::Journey::Journey(MWWorld::Ptr mNpc, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination) :
-	mNpc(mNpc), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
+MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination) :
+	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
 {
-	update();
+	//update();
 }
 
 
@@ -59,12 +59,14 @@ void MWBase::AIScheduleManager::Journey::update()
 	auto m = MWBase::Environment::get().getAIScheduleManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
 
 	MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
+	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+
 
 	ESM::Position markerPos = markerPtr.getRefData().getPosition();
 	MWWorld::CellStore* store = markerPtr.getCell();
 
 	
-	MWBase::Environment::get().getWorld()->moveObject(mNpc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+	MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 	
 }
 
@@ -238,6 +240,16 @@ namespace MWAISchedule
 				
 			
 		}
+		updateJourneys();
+	}
+
+	void AIScheduleManager::updateJourneys()
+	{
+		
+		for (unsigned int i = 0; i < mActiveJourneys.size(); i++)
+		{
+			mActiveJourneys[i]->update();
+		}
 	}
 
 
@@ -284,7 +296,7 @@ namespace MWAISchedule
 		}
 
 		//Make a journey.
-		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc, travelNodeList, dest);
+		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest);
 		
 		mActiveJourneys.push_back(j); //Do I want to do this through a method?
 
@@ -297,7 +309,7 @@ namespace MWAISchedule
 		
 		
 		MWWorld::Ptr marker = getHome(npc);
-		travel(npc, marker);
+		
 
 		//= MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
 		ESM::Position markerPos = marker.getRefData().getPosition();
@@ -310,7 +322,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::goBar(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbarmarker", false);
-		travel(npc, marker);
+		
 		ESM::Position markerPos = marker.getRefData().getPosition();
 		MWWorld::CellStore* store = marker.getCell();
 		MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
@@ -343,7 +355,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::crossBalmora(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora3", false);
-		travel(npc, marker);
+		
 		ESM::Position markerPos = marker.getRefData().getPosition();
 
 		MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();

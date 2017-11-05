@@ -65,8 +65,8 @@ namespace MWBase
 
 			struct Journey
 			{
-				Journey(MWWorld::Ptr mNpc, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
-				MWWorld::Ptr mNpc;
+				Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
+				std::string mNpcId;
 				int mStep;
 				std::vector<int> mTravelNodeItinerary;
 				MWWorld::Ptr mDestination;
@@ -94,6 +94,8 @@ namespace MWBase
 			virtual bool checkScheduleGlobal(std::string global) = 0;
 
 			virtual void updateSchedules() = 0;
+
+			virtual void updateJourneys() = 0;
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc) = 0;
 			

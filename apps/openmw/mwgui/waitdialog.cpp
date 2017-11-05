@@ -210,7 +210,7 @@ namespace MWGui
 		
 		std::vector<std::string> partsOfDay = { "night", "morning", "day", "evening" };
 		std::string currentPod = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
-		int podIdx;
+		int podIdx = 1;
 		for (unsigned int i = 0; i < partsOfDay.size(); i++)
 		{
 			if (partsOfDay[i] == currentPod)
