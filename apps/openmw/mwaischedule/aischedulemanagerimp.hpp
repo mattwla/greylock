@@ -39,6 +39,8 @@ namespace MWAISchedule
 
 			virtual void updateJourneys();
 
+			virtual void clearJourneys();
+
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);
 
 			virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest);

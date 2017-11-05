@@ -58,7 +58,7 @@ namespace MWBase
 				//ALL SUBJECT TO CHANGE
 
 				int id; //An id, static, must be used for astar to function. (use to make a map?)
-				std::string marker; //An in game location, for spawning NPCs
+				std::string marker; //An id for an in game location, for spawning NPCs
 				ESM::Pathgrid::Point point; //A point for astar pathfinding
 				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
 			};
@@ -70,17 +70,22 @@ namespace MWBase
 				int mStep;
 				std::vector<int> mTravelNodeItinerary;
 				MWWorld::Ptr mDestination;
+				std::string mOnCompleteTask;
 				
 				void update();
 			};
 
 			std::map<int, TravelNode*>  mtravelNodeMap;
 
+			std::map<MWWorld::CellStore*, TravelNode*> mCellToNodeMap;
+
 			ESM::Pathgrid mtravelPathGrid;
 			
 			MWMechanics::PathgridGraph mtravelPathGridGraph;
 
 			std::vector<Journey*> mActiveJourneys;
+
+			virtual void clearJourneys() = 0;
 			
 			
 			AIScheduleManager() {}

@@ -189,6 +189,12 @@ namespace MWAISchedule
 	void AIScheduleManager::updateSchedules()
 	{
 		
+		mtravelNodeMap = buildTravelNodes();
+		buildPathGrid(&mtravelPathGrid);
+		mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
+		mtravelPathGridGraph.load(); 
+		//HACK FIX TO DEAL WITH CHANGING POINTERS
+
 		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
 		
 		//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
@@ -252,6 +258,12 @@ namespace MWAISchedule
 		}
 	}
 
+	void AIScheduleManager::clearJourneys()
+	{
+		mActiveJourneys.clear();
+	
+	}
+
 
 
 	MWWorld::Ptr AIScheduleManager::getHome(MWWorld::Ptr npc)
@@ -286,7 +298,13 @@ namespace MWAISchedule
 
 		//We are here because NPC needs to traverse while outside of cell, so we will use the travelNode system
 		//Build a path through the nodes
-		auto path = mtravelPathGridGraph.aStarSearch(1, 0);
+		
+		//lookup what node is associated with NPCs current cell.
+		int currentNode = mCellToNodeMap[npc.getCell()]->id;
+		int destNode = mCellToNodeMap[dest.getCell()]->id;
+
+
+		auto path = mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
 		
 		//collect the ids of which nodes we will use
 		std::vector<int> travelNodeList;
@@ -396,7 +414,8 @@ namespace MWAISchedule
 			MWBase::AIScheduleManager::TravelNode *tn = new MWBase::AIScheduleManager::TravelNode;
 			tn->id = i;
 			tn->marker = vecvec[i][0];
-			ESM::Position markerPos = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false).getRefData().getPosition();
+			MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
+			ESM::Position markerPos = markerPtr.getRefData().getPosition();
 			ESM::Pathgrid::Point *point = new ESM::Pathgrid::Point;
 			point->mUnknown = i; //mUnknown seems unused, being used here to store the idx of point so we can look it up in nodeMap
 			point->mX = markerPos.pos[0];
@@ -406,6 +425,10 @@ namespace MWAISchedule
 			vecvec[i];
 			nodeMap[i] = tn;
 			//id,index,num of connections, connected to
+
+			MWWorld::CellStore* store = markerPtr.getCell(); //Where will this ptr go? Probably away so figure out how to make this crash.
+			mCellToNodeMap[store] = tn;
+			
 
 		}
 		
