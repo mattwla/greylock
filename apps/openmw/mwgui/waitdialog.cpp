@@ -156,7 +156,7 @@ namespace MWGui
 
     void WaitDialog::startWaiting(int hoursToWait)
     {
-		hoursToWait = hoursToWait * 6; //Time works in 6 hour chunks.
+		//hoursToWait = hoursToWait * 6; //Time works in 6 hour chunks.
 		
 		if(Settings::Manager::getBool("autosave","Saves")) //autosaves when enabled
             MWBase::Environment::get().getStateManager()->quickSave("Autosave");

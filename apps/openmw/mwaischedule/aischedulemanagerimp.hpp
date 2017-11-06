@@ -39,6 +39,8 @@ namespace MWAISchedule
 
 			virtual void updateJourneys();
 
+			virtual void taskRouter(std::string npcID, std::string task);
+
 			virtual void clearJourneys();
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);

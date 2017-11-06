@@ -48,7 +48,11 @@
 MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
 {
-	//update();
+}
+
+MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
+	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
+{
 }
 
 
@@ -56,18 +60,34 @@ MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int>
 void MWBase::AIScheduleManager::Journey::update()
 {
 	mStep = mStep + 1;
-	auto m = MWBase::Environment::get().getAIScheduleManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
+	if (mStep < mTravelNodeItinerary.size()) {
+		auto m = MWBase::Environment::get().getAIScheduleManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
 
-	MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
-	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 
 
-	ESM::Position markerPos = markerPtr.getRefData().getPosition();
-	MWWorld::CellStore* store = markerPtr.getCell();
+		ESM::Position markerPos = markerPtr.getRefData().getPosition();
+		MWWorld::CellStore* store = markerPtr.getCell();
 
-	
-	MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
-	std::cout << mNpcId << " at " << m->marker << std::endl;;
+		if (!MWBase::Environment::get().getWorld()->searchPtr(npcPtr.getCellRef().getRefId(), true)) //if npc is not in active cell
+		{
+			MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+			std::cout << mNpcId << " at " << m->marker << std::endl;;
+		}
+		else //npc is in active cell
+		{
+			std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+			std::cout << "tnode is: " << tnodeId << std::endl;
+			MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
+			
+			ESM::Position tnodePos = tnode.getRefData().getPosition();
+			MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+			seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
+
+			//SEQ TRAVEL HERE.....
+		}
+	}
 	
 }
 
@@ -221,33 +241,38 @@ namespace MWAISchedule
 		for (auto const& x : schedule)
 		{
 			
-			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(x.first, false);
-			
-			if (x.second == "home")
-			{
-				goHome(ptr);
-			}
-			else if (x.second == "bar")
-			{
-				goBar(ptr);
-			}
-			else if (x.second == "outside")
-			{
-				goOutside(ptr);
-			}
-			else if (x.second == "balmora")
-			{
-				goBalmora(ptr);
-			}
-			else if (x.second == "crossbalmora")
-			{
-				crossBalmora(ptr);
-			}
-			
-				
+			taskRouter(x.first, x.second);
 			
 		}
 		updateJourneys();
+	}
+
+	void AIScheduleManager::taskRouter(std::string npcID, std::string task)
+	{
+		MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(npcID, false);
+
+		if (task == "home")
+		{
+			goHome(ptr);
+		}
+		else if (task == "bar")
+		{
+			goBar(ptr);
+		}
+		else if (task == "outside")
+		{
+			goOutside(ptr);
+		}
+		else if (task == "balmora")
+		{
+			goBalmora(ptr);
+		}
+		else if (task == "crossbalmora")
+		{
+			crossBalmora(ptr);
+		}
+
+
 	}
 
 	void AIScheduleManager::updateJourneys()
