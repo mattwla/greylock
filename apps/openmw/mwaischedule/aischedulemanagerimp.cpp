@@ -91,6 +91,20 @@ void MWBase::AIScheduleManager::Journey::update()
 	
 }
 
+bool MWBase::AIScheduleManager::Journey::readyForUpdate()
+{
+	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+	MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+	if (seq.getTypeId() != 1) //Are we not currently travelling?
+	{
+		return true;
+		
+	}
+	
+	
+	return false;
+}
+
 
 namespace MWAISchedule
 {
@@ -280,7 +294,10 @@ namespace MWAISchedule
 		
 		for (unsigned int i = 0; i < mActiveJourneys.size(); i++)
 		{
-			mActiveJourneys[i]->update();
+			if (mActiveJourneys[i]->readyForUpdate())
+			{
+				mActiveJourneys[i]->update();
+			}
 		}
 	}
 

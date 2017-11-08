@@ -21,6 +21,7 @@
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/scriptmanager.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
@@ -1642,6 +1643,8 @@ namespace MWWorld
             mSpellPreloadTimer = 0.1f;
             preloadSpells();
         }
+
+		MWBase::Environment::get().getAIScheduleManager()->updateJourneys();
     }
 
     void World::updatePlayer(bool paused)

@@ -65,6 +65,7 @@ namespace MWBase
 
 			struct Journey
 			{
+				
 				Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination);
 				Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task);
 				std::string mNpcId;
@@ -74,6 +75,7 @@ namespace MWBase
 				std::string mOnCompleteTask;
 				
 				void update();
+				bool readyForUpdate();
 			};
 
 			std::map<int, TravelNode*>  mtravelNodeMap;
