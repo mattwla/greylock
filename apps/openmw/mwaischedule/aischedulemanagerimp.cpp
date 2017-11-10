@@ -45,8 +45,8 @@
 #include <iterator>
 #include <algorithm>
 
-MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0)
+MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
+	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
 {
 }
 
@@ -57,7 +57,7 @@ MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int>
 
 
 
-void MWBase::AIScheduleManager::Journey::update()
+void MWBase::AIScheduleManager::Journey::update() //journey should become a task
 {
 	mStep = mStep + 1;
 	if (mStep < mTravelNodeItinerary.size()) {
@@ -93,11 +93,19 @@ void MWBase::AIScheduleManager::Journey::update()
 
 bool MWBase::AIScheduleManager::Journey::readyForUpdate()
 {
+	if (mStep == 0)
+	{
+		return true;
+	}
+	
 	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 	MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
 	if (seq.getTypeId() != 1) //Are we not currently travelling?
 	{
-		return true;
+		if (((MWBase::Environment::get().getWorld()->getTimeStamp() - mStartTime ) / mStep) <= 1) //Have we reached right time? But mEndTime is for whole journey.... not each piece.
+		{
+			return true;
+		}
 		
 	}
 	
@@ -335,6 +343,8 @@ namespace MWAISchedule
 			return true;
 		}
 
+		MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
+
 		//std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
 		//std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
 
@@ -357,7 +367,7 @@ namespace MWAISchedule
 		}
 
 		//Make a journey.
-		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest);
+		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
 		
 		mActiveJourneys.push_back(j); //Do I want to do this through a method?
 
