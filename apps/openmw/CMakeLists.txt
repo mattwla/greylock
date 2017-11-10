@@ -103,7 +103,7 @@ add_openmw_dir (mwaischedule
     )
 
 add_openmw_dir (mwtasks
-tasksmanagerimp
+tasksmanagerimp task life journey
 )
 
 add_openmw_dir (mwtravelnodes

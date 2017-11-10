@@ -2,6 +2,7 @@
 #define GAME_MWMECHANICS_TASKSMANAGERIMP_H
 
 #include "../mwbase/tasksmanager.hpp"
+#include "../mwtasks/journey.hpp"
 
 #include "../mwworld/ptr.hpp"
 

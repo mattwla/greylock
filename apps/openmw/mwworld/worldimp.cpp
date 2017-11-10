@@ -1644,7 +1644,9 @@ namespace MWWorld
             preloadSpells();
         }
 
-		MWBase::Environment::get().getAIScheduleManager()->updateJourneys();
+		//MWBase::Environment::get().getAIScheduleManager()->updateJourneys();
+		//MWX TASK UPDATE
+		
     }
 
     void World::updatePlayer(bool paused)

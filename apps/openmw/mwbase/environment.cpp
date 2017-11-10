@@ -158,6 +158,11 @@ MWBase::AIScheduleManager *MWBase::Environment::getAIScheduleManager() const
 	return mAIScheduleManager;
 }
 
+MWBase::TravelNodesManager *MWBase::Environment::getTravelNodesManager() const
+{
+	assert(mTravelNodesManager);
+	return mTravelNodesManager;
+}
 
 MWBase::DialogueManager *MWBase::Environment::getDialogueManager() const
 {

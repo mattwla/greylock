@@ -37,15 +37,15 @@ namespace MWAISchedule
 
 			virtual void updateSchedules();
 
-			virtual void updateJourneys();
+			//virtual void updateJourneys();
 
 			virtual void taskRouter(std::string npcID, std::string task);
 
-			virtual void clearJourneys();
+			//virtual void clearJourneys();
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);
 
-			virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest);
+			//virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest);
 
 			virtual bool goHome(MWWorld::Ptr npc);
 
@@ -57,9 +57,7 @@ namespace MWAISchedule
 
 			virtual bool crossBalmora(MWWorld::Ptr npc);
 			
-			virtual std::map<int, TravelNode*> buildTravelNodes();
-
-			virtual void buildPathGrid(ESM::Pathgrid *grid);
+		
 
 			//virtual ESM::Pathgrid buildPathGrid();
 

@@ -96,6 +96,8 @@ namespace MWBase
 
 			AIScheduleManager *getAIScheduleManager() const;
 
+			TravelNodesManager *getTravelNodesManager() const;
+
             DialogueManager *getDialogueManager() const;
 
             Journal *getJournal() const;

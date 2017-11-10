@@ -496,7 +496,7 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
         MWBase::Environment::get().getWorld()->renderPlayer();
         MWBase::Environment::get().getWindowManager()->updatePlayer();
         MWBase::Environment::get().getMechanicsManager()->playerLoaded();
-		MWBase::Environment::get().getAIScheduleManager()->clearJourneys(); //MWX
+		
 
         if (firstPersonCam != MWBase::Environment::get().getWorld()->isFirstPerson())
             MWBase::Environment::get().getWorld()->togglePOV();

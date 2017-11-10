@@ -45,83 +45,12 @@
 #include <iterator>
 #include <algorithm>
 
-MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
-{
-}
-
-MWBase::AIScheduleManager::Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-{
-}
-
-
-
-void MWBase::AIScheduleManager::Journey::update() //journey should become a task
-{
-	mStep = mStep + 1;
-	if (mStep < mTravelNodeItinerary.size()) {
-		auto m = MWBase::Environment::get().getAIScheduleManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
-
-		MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-
-
-		ESM::Position markerPos = markerPtr.getRefData().getPosition();
-		MWWorld::CellStore* store = markerPtr.getCell();
-
-		if (!MWBase::Environment::get().getWorld()->searchPtr(npcPtr.getCellRef().getRefId(), true)) //if npc is not in active cell
-		{
-			MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
-			std::cout << mNpcId << " at " << m->marker << std::endl;;
-		}
-		else //npc is in active cell
-		{
-			std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
-			std::cout << "tnode is: " << tnodeId << std::endl;
-			MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
-			
-			ESM::Position tnodePos = tnode.getRefData().getPosition();
-			MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-			seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
-
-			//SEQ TRAVEL HERE.....
-		}
-	}
-	
-}
-
-bool MWBase::AIScheduleManager::Journey::readyForUpdate()
-{
-	if (mStep == 0)
-	{
-		return true;
-	}
-	
-	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-	MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-	if (seq.getTypeId() != 1) //Are we not currently travelling?
-	{
-		if (((MWBase::Environment::get().getWorld()->getTimeStamp() - mStartTime ) / mStep) <= 1) //Have we reached right time? But mEndTime is for whole journey.... not each piece.
-		{
-			return true;
-		}
-		
-	}
-	
-	
-	return false;
-}
-
 
 namespace MWAISchedule
 {
 	AIScheduleManager::AIScheduleManager()
 	{
-		mtravelNodeMap = buildTravelNodes();
-		buildPathGrid(&mtravelPathGrid);
-	    mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
-		mtravelPathGridGraph.load();
+		
 		
 	}
 
@@ -232,10 +161,10 @@ namespace MWAISchedule
 	void AIScheduleManager::updateSchedules()
 	{
 		
-		mtravelNodeMap = buildTravelNodes();
+		/*mtravelNodeMap = buildTravelNodes();
 		buildPathGrid(&mtravelPathGrid);
 		mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
-		mtravelPathGridGraph.load(); 
+		mtravelPathGridGraph.load(); */
 		//HACK FIX TO DEAL WITH CHANGING POINTERS
 
 		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
@@ -266,7 +195,7 @@ namespace MWAISchedule
 			taskRouter(x.first, x.second);
 			
 		}
-		updateJourneys();
+		//updateJourneys();
 	}
 
 	void AIScheduleManager::taskRouter(std::string npcID, std::string task)
@@ -297,7 +226,7 @@ namespace MWAISchedule
 
 	}
 
-	void AIScheduleManager::updateJourneys()
+	/*void AIScheduleManager::updateJourneys()
 	{
 		
 		for (unsigned int i = 0; i < mActiveJourneys.size(); i++)
@@ -313,7 +242,7 @@ namespace MWAISchedule
 	{
 		mActiveJourneys.clear();
 	
-	}
+	}*/
 
 
 
@@ -327,53 +256,7 @@ namespace MWAISchedule
 		return marker;
 	}
 
-	bool AIScheduleManager::travel(MWWorld::Ptr npc, MWWorld::Ptr dest)
-	{
-		bool actorInLive;
-		bool destInLive;
-		
-		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(npc.getCellRef().getRefId(), true);
-		destInLive = MWBase::Environment::get().getWorld()->searchPtr(dest.getCellRef().getRefId(), true);
-
-		if (actorInLive && destInLive) //NPC can just walk there, so do that..... for now
-		{
-			ESM::Position destPos = dest.getRefData().getPosition();
-			MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
-			seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), npc);
-			return true;
-		}
-
-		MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
-
-		//std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
-		//std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
-
-
-		//We are here because NPC needs to traverse while outside of cell, so we will use the travelNode system
-		//Build a path through the nodes
-		
-		//lookup what node is associated with NPCs current cell.
-		int currentNode = mCellToNodeMap[npc.getCell()]->id;
-		int destNode = mCellToNodeMap[dest.getCell()]->id;
-
-
-		auto path = mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
-		
-		//collect the ids of which nodes we will use
-		std::vector<int> travelNodeList;
-		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
-		{
-			travelNodeList.push_back(it->mUnknown);
-		}
-
-		//Make a journey.
-		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
-		
-		mActiveJourneys.push_back(j); //Do I want to do this through a method?
-
-
-		return true;
-	}
+	
 
 	bool AIScheduleManager::goHome(MWWorld::Ptr npc)
 	{
@@ -416,7 +299,7 @@ namespace MWAISchedule
 	bool AIScheduleManager::goBalmora(MWWorld::Ptr npc)
 	{
 		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
-		travel(npc, marker);
+		//travel(npc, marker);
 		//ESM::Position markerPos = marker.getRefData().getPosition();
 		//MWWorld::CellStore* store = marker.getCell();
 		//MWBase::Environment::get().getWorld()->moveObject(npc, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
@@ -434,102 +317,9 @@ namespace MWAISchedule
 		return true;
 	}
 
-	std::map<int, MWBase::AIScheduleManager::TravelNode*> AIScheduleManager::buildTravelNodes()
-	{
-		std::map<int, TravelNode*> nodeMap;
-		
-		std::string nodelist = ("schedules/travelnodes.csv");
-		std::ifstream in(nodelist.c_str());
-		if (!in.is_open())
-			std::cout << "Not open" << std::endl;
-		else
-			std::cout << "Open " << nodelist << std::endl;
+	
 
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-
-		std::vector<std::vector<std::string>> vecvec;
-		
-		std::string line;
-
-		while (getline(in, line))
-		{
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
-		}
-		
-		for (unsigned int i = 0; i < vecvec.size(); i++)
-		{
-			MWBase::AIScheduleManager::TravelNode *tn = new MWBase::AIScheduleManager::TravelNode;
-			tn->id = i;
-			tn->marker = vecvec[i][0];
-			MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(vecvec[i][0], false);
-			ESM::Position markerPos = markerPtr.getRefData().getPosition();
-			ESM::Pathgrid::Point *point = new ESM::Pathgrid::Point;
-			point->mUnknown = i; //mUnknown seems unused, being used here to store the idx of point so we can look it up in nodeMap
-			point->mX = markerPos.pos[0];
-			point->mY = markerPos.pos[1];
-			point->mZ = markerPos.pos[2];
-			tn->point = *point;
-			vecvec[i];
-			nodeMap[i] = tn;
-			//id,index,num of connections, connected to
-
-			MWWorld::CellStore* store = markerPtr.getCell(); //Where will this ptr go? Probably away so figure out how to make this crash.
-			mCellToNodeMap[store] = tn;
-			
-
-		}
-		
-		return nodeMap;
-	}
-
-	void AIScheduleManager::buildPathGrid(ESM::Pathgrid * grid)
-	{
-		for (unsigned int i = 0; i < mtravelNodeMap.size(); i++)
-		{
-			grid->mPoints.push_back(mtravelNodeMap[i]->point);
-		}
-
-		std::string nodelist = ("schedules/edges.csv");
-		std::ifstream in(nodelist.c_str());
-		if (!in.is_open())
-			std::cout << "Not open" << std::endl;
-		else
-			std::cout << "Open " << nodelist << std::endl;
-
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-
-		std::vector<std::vector<std::string>> vecvec;
-
-		std::string line;
-
-		while (getline(in, line))
-		{
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
-		}
-
-
-		for (unsigned int i = 0; i < vecvec.size(); i++)
-		{
-			ESM::Pathgrid::Edge e;
-			e.mV0 = std::stoi(vecvec[i][0]);
-			e.mV1 = std::stoi(vecvec[i][1]);
-			grid->mEdges.push_back(e);
-		}
-
-		
-	}
+	
 	
 
 	

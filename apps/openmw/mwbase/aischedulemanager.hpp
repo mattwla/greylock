@@ -54,43 +54,14 @@ namespace MWBase
 
         public:
 
-			struct TravelNode
-			{
-				//ALL SUBJECT TO CHANGE
+		
 
-				int id; //An id, static, must be used for astar to function. (use to make a map?)
-				std::string marker; //An id for an in game location, for spawning NPCs
-				ESM::Pathgrid::Point point; //A point for astar pathfinding
-				std::vector<MWWorld::Ptr> npcs; //A list of npcs at node
-			};
 
-			struct Journey
-			{
-				
-				Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
-				Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task);
-				std::string mNpcId;
-				unsigned int mStep;
-				std::vector<int> mTravelNodeItinerary;
-				MWWorld::Ptr mDestination;
-				std::string mOnCompleteTask;
-				MWWorld::TimeStamp mStartTime;
-				
-				void update();
-				bool readyForUpdate();
-			};
-
-			std::map<int, TravelNode*>  mtravelNodeMap;
-
-			std::map<MWWorld::CellStore*, TravelNode*> mCellToNodeMap;
-
-			ESM::Pathgrid mtravelPathGrid;
 			
-			MWMechanics::PathgridGraph mtravelPathGridGraph;
 
-			std::vector<Journey*> mActiveJourneys;
+			//std::vector<Journey*> mActiveJourneys;
 
-			virtual void clearJourneys() = 0;
+			//virtual void clearJourneys() = 0;
 			
 			
 			AIScheduleManager() {}
@@ -107,7 +78,7 @@ namespace MWBase
 
 			virtual void updateSchedules() = 0;
 
-			virtual void updateJourneys() = 0;
+			//virtual void updateJourneys() = 0;
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc) = 0;
 			
@@ -121,11 +92,11 @@ namespace MWBase
 
 			virtual bool crossBalmora(MWWorld::Ptr npc) = 0;
 
-			virtual std::map<int, TravelNode*> buildTravelNodes() = 0;
+			
 
-			virtual void buildPathGrid(ESM::Pathgrid *grid) = 0;
+		
 
-			virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest) = 0;
+			//virtual bool travel(MWWorld::Ptr npc, MWWorld::Ptr dest) = 0;
 
          
 

@@ -19,6 +19,14 @@ namespace MWTravelNodes
 
 		TravelNodesManager();
 
+		~TravelNodesManager();
+
+
+
+		virtual std::map<int, TravelNode*> buildTravelNodes();
+
+		virtual void buildPathGrid(ESM::Pathgrid *grid);
+
 	};
 }
 
