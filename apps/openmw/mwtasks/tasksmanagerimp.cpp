@@ -94,6 +94,7 @@ namespace MWTasks
 		if (stask == "balmora")
 		{
 			MWTasks::Journey * rtask = new MWTasks::Journey();
+			return rtask;
 			
 			//JOURNEY
 		}

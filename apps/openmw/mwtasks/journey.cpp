@@ -49,6 +49,10 @@ namespace MWTasks
 	
 	*/
 
+	Journey::Journey()
+	{
+	}
+
 	void Journey::update() //journey should become a task
 	{
 		mStep = mStep + 1;

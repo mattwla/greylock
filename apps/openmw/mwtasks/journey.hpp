@@ -17,7 +17,7 @@ namespace MWTasks
 	public:
 
 		Journey();
-		Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
+		//Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 
 		unsigned int mStep;
 		std::vector<int> mTravelNodeItinerary;
