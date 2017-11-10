@@ -10,20 +10,23 @@
 namespace MWTasks
 {
 
-	class Journey : Task
+	class Journey : public Task
 	{
+		
+		
+	public:
 
+		Journey();
 		Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
-		Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task);
-		std::string mNpcId;
+
 		unsigned int mStep;
 		std::vector<int> mTravelNodeItinerary;
 		MWWorld::Ptr mDestination;
-		std::string mOnCompleteTask;
+		
 		MWWorld::TimeStamp mStartTime;
 
 		void update();
-		bool readyForUpdate();
+	
 	};
 
 }

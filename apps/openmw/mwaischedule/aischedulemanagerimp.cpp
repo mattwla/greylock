@@ -317,6 +317,49 @@ namespace MWAISchedule
 		return true;
 	}
 
+	std::string AIScheduleManager::fetchCurrentScheduledTask(std::string npcId)
+	{
+
+		//MWX WILL NEED REFACTORING
+
+		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+
+											//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		std::vector<std::vector<std::string>> vecvec;
+
+		std::string line;
+
+		while (getline(in, line))
+		{
+			std::vector<std::string> vec;
+			Tokenizer tok(line);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+			{
+				vec.push_back(*it);
+			}
+			vecvec.push_back(vec);
+		}
+
+		//parse our vector of vectors, get a map back of what each NPC should be doing.
+		std::map<std::string, std::string> schedule = mapSchedule(vecvec);
+
+		for (auto const& x : schedule)
+		{
+
+			if (x.first == npcId)
+			{
+				return x.second;
+			}
+			
+			//taskRouter(x.first, x.second);
+
+		}
+		
+		
+		return NULL;
+	}
+
 	
 
 	

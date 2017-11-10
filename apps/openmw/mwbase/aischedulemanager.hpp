@@ -69,6 +69,8 @@ namespace MWBase
             virtual ~AIScheduleManager() {}
 
 			virtual std::ifstream fetchSchedule() = 0;
+
+			virtual std::string fetchCurrentScheduledTask(std::string npcId) = 0;
 			
 			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
 

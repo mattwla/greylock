@@ -1,6 +1,11 @@
 #include "task.hpp"
+#include <string>
 
 MWTasks::Task::Task()
+{
+}
+
+MWTasks::Task::Task(std::string npcId) : mNpcId(npcId)
 {
 }
 

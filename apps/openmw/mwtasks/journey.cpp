@@ -37,7 +37,7 @@
 namespace MWTasks
 {
 
-	Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
+	/**Journey::Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
 		mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
 	{
 	}
@@ -46,8 +46,8 @@ namespace MWTasks
 		mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
 	{
 	}
-
-
+	
+	*/
 
 	void Journey::update() //journey should become a task
 	{
@@ -83,27 +83,27 @@ namespace MWTasks
 
 	}
 
-	bool Journey::readyForUpdate()
-	{
-		if (mStep == 0)
-		{
-			return true;
-		}
+	//bool Journey::readyForUpdate()
+	//{
+	//	if (mStep == 0)
+	//	{
+	//		return true;
+	//	}
 
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-		if (seq.getTypeId() != 1) //Are we not currently travelling?
-		{
-			if (((MWBase::Environment::get().getWorld()->getTimeStamp() - mStartTime) / mStep) <= 1) //Have we reached right time? But mEndTime is for whole journey.... not each piece.
-			{
-				return true;
-			}
+	//	MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+	//	MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+	//	if (seq.getTypeId() != 1) //Are we not currently travelling?
+	//	{
+	//		if (((MWBase::Environment::get().getWorld()->getTimeStamp() - mStartTime) / mStep) <= 1) //Have we reached right time? But mEndTime is for whole journey.... not each piece.
+	//		{
+	//			return true;
+	//		}
 
-		}
+	//	}
 
 
-		return false;
-	}
+	//	return false;
+	//}
 
 	/*bool Journey::travel(MWWorld::Ptr npc, MWWorld::Ptr dest)
 	{

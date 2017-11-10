@@ -18,6 +18,8 @@ namespace MWTasks
 	public:
 		Task();
 
+		Task(std::string npcId);
+
 		~Task();
 
 		std::string mNpcId;

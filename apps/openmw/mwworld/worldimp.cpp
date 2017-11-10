@@ -22,6 +22,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/scriptmanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
+#include "../mwbase/tasksmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
@@ -1646,6 +1647,7 @@ namespace MWWorld
 
 		//MWBase::Environment::get().getAIScheduleManager()->updateJourneys();
 		//MWX TASK UPDATE
+		MWBase::Environment::get().getTasksManager()->update();
 		
     }
 

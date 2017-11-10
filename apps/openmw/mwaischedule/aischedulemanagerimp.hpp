@@ -5,6 +5,8 @@
 
 #include "../mwworld/ptr.hpp"
 
+#include <string>
+
 
 namespace MWWorld
 {
@@ -56,6 +58,8 @@ namespace MWAISchedule
 			virtual bool goBalmora(MWWorld::Ptr npc);
 
 			virtual bool crossBalmora(MWWorld::Ptr npc);
+
+			virtual std::string fetchCurrentScheduledTask(std::string npcId);
 			
 		
 

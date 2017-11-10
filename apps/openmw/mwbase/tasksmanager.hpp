@@ -15,6 +15,7 @@
 #include "../mwworld/timestamp.hpp"
 
 #include "../mwworld/ptr.hpp"
+#include "../mwtasks/task.hpp"
 
 
 namespace osg
@@ -42,6 +43,11 @@ namespace Loading
 	class Listener;
 }
 
+namespace MWTasks
+{
+	class Task;
+}
+
 namespace MWBase
 {
 	class TasksManager
@@ -56,6 +62,16 @@ namespace MWBase
 
 	
 		TasksManager() {};
+
+		virtual ~TasksManager() {}
+
+		std::map<std::string, MWTasks::Task*>  mNpcMap;
+
+		virtual void update() = 0;
+
+		virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
+
+
 	
 	
 	};

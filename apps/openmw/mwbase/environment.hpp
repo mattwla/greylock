@@ -100,6 +100,8 @@ namespace MWBase
 
             DialogueManager *getDialogueManager() const;
 
+			TasksManager *getTasksManager() const;
+
             Journal *getJournal() const;
 
             InputManager *getInputManager() const;
