@@ -15,6 +15,7 @@
 #include "statemanager.hpp"
 #include "aischedulemanager.hpp"
 #include "tasksmanager.hpp"
+#include "travelnodesmanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -61,6 +62,11 @@ void MWBase::Environment::setMechanicsManager (MechanicsManager *mechanicsManage
 void MWBase::Environment::setTasksManager(TasksManager *tasksManager)
 {
 	mTasksManager = tasksManager;
+}
+
+void MWBase::Environment::setTravelNodesManager(TravelNodesManager *travelNodesManager)
+{
+	mTravelNodesManager = travelNodesManager;
 }
 
 void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleManager)
@@ -216,6 +222,9 @@ void MWBase::Environment::cleanup()
 
 	delete mTasksManager;
 	mTasksManager = 0;
+
+	delete mTravelNodesManager;
+	mTravelNodesManager = 0;
 }
 
 const MWBase::Environment& MWBase::Environment::get()

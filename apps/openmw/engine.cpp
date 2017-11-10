@@ -56,6 +56,7 @@
 
 #include "mwaischedule/aischedulemanagerimp.hpp"
 #include "mwtasks/tasksmanagerimp.hpp"
+#include "mwtravelnodes/travelnodesmanagerimp.hpp"
 
 #include "mwstate/statemanagerimp.hpp"
 
@@ -547,9 +548,13 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	MWAISchedule::AIScheduleManager* aischedule = new MWAISchedule::AIScheduleManager;
 	mEnvironment.setAIScheduleManager(aischedule);
 
+	//Create Tasks Manager
 	MWTasks::TasksManager* tasksmanager = new MWTasks::TasksManager;
 	mEnvironment.setTasksManager(tasksmanager);
 	
+	//Create travel nodes manager
+	MWTravelNodes::TravelNodesManager* travelnodesmanager = new MWTravelNodes::TravelNodesManager;
+	mEnvironment.setTravelNodesManager(travelnodesmanager);
 
     // scripts
     if (mCompileAll)

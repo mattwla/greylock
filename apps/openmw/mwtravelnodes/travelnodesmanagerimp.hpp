@@ -1,0 +1,26 @@
+#ifndef GAME_MWMECHANICS_TRAVELNODESMANAGERIMP_H
+#define GAME_MWMECHANICS_TRAVELNODESMANAGERIMP_H
+
+#include "../mwbase/travelnodesmanager.hpp"
+
+#include "../mwworld/ptr.hpp"
+
+namespace MWWorld
+{
+	class CellStore;
+}
+
+namespace MWTravelNodes
+{
+	class TravelNodesManager : public MWBase::TravelNodesManager
+	{
+
+	public:
+
+		TravelNodesManager();
+
+	};
+}
+
+
+#endif
