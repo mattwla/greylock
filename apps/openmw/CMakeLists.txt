@@ -95,12 +95,16 @@ add_openmw_dir (mwstate
 
 add_openmw_dir (mwbase
     environment world scriptmanager dialoguemanager journal soundmanager mechanicsmanager
-    inputmanager windowmanager statemanager aischedulemanager
+    inputmanager windowmanager statemanager aischedulemanager tasksmanager
     )
 
 add_openmw_dir (mwaischedule
     aischedulemanagerimp
     )
+
+add_openmw_dir (mwtasks
+tasksmanagerimp
+)
 
 # Main executable
 

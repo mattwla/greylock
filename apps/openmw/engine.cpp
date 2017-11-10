@@ -55,6 +55,7 @@
 #include "mwmechanics/mechanicsmanagerimp.hpp"
 
 #include "mwaischedule/aischedulemanagerimp.hpp"
+#include "mwtasks/tasksmanagerimp.hpp"
 
 #include "mwstate/statemanagerimp.hpp"
 
@@ -545,6 +546,9 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	//Create AI Schedule Manager
 	MWAISchedule::AIScheduleManager* aischedule = new MWAISchedule::AIScheduleManager;
 	mEnvironment.setAIScheduleManager(aischedule);
+
+	MWTasks::TasksManager* tasksmanager = new MWTasks::TasksManager;
+	mEnvironment.setTasksManager(tasksmanager);
 	
 
     // scripts

@@ -13,6 +13,7 @@ namespace MWBase
     class WindowManager;
     class StateManager;
 	class AIScheduleManager;
+	class TasksManager;
 
     /// \brief Central hub for mw-subsystems
     ///
@@ -29,6 +30,7 @@ namespace MWBase
             ScriptManager *mScriptManager;
             WindowManager *mWindowManager;
             MechanicsManager *mMechanicsManager;
+			TasksManager *mTasksManager;
 			AIScheduleManager *mAIScheduleManager;
             DialogueManager *mDialogueManager;
             Journal *mJournal;
@@ -58,6 +60,8 @@ namespace MWBase
             void setWindowManager (WindowManager *windowManager);
 
             void setMechanicsManager (MechanicsManager *mechanicsManager);
+
+			void setTasksManager(TasksManager *tasksManager);
 
 			void setAIScheduleManager(AIScheduleManager *AIScheduleManager);
 

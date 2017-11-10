@@ -14,6 +14,7 @@
 #include "windowmanager.hpp"
 #include "statemanager.hpp"
 #include "aischedulemanager.hpp"
+#include "tasksmanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -55,6 +56,11 @@ void MWBase::Environment::setWindowManager (WindowManager *windowManager)
 void MWBase::Environment::setMechanicsManager (MechanicsManager *mechanicsManager)
 {
     mMechanicsManager = mechanicsManager;
+}
+
+void MWBase::Environment::setTasksManager(TasksManager *tasksManager)
+{
+	mTasksManager = tasksManager;
 }
 
 void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleManager)
@@ -207,6 +213,9 @@ void MWBase::Environment::cleanup()
 
 	delete mAIScheduleManager;
 	mAIScheduleManager = 0;
+
+	delete mTasksManager;
+	mTasksManager = 0;
 }
 
 const MWBase::Environment& MWBase::Environment::get()
