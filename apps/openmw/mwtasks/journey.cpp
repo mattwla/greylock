@@ -56,7 +56,7 @@ namespace MWTasks
 	Journey::Journey(MWWorld::Ptr dest):
 		mDestination(dest)
 	{
-
+		mStep = 0;
 	}
 
 	void Journey::update() //journey should become a task
@@ -161,10 +161,10 @@ namespace MWTasks
 		auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
 
 																			 //collect the ids of which nodes we will use
-		std::vector<int> travelNodeList;
+		//std::vector<int> travelNodeList;
 		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
 		{
-			travelNodeList.push_back(it->mUnknown);
+			mTravelNodeItinerary.push_back(it->mUnknown);
 		}
 
 		
