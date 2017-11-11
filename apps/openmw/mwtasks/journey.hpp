@@ -5,6 +5,7 @@
 
 #include "../mwworld/cellstore.hpp" // for Doors
 
+
 #include "../mwbase/world.hpp"
 
 namespace MWTasks
@@ -17,15 +18,28 @@ namespace MWTasks
 	public:
 
 		Journey();
+
+		Journey(MWWorld::Ptr dest);
+		
 		//Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 
 		unsigned int mStep;
+		
+		MWBase::TravelNodesManager * mTravelNodesManager = MWBase::Environment::get().getTravelNodesManager();
+		
 		std::vector<int> mTravelNodeItinerary;
+		
 		MWWorld::Ptr mDestination;
 		
 		MWWorld::TimeStamp mStartTime;
 
-		void update();
+		virtual void update();
+
+		virtual int getTypeId() const;
+
+		bool init();
+
+		bool mInitialized = false;
 	
 	};
 

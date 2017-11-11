@@ -47,11 +47,22 @@ namespace MWTasks
 		mNpcId = npcId;
 	}
 
+	int Life::getTypeId() const
+	{
+		return TypeIDLife;
+	}
+
 	void Life::update()
 	{
 		if (!mSubTask)
 		{
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
+			if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
+			{
+				mSubTask->mNpcId = mNpcId;
+				
+			}
+
 		}
 		else
 		{

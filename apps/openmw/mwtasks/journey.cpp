@@ -53,8 +53,20 @@ namespace MWTasks
 	{
 	}
 
+	Journey::Journey(MWWorld::Ptr dest):
+		mDestination(dest)
+	{
+
+	}
+
 	void Journey::update() //journey should become a task
 	{
+		if (!mInitialized)
+		{
+			init();
+			return;
+		}
+
 		mStep = mStep + 1;
 		if (mStep < mTravelNodeItinerary.size()) {
 			auto m = MWBase::Environment::get().getTravelNodesManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
@@ -87,6 +99,11 @@ namespace MWTasks
 
 	}
 
+	int Journey::getTypeId() const
+	{
+		return TypeIDJourney;
+	}
+
 	//bool Journey::readyForUpdate()
 	//{
 	//	if (mStep == 0)
@@ -109,19 +126,21 @@ namespace MWTasks
 	//	return false;
 	//}
 
-	/*bool Journey::travel(MWWorld::Ptr npc, MWWorld::Ptr dest)
+	bool Journey::init()
 	{
 		bool actorInLive;
 		bool destInLive;
 
-		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(npc.getCellRef().getRefId(), true);
-		destInLive = MWBase::Environment::get().getWorld()->searchPtr(dest.getCellRef().getRefId(), true);
+		MWWorld::Ptr npcptr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+
+		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true);
+		destInLive = MWBase::Environment::get().getWorld()->searchPtr(mDestination.getCellRef().getRefId(), true); //Messy here MWX
 
 		if (actorInLive && destInLive) //NPC can just walk there, so do that..... for now
 		{
-			ESM::Position destPos = dest.getRefData().getPosition();
-			MWMechanics::AiSequence& seq = npc.getClass().getCreatureStats(npc).getAiSequence();
-			seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), npc);
+			ESM::Position destPos = mDestination.getRefData().getPosition();
+			MWMechanics::AiSequence& seq = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true).getClass().getCreatureStats(MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)).getAiSequence();
+			seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)); //PLZ FIX PLZ MWX too many search ptrs
 			return true;
 		}
 
@@ -135,11 +154,11 @@ namespace MWTasks
 		//Build a path through the nodes
 
 		//lookup what node is associated with NPCs current cell.
-		int currentNode = mCellToNodeMap[npc.getCell()]->id;
-		int destNode = mCellToNodeMap[dest.getCell()]->id;
+		int currentNode = mTravelNodesManager->mCellToNodeMap[npcptr.getCell()]->id;
+		int destNode = mTravelNodesManager->mCellToNodeMap[mDestination.getCell()]->id;
 
 
-		auto path = mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
+		auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
 
 																			 //collect the ids of which nodes we will use
 		std::vector<int> travelNodeList;
@@ -148,14 +167,16 @@ namespace MWTasks
 			travelNodeList.push_back(it->mUnknown);
 		}
 
+		
+		
 		//Make a journey.
-		MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
+		//MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
 
-		mActiveJourneys.push_back(j); //Do I want to do this through a method?
+		//mActiveJourneys.push_back(j); //Do I want to do this through a method?
 
-
+		mInitialized = true;
 		return true;
-	}*/
+	}
 
 }
 

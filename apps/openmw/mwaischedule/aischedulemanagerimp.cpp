@@ -357,7 +357,7 @@ namespace MWAISchedule
 		}
 		
 		
-		return NULL;
+		return "";
 	}
 
 	

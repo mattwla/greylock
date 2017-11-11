@@ -15,8 +15,10 @@ namespace MWTasks
 	
 	public:
 		Life(std::string npcId);
+		
+		virtual int getTypeId() const;
 
-		void update();
+		virtual void update();
 
 	};
 

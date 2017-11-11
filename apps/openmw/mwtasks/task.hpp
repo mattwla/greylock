@@ -1,6 +1,8 @@
 #ifndef GAME_MWTASKS_TASK_H
 #define GAME_MWTASKS_TASK_H
 #include <components/esm/defs.hpp>
+#include "../mwbase/travelnodesmanager.hpp"
+#include "../mwbase/environment.hpp"
 
 #include <string>
 
@@ -16,19 +18,28 @@ namespace MWTasks
 	class Task
 	{
 	public:
+
+		enum TypeID {
+			TypeIDLife = 0,
+			TypeIDJourney = 1 
+		};
+		
 		Task();
 
 		Task(std::string npcId);
 
-		~Task();
+		virtual ~Task();
 
 		std::string mNpcId;
 
+		virtual int getTypeId() const = 0;
+
 		bool mDone;
 
-		void update();
+		virtual void update() = 0;
 
-		Task* mSubTask;
+		Task* mSubTask = nullptr;
+
 
 
 	};

@@ -93,7 +93,8 @@ namespace MWTasks
 
 		if (stask == "balmora")
 		{
-			MWTasks::Journey * rtask = new MWTasks::Journey();
+			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
+			MWTasks::Journey * rtask = new MWTasks::Journey(marker); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 			
 			//JOURNEY
