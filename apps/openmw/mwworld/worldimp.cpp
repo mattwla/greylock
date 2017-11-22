@@ -820,7 +820,9 @@ namespace MWWorld
 
     void World::advanceTime (double hours, bool incremental)
     {
-        MWBase::Environment::get().getMechanicsManager()->advanceTime(static_cast<float>(hours * 3600));
+		//std::cout << "time advanced" << std::endl;
+		
+		MWBase::Environment::get().getMechanicsManager()->advanceTime(static_cast<float>(hours * 3600));
 
         mWeatherManager->advanceTime (hours, incremental);
 
@@ -839,6 +841,8 @@ namespace MWWorld
         if (days>0)
             mDaysPassed->setInteger (
                 days + mDaysPassed->getInteger());
+
+		MWBase::Environment::get().getTasksManager()->update(); //mwx
     }
 
     void World::setHour (double hour)
@@ -854,6 +858,8 @@ namespace MWWorld
 
         if (days>0)
             setDay (days + mDay->getInteger());
+
+		
     }
 
     void World::setDay (int day)
@@ -1647,7 +1653,7 @@ namespace MWWorld
 
 		//MWBase::Environment::get().getAIScheduleManager()->updateJourneys();
 		//MWX TASK UPDATE
-		MWBase::Environment::get().getTasksManager()->update();
+		//
 		
     }
 

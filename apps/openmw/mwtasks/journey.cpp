@@ -57,6 +57,7 @@ namespace MWTasks
 		mDestination(dest)
 	{
 		mStep = 0;
+		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 	}
 
 	void Journey::update() //journey should become a task
@@ -67,6 +68,14 @@ namespace MWTasks
 			return;
 		}
 
+		if ( MWBase::Environment::get().getWorld()->getTimeStamp() < mStartTime + mStep )
+		{
+			return;
+		}
+
+		//JOURNEY NEEDS RE-WRITE
+
+		
 		mStep = mStep + 1;
 		if (mStep < mTravelNodeItinerary.size()) {
 			auto m = MWBase::Environment::get().getTravelNodesManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
@@ -83,7 +92,7 @@ namespace MWTasks
 				MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 				std::cout << mNpcId << " at " << m->marker << std::endl;;
 			}
-			else //npc is in active cell
+			else //npc is in active cell AND WHAT IF NPC WAS KNOCKED OF COURSE,n should have more recalc. Itineraery can change often.
 			{
 				std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
 				std::cout << "tnode is: " << tnodeId << std::endl;
@@ -144,7 +153,7 @@ namespace MWTasks
 			return true;
 		}
 
-		MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
+		//MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
 
 		//std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
 		//std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
