@@ -47,6 +47,7 @@
 #include "../mwphysics/actor.hpp"
 #include "../mwphysics/collisiontype.hpp"
 
+
 #include "player.hpp"
 #include "manualref.hpp"
 #include "cellstore.hpp"
@@ -285,6 +286,8 @@ namespace MWWorld
             MWBase::Environment::get().getWindowManager()->executeInConsole(mStartupScript);
 
         MWBase::Environment::get().getWindowManager()->updatePlayer();
+
+		//getPlayerPtr().getClass().getAutoMove();
     }
 
     void World::clear()
@@ -2232,6 +2235,8 @@ namespace MWWorld
         }
 
         Ptr ptr = mPlayer->getPlayer();
+		mPlayer->setRunState(false); //MWX
+		
         mRendering->setupPlayer(ptr);
     }
 

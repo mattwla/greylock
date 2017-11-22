@@ -113,6 +113,8 @@ namespace MWInput
         virtual bool joystickLastUsed() {return mJoystickLastUsed;}
 
     public:
+		
+
         virtual void keyPressed(const SDL_KeyboardEvent &arg );
         virtual void keyReleased( const SDL_KeyboardEvent &arg );
         virtual void textInput (const SDL_TextInputEvent &arg);
@@ -155,6 +157,8 @@ namespace MWInput
         virtual int countSavedGameRecords() const;
         virtual void write(ESM::ESMWriter& writer, Loading::Listener& progress);
         virtual void readRecord(ESM::ESMReader& reader, uint32_t type);
+
+		virtual void deactivateAutorun();
 
 		bool mInChunkMode;
 		bool mInGoMode;
@@ -199,7 +203,7 @@ namespace MWInput
         float mGuiCursorY;
         int mMouseWheel;
         bool mUserFileExists;
-        bool mAlwaysRunActive;
+		bool mAlwaysRunActive; //mwx
         bool mSneakToggles;
         bool mSneaking;
         bool mAttemptJump;

@@ -1713,6 +1713,11 @@ namespace MWInput
         }
     }
 
+	void InputManager::deactivateAutorun()
+	{
+		mAlwaysRunActive = false;
+	}
+
     void InputManager::resetToDefaultKeyBindings()
     {
         loadKeyDefaults(true);

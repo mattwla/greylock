@@ -146,6 +146,8 @@ void MWState::StateManager::newGame (bool bypass)
 
         MWBase::Environment::get().getWorld()->startNewGame (bypass);
 
+		MWBase::Environment::get().getInputManager()->deactivateAutorun();
+
         mState = State_Running;
 
         MWBase::Environment::get().getWindowManager()->fadeScreenOut(0);

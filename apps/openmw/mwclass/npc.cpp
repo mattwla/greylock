@@ -930,7 +930,8 @@ namespace MWClass
 
     float Npc::getSpeed(const MWWorld::Ptr& ptr) const
     {
-        const MWBase::World *world = MWBase::Environment::get().getWorld();
+		bool isPlayer = ptr == MWMechanics::getPlayer();
+		const MWBase::World *world = MWBase::Environment::get().getWorld();
         const GMST& gmst = getGmst();
 
         const NpcCustomData *npcdata = static_cast<const NpcCustomData*>(ptr.getRefData().getCustomData());
@@ -952,37 +953,45 @@ namespace MWClass
                                     gmst.fAthleticsRunBonus->getFloat() + gmst.fBaseRunMultiplier->getFloat());
 
         float moveSpeed;
-        if(getEncumbrance(ptr) > getCapacity(ptr))
-            moveSpeed = 0.0f;
-        else if(mageffects.get(ESM::MagicEffect::Levitate).getMagnitude() > 0 &&
-                world->isLevitationEnabled())
-        {
-            float flySpeed = 0.01f*(npcdata->mNpcStats.getAttribute(ESM::Attribute::Speed).getModified() +
-                                    mageffects.get(ESM::MagicEffect::Levitate).getMagnitude());
-            flySpeed = gmst.fMinFlySpeed->getFloat() + flySpeed*(gmst.fMaxFlySpeed->getFloat() - gmst.fMinFlySpeed->getFloat());
-            flySpeed *= 1.0f - gmst.fEncumberedMoveEffect->getFloat() * normalizedEncumbrance;
-            flySpeed = std::max(0.0f, flySpeed);
-            moveSpeed = flySpeed;
-        }
-        else if(world->isSwimming(ptr))
-        {
-            float swimSpeed = walkSpeed;
-            if(running)
-                swimSpeed = runSpeed;
-            swimSpeed *= 1.0f + 0.01f * mageffects.get(ESM::MagicEffect::SwiftSwim).getMagnitude();
-            swimSpeed *= gmst.fSwimRunBase->getFloat() + 0.01f*npcdata->mNpcStats.getSkill(ESM::Skill::Athletics).getModified()*
-                                                    gmst.fSwimRunAthleticsMult->getFloat();
-            moveSpeed = swimSpeed;
-        }
-        else if(running && !sneaking)
-            moveSpeed = runSpeed;
-        else
-            moveSpeed = walkSpeed;
+		if (getEncumbrance(ptr) > getCapacity(ptr))
+			moveSpeed = 0.0f;
+		else if (mageffects.get(ESM::MagicEffect::Levitate).getMagnitude() > 0 &&
+			world->isLevitationEnabled())
+		{
+			float flySpeed = 0.01f*(npcdata->mNpcStats.getAttribute(ESM::Attribute::Speed).getModified() +
+				mageffects.get(ESM::MagicEffect::Levitate).getMagnitude());
+			flySpeed = gmst.fMinFlySpeed->getFloat() + flySpeed*(gmst.fMaxFlySpeed->getFloat() - gmst.fMinFlySpeed->getFloat());
+			flySpeed *= 1.0f - gmst.fEncumberedMoveEffect->getFloat() * normalizedEncumbrance;
+			flySpeed = std::max(0.0f, flySpeed);
+			moveSpeed = flySpeed;
+		}
+		else if (world->isSwimming(ptr))
+		{
+			float swimSpeed = walkSpeed;
+			if (running)
+				swimSpeed = runSpeed;
+			swimSpeed *= 1.0f + 0.01f * mageffects.get(ESM::MagicEffect::SwiftSwim).getMagnitude();
+			swimSpeed *= gmst.fSwimRunBase->getFloat() + 0.01f*npcdata->mNpcStats.getSkill(ESM::Skill::Athletics).getModified()*
+				gmst.fSwimRunAthleticsMult->getFloat();
+			moveSpeed = swimSpeed;
+		}
+		else if (running && !sneaking)
+			if (isPlayer)
+				moveSpeed = 1000;//runSpeed;
+			else
+				moveSpeed = runSpeed;
+		else if (isPlayer)
+			moveSpeed = 500;
+		else
+			moveSpeed = walkSpeed;
         if(getMovementSettings(ptr).mPosition[0] != 0 && getMovementSettings(ptr).mPosition[1] == 0)
             moveSpeed *= 0.75f;
 
         if(npcdata->mNpcStats.isWerewolf() && running && npcdata->mNpcStats.getDrawState() == MWMechanics::DrawState_Nothing)
             moveSpeed *= gmst.fWereWolfRunMult->getFloat();
+
+
+	
 
         return moveSpeed;
     }
