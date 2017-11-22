@@ -125,6 +125,7 @@ namespace MWGui
         : mTitle(title), mNeedMargin(needMargin)
     {
         mText = text;
+		mType = response;
     }
 
 	std::string Response::parsePortraitTags(std::string text) const
@@ -280,6 +281,7 @@ namespace MWGui
     Message::Message(const std::string& text)
     {
         mText = text;
+		mType = message;
     }
 
     void Message::write(BookTypesetter::Ptr typesetter, KeywordSearchT* keywordSearch, std::map<std::string, Link*>& topicLinks) const
@@ -762,12 +764,18 @@ namespace MWGui
         
 		if (mHistoryContents.size() > 1) //Different logic depending on if this is greeting or deeper in dialogue.
 		{
-			for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
-			{
-				(*it)->mSplitText = splitText((*it)->mText); //take our mSplitText member variable, store the split dialogue in it.
-				(*it)->write(typesetter, &mKeywordSearch, mTopicLinks);
+			//for (std::vector<DialogueText*>::iterator it = mHistoryContents.begin()+(mHistoryContents.size()-1); it != mHistoryContents.end(); ++it)
+			//{
 				
-				if ((*it)->mCurrent_chunk < (*it)->mSplitText.size() - 1)
+			DialogueText * it = mHistoryContents.back();
+			if (it->mType == message)
+			{
+				it = mHistoryContents[mHistoryContents.size() - 2];
+			}
+			it->mSplitText = splitText(it->mText); //take our mSplitText member variable, store the split dialogue in it.
+			it->write(typesetter, &mKeywordSearch, mTopicLinks);
+				
+				if (it->mCurrent_chunk < it->mSplitText.size() - 1)
 				{
 					inChunk = true;
 					mTopicsList->setVisible(false);
@@ -775,11 +783,13 @@ namespace MWGui
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
+					if (mHistoryContents.back()->mType = message) //do we have a message we need to show?
+						mHistoryContents.back()->write(typesetter, &mKeywordSearch, mTopicLinks);
 					mTopicsList->setVisible(true);
 					inChunk = false;
-					
 				}
-			}
+			//	}
+			//}
 		}
 		else
 		{
@@ -922,8 +932,19 @@ namespace MWGui
 
 	void DialogueWindow::nextChunk()
 	{
+
+		auto dialogue = mHistoryContents.back();
+
+		//Queed 
+		
 		//We look at the most recent dialogue added to history, and iterate its current_chunk tracker. current_chunk is used to show player pieces of dialogue at a time. MWX
-		mHistoryContents.back()->mCurrent_chunk += 1;
+		
+		if (dialogue->mType == message)
+		{
+			dialogue = mHistoryContents[mHistoryContents.size() - 2];
+		}
+		
+		dialogue->mCurrent_chunk += 1;
 		updateHistory();
 	}
 

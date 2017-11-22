@@ -100,6 +100,8 @@ namespace MWGui
 
     typedef MWDialogue::KeywordSearch <std::string, intptr_t> KeywordSearchT;
 
+	enum TextType {response, message};
+
     struct DialogueText
     {
         virtual ~DialogueText() {}
@@ -107,6 +109,7 @@ namespace MWGui
         std::string mText;
 		std::vector<std::string> mSplitText; //MWX a vector to hold the split strings, an int to hold which chunk we are dealing with
 		unsigned int mCurrent_chunk = 0;
+		TextType mType;
     };
 
     struct Response : DialogueText
