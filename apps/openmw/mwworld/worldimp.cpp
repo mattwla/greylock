@@ -1705,7 +1705,7 @@ namespace MWWorld
         mRendering->setNightEyeFactor(std::min(1.f, (nightEye/100.f)));
 
         mRendering->getCamera()->setCameraDistance();
-        if(!mRendering->getCamera()->isFirstPerson())
+        if(!mRendering->getCamera()->isFirstPerson()) //camera clipping!!!! mwx
         {
             osg::Vec3f focal, camera;
             mRendering->getCamera()->getPosition(focal, camera);
@@ -2219,6 +2219,11 @@ namespace MWWorld
         mRendering->setCameraDistance(dist, adjust, override_);
     }
 
+	void World::rotateCamera(float x, float y, float z)
+	{
+		mRendering->rotateCamera(x, y, z);
+	}
+
     void World::setupPlayer()
     {
         const ESM::NPC *player = mStore.get<ESM::NPC>().find("player");
@@ -2429,7 +2434,7 @@ namespace MWWorld
     {
         if (isCellExterior() || isCellQuasiExterior())
             return mWeatherManager->getWindSpeed();
-        else
+        else 
             return 0.f;
     }
 

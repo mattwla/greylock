@@ -31,6 +31,7 @@
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/actorutil.hpp"
+#include "../mwrender/renderingmanager.cpp"
 
 namespace MWInput
 {
@@ -73,6 +74,7 @@ namespace MWInput
         , mFakeDeviceID(1)
 		, mInChunkMode(false)
 		, mInGoMode(false)
+		
     {
         mInputManager = new SDLUtil::InputWrapper(window, viewer, grab);
         mInputManager->setMouseEventCallback (this);
@@ -139,6 +141,7 @@ namespace MWInput
 
         mGuiCursorX = mInvUiScalingFactor * w / 2.f;
         mGuiCursorY = mInvUiScalingFactor * h / 2.f;
+		mRot = *new std::vector<float>(3, 0);
     }
 
     void InputManager::clear()
@@ -447,16 +450,21 @@ namespace MWInput
 
                 float rot[3];
                 rot[0] = yAxis * (dt * 100.0f) * 10.0f * mCameraSensitivity * (1.0f/256.f) * (mInvertY ? -1 : 1) * mCameraYMultiplier;
+		
                 rot[1] = 0.0f;
+			
                 rot[2] = xAxis * (dt * 100.0f) * 10.0f * mCameraSensitivity * (1.0f/256.f);
+			
+				//MWX copy the mouse rotation into member variables for other classes to use.
 
-                // Only actually turn player when we're not in vanity mode
-                if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot))
+                // Only actually turn player when we're not in vanity mode MWX
+                if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive)
                 {
                     mPlayer->yaw(rot[2]);
                     mPlayer->pitch(rot[0]);
                 }
             }
+			
         }
 
         // Disable movement in Gui mode
@@ -510,13 +518,27 @@ namespace MWInput
 
                 if (actionIsActive(A_MoveLeft))
                 {
-                    triedToMove = true;
-                    mPlayer->setLeftRight (-1);
+					if (!mAlwaysRunActive)
+					{
+						triedToMove = true;
+						mPlayer->setLeftRight(-1);
+					}
+					else {
+						mPlayer->yaw(-.03);
+
+					}
                 }
                 else if (actionIsActive(A_MoveRight))
                 {
-                    triedToMove = true;
-                    mPlayer->setLeftRight (1);
+					if (!mAlwaysRunActive)
+					{
+						triedToMove = true;
+						mPlayer->setLeftRight(1);
+					}
+					else {
+						mPlayer->yaw(.03);
+
+					}
                 }
 
                 if (actionIsActive(A_MoveForward))
@@ -524,12 +546,14 @@ namespace MWInput
                     triedToMove = true;
                     mPlayer->setAutoMove (false);
                     mPlayer->setForwardBackward (1);
+					deactivateAutorun();
                 }
                 else if (actionIsActive(A_MoveBackward))
                 {
                     triedToMove = true;
                     mPlayer->setAutoMove (false);
                     mPlayer->setForwardBackward (-1);
+					deactivateAutorun();
                 }
 
                 else if(mPlayer->getAutoMove())
@@ -842,12 +866,22 @@ namespace MWInput
             float y = arg.yrel * mCameraSensitivity * (1.0f/256.f) * (mInvertY ? -1 : 1) * mCameraYMultiplier;
 
             float rot[3];
+
             rot[0] = -y;
             rot[1] = 0.0f;
             rot[2] = -x;
+			
+			//mRot[0] = -y;
+			//mRot[1] = 0.0f;
+			//mRot[2] = -x;
+		
+			if (mAlwaysRunActive)
+			{
+				MWBase::Environment::get().getWorld()->rotateCamera(rot[0], rot[1], rot[2]); //MWX
+			}
 
-            // Only actually turn player when we're not in vanity mode
-            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot))
+            // Only actually turn player when we're not in vanity mode mwx
+            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive )
             {
                 mPlayer->yaw(x);
                 mPlayer->pitch(y);
@@ -1163,7 +1197,10 @@ namespace MWInput
     void InputManager::toggleWalking()
     {
         if (MWBase::Environment::get().getWindowManager()->isGuiMode()) return;
-        mAlwaysRunActive = !mAlwaysRunActive;
+		{
+			mAlwaysRunActive = !mAlwaysRunActive;
+			mPlayer->setAutoMove(mAlwaysRunActive);
+		}
 
         Settings::Manager::setBool("always run", "Input", mAlwaysRunActive);
     }
@@ -1716,6 +1753,17 @@ namespace MWInput
 	void InputManager::deactivateAutorun()
 	{
 		mAlwaysRunActive = false;
+		mPlayer->setAutoMove(false);
+	}
+
+	bool InputManager::autorunEnabled()
+	{
+		return mAlwaysRunActive;
+	}
+
+	std::vector<float> InputManager::getMouseInputRotation()
+	{
+		return mRot;
 	}
 
     void InputManager::resetToDefaultKeyBindings()

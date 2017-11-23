@@ -160,10 +160,18 @@ namespace MWInput
 
 		virtual void deactivateAutorun();
 
+		virtual bool autorunEnabled();
+
 		bool mInChunkMode;
 		bool mInGoMode;
+		std::vector<float> InputManager::getMouseInputRotation();
+
+
+
+		
 
     private:
+		std::vector<float> mRot;
         SDL_Window* mWindow;
         bool mWindowVisible;
         osg::ref_ptr<osgViewer::Viewer> mViewer;
@@ -247,6 +255,7 @@ namespace MWInput
         void rest();
         void quickLoad();
         void quickSave();
+
 
         void quickKey (int index);
         void showQuickKeysMenu();

@@ -119,6 +119,8 @@ namespace MWRender
         void moveObject(const MWWorld::Ptr& ptr, const osg::Vec3f& pos);
         void scaleObject(const MWWorld::Ptr& ptr, const osg::Vec3f& scale);
 
+		void rotateCamera(float x, float y, float z);
+
         void removeObject(const MWWorld::Ptr& ptr);
 
         void setWaterEnabled(bool enabled);

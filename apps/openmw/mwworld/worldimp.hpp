@@ -510,6 +510,8 @@ namespace MWWorld
             bool vanityRotateCamera(float * rot) override;
             void setCameraDistance(float dist, bool adjust = false, bool override = true) override;
 
+			void rotateCamera(float x, float y, float z) override;
+
             void setupPlayer() override;
             void renderPlayer() override;
 

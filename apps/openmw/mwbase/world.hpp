@@ -401,6 +401,8 @@ namespace MWBase
             virtual bool vanityRotateCamera(float * rot) = 0;
             virtual void setCameraDistance(float dist, bool adjust = false, bool override = true)=0;
 
+			virtual void rotateCamera(float x, float y, float z) = 0;
+
             virtual void setupPlayer() = 0;
             virtual void renderPlayer() = 0;
 

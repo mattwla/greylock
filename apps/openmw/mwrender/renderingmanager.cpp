@@ -36,6 +36,7 @@
 #include <components/terrain/terraingrid.hpp>
 #include <components/terrain/quadtreeworld.hpp>
 
+
 #include <components/esm/loadcell.hpp>
 #include <components/fallback/fallback.hpp>
 
@@ -50,6 +51,8 @@
 #include "water.hpp"
 #include "terrainstorage.hpp"
 #include "util.hpp"
+#include "../mwbase/inputmanager.hpp"
+#include "../mwbase/environment.hpp"
 
 namespace MWRender
 {
@@ -531,6 +534,13 @@ namespace MWRender
                 mStateUpdater->setFogEnd(mViewDistance);
             }
         }
+	
+		//if (MWBase::Environment::get().getInputManager()->autorunEnabled()) //mwx if autorun enabled mouse movement should turn camera.
+		//{
+		//	auto mouserot = MWBase::Environment::get().getInputManager()->getMouseInputRotation();
+		//	mCamera->rotateCamera(mouserot[0], mouserot[2], true);
+		//}
+		
     }
 
     void RenderingManager::updatePlayerPtr(const MWWorld::Ptr &ptr)
@@ -553,7 +563,13 @@ namespace MWRender
         if(ptr == mCamera->getTrackingPtr() &&
            !mCamera->isVanityOrPreviewModeEnabled())
         {
-            mCamera->rotateCamera(-ptr.getRefData().getPosition().rot[0], -ptr.getRefData().getPosition().rot[2], false);
+            if (!MWBase::Environment::get().getInputManager()->autorunEnabled()) //make sure we arnt in run mode mwx
+				mCamera->rotateCamera(-ptr.getRefData().getPosition().rot[0], -ptr.getRefData().getPosition().rot[2], false);
+			else
+			{
+				//mCamera->rotateCamera(rot[0], rot[2], true);
+			}
+			
         }
 
         ptr.getRefData().getBaseNode()->setAttitude(rot);
@@ -571,6 +587,13 @@ namespace MWRender
         if (ptr == mCamera->getTrackingPtr()) // update height of camera
             mCamera->processViewChange();
     }
+
+	void RenderingManager::rotateCamera(float x, float y, float z)
+	{
+		mCamera->rotateCamera(x, z, true);
+
+			//mCamera->rotateCamera(mouserot[0], mouserot[2], true);
+	}
 
     void RenderingManager::removeObject(const MWWorld::Ptr &ptr)
     {
