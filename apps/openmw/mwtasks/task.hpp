@@ -21,8 +21,9 @@ namespace MWTasks
 
 		enum TypeID {
 			TypeIDLife = 0,
-			TypeIDJourney = 1, 
-			TypeIDGet = 2
+			TypeIDJourney = 1,
+			TypeIDGet = 2,
+			TypeIDHunt = 3
 		};
 		
 		Task();

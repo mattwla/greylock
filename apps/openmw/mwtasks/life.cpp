@@ -57,11 +57,11 @@ namespace MWTasks
 		if (!mSubTask)
 		{
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
-			if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
-			{
-				mSubTask->mNpcId = mNpcId;
+			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
+			//{
+			//	mSubTask->mNpcId = mNpcId;
 				
-			}
+			//}
 
 		}
 		else

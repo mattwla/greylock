@@ -1,4 +1,4 @@
-#include "Get.hpp"
+#include "Hunt.hpp"
 
 #include <limits.h>
 #include <iostream>
@@ -31,6 +31,7 @@
 #include "../mwmechanics/aiactivate.hpp"
 #include "../mwmechanics/pathgrid.hpp"
 #include "journey.hpp"
+#include "get.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -39,23 +40,23 @@
 namespace MWTasks
 {
 
-	/**Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
+	/**Hunt::Hunt(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
 	{
 	}
 
-	Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
+	Hunt::Hunt(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
 	{
 	}
 
 	*/
 
-	Get::Get()
+	Hunt::Hunt()
 	{
 	}
 
-	Get::Get(MWWorld::Ptr dest) :
+	Hunt::Hunt(MWWorld::Ptr dest) :
 		mDestination(dest)
 	{
 		mStep = 0;
@@ -63,7 +64,7 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Get::Get(std::string destId, std::string npcId) :
+	Hunt::Hunt(std::string destId, std::string npcId) :
 		mDestId(destId)
 	{
 		mNpcId = npcId;
@@ -74,11 +75,16 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	void Get::update()
+	void Hunt::update()
 	{
-		if (mStep == 0)
+		if (MWBase::Environment::get().getWorld()->getTimeStamp() > mStartTime + 5)
 		{
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			std::cout << "time to end hunt" << std::endl;
+			mDone = true;
+		}
+		else if (mStep == 0)
+		{
+			mSubTask = new MWTasks::Get("nadia bow", mNpcId);
 			mStep += 1;
 		}
 		else if (mStep == 1)
@@ -93,36 +99,41 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			if(pickupItem())
+			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mStep += 1;
+		}
+		else if (mStep >= 3)
+		{
+			mSubTask->update();
+			if (mSubTask->mDone)
 			{
-				mDone = true;
+				delete mSubTask;
+				mSubTask = NULL;
+				mStep += 1;
+				if (mStep % 2 == 0)
+				{
+					mSubTask = new MWTasks::Journey("tnode3", mNpcId);
+				}
+				else
+				{
+					mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+				}
 			}
 		}
+	
 
 
-		
 	}
 
-	bool Get::pickupItem()
+
+
+	int Hunt::getTypeId() const
 	{
-		
-		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-		seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
-		std::cout << "activated" << std::endl;
-		//npcPtr.getClass().activate(itemPtr, npcPtr);
-		return true;
+		return TypeIDHunt;
 	}
 
 
-	int Get::getTypeId() const
-	{
-		return TypeIDGet;
-	}
-
-
-	bool Get::init()
+	bool Hunt::init()
 	{
 		return true;
 	}

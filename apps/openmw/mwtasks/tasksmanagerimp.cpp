@@ -34,6 +34,7 @@
 #include "../mwtasks/life.hpp"
 #include "../mwtasks/journey.hpp"
 #include "../mwtasks/get.hpp"
+#include "../mwtasks/hunt.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -94,19 +95,19 @@ namespace MWTasks
 
 		if (stask == "journey")
 		{
-			std::string destID = "tnode4";
+			std::string destID = "nadia firepit";
 			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
 			MWTasks::Journey * rtask = new MWTasks::Journey(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 			
 			//JOURNEY
 		}
-		if (stask == "bow")
+		if (stask == "hunt")
 		{
 
-			std::string destID = "nadia bow";
+			std::string destId = "tnode4";
 			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
-			MWTasks::Get * rtask = new MWTasks::Get(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
+			MWTasks::Hunt * rtask = new MWTasks::Hunt(destId, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 		}
 

@@ -69,6 +69,7 @@ namespace MWTasks
 		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		init();
 		mReadyForUpdate = true;
+		mDone = false;
 	}
 
 	void Journey::update()
