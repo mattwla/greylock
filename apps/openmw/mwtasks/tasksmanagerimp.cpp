@@ -91,10 +91,11 @@ namespace MWTasks
 	{
 		std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
 
-		if (stask == "balmora")
+		if (stask == "journey")
 		{
-			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("xbalmora1", false);
-			MWTasks::Journey * rtask = new MWTasks::Journey(marker); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
+			std::string destID = "tnode4";
+			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
+			MWTasks::Journey * rtask = new MWTasks::Journey(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 			
 			//JOURNEY

@@ -427,9 +427,10 @@ namespace MWGui
 
     bool DialogueWindow::exit()
     {
-        if ((MWBase::Environment::get().getDialogueManager()->isInChoice()))
+        if ((MWBase::Environment::get().getDialogueManager()->isInChoice()) || MWBase::Environment::get().getInputManager()->getInChunkMode())
         {
             return false;
+			
         }
         else
         {
@@ -746,7 +747,9 @@ namespace MWGui
 
 	void DialogueWindow::updateHistory(bool scrollbar)
     {
-		bool inChunk = true; //We will use this to determine later behavior. are we in middle of dialogue flow or not?
+		bool inChunk = true; 
+		
+		//We will use this to determine later behavior. are we in middle of dialogue flow or not?
 		MWBase::Environment::get().getInputManager()->dialogueGoMode(false); //Assume we are not about to use GO work around unless we intentionally flip it on.
 		if (!scrollbar && mScrollBar->getVisible())
         {

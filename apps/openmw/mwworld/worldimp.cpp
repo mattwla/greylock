@@ -286,6 +286,7 @@ namespace MWWorld
             MWBase::Environment::get().getWindowManager()->executeInConsole(mStartupScript);
 
         MWBase::Environment::get().getWindowManager()->updatePlayer();
+		mRendering->resetCamera();
 
 		//getPlayerPtr().getClass().getAutoMove();
     }
@@ -2242,7 +2243,9 @@ namespace MWWorld
         Ptr ptr = mPlayer->getPlayer();
 		mPlayer->setRunState(false); //MWX
 		
+		
         mRendering->setupPlayer(ptr);
+		//mRendering->resetCamera();
     }
 
     void World::renderPlayer()

@@ -91,7 +91,7 @@ namespace MWTravelNodes
 			point->mY = markerPos.pos[1];
 			point->mZ = markerPos.pos[2];
 			tn->point = *point;
-			vecvec[i];
+			//vecvec[i];
 			nodeMap[i] = tn;
 			//id,index,num of connections, connected to
 

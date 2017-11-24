@@ -60,53 +60,83 @@ namespace MWTasks
 		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 	}
 
-	void Journey::update() //journey should become a task
+	Journey::Journey(std::string destId, std::string npcId):
+		mDestId(destId)
 	{
-		if (!mInitialized)
+		mNpcId = npcId;
+		mStep = 0;
+		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
+		init();
+		mReadyForUpdate = true;
+	}
+
+	void Journey::update()
+	{
+		if (mReadyForUpdate == true)
 		{
-			init();
-			return;
-		}
-
-		if ( MWBase::Environment::get().getWorld()->getTimeStamp() < mStartTime + mStep )
-		{
-			return;
-		}
-
-		//JOURNEY NEEDS RE-WRITE
-
-		
-		mStep = mStep + 1;
-		if (mStep < mTravelNodeItinerary.size()) {
-			auto m = MWBase::Environment::get().getTravelNodesManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
-
-			MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
+			mStep += 1;
+			std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+			std::cout << "tnode is: " << tnodeId << std::endl;
+			MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-
-
-			ESM::Position markerPos = markerPtr.getRefData().getPosition();
-			MWWorld::CellStore* store = markerPtr.getCell();
-
-			if (!MWBase::Environment::get().getWorld()->searchPtr(npcPtr.getCellRef().getRefId(), true)) //if npc is not in active cell
-			{
-				MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
-				std::cout << mNpcId << " at " << m->marker << std::endl;;
-			}
-			else //npc is in active cell AND WHAT IF NPC WAS KNOCKED OF COURSE,n should have more recalc. Itineraery can change often.
-			{
-				std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
-				std::cout << "tnode is: " << tnodeId << std::endl;
-				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
-
-				ESM::Position tnodePos = tnode.getRefData().getPosition();
-				MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
-
-				//SEQ TRAVEL HERE.....
-			}
+			ESM::Position tnodePos = tnode.getRefData().getPosition();
+			MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+			seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
+			
+			mReadyForUpdate = false;
 		}
 
 	}
+
+	//void Journey::update() //journey should become a task
+	//{
+	//	if (!mInitialized)
+	//	{
+	//		init();
+	//		return;
+	//	}
+
+	//	/*if ( MWBase::Environment::get().getWorld()->getTimeStamp() < mStartTime + mStep )
+	//	{
+	//		std::cout << "not ready" << std::endl;
+	//		return;
+	//	}
+	//	*/
+
+	//	//JOURNEY NEEDS RE-WRITE
+
+	//	
+	//	mStep = mStep + 1;
+	//	if (mStep < mTravelNodeItinerary.size()) {
+	//		auto m = MWBase::Environment::get().getTravelNodesManager()->mtravelNodeMap[mTravelNodeItinerary[mStep]];
+
+	//		MWWorld::Ptr markerPtr = MWBase::Environment::get().getWorld()->searchPtr(m->marker, false);
+	//		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+
+
+	//		ESM::Position markerPos = markerPtr.getRefData().getPosition();
+	//		MWWorld::CellStore* store = markerPtr.getCell();
+
+	//		if (!MWBase::Environment::get().getWorld()->searchPtr(npcPtr.getCellRef().getRefId(), true)) //if npc is not in active cell
+	//		{
+	//			MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+	//			std::cout << mNpcId << " at " << m->marker << std::endl;;
+	//		}
+	//		else //npc is in active cell AND WHAT IF NPC WAS KNOCKED OF COURSE,n should have more recalc. Itineraery can change often.
+	//		{
+	//			std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+	//			std::cout << "tnode is: " << tnodeId << std::endl;
+	//			MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
+
+	//			ESM::Position tnodePos = tnode.getRefData().getPosition();
+	//			MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+	//			seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
+
+	//			//SEQ TRAVEL HERE.....
+	//		}
+	//	}
+
+	//}
 
 	int Journey::getTypeId() const
 	{
@@ -137,55 +167,77 @@ namespace MWTasks
 
 	bool Journey::init()
 	{
-		bool actorInLive;
-		bool destInLive;
-
-		MWWorld::Ptr npcptr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-
-		actorInLive = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true);
-		destInLive = MWBase::Environment::get().getWorld()->searchPtr(mDestination.getCellRef().getRefId(), true); //Messy here MWX
-
-		if (actorInLive && destInLive) //NPC can just walk there, so do that..... for now
-		{
-			ESM::Position destPos = mDestination.getRefData().getPosition();
-			MWMechanics::AiSequence& seq = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true).getClass().getCreatureStats(MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)).getAiSequence();
-			seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)); //PLZ FIX PLZ MWX too many search ptrs
-			return true;
-		}
-
-		//MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
-
-		//std::cout << npc.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
-		//std::cout << dest.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWWorld::Ptr destPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 
 
-		//We are here because NPC needs to traverse while outside of cell, so we will use the travelNode system
-		//Build a path through the nodes
+		int currentNode = mTravelNodesManager->mCellToNodeMap[npcPtr.getCell()]->id;
+		int destNode = mTravelNodesManager->mCellToNodeMap[destPtr.getCell()]->id;
 
-		//lookup what node is associated with NPCs current cell.
-		int currentNode = mTravelNodesManager->mCellToNodeMap[npcptr.getCell()]->id;
-		int destNode = mTravelNodesManager->mCellToNodeMap[mDestination.getCell()]->id;
+		auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE
 
-
-		auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
-
-																			 //collect the ids of which nodes we will use
-		//std::vector<int> travelNodeList;
 		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
-		{
-			mTravelNodeItinerary.push_back(it->mUnknown);
-		}
-
+				{
+					mTravelNodeItinerary.push_back(it->mUnknown);
+				}
 		
 		
-		//Make a journey.
-		//MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
-
-		//mActiveJourneys.push_back(j); //Do I want to do this through a method?
-
-		mInitialized = true;
+		
 		return true;
-	}
 
+
+
+		//	bool actorInLive;
+		//	bool destInLive;
+
+		//	MWWorld::Ptr npcptr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//	md
+
+		//	actorInLive = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true);
+		//	destInLive = MWBase::Environment::get().getWorld()->searchPtr(mDestination.getCellRef().getRefId(), true); //Messy here MWX
+
+		//	//if (actorInLive && destInLive) //NPC can just walk there, so do that..... for now
+		//	//{
+		//	//	std::cout << "we live" << std::endl;
+		//	//	ESM::Position destPos = mDestination.getRefData().getPosition();
+		//	//	MWMechanics::AiSequence& seq = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true).getClass().getCreatureStats(MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)).getAiSequence();
+		//	//	seq.stack(MWMechanics::AiTravel(destPos.pos[0], destPos.pos[1], destPos.pos[2]), MWBase::Environment::get().getWorld()->searchPtr(mNpcId, true)); //PLZ FIX PLZ MWX too many search ptrs
+		//	//	return true;
+		//	//}
+
+		//	//MWWorld::TimeStamp tstamp = MWBase::Environment::get().getWorld()->getTimeStamp();
+
+		//	std::cout << npcptr.getCellRef().getRefId() << " in live: " << actorInLive << std::endl;
+		//	std::cout << mDestination.getCellRef().getRefId() << " in live: " << destInLive << std::endl; //GAHH, WE ARE SEARCHING BY NAME HERE NOT ID :/ EDIT: fixed, do same for actor?
+
+
+		//	//We are here because NPC needs to traverse while outside of cell, so we will use the travelNode system
+		//	//Build a path through the nodes
+
+		//	//lookup what node is associated with NPCs current cell.
+		//	int currentNode = mTravelNodesManager->mCellToNodeMap[npcptr.getCell()]->id;
+		//	int destNode = mTravelNodesManager->mCellToNodeMap[mDestination.getCell()]->id;
+
+
+		//	auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE.
+
+		//																		 //collect the ids of which nodes we will use
+		//	//std::vector<int> travelNodeList;
+		//	for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)
+		//	{
+		//		mTravelNodeItinerary.push_back(it->mUnknown);
+		//	}
+
+		//	
+		//	
+		//	//Make a journey.
+		//	//MWBase::AIScheduleManager::Journey *j = new MWBase::AIScheduleManager::Journey(npc.getCellRef().getRefId(), travelNodeList, dest, tstamp);
+
+		//	//mActiveJourneys.push_back(j); //Do I want to do this through a method?
+
+		//	mInitialized = true;
+		//	return true;
+		//}
+	}
 }
 

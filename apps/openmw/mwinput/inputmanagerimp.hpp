@@ -165,6 +165,8 @@ namespace MWInput
 		bool mInChunkMode;
 		bool mInGoMode;
 		std::vector<float> InputManager::getMouseInputRotation();
+		virtual bool getInChunkMode();
+
 
 
 

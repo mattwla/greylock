@@ -79,6 +79,8 @@ namespace MWBase
 			virtual void deactivateAutorun() = 0;
 			virtual bool autorunEnabled() = 0;
 			virtual std::vector<float> getMouseInputRotation() = 0;
+
+			virtual bool getInChunkMode() = 0;
 		
 			
     };

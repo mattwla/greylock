@@ -1766,6 +1766,11 @@ namespace MWInput
 		return mRot;
 	}
 
+	bool InputManager::getInChunkMode()
+	{
+		return mInChunkMode;
+	}
+
     void InputManager::resetToDefaultKeyBindings()
     {
         loadKeyDefaults(true);

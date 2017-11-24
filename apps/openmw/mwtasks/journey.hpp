@@ -20,6 +20,8 @@ namespace MWTasks
 		Journey();
 
 		Journey(MWWorld::Ptr dest);
+
+		Journey(std::string destId, std::string npcId);
 		
 		//Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 
@@ -40,6 +42,10 @@ namespace MWTasks
 		bool init();
 
 		bool mInitialized = false;
+
+		std::string mDestId;
+
+		bool mReadyForUpdate;
 	
 	};
 

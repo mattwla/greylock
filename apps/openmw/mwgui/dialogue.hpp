@@ -201,6 +201,8 @@ namespace MWGui
 
         bool mEnabled;
 
+		bool mInChunk;
+
 
         bool mIsCompanion;
         std::list<std::string> mKeywords;
