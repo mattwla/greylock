@@ -67,6 +67,11 @@ namespace MWTasks
 		else
 		{
 			mSubTask->update();
+			if (mSubTask->mDone)
+			{
+				delete mSubTask;
+				mSubTask = NULL;
+			}
 		}
 
 	}

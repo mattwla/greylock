@@ -58,6 +58,7 @@ namespace MWTasks
 	{
 		mStep = 0;
 		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
+		mDone = false;
 	}
 
 	Journey::Journey(std::string destId, std::string npcId):
@@ -72,18 +73,36 @@ namespace MWTasks
 
 	void Journey::update()
 	{
-		if (mReadyForUpdate == true)
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+
+		if (mReadyForUpdate == true || seq.getTypeId() == -1)
 		{
-			mStep += 1;
-			std::string tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
-			std::cout << "tnode is: " << tnodeId << std::endl;
-			MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			ESM::Position tnodePos = tnode.getRefData().getPosition();
-			MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-			seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
-			
-			mReadyForUpdate = false;
+			if (mStep == mTravelNodeItinerary.size())
+			{
+				mDone = true;
+				
+			}
+			else {
+				std::string tnodeId;
+				mStep += 1;
+				if (mStep == mTravelNodeItinerary.size())
+				{
+					tnodeId = mDestId;
+				}
+				else
+				{
+					tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+				}
+
+				std::cout << "tnode is: " << tnodeId << std::endl;
+				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
+				//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+				ESM::Position tnodePos = tnode.getRefData().getPosition();
+				//MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
+				mReadyForUpdate = false;
+			}
 		}
 
 	}
