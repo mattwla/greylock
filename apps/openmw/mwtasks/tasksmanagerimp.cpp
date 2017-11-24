@@ -33,6 +33,7 @@
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/life.hpp"
 #include "../mwtasks/journey.hpp"
+#include "../mwtasks/get.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -105,7 +106,7 @@ namespace MWTasks
 
 			std::string destID = "nadia bow";
 			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
-			MWTasks::Journey * rtask = new MWTasks::Journey(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
+			MWTasks::Get * rtask = new MWTasks::Get(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 		}
 
