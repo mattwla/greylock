@@ -145,7 +145,7 @@ namespace MWMechanics
     const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 
     class SoulTrap : public MWMechanics::EffectSourceVisitor
-    {
+   { 
         MWWorld::Ptr mCreature;
         MWWorld::Ptr mActor;
         bool mTrapped;
