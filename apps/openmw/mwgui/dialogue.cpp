@@ -160,10 +160,10 @@ namespace MWGui
 		/*else*/
 			MWBase::Environment::get().getWindowManager()->getDialogueWindow()->setPortraitImage(name);
 		
-		if (speaker_changed)
+		//if (speaker_changed)
 			return name + ": " + text;
-		else
-			return text;
+		//else
+		//	return text;
 
 	}
 
@@ -786,7 +786,7 @@ namespace MWGui
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
-					if (mHistoryContents.back()->mType = message) //do we have a message we need to show?
+					if (mHistoryContents.back()->mType == message && MWBase::Environment::get().getDialogueManager()->getChoices().size() == 0) //do we have a message we need to show? MWX make sure it is not a choice
 						mHistoryContents.back()->write(typesetter, &mKeywordSearch, mTopicLinks);
 					mTopicsList->setVisible(true);
 					inChunk = false;

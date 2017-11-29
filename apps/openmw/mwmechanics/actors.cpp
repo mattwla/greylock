@@ -140,7 +140,8 @@ void getRestorationPerHourOfSleep (const MWWorld::Ptr& ptr, float& health, float
 namespace MWMechanics
 {
 
-    const float aiProcessingDistance = 7168;
+	const float aiProcessingDistance = 50000;
+		//7168;
     const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 
     class SoulTrap : public MWMechanics::EffectSourceVisitor
@@ -1180,6 +1181,8 @@ namespace MWMechanics
                 // using higher values will make a quest in Bloodmoon harder or impossible to complete (bug #1876)
                 bool inProcessingRange = (player.getRefData().getPosition().asVec3() - iter->first.getRefData().getPosition().asVec3()).length2()
                         <= sqrAiProcessingDistance;
+
+				inProcessingRange = true; //MWX
 
                 iter->second->getCharacterController()->setActive(inProcessingRange);
 

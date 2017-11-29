@@ -95,7 +95,7 @@ namespace MWTasks
 
 		if (stask == "journey")
 		{
-			std::string destID = "nadia firepit";
+			std::string destID = "tnode1";
 			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
 			MWTasks::Journey * rtask = new MWTasks::Journey(destID, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;

@@ -13,6 +13,6 @@ namespace MWWorld
 	void ActionDistantTalk::executeImp(const Ptr& actor)
 	{
 		//MWBase::Environment::get().getDialogueManager()->startDistantDialogue(getTarget());
-		MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_DistantDialogue, getTarget());
+		//MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_DistantDialogue, getTarget());
 	}
 }

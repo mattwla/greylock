@@ -524,7 +524,7 @@ namespace MWInput
 						mPlayer->setLeftRight(-1);
 					}
 					else {
-						mPlayer->yaw(-.03);
+						mPlayer->yaw(-.06);
 
 					}
                 }
@@ -536,7 +536,7 @@ namespace MWInput
 						mPlayer->setLeftRight(1);
 					}
 					else {
-						mPlayer->yaw(.03);
+						mPlayer->yaw(.06);
 
 					}
                 }
@@ -1200,6 +1200,8 @@ namespace MWInput
 		{
 			mAlwaysRunActive = !mAlwaysRunActive;
 			mPlayer->setAutoMove(mAlwaysRunActive);
+			if (mAlwaysRunActive)
+				mPlayer->setDrawState(MWMechanics::DrawState_Weapon);
 		}
 
         Settings::Manager::setBool("always run", "Input", mAlwaysRunActive);

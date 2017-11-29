@@ -977,7 +977,7 @@ namespace MWClass
 		}
 		else if (running && !sneaking)
 			if (isPlayer)
-				moveSpeed = 1000;//runSpeed;
+				moveSpeed = 1100;//runSpeed;
 			else
 				moveSpeed = runSpeed;
 		else if (isPlayer)
