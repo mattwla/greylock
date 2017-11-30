@@ -122,6 +122,8 @@ namespace MWGui
         int mLastMouseX;
         int mLastMouseY;
 
+		std::string getContextText();
+
         bool mEnabled;
 
         bool mFullHelp;

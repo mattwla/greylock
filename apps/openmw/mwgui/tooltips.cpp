@@ -326,6 +326,34 @@ namespace MWGui
         }
     }
 
+	std::string ToolTips::getContextText()
+	{
+		if (mFocusObject.isEmpty())
+			return "void";
+		
+		
+
+		std::string type = mFocusObject.getClass().getTypeName();
+		if (type == typeid(ESM::NPC).name())
+		{
+
+			auto faced = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
+			auto max = MWBase::Environment::get().getWorld()->getMaxActivationDistance();
+			if (MWBase::Environment::get().getWorld()->getDistanceToFacedObject() > MWBase::Environment::get().getWorld()->getMaxActivationDistance())
+			{
+				return "";
+			}
+			return "E) talk";
+		}
+		else if(type == typeid(ESM::Weapon).name())
+		{
+			return "E) take";
+		}
+		
+		return "E) activate";
+
+	}
+
     void ToolTips::setFocusObject(const MWWorld::Ptr& focus)
     {
         mFocusObject = focus;
@@ -382,7 +410,7 @@ namespace MWGui
         std::string caption = info.caption;
         std::string image = info.icon;
         int imageSize = (image != "") ? info.imageSize : 0;
-        std::string text = info.text;
+		std::string text = getContextText();//info.text;
 
         // remove the first newline (easier this way)
         if (text.size() > 0 && text[0] == '\n')
@@ -406,7 +434,7 @@ namespace MWGui
             }
         }
 
-        // this the maximum width of the tooltip before it starts word-wrapping
+        // this the maximum width of the tooltip before it starts word-wrapping MWX interesting
         setCoord(0, 0, 300, 300);
 
         const MyGUI::IntPoint padding(8, 8);
@@ -421,7 +449,7 @@ namespace MWGui
         MyGUI::EditBox* captionWidget = mDynamicToolTipBox->createWidget<MyGUI::EditBox>("NormalText", MyGUI::IntCoord(0, 0, 300, 300), MyGUI::Align::Left | MyGUI::Align::Top, "ToolTipCaption");
         captionWidget->setEditStatic(true);
         captionWidget->setNeedKeyFocus(false);
-        captionWidget->setCaptionWithReplacing(caption);
+        captionWidget->setCaptionWithReplacing(caption);//name
         MyGUI::IntSize captionSize = captionWidget->getTextSize();
 
         int captionHeight = std::max(caption != "" ? captionSize.height : 0, imageSize);
@@ -430,7 +458,7 @@ namespace MWGui
         textWidget->setEditStatic(true);
         textWidget->setEditMultiLine(true);
         textWidget->setEditWordWrap(info.wordWrap);
-        textWidget->setCaptionWithReplacing(text);
+        textWidget->setCaptionWithReplacing(text); //attributes
         textWidget->setTextAlign(MyGUI::Align::HCenter | MyGUI::Align::Top);
         textWidget->setNeedKeyFocus(false);
         MyGUI::IntSize textSize = textWidget->getTextSize();
