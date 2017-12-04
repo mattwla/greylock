@@ -77,13 +77,14 @@ namespace MWTasks
 
 	void Hunt::update()
 	{
-		if (MWBase::Environment::get().getWorld()->getTimeStamp() > mStartTime + 5)
+		if (MWBase::Environment::get().getWorld()->getTimeStamp() > mStartTime + 9)
 		{
 			std::cout << "time to end hunt" << std::endl;
 			mDone = true;
 		}
 		else if (mStep == 0)
 		{
+			std::cout << "getting bow..." << std::endl;
 			mSubTask = new MWTasks::Get("nadia bow", mNpcId);
 			mStep += 1;
 		}
@@ -99,6 +100,7 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
+			std::cout << "first journey..." << std::endl;
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
@@ -107,6 +109,7 @@ namespace MWTasks
 			mSubTask->update();
 			if (mSubTask->mDone)
 			{
+				std::cout << "looping journey" << std::endl;
 				delete mSubTask;
 				mSubTask = NULL;
 				mStep += 1;

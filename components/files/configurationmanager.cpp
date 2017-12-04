@@ -16,7 +16,7 @@ namespace Files
 static const char* const openmwCfgFile = "openmw.cfg";
 
 #if defined(_WIN32) || defined(__WINDOWS__)
-static const char* const applicationName = "OpenMW";
+static const char* const applicationName = "Greylock"; //MWX
 #else
 static const char* const applicationName = "openmw";
 #endif

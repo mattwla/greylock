@@ -190,9 +190,15 @@ namespace MWGui
         {
             if (!mBackground)
             {
-                mBackground = MyGUI::Gui::getInstance().createWidgetReal<BackgroundImage>("ImageBox", 0,0,1,1,
+                
+				mBackground = MyGUI::Gui::getInstance().createWidgetReal<BackgroundImage>("ImageBox", 0,0,1,1,
                     MyGUI::Align::Stretch, "Menu");
-                mBackground->setBackgroundImage("textures\\menu_morrowind.dds", true, stretch);
+                
+				int selector = 1;//rand() % 100; //MWX
+				if (selector <= 50)
+					mBackground->setBackgroundImage("textures\\menu_morrowind.dds", true, stretch);
+				else
+					mBackground->setBackgroundImage("textures\\menu_morrowindDAY.dds", true, stretch);
             }
             mBackground->setVisible(true);
         }

@@ -1334,7 +1334,8 @@ namespace MWMechanics
             if (currentMusic != 1 && hostilesCount == 0 && !(player.getClass().getCreatureStats(player).isDead() &&
             MWBase::Environment::get().getSoundManager()->isMusicPlaying()))
             {
-                MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Explore"));
+                //
+				MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Explore"));
                 currentMusic = 1;
             }
             else if (currentMusic != 2 && hostilesCount > 0)

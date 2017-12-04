@@ -679,8 +679,8 @@ void OMW::Engine::go()
         mEnvironment.getWindowManager()->pushGuiMode (MWGui::GM_MainMenu);
         try
         {
-            // Is there an ini setting for this filename or something?
-            mEnvironment.getSoundManager()->streamMusic("Special/morrowind title.mp3");
+            // Is there an ini setting for this filename or something? MWX
+            mEnvironment.getSoundManager()->streamMusic("Special/theme.ogg");
 
             std::string logo = mFallbackMap["Movies_Morrowind_Logo"];
             if (!logo.empty())
