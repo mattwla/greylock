@@ -27,11 +27,14 @@ namespace MWGui
 
     MessageBoxManager::~MessageBoxManager ()
     {
-        std::vector<MessageBox*>::iterator it(mMessageBoxes.begin());
-        for (; it != mMessageBoxes.end(); ++it)
-        {
-            delete *it;
-        }
+		if (mMessageBoxes.size() > 0)
+		{
+			std::vector<MessageBox*>::iterator it(mMessageBoxes.begin());
+			for (; it != mMessageBoxes.end(); ++it)
+			{
+				delete *it;
+			}
+		}
     }
 
     void MessageBoxManager::clear()
@@ -43,14 +46,17 @@ namespace MWGui
             delete mInterMessageBoxe;
             mInterMessageBoxe = NULL;
         }
+		if (mMessageBoxes.size() > 0)
+		{
 
-        std::vector<MessageBox*>::iterator it(mMessageBoxes.begin());
-        for (; it != mMessageBoxes.end(); ++it)
-        {
-            if (*it == mStaticMessageBox)
-                mStaticMessageBox = NULL;
-            delete *it;
-        }
+			std::vector<MessageBox*>::iterator it(mMessageBoxes.begin());
+			for (; it != mMessageBoxes.end(); ++it)
+			{
+				if (*it == mStaticMessageBox)
+					mStaticMessageBox = NULL;
+				delete *it;
+			}
+		}
         mMessageBoxes.clear();
 
         mLastButtonPressed = -1;

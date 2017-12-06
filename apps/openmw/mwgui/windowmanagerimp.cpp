@@ -527,17 +527,7 @@ namespace MWGui
 
 
 
-
 		MyGUI::LanguageManager::getInstance().eventRequestTag.clear();
-
-        delete mMessageBoxManager;
-        delete mLocalMapRender;
-        delete mCharGen;
-        delete mDragAndDrop;
-        delete mSoulgemDialog;
-        delete mCursorManager;
-        delete mToolTips;
-
 
 		MyGUI::PointerManager::getInstance().eventChangeMousePointer.clear();
 
@@ -568,6 +558,8 @@ namespace MWGui
 		delete mSoulgemDialog;
 
 		delete mCursorManager;
+
+		delete mToolTips;
 
 
 
