@@ -49,6 +49,11 @@ namespace MWGui
             mWindow->addResponse(title, text, mNeedMargin);
         }
 
+        void updateTopics()
+        {
+            mWindow->updateTopics();
+        }
+
     private:
         DialogueWindow* mWindow;
         bool mNeedMargin;
@@ -94,7 +99,11 @@ namespace MWGui
         else /*if (sender == mBribe1000Button)*/
             type = MWBase::MechanicsManager::PT_Bribe1000;
 
+
         //MWBase::Environment::get().getDialogueManager()->persuade(type, mCallback.get());
+
+        mCallback->updateTopics();
+
 
         setVisible(false);
     }
@@ -550,6 +559,8 @@ namespace MWGui
                 else if (topic == gmst.find("sRepair")->getString())
                     MWBase::Environment::get().getWindowManager()->pushGuiMode(GM_MerchantRepair, mPtr);
             }
+            else
+                updateTopics();
         }
     }
 
@@ -619,7 +630,9 @@ namespace MWGui
 
         setTitle(mPtr.getClass().getName(mPtr));
 
-        updateTopicsPane();
+        updateTopics();
+        updateTopicsPane(); // force update for new services
+
         updateDisposition();
         restock();
 		/*addResponse(response.first, response.second, false);*/
@@ -910,6 +923,8 @@ namespace MWGui
 
         MWBase::Environment::get().getDialogueManager()->keywordSelected(topicId, mCallback.get());
 
+        updateTopics();
+
     }
 
     void DialogueWindow::onChoiceActivated(int id)
@@ -922,6 +937,9 @@ namespace MWGui
 		
 
         MWBase::Environment::get().getDialogueManager()->questionAnswered(id, mCallback.get());
+
+
+        updateTopics();
 
     }
 

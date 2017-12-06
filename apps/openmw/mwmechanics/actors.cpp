@@ -1149,6 +1149,46 @@ namespace MWMechanics
         }
     }
 
+    void Actors::updateCombatMusic ()
+    {
+        MWWorld::Ptr player = getPlayer();
+        int hostilesCount = 0; // need to know this to play Battle music
+
+        for(PtrActorMap::iterator iter(mActors.begin()); iter != mActors.end(); ++iter)
+        {
+            if (!iter->first.getClass().getCreatureStats(iter->first).isDead())
+            {
+                bool inProcessingRange = (player.getRefData().getPosition().asVec3() - iter->first.getRefData().getPosition().asVec3()).length2()
+                        <= sqrAiProcessingDistance;
+
+                if (MWBase::Environment::get().getMechanicsManager()->isAIActive() && inProcessingRange)
+                {
+                    if (iter->first != player)
+                    {
+                        MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);
+                        if (stats.getAiSequence().isInCombat() && !stats.isDead()) hostilesCount++;
+                    }
+                }
+            }
+        }
+
+        // check if we still have any player enemies to switch music
+        static int currentMusic = 0;
+
+        if (currentMusic != 1 && hostilesCount == 0 && !(player.getClass().getCreatureStats(player).isDead() &&
+        MWBase::Environment::get().getSoundManager()->isMusicPlaying()))
+        {
+            MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Explore"));
+            currentMusic = 1;
+        }
+        else if (currentMusic != 2 && hostilesCount > 0)
+        {
+            MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Battle"));
+            currentMusic = 2;
+        }
+
+    }
+
     void Actors::update (float duration, bool paused)
     {
         if(!paused)
@@ -1165,8 +1205,6 @@ namespace MWMechanics
             if (timerUpdateEquippedLight >= updateEquippedLightInterval) timerUpdateEquippedLight = 0;
 
             MWWorld::Ptr player = getPlayer();
-
-            int hostilesCount = 0; // need to know this to play Battle music
 
             /// \todo move update logic to Actor class where appropriate
 
@@ -1233,8 +1271,13 @@ namespace MWMechanics
                             float sqrHeadTrackDistance = std::numeric_limits<float>::max();
                             MWWorld::Ptr headTrackTarget;
 
+                            MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);
+
                             // Unconsious actor can not track target
-                            if (!iter->first.getClass().getCreatureStats(iter->first).getKnockedDown())
+                            // Also actors in combat and pursue mode do not bother to headtrack
+                            if (!stats.getKnockedDown() &&
+                                !stats.getAiSequence().isInCombat() &&
+                                !stats.getAiSequence().hasPackage(AiPackage::TypeIdPursue))
                             {
                                 for(PtrActorMap::iterator it(mActors.begin()); it != mActors.end(); ++it)
                                 {
@@ -1242,8 +1285,9 @@ namespace MWMechanics
                                         continue;
                                     updateHeadTracking(iter->first, it->first, headTrackTarget, sqrHeadTrackDistance);
                                 }
-                                iter->second->getCharacterController()->setHeadTrackTarget(headTrackTarget);
                             }
+
+                            iter->second->getCharacterController()->setHeadTrackTarget(headTrackTarget);
                         }
 
                         if (iter->first.getClass().isNpc() && iter->first != player)
@@ -1254,8 +1298,6 @@ namespace MWMechanics
                             CreatureStats &stats = iter->first.getClass().getCreatureStats(iter->first);
                             if (isConscious(iter->first))
                                 stats.getAiSequence().execute(iter->first, *iter->second->getCharacterController(), iter->second->getAiState(), duration);
-
-                            if (stats.getAiSequence().isInCombat() && !stats.isDead()) hostilesCount++;
                         }
                     }
 
@@ -1328,22 +1370,6 @@ namespace MWMechanics
 
             killDeadActors();
 
-            // check if we still have any player enemies to switch music
-            static int currentMusic = 0;
-
-            if (currentMusic != 1 && hostilesCount == 0 && !(player.getClass().getCreatureStats(player).isDead() &&
-            MWBase::Environment::get().getSoundManager()->isMusicPlaying()))
-            {
-                //
-				MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Explore"));
-                currentMusic = 1;
-            }
-            else if (currentMusic != 2 && hostilesCount > 0)
-            {
-                MWBase::Environment::get().getSoundManager()->playPlaylist(std::string("Battle"));
-                currentMusic = 2;
-            }
-
             static float sneakTimer = 0.f; // times update of sneak icon
 
             // if player is in sneak state see if anyone detects him
@@ -1410,6 +1436,8 @@ namespace MWMechanics
                 MWBase::Environment::get().getWindowManager()->setSneakVisibility(false);
             }
         }
+
+        updateCombatMusic();
     }
 
     void Actors::killDeadActors()
@@ -1623,6 +1651,17 @@ namespace MWMechanics
             if ((iter->first.getRefData().getPosition().asVec3() - position).length2() <= radius*radius)
                 out.push_back(iter->first);
         }
+    }
+
+    bool Actors::isAnyObjectInRange(const osg::Vec3f& position, float radius)
+    {
+        for (PtrActorMap::iterator iter = mActors.begin(); iter != mActors.end(); ++iter)
+        {
+            if ((iter->first.getRefData().getPosition().asVec3() - position).length2() <= radius*radius)
+                return true;
+        }
+
+        return false;
     }
 
     std::list<MWWorld::Ptr> Actors::getActorsSidingWith(const MWWorld::Ptr& actor)
