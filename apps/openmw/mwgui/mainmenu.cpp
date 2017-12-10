@@ -33,7 +33,7 @@ namespace MWGui
         getWidget(mVersionText, "VersionText");
         mVersionText->setCaption(versionDescription);
 
-        mHasAnimatedMenu = mVFS->exists("video/menu_background.bik");
+		mHasAnimatedMenu = false;//mVFS->exists("video/menu_background.bik");
 
         updateMenu();
     }
