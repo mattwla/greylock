@@ -819,9 +819,9 @@ void MwIniImporter::importArchives(multistrmap &cfg, const multistrmap &ini) con
     // does not appears in the ini file
     cfg["fallback-archive"].push_back("Morrowind.bsa");
 
-    for(std::vector<std::string>::const_iterator iter=archives.begin(); iter!=archives.end(); ++iter) {
+   /* for(std::vector<std::string>::const_iterator iter=archives.begin(); iter!=archives.end(); ++iter) {
         cfg["fallback-archive"].push_back(*iter);
-    }
+    }*/
 }
 
 void MwIniImporter::importGameFiles(multistrmap &cfg, const multistrmap &ini, const boost::filesystem::path& iniFilename) const {
