@@ -19,6 +19,7 @@
 
 #include "utils/textinputdialog.hpp"
 #include "utils/profilescombobox.hpp"
+#include <iostream>
 
 
 const char *Launcher::DataFilesPage::mDefaultContentListName = "Default";
@@ -90,11 +91,16 @@ bool Launcher::DataFilesPage::loadSettings()
 void Launcher::DataFilesPage::populateFileViews(const QString& contentModelName)
 {
     QStringList paths = mGameSettings.getDataDirs();
-
-    foreach(const QString &path, paths)
-        mSelector->addFiles(path);
-
+	
+	foreach(const QString &path, paths)
+	{
+		mSelector->addFiles(path);
+		std::cout << path.toStdString() << std::endl;
+	}
+	//MWX
     mDataLocal = mGameSettings.getDataLocal();
+
+	//mDataLocal
 
     if (!mDataLocal.isEmpty())
         mSelector->addFiles(mDataLocal);

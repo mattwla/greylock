@@ -35,7 +35,7 @@ Wizard::MainWizard::MainWizard(QWidget *parent) :
     setWizardStyle(QWizard::ClassicStyle);
 #endif
 
-    setWindowTitle(tr("OpenMW Wizard"));
+    setWindowTitle(tr("Greylock Wizard"));
     setWindowIcon(QIcon(QLatin1String(":/images/openmw-wizard.png")));
     setMinimumWidth(550);
 
@@ -286,7 +286,7 @@ void Wizard::MainWizard::runSettingsImporter()
     arguments.append(QLatin1String("--cfg"));
     arguments.append(userPath + QLatin1String("openmw.cfg"));
 
-    if (!mImporterInvoker->startProcess(QLatin1String("openmw-iniimporter"), arguments, false))
+    if (!mImporterInvoker->startProcess(QLatin1String("openmw-iniimporter"), arguments, false)) //MWX
         return qApp->quit();
 }
 

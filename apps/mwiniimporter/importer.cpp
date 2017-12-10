@@ -860,9 +860,13 @@ void MwIniImporter::importGameFiles(multistrmap &cfg, const multistrmap &ini, co
 
     // this will sort files by time order first, then alphabetical (maybe), I suspect non ASCII filenames will be stuffed.
     sort(contentFiles.begin(), contentFiles.end());
-    for(std::vector<std::pair<std::time_t, std::string> >::const_iterator iter=contentFiles.begin(); iter!=contentFiles.end(); ++iter) {
-        cfg["content"].push_back(iter->second);
-    }
+    //for(std::vector<std::pair<std::time_t, std::string> >::const_iterator iter=contentFiles.begin(); iter!=contentFiles.end(); ++iter) {
+    //    cfg["content"].push_back(iter->second);
+    //}
+	cfg["content"].push_back("blank.esm");
+	cfg["content"].push_back("11.esp");
+	cfg["content"].push_back("GreyLockDemo.ESP");
+	cfg["content"].push_back("Grass.esp");
 }
 
 void MwIniImporter::writeToFile(std::ostream &out, const multistrmap &cfg) {

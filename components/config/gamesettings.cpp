@@ -508,7 +508,7 @@ void Config::GameSettings::setContentList(const QStringList& fileNames)
     remove(sContentKey);
     foreach(const QString& fileName, fileNames)
     {
-        setMultiValue(sContentKey, fileName);
+        setMultiValue(sContentKey, fileName); //MWX
     }
 }
 

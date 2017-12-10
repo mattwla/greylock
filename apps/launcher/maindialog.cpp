@@ -164,7 +164,7 @@ Launcher::FirstRunDialogResult Launcher::MainDialog::showFirstRunDialog()
 
         if (msgBox.clickedButton() == wizardButton)
         {
-            if (!mWizardInvoker->startProcess(QLatin1String("openmw-wizard"), false)) {
+            if (!mWizardInvoker->startProcess(QLatin1String("greylock-wizard"), false)) {
                 return FirstRunDialogResultFailure;
             } else {
                 return FirstRunDialogResultWizard;
