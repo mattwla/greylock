@@ -686,6 +686,7 @@ void OMW::Engine::go()
             std::string logo = mFallbackMap["Movies_Morrowind_Logo"];
             /*if (!logo.empty())
                 mEnvironment.getWindowManager()->playVideo(logo, true);*/
+			//MWX
         }
         catch (...) {}
     }

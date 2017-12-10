@@ -63,7 +63,7 @@ namespace MWGui
     void LoadingScreen::findSplashScreens()
     {
         const std::map<std::string, VFS::File*>& index = mVFS->getIndex();
-        std::string pattern = "Splash/";
+        std::string pattern = "GreylockSplash/";
         mVFS->normalizeFilename(pattern);
 
         /* priority given to the left */
