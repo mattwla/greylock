@@ -508,8 +508,9 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
     if (!mSkipMenu)
     {
         std::string logo = mFallbackMap["Movies_Company_Logo"];
-        if (!logo.empty())
-            window->playVideo(logo, true);
+        /*if (!logo.empty())
+            window->playVideo(logo, true);*/
+		//MWX
     }
 
     // Create the world
@@ -683,8 +684,8 @@ void OMW::Engine::go()
             mEnvironment.getSoundManager()->streamMusic("Special/theme.ogg");
 
             std::string logo = mFallbackMap["Movies_Morrowind_Logo"];
-            if (!logo.empty())
-                mEnvironment.getWindowManager()->playVideo(logo, true);
+            /*if (!logo.empty())
+                mEnvironment.getWindowManager()->playVideo(logo, true);*/
         }
         catch (...) {}
     }
