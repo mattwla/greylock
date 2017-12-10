@@ -273,9 +273,9 @@ namespace MWWorld
 
         if (!bypass)
         {
-            std::string video = mFallback.getFallbackString("Movies_New_Game");
-            if (!video.empty())
-                MWBase::Environment::get().getWindowManager()->playVideo(video, true);
+            std::string video = mFallback.getFallbackString("Movies_New_Game"); //MWX
+            /*if (!video.empty()) 
+                MWBase::Environment::get().getWindowManager()->playVideo(video, true);*/
         }
 
         // enable collision
