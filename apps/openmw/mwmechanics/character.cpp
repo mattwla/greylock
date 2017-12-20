@@ -1796,6 +1796,11 @@ void CharacterController::update(float duration)
             vec.x() *= factor;
             vec.y() *= factor;
             vec.z()  = 0.0f;
+			//MWX if there is object in front of player;
+			//bool obstructed  = 
+			//MWBase::Environment::get().getWorld()->getDistToNearestRayHit();
+			//MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
+			
         }
         else if(vec.z() > 0.0f && mJumpState == JumpState_None)
         {

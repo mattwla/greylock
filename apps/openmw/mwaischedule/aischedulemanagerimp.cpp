@@ -249,10 +249,10 @@ namespace MWAISchedule
 	MWWorld::Ptr AIScheduleManager::getHome(MWWorld::Ptr npc)
 	{
 		//NPCs all have global variable called idhome where is their id. There are home markers all called homeint where int is a label for which home it is. NPC homes are looked up by checking the int registered under their id+home than looking up home+ the int found under their global var
-		
+		//MWX redo by simply looking up interior name? makes tonsa sense yo. see ref x
 		std::string name = npc.getCellRef().getRefId();
 		std::string houseNumber = std::to_string(MWBase::Environment::get().getWorld()->getGlobalInt(name+"home"));
-		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("home" + houseNumber, false);
+		MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("home_" + houseNumber, false); //MWX search by cell name? ref x
 		return marker;
 	}
 

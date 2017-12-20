@@ -977,11 +977,11 @@ namespace MWClass
 		}
 		else if (running && !sneaking)
 			if (isPlayer)
-				moveSpeed = 1100;//runSpeed;
+				moveSpeed = runSpeed;//runSpeed; MWX
 			else
 				moveSpeed = runSpeed;
 		else if (isPlayer)
-			moveSpeed = 500;
+			moveSpeed = 500; //MWX
 		else
 			moveSpeed = walkSpeed;
         if(getMovementSettings(ptr).mPosition[0] != 0 && getMovementSettings(ptr).mPosition[1] == 0)
