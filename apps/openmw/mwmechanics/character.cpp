@@ -1796,55 +1796,63 @@ void CharacterController::update(float duration)
             vec.x() *= factor;
             vec.y() *= factor;
             vec.z()  = 0.0f;
-			//MWX if there is object in front of player;
-			//bool obstructed  = 
-			//MWBase::Environment::get().getWorld()->getDistToNearestRayHit();
-			//MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
-			osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
-			osg::Vec3f playerDirection = cls.getRotationVector(mPtr);
-			
+			////MWX if there is object in front of player;
+			////bool obstructed  = 
+			////MWBase::Environment::get().getWorld()->getDistToNearestRayHit();
+			////MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
+			//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
+			//osg::Vec3f playerDirection = cls.getRotationVector(mPtr);
+			//
 		
-				//cls.getMovementSettings(mPtr).asVec3();
-			//playerDirection.normalize();
-			/*MWBase::Environment::get().getWorld()->getFacedObject();*/
-			
+			//	//cls.getMovementSettings(mPtr).asVec3();
+			////playerDirection.normalize();
+			///*MWBase::Environment::get().getWorld()->getFacedObject();*/
+			//
 
-			//auto dist = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
+			////auto dist = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
 
 		
-			
-			
-			
-			
-			
-			const ESM::Position& refpos = getPlayer().getRefData().getPosition();
-			auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
-			//osg::Vec3f listenerPos;
+			//
+			//
+			//
+			//
+			//
+			//const ESM::Position& refpos = getPlayer().getRefData().getPosition();
+			//auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
+			////osg::Vec3f listenerPos;
 
-			osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) *
-				osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
-				osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
+			//osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) *
+			//	osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
+			//	osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
 
-			osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
-			osg::Vec3f up = listenerOrient * osg::Vec3f(0, 0, 1);
-			osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
-			
-			auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 500.0f, false);
-			if (dist < 500.0f)
-			{
-				std::cout << "Object in way of jump" << std::endl;
-				/*std::cout << forward.x() << std::endl;
-				std::cout << forward.y() << std::endl;
-				std::cout << forward.z() << std::endl;*/
-			}
-			else
-			{
-				std::cout << "nothing in way" << std::endl;
-				/*std::cout << "direction is" << std::endl;
-				std::cout << forward.x() << std::endl;
-				std::cout << forward.y() << std::endl;
-				std::cout << forward.z() << std::endl;*/
-			}
+			//osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+			//osg::Vec3f up = listenerOrient * osg::Vec3f(0, 0, 1);
+			//osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+			//
+			//auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 500.0f, false);
+			//if (dist < 500.0f)
+			//{
+			//	auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + 70);
+			//	auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 500.0f, false);
+			//	if (ledgecheck == 500.0f)
+			//	{
+			//		std::cout << "can climb" << std::endl;
+			//	}
+			//	
+			//	/*std::cout << "Object in way of jump" << std::endl;
+			//	std::cout << listenerPos.x() << std::endl;
+			//	std::cout << listenerPos.y() << std::endl;
+			//	std::cout << listenerPos.z() << std::endl;*/
+
+			//}
+			//else
+			//{
+			//	std::cout << "nothing in way" << std::endl;
+			//	/*std::cout << "direction is" << std::endl;
+			//	std::cout << forward.x() << std::endl;
+			//	std::cout << forward.y() << std::endl;
+			//	std::cout << forward.z() << std::endl;*/
+			//}
 
 
 
