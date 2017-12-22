@@ -298,7 +298,7 @@ namespace MWMechanics
         if(mDistance && cellChange)
             mDistance = 0;
 
-        // For stationary NPCs, move back to the starting location if another AiPackage moved us elsewhere
+        // For stationary NPCs, move back to the startin glocation if another AiPackage moved us elsewhere
         if (mDistance == 0 && !cellChange
             && (pos.asVec3() - mInitialActorPosition).length2() > (DESTINATION_TOLERANCE * DESTINATION_TOLERANCE))
         {

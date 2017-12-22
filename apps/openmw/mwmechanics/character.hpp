@@ -147,6 +147,11 @@ enum JumpingState {
     JumpState_Landing
 };
 
+enum ClimbingState {
+	ClimbState_None,
+	ClimbState_Climbing
+};
+
 struct WeaponInfo;
 
 class CharacterController : public MWRender::Animation::TextKeyListener
@@ -184,6 +189,8 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 
     JumpingState mJumpState;
     std::string mCurrentJump;
+
+	ClimbingState mClimbState;
 
     WeaponType mWeaponType;
     std::string mCurrentWeapon;

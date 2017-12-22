@@ -762,6 +762,7 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mHitState(CharState_None)
     , mUpperBodyState(UpperCharState_Nothing)
     , mJumpState(JumpState_None)
+	, mClimbState(ClimbState_None)
     , mWeaponType(WeapType_None)
     , mAttackStrength(0.f)
     , mSkipAnim(false)
@@ -1796,65 +1797,66 @@ void CharacterController::update(float duration)
             vec.x() *= factor;
             vec.y() *= factor;
             vec.z()  = 0.0f;
-			////MWX if there is object in front of player;
-			////bool obstructed  = 
-			////MWBase::Environment::get().getWorld()->getDistToNearestRayHit();
-			////MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
-			//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
-			//osg::Vec3f playerDirection = cls.getRotationVector(mPtr);
-			//
+			//MWX if there is object in front of player;
+
+			if (mClimbState == ClimbState_None)
+			{
+			
+			osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
+	
 		
-			//	//cls.getMovementSettings(mPtr).asVec3();
-			////playerDirection.normalize();
-			///*MWBase::Environment::get().getWorld()->getFacedObject();*/
-			//
+			
 
-			////auto dist = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
-
+			const ESM::Position& refpos = getPlayer().getRefData().getPosition();
+			auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
 		
-			//
-			//
-			//
-			//
-			//
-			//const ESM::Position& refpos = getPlayer().getRefData().getPosition();
-			//auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
-			////osg::Vec3f listenerPos;
 
-			//osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) *
-			//	osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
-			//	osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
+			osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) *
+			osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
+			osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
 
-			//osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
-			//osg::Vec3f up = listenerOrient * osg::Vec3f(0, 0, 1);
-			//osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
-			//
-			//auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 500.0f, false);
-			//if (dist < 500.0f)
-			//{
-			//	auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + 70);
-			//	auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 500.0f, false);
-			//	if (ledgecheck == 500.0f)
-			//	{
-			//		std::cout << "can climb" << std::endl;
-			//	}
-			//	
-			//	/*std::cout << "Object in way of jump" << std::endl;
-			//	std::cout << listenerPos.x() << std::endl;
-			//	std::cout << listenerPos.y() << std::endl;
-			//	std::cout << listenerPos.z() << std::endl;*/
+			osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+			osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 
-			//}
-			//else
-			//{
-			//	std::cout << "nothing in way" << std::endl;
-			//	/*std::cout << "direction is" << std::endl;
-			//	std::cout << forward.x() << std::endl;
-			//	std::cout << forward.y() << std::endl;
-			//	std::cout << forward.z() << std::endl;*/
-			//}
+				//MWX CLIMBING CODE
+				auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 500.0f, false);
+				if (dist < 500.0f)
+				{
+					auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + 70);
+					auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
+					if (ledgecheck == 100.0f)
+					{
+						//MWBase::Environment::get().getWorld()->toggleCollisionMode();
+						mClimbState = ClimbState_Climbing;
+						std::cout << "can climb" << std::endl;
+						ESM::Position ledgeesmpos;
+						ledgeesmpos.pos[0] = ledgepos.x();
+						ledgeesmpos.pos[1] = ledgepos.y();
+						ledgeesmpos.pos[2] = ledgepos.z() + 1000;
+						//mPtr.getRefData().setPosition(ledgeesmpos);
+						//mPtr.getClass().getMovementSettings(mPtr).mPosition[2] = 1.0f;
 
 
+						//MWBase::Environment::get().getWorld()->moveObject(mPtr, ledgepos.x(), ledgepos.y(), ledgepos.z() + 200.0f);
+					}
+
+
+					/*std::cout << "Object in way of jump" << std::endl;
+					std::cout << listenerPos.x() << std::endl;
+					std::cout << listenerPos.y() << std::endl;
+					std::cout << listenerPos.z() << std::endl;*/
+
+				}
+				else
+				{
+					std::cout << "nothing in way" << std::endl;
+					std::cout << "direction is" << std::endl;
+					std::cout << forward.x() << std::endl;
+					std::cout << forward.y() << std::endl;
+					std::cout << forward.z() << std::endl;
+				}
+
+			}
 
         }
         else if(vec.z() > 0.0f && mJumpState == JumpState_None)
@@ -2037,8 +2039,15 @@ void CharacterController::update(float duration)
             // We must always queue movement, even if there is none, to apply gravity.
             world->queueMovement(mPtr, osg::Vec3f(0.f, 0.f, 0.f));
 
-        movement = vec;
-        cls.getMovementSettings(mPtr).mPosition[0] = cls.getMovementSettings(mPtr).mPosition[1] = 0;
+	/*	if (mClimbState == ClimbState_Climbing)
+		{
+			
+			world->queueMovement(mPtr, osg::Vec3f(0.f, 100.0f, 0.0f));
+		}
+		else {*/
+			movement = vec;
+			cls.getMovementSettings(mPtr).mPosition[0] = cls.getMovementSettings(mPtr).mPosition[1] = 0;
+	/*	}*/
         // Can't reset jump state (mPosition[2]) here; we don't know for sure whether the PhysicSystem will actually handle it in this frame
         // due to the fixed minimum timestep used for the physics update. It will be reset in PhysicSystem::move once the jump is handled.
 
@@ -2093,7 +2102,15 @@ void CharacterController::update(float duration)
     if(mMovementAnimationControlled && mPtr.getClass().isActor())
         world->queueMovement(mPtr, moved);
 
-    mSkipAnim = false;
+	if (mClimbState == ClimbState_Climbing)
+	{
+		osg::Vec3f climbmoved(moved.x(), moved.y(), 500.0f);//mwx or frame related?
+
+		world->queueMovement(mPtr, climbmoved);
+   }
+	
+	
+	mSkipAnim = false;
 
     mAnimation->enableHeadAnimation(cls.isActor() && !cls.getCreatureStats(mPtr).isDead());
 }

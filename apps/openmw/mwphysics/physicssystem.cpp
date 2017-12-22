@@ -1414,6 +1414,7 @@ namespace MWPhysics
             physicActor->setCanWaterWalk(waterCollision);
 
             // Slow fall reduces fall speed by a factor of (effect magnitude / 200)
+			//MWX GRAVITY
             float slowFall = 1.f - std::max(0.f, std::min(1.f, effects.get(ESM::MagicEffect::SlowFall).getMagnitude() * 0.005f));
 
             bool flying = world->isFlying(iter->first);

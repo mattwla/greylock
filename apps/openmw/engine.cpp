@@ -708,7 +708,7 @@ void OMW::Engine::go()
         dt = std::min(dt, 0.2);
 
         mViewer->advance(simulationTime);
-
+		//std::cout << dt << std::endl;
         if (!frame(dt))
         {
             OpenThreads::Thread::microSleep(5000);
