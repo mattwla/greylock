@@ -208,6 +208,8 @@ namespace MWMechanics
             /// If the observer is a non-NPC, check all actors in AI processing distance as observers
             virtual bool isActorDetected(const MWWorld::Ptr& actor, const MWWorld::Ptr& observer);
 
+			virtual bool isActorClimbing(const MWWorld::Ptr & actor);
+
             virtual void confiscateStolenItems (const MWWorld::Ptr& player, const MWWorld::Ptr& targetContainer);
 
             /// List the owners that the player has stolen this item from (the owner can be an NPC or a faction).

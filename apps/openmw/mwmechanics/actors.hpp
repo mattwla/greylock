@@ -115,7 +115,9 @@ namespace MWMechanics
             ///< Return the number of deaths for actors with the given ID.
 
             bool isAttackPrepairing(const MWWorld::Ptr& ptr);
+
             bool isRunning(const MWWorld::Ptr& ptr);
+			bool isClimbing(const MWWorld::Ptr& ptr);
             bool isSneaking(const MWWorld::Ptr& ptr);
 
             void forceStateUpdate(const MWWorld::Ptr &ptr);

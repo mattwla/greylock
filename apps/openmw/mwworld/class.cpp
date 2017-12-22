@@ -396,6 +396,11 @@ namespace MWWorld
         return false;
     }
 
+	bool Class::isClimbing(const ConstPtr &ptr) const {
+
+		return false;
+	}
+
     bool Class::isPureWaterCreature(const MWWorld::Ptr& ptr) const
     {
         return canSwim(ptr)

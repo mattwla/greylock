@@ -321,6 +321,7 @@ namespace MWWorld
             virtual bool canFly(const MWWorld::ConstPtr& ptr) const;
             virtual bool canSwim(const MWWorld::ConstPtr& ptr) const;
             virtual bool canWalk(const MWWorld::ConstPtr& ptr) const;
+			virtual bool isClimbing(const MWWorld::ConstPtr& ptr) const;
             bool isPureWaterCreature(const MWWorld::Ptr& ptr) const;
             bool isPureFlyingCreature(const MWWorld::Ptr& ptr) const;
             bool isPureLandCreature(const MWWorld::Ptr& ptr) const;

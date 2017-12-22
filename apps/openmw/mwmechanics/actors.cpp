@@ -829,6 +829,17 @@ namespace MWMechanics
         return ctrl->isRunning();
     }
 
+	bool Actors::isClimbing(const MWWorld::Ptr& ptr)
+	{
+		PtrActorMap::iterator it = mActors.find(ptr);
+		if (it == mActors.end())
+			return false;
+		CharacterController* ctrl = it->second->getCharacterController();
+
+		return ctrl->isClimbing();
+		
+	}
+
     bool Actors::isSneaking(const MWWorld::Ptr& ptr)
     {
         PtrActorMap::iterator it = mActors.find(ptr);

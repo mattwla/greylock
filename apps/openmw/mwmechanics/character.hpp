@@ -288,6 +288,7 @@ public:
     bool isRunning() const;
     bool isTurning() const;
     bool isAttackingOrSpell() const;
+	bool isClimbing() const;
 
     void setAttackingOrSpell(bool attackingOrSpell);
     void setAIAttackType(const std::string& attackType);

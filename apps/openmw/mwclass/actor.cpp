@@ -102,4 +102,9 @@ namespace MWClass
 
         return true;
     }
+	bool Actor::isClimbing() const
+	{
+		//return true;
+		return false;
+	}
 }

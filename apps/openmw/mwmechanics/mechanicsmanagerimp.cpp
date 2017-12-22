@@ -433,6 +433,12 @@ namespace MWMechanics
         return mActors.isActorDetected(actor, observer);
     }
 
+	bool MechanicsManager::isActorClimbing(const MWWorld::Ptr& actor)
+	{
+		return mActors.isClimbing(actor);
+	}
+
+
     bool MechanicsManager::isAttackPrepairing(const MWWorld::Ptr& ptr)
     {
         return mActors.isAttackPrepairing(ptr);

@@ -2082,6 +2082,10 @@ namespace MWWorld
     {
         const MWMechanics::CreatureStats &stats = ptr.getClass().getCreatureStats(ptr);
 
+		if (MWBase::Environment::get().getMechanicsManager()->isActorClimbing(ptr))
+			return true;
+		
+
         if(!ptr.getClass().isActor())
             return false;
 

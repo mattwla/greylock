@@ -294,6 +294,7 @@ namespace MWPhysics
                                     osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))
                                     ) * movement * time;
             }
+			
 
             const btCollisionObject *colobj = physicActor->getCollisionObject();
             osg::Vec3f halfExtents = physicActor->getHalfExtents();
@@ -312,12 +313,13 @@ namespace MWPhysics
             osg::Vec3f inertia = physicActor->getInertialForce();
             osg::Vec3f velocity;
 
-            if(position.z() < swimlevel || isFlying)
-            {
-                velocity = (osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
-                            osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
-            }
-            else
+            //if(position.z() < swimlevel || isFlying)
+            //{
+            //    velocity = (osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
+            //                osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
+            //}
+            //else
+			//mwx flying altered so jump will make flying entity go up on Z axis.
             {
                 velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
 
@@ -1418,6 +1420,9 @@ namespace MWPhysics
             float slowFall = 1.f - std::max(0.f, std::min(1.f, effects.get(ESM::MagicEffect::SlowFall).getMagnitude() * 0.005f));
 
             bool flying = world->isFlying(iter->first);
+			if (flying)
+				std::cout << "Flying." << std::endl;
+			
 
             bool wasOnGround = physicActor->getOnGround();
             osg::Vec3f position = physicActor->getPosition();

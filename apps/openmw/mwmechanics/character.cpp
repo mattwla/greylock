@@ -2405,6 +2405,14 @@ bool CharacterController::isAttackingOrSpell() const
             mUpperBodyState != UpperCharState_WeapEquiped;
 }
 
+bool CharacterController::isClimbing() const
+{
+	if (mClimbState == ClimbState_Climbing)
+		return true;
+	else
+		return false;
+}
+
 bool CharacterController::isSneaking() const
 {
     return mIdleState == CharState_IdleSneak ||
