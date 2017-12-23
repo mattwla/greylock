@@ -264,6 +264,8 @@ public:
 
     void update(float duration);
 
+	ClimbData checkLedge();
+
 	bool updateClimb();
 
 	bool startClimb(float z, float forward, osg::Vec3f direction);

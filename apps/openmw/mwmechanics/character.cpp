@@ -1802,62 +1802,10 @@ void CharacterController::update(float duration)
 
 			if (mClimbState == ClimbState_None)
 			{
+				
+				//checkforledge
+				ClimbData ledgedata = checkLedge();
 			
-			osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
-	
-		
-			
-
-			const ESM::Position& refpos = getPlayer().getRefData().getPosition();
-			auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
-		
-
-			osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) *
-			osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) *
-			osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
-
-			osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
-			osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
-
-				//MWX CLIMBING CODE
-				auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false);
-				if (dist < 100.0f)
-				{
-					auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + 70);
-					auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
-					if (ledgecheck == 100.0f)
-					{
-						startClimb(2000.0f, 1000.0f, lat);
-						
-						//MWBase::Environment::get().getWorld()->toggleCollisionMode();
-						
-			
-						ESM::Position ledgeesmpos;
-						ledgeesmpos.pos[0] = ledgepos.x();
-						ledgeesmpos.pos[1] = ledgepos.y();
-						ledgeesmpos.pos[2] = ledgepos.z() + 1000;
-						//mPtr.getRefData().setPosition(ledgeesmpos);
-						//mPtr.getClass().getMovementSettings(mPtr).mPosition[2] = 1.0f;
-
-
-						//MWBase::Environment::get().getWorld()->moveObject(mPtr, ledgepos.x(), ledgepos.y(), ledgepos.z() + 200.0f);
-					}
-
-
-					/*std::cout << "Object in way of jump" << std::endl;
-					std::cout << listenerPos.x() << std::endl;
-					std::cout << listenerPos.y() << std::endl;
-					std::cout << listenerPos.z() << std::endl;*/
-
-				}
-				else
-				{
-					std::cout << "nothing in way" << std::endl;
-					std::cout << "direction is" << std::endl;
-					std::cout << forward.x() << std::endl;
-					std::cout << forward.y() << std::endl;
-					std::cout << forward.z() << std::endl;
-				}
 
 			}
 
@@ -2117,6 +2065,55 @@ void CharacterController::update(float duration)
     mAnimation->enableHeadAnimation(cls.isActor() && !cls.getCreatureStats(mPtr).isDead());
 }
 
+ClimbData CharacterController::checkLedge()
+{
+	float zscan = 0;
+	//How high above player center(?) we are scanning
+	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
+	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
+	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
+	osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
+	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
+	if (dist < 100.0f)
+	{
+		while (zscan <= 500)
+		{
+			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
+			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
+			if (ledgecheck == 100.0f)
+			{
+				startClimb(zscan, 1000.0f, lat);
+				break;
+				//MWBase::Environment::get().getWorld()->toggleCollisionMode();
+				/*ESM::Position ledgeesmpos;
+				ledgeesmpos.pos[0] = ledgepos.x();
+				ledgeesmpos.pos[1] = ledgepos.y();
+				ledgeesmpos.pos[2] = ledgepos.z() + 1000;*/
+				//mPtr.getRefData().setPosition(ledgeesmpos);
+				//mPtr.getClass().getMovementSettings(mPtr).mPosition[2] = 1.0f;
+				//MWBase::Environment::get().getWorld()->moveObject(mPtr, ledgepos.x(), ledgepos.y(), ledgepos.z() + 200.0f);
+			}
+			zscan += 10.0f;
+		}
+		/*std::cout << "Object in way of jump" << std::endl;
+		std::cout << listenerPos.x() << std::endl;
+		std::cout << listenerPos.y() << std::endl;
+		std::cout << listenerPos.z() << std::endl;*/
+	}
+	else
+	{
+		std::cout << "nothing in way" << std::endl;
+	/*	std::cout << "direction is" << std::endl;
+		std::cout << forward.x() << std::endl;
+		std::cout << forward.y() << std::endl;
+		std::cout << forward.z() << std::endl;*/
+	}
+	return ClimbData();
+}
+
 bool CharacterController::updateClimb() {
 
 	float climbstrength = 800.0f;
@@ -2151,6 +2148,8 @@ bool CharacterController::updateClimb() {
 
 bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
 {
+	
+	std::cout << "Climb started" << std::endl;
 	mClimbData.z = z;
 	mClimbData.forward = forward;
 	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
