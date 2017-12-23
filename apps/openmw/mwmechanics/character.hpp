@@ -152,6 +152,12 @@ enum ClimbingState {
 	ClimbState_Climbing
 };
 
+struct ClimbData {
+	float z = 0.f;
+	float forward = 0.f;
+	osg::Vec3f direction;
+};
+
 struct WeaponInfo;
 
 class CharacterController : public MWRender::Animation::TextKeyListener
@@ -191,6 +197,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
     std::string mCurrentJump;
 
 	ClimbingState mClimbState;
+	ClimbData mClimbData;
 
     WeaponType mWeaponType;
     std::string mCurrentWeapon;
@@ -256,6 +263,10 @@ public:
     void updatePtr(const MWWorld::Ptr &ptr);
 
     void update(float duration);
+
+	bool updateClimb();
+
+	bool startClimb(float z, float forward, osg::Vec3f direction);
 
     void persistAnimationState();
     void unpersistAnimationState();

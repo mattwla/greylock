@@ -1420,8 +1420,8 @@ namespace MWPhysics
             float slowFall = 1.f - std::max(0.f, std::min(1.f, effects.get(ESM::MagicEffect::SlowFall).getMagnitude() * 0.005f));
 
             bool flying = world->isFlying(iter->first);
-			if (flying)
-				std::cout << "Flying." << std::endl;
+			//if (flying)
+			//	std::cout << "Flying." << std::endl;
 			
 
             bool wasOnGround = physicActor->getOnGround();

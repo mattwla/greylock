@@ -462,8 +462,9 @@ namespace MWInput
 			
 				//MWX copy the mouse rotation into member variables for other classes to use.
 
-                // Only actually turn player when we're not in vanity mode MWX
-                if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive)
+                // Only actually turn player when we're not in vanity mode or climb modeMWX
+				
+				if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()))
                 {
                     mPlayer->yaw(rot[2]);
                     mPlayer->pitch(rot[0]);
@@ -885,8 +886,8 @@ namespace MWInput
 				MWBase::Environment::get().getWorld()->rotateCamera(rot[0], rot[1], rot[2]); //MWX
 			}
 
-            // Only actually turn player when we're not in vanity mode mwx
-            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive )
+            // Only actually turn player when we're not in vanity mode mwx, not in running mode, or not climbing
+            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && !MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()))
             {
                 mPlayer->yaw(x);
                 mPlayer->pitch(y);

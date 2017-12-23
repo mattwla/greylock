@@ -763,6 +763,7 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mUpperBodyState(UpperCharState_Nothing)
     , mJumpState(JumpState_None)
 	, mClimbState(ClimbState_None)
+	, mClimbData()
     , mWeaponType(WeapType_None)
     , mAttackStrength(0.f)
     , mSkipAnim(false)
@@ -1819,16 +1820,18 @@ void CharacterController::update(float duration)
 			osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 
 				//MWX CLIMBING CODE
-				auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 500.0f, false);
-				if (dist < 500.0f)
+				auto dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false);
+				if (dist < 100.0f)
 				{
 					auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + 70);
 					auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
 					if (ledgecheck == 100.0f)
 					{
+						startClimb(2000.0f, 1000.0f, lat);
+						
 						//MWBase::Environment::get().getWorld()->toggleCollisionMode();
-						mClimbState = ClimbState_Climbing;
-						std::cout << "can climb" << std::endl;
+						
+			
 						ESM::Position ledgeesmpos;
 						ledgeesmpos.pos[0] = ledgepos.x();
 						ledgeesmpos.pos[1] = ledgepos.y();
@@ -2104,15 +2107,60 @@ void CharacterController::update(float duration)
 
 	if (mClimbState == ClimbState_Climbing)
 	{
-		osg::Vec3f climbmoved(moved.x(), moved.y(), 500.0f);//mwx or frame related?
-
-		world->queueMovement(mPtr, climbmoved);
+		
+		updateClimb();
    }
 	
 	
 	mSkipAnim = false;
 
     mAnimation->enableHeadAnimation(cls.isActor() && !cls.getCreatureStats(mPtr).isDead());
+}
+
+bool CharacterController::updateClimb() {
+
+	float climbstrength = 800.0f;
+	if (mClimbData.z > 0.0f)
+	{
+		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
+		mClimbData.z -= climbstrength;
+	}
+	else
+	{
+		if (mClimbData.forward > 0.0f)
+		{
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
+			mClimbData.forward -= 100.0f;
+			std::cout << "forward" << std::endl;
+		}
+		else {
+
+
+			mClimbState = ClimbState_None;
+			std::cout << "climb done" << std::endl;
+		}
+	}
+	
+
+
+
+	//put something in movement queue
+	return true;
+}
+
+bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
+{
+	mClimbData.z = z;
+	mClimbData.forward = forward;
+	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
+	mClimbData.direction.y() = 100.0f;//direction.y() * 100;
+	mClimbData.direction.z() = 0.0f;
+	mClimbState = ClimbState_Climbing;
+	
+	std::cout << "can climb" << std::endl;
+	
+	return true;
 }
 
 void CharacterController::persistAnimationState()
