@@ -595,6 +595,11 @@ namespace MWRender
 			//mCamera->rotateCamera(mouserot[0], mouserot[2], true);
 	}
 
+	void RenderingManager::rollCamera(float angle, bool adjust)
+	{
+		mCamera->rollCamera(angle, adjust);
+	}
+
     void RenderingManager::removeObject(const MWWorld::Ptr &ptr)
     {
         mObjects->removeObject(ptr);

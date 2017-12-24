@@ -2097,7 +2097,7 @@ ClimbData CharacterController::checkLedge()
 				else
 				{
 					
-					startClimb(zscan + 10000.0, 1000.0f, lat);
+					startClimb(zscan + 8000.0, 500.0f, lat);
 					break;
 				}
 				//MWBase::Environment::get().getWorld()->toggleCollisionMode();
@@ -2129,7 +2129,8 @@ ClimbData CharacterController::checkLedge()
 
 bool CharacterController::updateClimb(float duration) {
 
-	float climbstrength = mClimbData.originalz / (0.25 / duration);
+	float climbstrength = mClimbData.originalz / (0.5 / duration);
+	float rotatestrength = .3 / (.75 / duration);
 	float forwardstrength = mClimbData.originalforward / (.25 / duration);
 	/*std::cout << duration << std::endl;
 	std::cout << mClimbData.z << std::endl;
@@ -2139,11 +2140,16 @@ bool CharacterController::updateClimb(float duration) {
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
 		mClimbData.z -= climbstrength;
+		if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
+			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+		else
+			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
 	}
 	else
 	{
 		if (mClimbData.forward > 0.0f)
 		{
+			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
 			mClimbData.direction.y() = forwardstrength * 10;
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
 			mClimbData.forward -= forwardstrength;
@@ -2154,6 +2160,7 @@ bool CharacterController::updateClimb(float duration) {
 
 			mClimbState = ClimbState_None;
 			std::cout << "climb done" << std::endl;
+			MWBase::Environment::get().getWorld()->rollCamera(0, false);
 		}
 	}
 	

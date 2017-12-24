@@ -559,7 +559,7 @@ namespace MWWorld
         }
         if(mRendering->getCamera()->isFirstPerson())
             mRendering->getCamera()->toggleViewMode(true);
-    }
+   } 
 
     MWWorld::Player& World::getPlayer()
     {
@@ -2227,6 +2227,11 @@ namespace MWWorld
 	void World::rotateCamera(float x, float y, float z)
 	{
 		mRendering->rotateCamera(x, y, z);
+	}
+
+	void World::rollCamera(float angle, bool adjust)
+	{
+		mRendering->rollCamera(angle, adjust);
 	}
 
     void World::setupPlayer()

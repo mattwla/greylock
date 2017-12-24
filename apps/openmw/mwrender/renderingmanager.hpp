@@ -121,6 +121,8 @@ namespace MWRender
 
 		void rotateCamera(float x, float y, float z);
 
+		void rollCamera(float angle, bool adjust);
+
         void removeObject(const MWWorld::Ptr& ptr);
 
         void setWaterEnabled(bool enabled);

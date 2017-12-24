@@ -512,6 +512,8 @@ namespace MWWorld
 
 			void rotateCamera(float x, float y, float z) override;
 
+			void rollCamera(float angle, bool adjust) override;
+
             void setupPlayer() override;
             void renderPlayer() override;
 

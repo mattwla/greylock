@@ -144,7 +144,7 @@ namespace MWRender
 	{
 		if (adjust)
 		{
-			roll += getPitch();
+			roll += getRoll();
 		
 		}
 		setRoll(roll);
@@ -309,7 +309,7 @@ namespace MWRender
 
 	void Camera::setRoll(float angle)
 	{
-		const float epsilon = 0.000001f;
+		/*const float epsilon = 0.000001f;
 		float limit = osg::PI_2 - epsilon;
 		if (mPreviewMode)
 			limit /= 2;
@@ -317,7 +317,7 @@ namespace MWRender
 		if (angle > limit)
 			angle = limit;
 		else if (angle < -limit)
-			angle = -limit;
+			angle = -limit;*/
 
 	
 		mMainCam.roll = angle;

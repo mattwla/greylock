@@ -403,6 +403,8 @@ namespace MWBase
 
 			virtual void rotateCamera(float x, float y, float z) = 0;
 
+			virtual void rollCamera(float angle, bool adjust) = 0;
+
             virtual void setupPlayer() = 0;
             virtual void renderPlayer() = 0;
 
