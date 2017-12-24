@@ -1810,7 +1810,7 @@ void CharacterController::update(float duration)
 			}
 
         }
-        else if(vec.z() > 0.0f && mJumpState == JumpState_None)
+        else if(vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
         {
             // Started a jump.
             float z = cls.getJump(mPtr);
@@ -2056,7 +2056,7 @@ void CharacterController::update(float duration)
 	if (mClimbState == ClimbState_Climbing)
 	{
 		
-		updateClimb();
+		updateClimb(duration);
    }
 	
 	
@@ -2067,7 +2067,7 @@ void CharacterController::update(float duration)
 
 ClimbData CharacterController::checkLedge()
 {
-	float zscan = 0;
+	float zscan = 50;
 	//How high above player center(?) we are scanning
 	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
 	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
@@ -2079,14 +2079,27 @@ ClimbData CharacterController::checkLedge()
 	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
 	if (dist < 100.0f)
 	{
-		while (zscan <= 500)
+		while (zscan <= 100)
 		{
 			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
-			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
-			if (ledgecheck == 100.0f)
+			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 200.0f, false);
+			//std::cout << ledgecheck << std::endl;
+			if (ledgecheck == 200.0f)
 			{
-				startClimb(zscan, 1000.0f, lat);
-				break;
+				
+				
+				auto slopepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan + 1.0f);
+				auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
+				auto slopediff = abs(slopecheck - ledgecheck);
+				/*std::cout << slopediff << std::endl;*/
+				if (slopediff < 50.0f)
+					std::cout << "too steep" << std::endl;
+				else
+				{
+					
+					startClimb(zscan + 10000.0, 1000.0f, lat);
+					break;
+				}
 				//MWBase::Environment::get().getWorld()->toggleCollisionMode();
 				/*ESM::Position ledgeesmpos;
 				ledgeesmpos.pos[0] = ledgepos.x();
@@ -2105,7 +2118,7 @@ ClimbData CharacterController::checkLedge()
 	}
 	else
 	{
-		std::cout << "nothing in way" << std::endl;
+		/*std::cout << "nothing in way" << std::endl;*/
 	/*	std::cout << "direction is" << std::endl;
 		std::cout << forward.x() << std::endl;
 		std::cout << forward.y() << std::endl;
@@ -2114,9 +2127,13 @@ ClimbData CharacterController::checkLedge()
 	return ClimbData();
 }
 
-bool CharacterController::updateClimb() {
+bool CharacterController::updateClimb(float duration) {
 
-	float climbstrength = 800.0f;
+	float climbstrength = mClimbData.originalz / (0.25 / duration);
+	float forwardstrength = mClimbData.originalforward / (.25 / duration);
+	/*std::cout << duration << std::endl;
+	std::cout << mClimbData.z << std::endl;
+	std::cout << climbstrength << std::endl;*/
 	if (mClimbData.z > 0.0f)
 	{
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
@@ -2127,9 +2144,10 @@ bool CharacterController::updateClimb() {
 	{
 		if (mClimbData.forward > 0.0f)
 		{
+			mClimbData.direction.y() = forwardstrength * 10;
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
-			mClimbData.forward -= 100.0f;
-			std::cout << "forward" << std::endl;
+			mClimbData.forward -= forwardstrength;
+			//std::cout << "forward" << std::endl;
 		}
 		else {
 
@@ -2151,7 +2169,9 @@ bool CharacterController::startClimb(float z, float forward, osg::Vec3f directio
 	
 	std::cout << "Climb started" << std::endl;
 	mClimbData.z = z;
+	mClimbData.originalz = z;
 	mClimbData.forward = forward;
+	mClimbData.originalforward = forward;
 	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
 	mClimbData.direction.y() = 100.0f;//direction.y() * 100;
 	mClimbData.direction.z() = 0.0f;

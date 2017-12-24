@@ -243,8 +243,13 @@ namespace MWInput
                 MWMechanics::DrawState_ state = MWBase::Environment::get().getWorld()->getPlayer().getDrawState();
                 mPlayer->setAttackingOrSpell(currentValue != 0 && state != MWMechanics::DrawState_Nothing);
             }
-            else if (action == A_Jump)
-                mAttemptJump = (currentValue == 1.0 && previousValue == 0.0);
+			else if (action == A_Jump)
+			{
+				mAttemptJump = (currentValue == 1.0 && previousValue == 0.0);
+				std::cout << "jump detected:" << std::endl;
+					std::cout << mAttemptJump << std::endl;
+				
+			}
         }
 
         if (currentValue == 1)
@@ -575,7 +580,8 @@ namespace MWInput
 
                 if (mAttemptJump && mControlSwitch["playerjumping"])
                 {
-                    mPlayer->setUpDown (1);
+					std::cout << "Setting up down..." << std::endl;
+					mPlayer->setUpDown (1);
                     triedToMove = true;
                     mOverencumberedMessageDelay = 0.f;
                 }

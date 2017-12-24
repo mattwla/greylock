@@ -154,7 +154,9 @@ enum ClimbingState {
 
 struct ClimbData {
 	float z = 0.f;
+	float originalz = 0.f;
 	float forward = 0.f;
+	float originalforward = 0.f;
 	osg::Vec3f direction;
 };
 
@@ -266,7 +268,7 @@ public:
 
 	ClimbData checkLedge();
 
-	bool updateClimb();
+	bool updateClimb(float duration);
 
 	bool startClimb(float z, float forward, osg::Vec3f direction);
 
