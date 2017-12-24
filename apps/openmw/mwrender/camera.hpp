@@ -24,7 +24,7 @@ namespace MWRender
     class Camera
     {
         struct CamData {
-            float pitch, yaw, offset;
+            float pitch, yaw, offset, roll;
         };
 
         MWWorld::Ptr mTrackingPtr;
@@ -73,10 +73,15 @@ namespace MWRender
         /// \param rot Rotation angles in radians
         void rotateCamera(float pitch, float yaw, bool adjust);
 
+		//MWX roll camera
+		void rollCamera(float roll, bool adjust);
+
         float getYaw();
         void setYaw(float angle);
 
         float getPitch();
+		float getRoll();
+		void setRoll(float angle);
         void setPitch(float angle);
 
         /// Attach camera to object

@@ -69,6 +69,7 @@ namespace MWRender
         mMainCam.pitch = 0.f;
         mMainCam.yaw = 0.f;
         mMainCam.offset = 400.f;
+		mMainCam.roll = 0.f;
 
         mCameraDistance = mMaxCameraDistance;
 
@@ -115,7 +116,7 @@ namespace MWRender
         position += offset;
 
         osg::Vec3d forward = orient * osg::Vec3d(0,1,0);
-        osg::Vec3d up = orient * osg::Vec3d(0,0,1);
+        osg::Vec3d up = orient * osg::Vec3d(getRoll(), 0, 1); //mwx
 
         cam->setViewMatrixAsLookAt(position, position + forward, up);
     }
@@ -138,6 +139,17 @@ namespace MWRender
         setYaw(yaw);
         setPitch(pitch);
     }
+
+	void Camera::rollCamera(float roll, bool adjust)
+	{
+		if (adjust)
+		{
+			roll += getPitch();
+		
+		}
+		setRoll(roll);
+		
+	}
 
     void Camera::attachTo(const MWWorld::Ptr &ptr)
     {
@@ -289,6 +301,29 @@ namespace MWRender
         }
         return mMainCam.pitch;
     }
+
+	float Camera::getRoll()
+	{
+		return mMainCam.roll;
+	}
+
+	void Camera::setRoll(float angle)
+	{
+		const float epsilon = 0.000001f;
+		float limit = osg::PI_2 - epsilon;
+		if (mPreviewMode)
+			limit /= 2;
+
+		if (angle > limit)
+			angle = limit;
+		else if (angle < -limit)
+			angle = -limit;
+
+	
+		mMainCam.roll = angle;
+
+	}
+
 
     void Camera::setPitch(float angle)
     {
