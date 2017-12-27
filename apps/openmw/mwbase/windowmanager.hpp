@@ -332,6 +332,7 @@ namespace MWBase
             virtual void setBlindness(const int percent) = 0;
 
             virtual void activateHitOverlay(bool interrupt=true) = 0;
+			virtual void activateSneakOverlay(bool interrupt, bool sneak) = 0;
             virtual void setWerewolfOverlay(bool set) = 0;
 
             virtual void toggleDebugWindow() = 0;

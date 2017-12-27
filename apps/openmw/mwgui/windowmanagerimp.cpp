@@ -1981,6 +1981,11 @@ namespace MWGui
         mHitFader->fadeTo(0, 0.5f);
     }
 
+	void WindowManager::activateSneakOverlay(bool interrupt, bool sneak)
+	{
+
+	}
+
     void WindowManager::setWerewolfOverlay(bool set)
     {
         if (!mWerewolfOverlayEnabled)

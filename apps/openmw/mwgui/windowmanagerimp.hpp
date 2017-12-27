@@ -363,6 +363,7 @@ namespace MWGui
     virtual void setBlindness(const int percent);
 
     virtual void activateHitOverlay(bool interrupt);
+	virtual void activateSneakOverlay(bool interrupt, bool sneak);
     virtual void setWerewolfOverlay(bool set);
 
     virtual void toggleDebugWindow();
