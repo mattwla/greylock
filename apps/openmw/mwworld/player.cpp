@@ -147,6 +147,12 @@ namespace MWWorld
         ptr.getClass().getMovementSettings(ptr).mPosition[1] = static_cast<float>(value);
     }
 
+	bool Player::setAttemptClimb(bool enable)
+	{
+		MWWorld::Ptr ptr = getPlayer();
+		ptr.getClass().getMovementSettings(ptr).mAttemptClimb = enable;
+	}
+
     void Player::setLeftRight (int value)
     {
         MWWorld::Ptr ptr = getPlayer();

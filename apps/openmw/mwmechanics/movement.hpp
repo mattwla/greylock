@@ -10,6 +10,7 @@ namespace MWMechanics
     {
         float mPosition[3];
         float mRotation[3];
+		bool mAttemptClimb = false; //mwx
 
         Movement()
         {

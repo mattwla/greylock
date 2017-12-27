@@ -246,6 +246,7 @@ namespace MWInput
 			else if (action == A_Jump)
 			{
 				mAttemptJump = (currentValue == 1.0 && previousValue == 0.0);
+				mPlayer->setAttemptClimb(currentValue); //mwx
 				std::cout << "jump detected:" << std::endl;
 					std::cout << mAttemptJump << std::endl;
 				
@@ -582,6 +583,7 @@ namespace MWInput
                 {
 					std::cout << "Setting up down..." << std::endl;
 					mPlayer->setUpDown (1);
+					
                     triedToMove = true;
                     mOverencumberedMessageDelay = 0.f;
                 }

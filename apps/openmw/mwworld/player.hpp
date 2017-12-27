@@ -88,6 +88,8 @@ namespace MWWorld
         bool getAutoMove() const;
         void setAutoMove (bool enable);
 
+		bool setAttemptClimb(bool enable);
+
         void setLeftRight (int value);
 
         void setForwardBackward (int value);

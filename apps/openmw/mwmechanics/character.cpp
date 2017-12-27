@@ -2058,6 +2058,10 @@ void CharacterController::update(float duration)
 		
 		updateClimb(duration);
    }
+	else
+	{
+		//checkLedge();
+	}
 	
 	
 	mSkipAnim = false;
@@ -2079,7 +2083,7 @@ ClimbData CharacterController::checkLedge()
 	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
 	if (dist < 100.0f)
 	{
-		while (zscan <= 100)
+		while (zscan <= 200)
 		{
 			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
 			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 200.0f, false);
@@ -2093,12 +2097,16 @@ ClimbData CharacterController::checkLedge()
 				auto slopediff = abs(slopecheck - ledgecheck);
 				/*std::cout << slopediff << std::endl;*/
 				if (slopediff < 50.0f)
-					std::cout << "too steep" << std::endl;
+					std::cout << "too steep" << slopediff << std::endl;
 				else
 				{
-					
-					startClimb(zscan + 8000.0, 500.0f, lat);
-					break;
+					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
+					const MWWorld::Class &cls = mPtr.getClass();
+					if (cls.getMovementSettings(mPtr).mAttemptClimb)
+					{
+						startClimb(zscan + 8000.0, 500.0f, lat);
+						break;
+					}
 				}
 				//MWBase::Environment::get().getWorld()->toggleCollisionMode();
 				/*ESM::Position ledgeesmpos;
