@@ -1688,14 +1688,14 @@ namespace MWWorld
             MWBase::Environment::get().getWindowManager()->setWerewolfOverlay(false);
         }
 
-        // Sink the camera while sneaking
+        // Sink the camera while sneaking MWX
         bool sneaking = player.getClass().getCreatureStats(getPlayerPtr()).getStance(MWMechanics::CreatureStats::Stance_Sneak);
         bool inair = !isOnGround(player);
         bool swimming = isSwimming(player);
 
         static const float i1stPersonSneakDelta = getStore().get<ESM::GameSetting>().find("i1stPersonSneakDelta")->getFloat();
         if(!paused && sneaking && !(swimming || inair))
-            mRendering->getCamera()->setSneakOffset(i1stPersonSneakDelta);
+            mRendering->getCamera()->setSneakOffset(40.0f);
         else
             mRendering->getCamera()->setSneakOffset(0.f);
 

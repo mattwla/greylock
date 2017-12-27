@@ -687,12 +687,31 @@ osg::Vec3f NpcAnimation::runAnimation(float timepassed)
         float rotateFactor = 0.75f + 0.25f * mAimingFactor;
 
         mFirstPersonNeckController->setRotate(osg::Quat(mPtr.getRefData().getPosition().rot[0] * rotateFactor, osg::Vec3f(-1,0,0)));
-        mFirstPersonNeckController->setOffset(mFirstPersonOffset);
+        mFirstPersonNeckController->setOffset(calculateOffset(timepassed)); //MWX
     }
 
     WeaponAnimation::configureControllers(mPtr.getRefData().getPosition().rot[0]);
 
     return ret;
+}
+
+osg::Vec3f NpcAnimation::calculateOffset(float timepassed)
+{
+	float increment = 40.0/(0.25 / timepassed);
+
+	float currentZ = mFirstPersonOffset.z();
+	float targetZ = mFirstPersonTargetOffset.z();
+	if (currentZ > targetZ)
+	{
+		mFirstPersonOffset.z() -= increment;
+	}
+	else if (currentZ < targetZ)
+	{
+		mFirstPersonOffset.z() += increment;
+	}
+
+	return mFirstPersonOffset;
+
 }
 
 void NpcAnimation::removeIndividualPart(ESM::PartReferenceType type)
@@ -1045,6 +1064,11 @@ void NpcAnimation::setVampire(bool vampire)
 void NpcAnimation::setFirstPersonOffset(const osg::Vec3f &offset)
 {
     mFirstPersonOffset = offset;
+}
+
+void NpcAnimation::setFirstPersonTargetOffset(const osg::Vec3f &offset)
+{
+	mFirstPersonTargetOffset = offset;
 }
 
 void NpcAnimation::updatePtr(const MWWorld::Ptr &updated)

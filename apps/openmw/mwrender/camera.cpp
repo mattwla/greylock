@@ -270,7 +270,8 @@ namespace MWRender
 
     void Camera::setSneakOffset(float offset)
     {
-        mAnimation->setFirstPersonOffset(osg::Vec3f(0,0,-offset));
+        //mAnimation->setFirstPersonOffset(osg::Vec3f(0,0,-offset));
+		mAnimation->setFirstPersonTargetOffset(osg::Vec3f(0, 0, -offset));
     }
 
     float Camera::getYaw()

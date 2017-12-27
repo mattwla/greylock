@@ -61,6 +61,7 @@ private:
     int mPartPriorities[ESM::PRT_Count];
 
     osg::Vec3f mFirstPersonOffset;
+	osg::Vec3f mFirstPersonTargetOffset;
     // Field of view to use when rendering first person meshes
     float mFirstPersonFieldOfView;
 
@@ -120,6 +121,8 @@ public:
 
     virtual osg::Vec3f runAnimation(float timepassed);
 
+	osg::Vec3f calculateOffset(float timepassed);
+
     /// A relative factor (0-1) that decides if and how much the skeleton should be pitched
     /// to indicate the facing orientation of the character.
     virtual void setPitchFactor(float factor) { mPitchFactor = factor; }
@@ -151,6 +154,10 @@ public:
 
     /// Set a translation offset (in object root space) to apply to meshes when in first person mode.
     void setFirstPersonOffset(const osg::Vec3f& offset);
+
+
+
+	void setFirstPersonTargetOffset(const osg::Vec3f& offset);
 
     virtual void updatePtr(const MWWorld::Ptr& updated);
 
