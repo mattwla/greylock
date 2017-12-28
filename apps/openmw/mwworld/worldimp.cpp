@@ -1695,7 +1695,7 @@ namespace MWWorld
 
         static const float i1stPersonSneakDelta = getStore().get<ESM::GameSetting>().find("i1stPersonSneakDelta")->getFloat();
         if(!paused && sneaking && !(swimming || inair))
-            mRendering->getCamera()->setSneakOffset(40.0f);
+            mRendering->getCamera()->setSneakOffset(50.0f);
         else
             mRendering->getCamera()->setSneakOffset(0.f);
 

@@ -697,11 +697,15 @@ osg::Vec3f NpcAnimation::runAnimation(float timepassed)
 
 osg::Vec3f NpcAnimation::calculateOffset(float timepassed)
 {
-	float increment = 40.0/(0.25 / timepassed);
+	float increment = 50.0/(0.25 / timepassed); //MWX fix this use of hardcoded 50.0f
 
 	float currentZ = mFirstPersonOffset.z();
 	float targetZ = mFirstPersonTargetOffset.z();
-	if (currentZ > targetZ)
+	if (abs(currentZ - targetZ) < 2.0f)
+	{
+		return mFirstPersonOffset;
+	}
+	else if (currentZ > targetZ)
 	{
 		mFirstPersonOffset.z() -= increment;
 	}

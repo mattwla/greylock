@@ -1804,7 +1804,7 @@ void CharacterController::update(float duration)
 			{
 				
 				//checkforledge
-				ClimbData ledgedata = checkLedge();
+				//ClimbData ledgedata = checkLedge();
 			
 
 			}
@@ -2058,9 +2058,9 @@ void CharacterController::update(float duration)
 		
 		updateClimb(duration);
    }
-	else
+	else if (mPtr == getPlayer())
 	{
-		//checkLedge();
+		checkLedge();
 	}
 	
 	
@@ -2083,16 +2083,16 @@ ClimbData CharacterController::checkLedge()
 	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
 	if (dist < 100.0f)
 	{
-		while (zscan <= 200)
+		while (zscan <= 100)
 		{
 			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
-			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 200.0f, false);
+			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
 			//std::cout << ledgecheck << std::endl;
-			if (ledgecheck == 200.0f)
+			if (ledgecheck == 100.0f) //there is room for us above object
 			{
 				
 				
-				auto slopepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan + 1.0f);
+				auto slopepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
 				auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
 				auto slopediff = abs(slopecheck - ledgecheck);
 				/*std::cout << slopediff << std::endl;*/
@@ -2102,9 +2102,9 @@ ClimbData CharacterController::checkLedge()
 				{
 					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 					const MWWorld::Class &cls = mPtr.getClass();
-					if (cls.getMovementSettings(mPtr).mAttemptClimb)
+					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
-						startClimb(zscan + 8000.0, 500.0f, lat);
+						startClimb(zscan*200.0, 500.0f, lat);
 						break;
 					}
 				}

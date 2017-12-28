@@ -166,6 +166,7 @@ namespace MWGui
       , mWerewolfFader(NULL)
       , mBlindnessFader(NULL)
       , mHitFader(NULL)
+	  , mStealthView(NULL)
       , mScreenFader(NULL)
       , mDebugWindow(NULL)
       , mJailScreen(NULL)
@@ -479,6 +480,9 @@ namespace MWGui
         }
         mHitFader = new ScreenFader(hitFaderTexture, hitFaderLayout, hitFaderCoord);
         mWindows.push_back(mHitFader);
+
+		mStealthView = new ScreenFader("textures\\stealth_view.dds", hitFaderLayout, hitFaderCoord);
+		mWindows.push_back(mStealthView);
 
         mScreenFader = new ScreenFader("black");
         mWindows.push_back(mScreenFader);
@@ -1983,7 +1987,16 @@ namespace MWGui
 
 	void WindowManager::activateSneakOverlay(bool interrupt, bool sneak)
 	{
-
+		
+		mStealthView->clearQueue();
+		if (sneak)
+		{
+			mStealthView->fadeTo(100, 0.0f);
+		}
+		else
+		{
+			mStealthView->fadeTo(0, 0.5f);
+		}
 	}
 
     void WindowManager::setWerewolfOverlay(bool set)

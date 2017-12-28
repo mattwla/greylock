@@ -448,6 +448,7 @@ namespace MWGui
     ScreenFader* mWerewolfFader;
     ScreenFader* mBlindnessFader;
     ScreenFader* mHitFader;
+	ScreenFader* mStealthView;
     ScreenFader* mScreenFader;
     DebugWindow* mDebugWindow;
     JailScreen* mJailScreen;
