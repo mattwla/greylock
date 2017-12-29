@@ -463,8 +463,8 @@ namespace MWGui
 
     void InventoryWindow::onTitleDoubleClicked()
     {
-        if (!mPinned)
-            MWBase::Environment::get().getWindowManager()->toggleVisible(GW_Inventory);
+        //if (!mPinned)
+          //  MWBase::Environment::get().getWindowManager()->toggleVisible(GW_Inventory);
     }
 
     void InventoryWindow::useItem(const MWWorld::Ptr &ptr)

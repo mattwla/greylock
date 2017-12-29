@@ -651,7 +651,7 @@ namespace MWGui
 
 
 		// Icons of forced hidden windows are displayed
-
+		//MWX HUD
 		//setMinimapVisibility((mAllowed & GW_Map) && (!mMap->pinned() || (mForceHidden & GW_Map)));
 		setMinimapVisibility(false);
 

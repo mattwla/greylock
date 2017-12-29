@@ -323,7 +323,7 @@ namespace MWGui
             return;
         }
 
-        MWBase::Environment::get().getWindowManager()->toggleVisible(GW_Inventory);
+        //MWBase::Environment::get().getWindowManager()->toggleVisible(GW_Inventory);
     }
 
     void HUD::onMagicClicked(MyGUI::Widget* _sender)
