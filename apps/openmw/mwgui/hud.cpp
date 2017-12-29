@@ -525,9 +525,10 @@ namespace MWGui
     void HUD::setHmsVisible(bool visible)
     {
         mHealth->setVisible(visible);
-        mMagicka->setVisible(visible);
-        mStamina->setVisible(visible);
+        mMagicka->setVisible(false);
+        mStamina->setVisible(false);
         updatePositions();
+		//mwx hide magicka and stamina, implement luck system?
     }
 
     void HUD::setWeapVisible(bool visible)

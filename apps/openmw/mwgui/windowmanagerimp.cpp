@@ -652,11 +652,14 @@ namespace MWGui
 
 		// Icons of forced hidden windows are displayed
 
-		setMinimapVisibility((mAllowed & GW_Map) && (!mMap->pinned() || (mForceHidden & GW_Map)));
+		//setMinimapVisibility((mAllowed & GW_Map) && (!mMap->pinned() || (mForceHidden & GW_Map)));
+		setMinimapVisibility(false);
+
 
 		setWeaponVisibility((mAllowed & GW_Inventory) && (!mInventoryWindow->pinned() || (mForceHidden & GW_Inventory)));
 
-		setSpellVisibility((mAllowed & GW_Magic) && (!mSpellWindow->pinned() || (mForceHidden & GW_Magic)));
+		//setSpellVisibility((mAllowed & GW_Magic) && (!mSpellWindow->pinned() || (mForceHidden & GW_Magic)));
+		setSpellVisibility(false);
 
 		setHMSVisibility((mAllowed & GW_Stats) && (!mStatsWindow->pinned() || (mForceHidden & GW_Stats)));
 
@@ -720,15 +723,21 @@ namespace MWGui
 
 			// windows we are allowed to show (the 'allowed' var.)
 
+			//mwx inventory
+
 			int eff = mShown & mAllowed & ~mForceHidden;
 
-			mMap->setVisible(eff & GW_Map);
+			//mMap->setVisible(eff & GW_Map);
+			mMap->setVisible(false);
 
 			mInventoryWindow->setVisible(eff & GW_Inventory);
+			//mInventoryWindow->setVisible(false);
 
-			mSpellWindow->setVisible(eff & GW_Magic);
+			//mSpellWindow->setVisible(eff & GW_Magic);
+			mSpellWindow->setVisible(false);
 
-			mStatsWindow->setVisible(eff & GW_Stats);
+			//mStatsWindow->setVisible(eff & GW_Stats);
+			mStatsWindow->setVisible(false);
 
 		}
 
