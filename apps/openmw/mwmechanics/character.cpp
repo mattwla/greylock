@@ -2086,8 +2086,8 @@ ClimbData CharacterController::checkLedge()
 		const MWWorld::Class &cls = mPtr.getClass();
 		if (cls.getMovementSettings(mPtr).mAttemptJump)
 		{
-			//wallJump();
-			//return ClimbData();
+			wallJump();
+			return ClimbData();
 		}
 
 		while (zscan <= 100)

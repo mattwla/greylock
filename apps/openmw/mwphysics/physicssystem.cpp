@@ -323,7 +323,8 @@ namespace MWPhysics
             {
                 velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
 
-                if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
+                //if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
+				if(velocity.z() > 0.f)
                     inertia = velocity;
                 else if(!physicActor->getOnGround() || physicActor->getOnSlope())
                     velocity = velocity + physicActor->getInertialForce();
@@ -488,7 +489,7 @@ namespace MWPhysics
                 physicActor->setInertialForce(osg::Vec3f(0.f, 0.f, 0.f));
             else
             {
-                inertia.z() += time * -627.2f;
+                inertia.z() += time * -627.2f; //gravity?
                 if (inertia.z() < 0)
                     inertia.z() *= slowFall;
                 if (slowFall < 1.f) {
