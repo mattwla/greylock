@@ -242,11 +242,12 @@ namespace MWInput
             {
                 MWMechanics::DrawState_ state = MWBase::Environment::get().getWorld()->getPlayer().getDrawState();
                 mPlayer->setAttackingOrSpell(currentValue != 0 && state != MWMechanics::DrawState_Nothing);
+				
             }
 			else if (action == A_Jump)
 			{
 				mAttemptJump = (currentValue == 1.0 && previousValue == 0.0);
-				mPlayer->setAttemptClimb(currentValue); //mwx
+				
 				std::cout << "jump detected:" << std::endl;
 					std::cout << mAttemptJump << std::endl;
 				
@@ -271,6 +272,7 @@ namespace MWInput
                 toggleConsole ();
                 break;
             case A_Activate:
+				mPlayer->setAttemptClimb(currentValue); //mwx
                 resetIdleTime();
                 activate();
                 break;
@@ -367,6 +369,10 @@ namespace MWInput
                 break;
             }
         }
+		else
+		{
+			mPlayer->setAttemptClimb(currentValue); //mwx
+		}
     }
 
     void InputManager::updateCursorMode()
@@ -1262,7 +1268,7 @@ namespace MWInput
         std::map<int, SDL_Scancode> defaultKeyBindings;
 
         //Gets the Keyvalue from the Scancode; gives the button in the same place reguardless of keyboard format
-        defaultKeyBindings[A_Activate] = SDL_SCANCODE_SPACE;
+        defaultKeyBindings[A_Activate] = SDL_SCANCODE_E;
         defaultKeyBindings[A_MoveBackward] = SDL_SCANCODE_S;
         defaultKeyBindings[A_MoveForward] = SDL_SCANCODE_W;
         defaultKeyBindings[A_MoveLeft] = SDL_SCANCODE_A;
@@ -1279,7 +1285,7 @@ namespace MWInput
         defaultKeyBindings[A_Run] = SDL_SCANCODE_LSHIFT;
         defaultKeyBindings[A_Sneak] = SDL_SCANCODE_LCTRL;
         defaultKeyBindings[A_AutoMove] = SDL_SCANCODE_Q;
-        defaultKeyBindings[A_Jump] = SDL_SCANCODE_E;
+        defaultKeyBindings[A_Jump] = SDL_SCANCODE_SPACE;
         defaultKeyBindings[A_Journal] = SDL_SCANCODE_J;
         defaultKeyBindings[A_Rest] = SDL_SCANCODE_T;
         defaultKeyBindings[A_GameMenu] = SDL_SCANCODE_ESCAPE;

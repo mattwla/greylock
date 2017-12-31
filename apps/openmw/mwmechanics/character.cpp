@@ -2103,10 +2103,10 @@ ClimbData CharacterController::checkLedge()
 					//std::cout << "here" << std::endl;
 					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 					const MWWorld::Class &cls = mPtr.getClass();
-					MWBase::Environment::get().getWindowManager()->BodyContext("Space) Climb");
+					MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
 					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
-						startClimb(zscan*200.0, 500.0f, lat);
+						startClimb(zscan*150.0, 500.0f, lat);
 						break;
 					}
 				}
