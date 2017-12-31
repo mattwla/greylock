@@ -2100,8 +2100,10 @@ ClimbData CharacterController::checkLedge()
 					std::cout << "too steep" << slopediff << std::endl;
 				else
 				{
+					//std::cout << "here" << std::endl;
 					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 					const MWWorld::Class &cls = mPtr.getClass();
+					MWBase::Environment::get().getWindowManager()->BodyContext("Space) Climb");
 					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
 						startClimb(zscan*200.0, 500.0f, lat);
@@ -2126,6 +2128,7 @@ ClimbData CharacterController::checkLedge()
 	}
 	else
 	{
+		//MWBase::Environment::get().getWindowManager()->
 		/*std::cout << "nothing in way" << std::endl;*/
 	/*	std::cout << "direction is" << std::endl;
 		std::cout << forward.x() << std::endl;

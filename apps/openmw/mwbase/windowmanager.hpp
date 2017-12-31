@@ -249,7 +249,9 @@ namespace MWBase
             virtual void interactiveMessageBox (const std::string& message,
                                                 const std::vector<std::string>& buttons = std::vector<std::string>(), bool block=false) = 0;
 
-            /// returns the index of the pressed button or -1 if no button was pressed (->MessageBoxmanager->InteractiveMessageBox)
+			virtual void BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode = MWGui::ShowInDialogueMode_IfPossible) = 0;
+			
+			/// returns the index of the pressed button or -1 if no button was pressed (->MessageBoxmanager->InteractiveMessageBox)
             virtual int readPressedButton() = 0;
 
             virtual void onFrame (float frameDuration) = 0;

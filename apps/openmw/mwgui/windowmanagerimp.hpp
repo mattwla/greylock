@@ -102,6 +102,7 @@ namespace MWGui
   class TextInputDialog;
   class InfoBoxDialog;
   class MessageBoxManager;
+  class BodyContextManager;
   class SettingsWindow;
   class AlchemyWindow;
   class QuickKeysMenu;
@@ -279,6 +280,8 @@ namespace MWGui
     virtual void interactiveMessageBox (const std::string& message,
                                         const std::vector<std::string>& buttons = std::vector<std::string>(), bool block=false);
 
+	virtual void BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode = MWGui::ShowInDialogueMode_IfPossible);
+
     virtual int readPressedButton (); ///< returns the index of the pressed button or -1 if no button was pressed (->MessageBoxmanager->InteractiveMessageBox)
 
     virtual void onFrame (float frameDuration);
@@ -423,6 +426,7 @@ namespace MWGui
     ToolTips *mToolTips;
     StatsWindow *mStatsWindow;
     MessageBoxManager *mMessageBoxManager;
+	BodyContextManager *mBodyContextManager;
     Console *mConsole;
     DialogueWindow *mDialogueWindow;
 

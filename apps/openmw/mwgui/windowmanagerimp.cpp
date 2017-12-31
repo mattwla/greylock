@@ -73,6 +73,7 @@
 #include "dialogue.hpp"
 #include "statswindow.hpp"
 #include "messagebox.hpp"
+#include "bodycontext.hpp"
 #include "tooltips.hpp"
 #include "scrollwindow.hpp"
 #include "bookwindow.hpp"
@@ -146,6 +147,7 @@ namespace MWGui
       , mToolTips(NULL)
       , mStatsWindow(NULL)
       , mMessageBoxManager(NULL)
+	  , mBodyContextManager(NULL)
       , mConsole(NULL)
       , mDialogueWindow(NULL)
       , mDragAndDrop(NULL)
@@ -359,6 +361,8 @@ namespace MWGui
 
         mMessageBoxManager = new MessageBoxManager(mStore->get<ESM::GameSetting>().find("fMessageTimePerChar")->getFloat());
 
+		mBodyContextManager = new BodyContextManager();
+
         SpellBuyingWindow* spellBuyingWindow = new SpellBuyingWindow();
         mWindows.push_back(spellBuyingWindow);
         mGuiModeStates[GM_SpellBuying] = GuiModeState(spellBuyingWindow);
@@ -552,6 +556,8 @@ namespace MWGui
 
 
 		delete mMessageBoxManager;
+
+		delete mBodyContextManager;
 
 		delete mLocalMapRender;
 
@@ -939,6 +945,18 @@ namespace MWGui
         }
     }
 
+	void WindowManager::BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode)
+	{
+		std::cout << "wm body context" << std::endl;
+		//if (getMode() == GM_Dialogue && showInDialogueMode != MWGui::ShowInDialogueMode_Never) {
+		//	mDialogueWindow->addMessageBox(MyGUI::LanguageManager::getInstance().replaceTags(message));
+		//}
+		//else if (showInDialogueMode != MWGui::ShowInDialogueMode_Only) {
+			mBodyContextManager->createBodyContext(message);
+	/*	}*/
+	}
+
+
     void WindowManager::staticMessageBox(const std::string& message)
     {
         mMessageBoxManager->createMessageBox(message, true);
@@ -1013,6 +1031,8 @@ namespace MWGui
         mKeyboardNavigation->onFrame();
 
         mMessageBoxManager->onFrame(frameDuration);
+
+		mBodyContextManager->onFrame(frameDuration);
 
         mToolTips->onFrame(frameDuration);
 
@@ -1714,6 +1734,8 @@ namespace MWGui
             mLocalMapRender->clear();
 
         mMessageBoxManager->clear();
+
+		mBodyContextManager->clear();
 
         mToolTips->setFocusObject(MWWorld::Ptr());
 
