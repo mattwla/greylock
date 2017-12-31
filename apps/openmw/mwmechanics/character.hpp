@@ -272,6 +272,8 @@ public:
 
 	bool startClimb(float z, float forward, osg::Vec3f direction);
 
+	bool wallJump();
+
     void persistAnimationState();
     void unpersistAnimationState();
 

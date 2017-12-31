@@ -153,6 +153,13 @@ namespace MWWorld
 		ptr.getClass().getMovementSettings(ptr).mAttemptClimb = enable;
 	}
 
+	bool Player::setAttemptJump(bool enable)
+	{
+		MWWorld::Ptr ptr = getPlayer();
+		ptr.getClass().getMovementSettings(ptr).mAttemptJump = enable;
+	}
+
+
     void Player::setLeftRight (int value)
     {
         MWWorld::Ptr ptr = getPlayer();

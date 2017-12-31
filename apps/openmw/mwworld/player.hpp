@@ -90,6 +90,8 @@ namespace MWWorld
 
 		bool setAttemptClimb(bool enable);
 
+		bool setAttemptJump(bool enable);
+
         void setLeftRight (int value);
 
         void setForwardBackward (int value);

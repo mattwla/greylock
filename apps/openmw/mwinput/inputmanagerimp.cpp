@@ -250,6 +250,7 @@ namespace MWInput
 				
 				std::cout << "jump detected:" << std::endl;
 					std::cout << mAttemptJump << std::endl;
+					mPlayer->setAttemptJump(currentValue);
 				
 			}
         }

@@ -2083,14 +2083,23 @@ ClimbData CharacterController::checkLedge()
 	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
 	if (dist < 100.0f)
 	{
+		const MWWorld::Class &cls = mPtr.getClass();
+		if (cls.getMovementSettings(mPtr).mAttemptJump)
+		{
+			//wallJump();
+			//return ClimbData();
+		}
+
 		while (zscan <= 100)
 		{
+			
 			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
 			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
 			//std::cout << ledgecheck << std::endl;
 			if (ledgecheck == 100.0f) //there is room for us above object
 			{
 				
+			
 				
 				auto slopepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
 				auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
@@ -2102,7 +2111,7 @@ ClimbData CharacterController::checkLedge()
 				{
 					//std::cout << "here" << std::endl;
 					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
-					const MWWorld::Class &cls = mPtr.getClass();
+					
 					MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
 					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
@@ -2197,6 +2206,15 @@ bool CharacterController::startClimb(float z, float forward, osg::Vec3f directio
 	
 	std::cout << "can climb" << std::endl;
 	
+	return true;
+}
+
+bool CharacterController::wallJump()
+{
+	//mClimbState = ClimbState_Climbing;
+	std::cout << "wall jump" << std::endl;
+	MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, -500.0f, 500.0f));
+
 	return true;
 }
 
