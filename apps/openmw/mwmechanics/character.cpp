@@ -2066,6 +2066,9 @@ void CharacterController::update(float duration)
 	}
 	else if (mPtr == getPlayer())
 	{
+		
+		mWallJumpOriginalVelocity = movement;
+		mWallJumpOriginalVelocity.y();
 		checkLedge();
 	}
 	
@@ -2252,6 +2255,8 @@ bool CharacterController::wallJump()
 		std::cout << "wall jump" << std::endl;
 		mInWallJump = true;
 		mWallJumpRotation = 0.0f;
+		std::cout << mWallJumpOriginalVelocity.y() << std::endl;
+		//mWallJumpOriginalVelocity = mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	}
 	return true;
 }
@@ -2259,17 +2264,50 @@ bool CharacterController::wallJump()
 bool CharacterController::updateWallJump(float duration)
 {
 	float turnspeed = (180.0f) / (0.25 / duration);
-	
-	if (mWallJumpRotation < 180)
+	float decreaserate = 10.0f / duration;
+	auto currentvelocity = mWallJumpOriginalVelocity;
+		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
+	float x = currentvelocity.x();
+	float y = currentvelocity.y();
+	float z = currentvelocity.z();
+	std::cout << x << y << z << std::endl;
+	if (false)
+		//(x != 0.0f || y != 0.0f || z != 0.0f) //if we are still in motion, slow down.
 	{
-		//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
-		mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
-		mWallJumpRotation += turnspeed;
+		
+		if (x > 0.0f)
+			x -= mWallJumpOriginalVelocity.x() / decreaserate;
+		if (x < 0.0f)
+			x += mWallJumpOriginalVelocity.x() / decreaserate;
+		if (y > 0.0f)
+			y -= mWallJumpOriginalVelocity.y() / decreaserate;
+		if (y < 0.0f)
+			y += mWallJumpOriginalVelocity.y() / decreaserate;
+		if (z > 0.0f)
+			z -= mWallJumpOriginalVelocity.z() / decreaserate;
+		if (z < 0.0f)
+			z += mWallJumpOriginalVelocity.z() / decreaserate;
+		/*if (abs(x) < 10.0)
+			x = 0.0f;
+		if (abs(y) < 10.0)
+			y = 0.0f;
+		if (abs(z) < 10.0)
+			z = 0.0f;*/
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
 	}
-	else
+	else //we are not in motion, turn around and leap!
 	{
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
-		mInWallJump = false;
+		if (mWallJumpRotation < 180)
+		{
+			//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
+			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
+			mWallJumpRotation += turnspeed;
+		}
+		else
+		{
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+			mInWallJump = false;
+		}
 	}
 	
 	return true;

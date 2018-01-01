@@ -216,6 +216,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 
 	float mWallJumpRotation;
 	bool mInWallJump;
+	osg::Vec3f mWallJumpOriginalVelocity;
 
     MWWorld::ConstPtr mHeadTrackTarget;
 
