@@ -211,6 +211,11 @@ class CharacterController : public MWRender::Animation::TextKeyListener
     // counted for skill increase
     float mSecondsOfSwimming;
     float mSecondsOfRunning;
+	
+	bool landed;
+
+	float mWallJumpRotation;
+	bool mInWallJump;
 
     MWWorld::ConstPtr mHeadTrackTarget;
 
@@ -266,6 +271,8 @@ public:
 
     void update(float duration);
 
+	float frontCollisionDistance(float raylength, float zoffset);
+
 	ClimbData checkLedge();
 
 	bool updateClimb(float duration);
@@ -273,6 +280,8 @@ public:
 	bool startClimb(float z, float forward, osg::Vec3f direction);
 
 	bool wallJump();
+
+	bool updateWallJump(float duration);
 
     void persistAnimationState();
     void unpersistAnimationState();

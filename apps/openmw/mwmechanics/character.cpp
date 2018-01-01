@@ -762,6 +762,7 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mHitState(CharState_None)
     , mUpperBodyState(UpperCharState_Nothing)
     , mJumpState(JumpState_None)
+	, landed(false)
 	, mClimbState(ClimbState_None)
 	, mClimbData()
     , mWeaponType(WeapType_None)
@@ -1848,7 +1849,8 @@ void CharacterController::update(float duration)
         {
             forcestateupdate = true;
             jumpstate = JumpState_Landing;
-            vec.z() = 0.0f;
+			
+			vec.z() = 0.0f;
 
             float height = cls.getCreatureStats(mPtr).land();
             float healthLost = getFallDamage(mPtr, height);
@@ -2058,6 +2060,10 @@ void CharacterController::update(float duration)
 		
 		updateClimb(duration);
    }
+	else if (mInWallJump)
+	{
+		updateWallJump(duration);
+	}
 	else if (mPtr == getPlayer())
 	{
 		checkLedge();
@@ -2069,9 +2075,23 @@ void CharacterController::update(float duration)
     mAnimation->enableHeadAnimation(cls.isActor() && !cls.getCreatureStats(mPtr).isDead());
 }
 
-ClimbData CharacterController::checkLedge()
+float CharacterController::frontCollisionDistance(float raylength, float zoffset)
 {
-	float zscan = 50;
+	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
+	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
+	osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+	listenerPos.z() += zoffset;
+	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
+	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, raylength , false); //check if there is an obstruciton in front of player.
+	return dist;
+}
+
+ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
+{
+	bool canwalljump = false;
+	float zscan = 0;
 	//How high above player center(?) we are scanning
 	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
 	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
@@ -2084,6 +2104,11 @@ ClimbData CharacterController::checkLedge()
 	if (dist < 100.0f)
 	{
 		const MWWorld::Class &cls = mPtr.getClass();
+		if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr))
+		{
+			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
+			canwalljump = true;
+		}
 		if (cls.getMovementSettings(mPtr).mAttemptJump)
 		{
 			wallJump();
@@ -2112,7 +2137,13 @@ ClimbData CharacterController::checkLedge()
 					//std::cout << "here" << std::endl;
 					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 					
-					MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
+					if (!canwalljump)
+						MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
+					else
+						MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
+					
+					
+					
 					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
 						startClimb(zscan*150.0, 500.0f, lat);
@@ -2150,12 +2181,14 @@ ClimbData CharacterController::checkLedge()
 bool CharacterController::updateClimb(float duration) {
 
 	float climbstrength = mClimbData.originalz / (0.5 / duration);
+	if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
+		climbstrength = mClimbData.z;
 	float rotatestrength = .3 / (.75 / duration);
 	float forwardstrength = mClimbData.originalforward / (.25 / duration);
 	/*std::cout << duration << std::endl;
 	std::cout << mClimbData.z << std::endl;
 	std::cout << climbstrength << std::endl;*/
-	if (mClimbData.z > 0.0f)
+	if (frontCollisionDistance(100.0f, -100.0f) != 100.0f)
 	{
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
@@ -2211,10 +2244,32 @@ bool CharacterController::startClimb(float z, float forward, osg::Vec3f directio
 
 bool CharacterController::wallJump()
 {
-	//mClimbState = ClimbState_Climbing;
-	std::cout << "wall jump" << std::endl;
-	MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, -500.0f, 500.0f));
+	
+	if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !mInWallJump)
+	{
+		std::cout << "wall jump" << std::endl;
+		mInWallJump = true;
+		mWallJumpRotation = 0.0f;
+	}
+	return true;
+}
 
+bool CharacterController::updateWallJump(float duration)
+{
+	float turnspeed = (180.0f) / (0.25 / duration);
+	
+	if (mWallJumpRotation < 180)
+	{
+		//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
+		mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
+		mWallJumpRotation += turnspeed;
+	}
+	else
+	{
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+		mInWallJump = false;
+	}
+	
 	return true;
 }
 
