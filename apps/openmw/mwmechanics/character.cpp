@@ -2185,6 +2185,8 @@ bool CharacterController::updateClimb(float duration) {
 		//climbstrength = mClimbData.z;
 	float rotatestrength = .3 / (.75 / duration);
 	float forwardstrength = mClimbData.originalforward / (.25 / duration);
+	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
+		forwardstrength = mClimbData.forward;
 	/*std::cout << duration << std::endl;
 	std::cout << mClimbData.z << std::endl;
 	std::cout << climbstrength << std::endl;*/
