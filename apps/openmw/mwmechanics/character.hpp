@@ -316,6 +316,8 @@ public:
     bool isAttackingOrSpell() const;
 	bool isClimbing() const;
 
+	bool isWallJumping() const;
+
     void setAttackingOrSpell(bool attackingOrSpell);
     void setAIAttackType(const std::string& attackType);
     static void setAttackTypeRandomly(std::string& attackType);

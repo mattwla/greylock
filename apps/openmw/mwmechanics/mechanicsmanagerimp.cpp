@@ -438,6 +438,11 @@ namespace MWMechanics
 		return mActors.isClimbing(actor);
 	}
 
+	bool MechanicsManager::isActorWallJumping(const MWWorld::Ptr& actor)
+	{
+		return mActors.isWallJumping(actor);
+	}
+
 
     bool MechanicsManager::isAttackPrepairing(const MWWorld::Ptr& ptr)
     {

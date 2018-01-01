@@ -118,6 +118,7 @@ namespace MWMechanics
 
             bool isRunning(const MWWorld::Ptr& ptr);
 			bool isClimbing(const MWWorld::Ptr& ptr);
+			bool isWallJumping(const MWWorld::Ptr & ptr);
             bool isSneaking(const MWWorld::Ptr& ptr);
 
             void forceStateUpdate(const MWWorld::Ptr &ptr);

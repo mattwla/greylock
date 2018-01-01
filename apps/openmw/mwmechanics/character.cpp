@@ -2573,6 +2573,12 @@ bool CharacterController::isClimbing() const
 		return false;
 }
 
+bool CharacterController::isWallJumping() const
+{
+	return mInWallJump;
+	
+}
+
 bool CharacterController::isSneaking() const
 {
     return mIdleState == CharState_IdleSneak ||

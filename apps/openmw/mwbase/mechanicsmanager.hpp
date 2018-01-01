@@ -260,6 +260,7 @@ namespace MWBase
             virtual bool isAttackPrepairing(const MWWorld::Ptr& ptr) = 0;
             virtual bool isRunning(const MWWorld::Ptr& ptr) = 0;
             virtual bool isSneaking(const MWWorld::Ptr& ptr) = 0;
+			virtual bool isActorWallJumping(const MWWorld::Ptr & actor) = 0;
     };
 }
 
