@@ -2181,14 +2181,14 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 bool CharacterController::updateClimb(float duration) {
 
 	float climbstrength = mClimbData.originalz / (0.5 / duration);
-	if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
-		climbstrength = mClimbData.z;
+	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
+		//climbstrength = mClimbData.z;
 	float rotatestrength = .3 / (.75 / duration);
 	float forwardstrength = mClimbData.originalforward / (.25 / duration);
 	/*std::cout << duration << std::endl;
 	std::cout << mClimbData.z << std::endl;
 	std::cout << climbstrength << std::endl;*/
-	if (frontCollisionDistance(100.0f, -100.0f) != 100.0f)
+	if (frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f)
 	{
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
