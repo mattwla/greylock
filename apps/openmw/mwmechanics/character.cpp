@@ -2054,22 +2054,26 @@ void CharacterController::update(float duration)
     // Update movement
     if(mMovementAnimationControlled && mPtr.getClass().isActor())
         world->queueMovement(mPtr, moved);
+	if (mPtr == getPlayer())
+	{
+		if (mClimbState == ClimbState_Climbing)
+		{
 
-	if (mClimbState == ClimbState_Climbing)
-	{
-		
-		updateClimb(duration);
-   }
-	else if (mInWallJump)
-	{
-		updateWallJump(duration);
-	}
-	else if (mPtr == getPlayer())
-	{
-		
-		mWallJumpOriginalVelocity = movement;
-		mWallJumpOriginalVelocity.y();
-		checkLedge();
+			updateClimb(duration);
+		}
+		else if (mInWallJump)
+		{
+			updateWallJump(duration);
+		}
+		else if (mPtr == getPlayer())
+		{
+			if (!(movement.x() == 0 && movement.y() == 0 && movement.z() == 0)) //get our last movement before it cuts to 0
+			{
+				mWallJumpOriginalVelocity = movement;
+			}
+			//mWallJumpOriginalVelocity.y();
+			checkLedge();
+		}
 	}
 	
 	
@@ -2109,14 +2113,18 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 		const MWWorld::Class &cls = mPtr.getClass();
 		if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr))
 		{
-			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
-			canwalljump = true;
+			if (mWallJumpOriginalVelocity.y() > 0 || dist < 40.0f) //can wall jump from further range if moving forward. if static need to be closer to wall.
+			{
+				MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
+				canwalljump = true;
+				if (cls.getMovementSettings(mPtr).mAttemptJump)
+				{
+					wallJump();
+					return ClimbData();
+				}
+			}
 		}
-		if (cls.getMovementSettings(mPtr).mAttemptJump)
-		{
-			wallJump();
-			return ClimbData();
-		}
+	
 
 		while (zscan <= 100)
 		{
@@ -2183,7 +2191,8 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 
 bool CharacterController::updateClimb(float duration) {
 
-	float climbstrength = mClimbData.originalz / (0.5 / duration);
+	float climbstrength = 5000 / (0.5 / duration);
+		//mClimbData.originalz / (0.5 / duration);
 	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
 		//climbstrength = mClimbData.z;
 	float rotatestrength = .3 / (.75 / duration);
@@ -2255,7 +2264,9 @@ bool CharacterController::wallJump()
 		std::cout << "wall jump" << std::endl;
 		mInWallJump = true;
 		mWallJumpRotation = 0.0f;
+		mWallJumpCameraTilt = 0.0f;
 		std::cout << mWallJumpOriginalVelocity.y() << std::endl;
+		currentvelocity = mWallJumpOriginalVelocity;
 		//mWallJumpOriginalVelocity = mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	}
 	return true;
@@ -2264,15 +2275,21 @@ bool CharacterController::wallJump()
 bool CharacterController::updateWallJump(float duration)
 {
 	float turnspeed = (180.0f) / (0.25 / duration);
-	float decreaserate = 10.0f / duration;
-	auto currentvelocity = mWallJumpOriginalVelocity;
+	float decreaserate = 10.0f / (0.5f / duration);
+	float tiltrate = 45.0 / (.2f / duration);
+	//currentvelocity = mWallJumpOriginalVelocity;
 		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	float x = currentvelocity.x();
 	float y = currentvelocity.y();
 	float z = currentvelocity.z();
-	std::cout << x << y << z << std::endl;
-	if (false)
-		//(x != 0.0f || y != 0.0f || z != 0.0f) //if we are still in motion, slow down.
+	//std::cout << x << y << z << std::endl;
+	std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;
+	if (mWallJumpCameraTilt < 45.0f)
+	{
+		mPtr.getClass().getMovementSettings(mPtr).mRotation[0] += osg::DegreesToRadians(tiltrate);
+		mWallJumpCameraTilt += tiltrate;
+	}
+	if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
 	{
 		
 		if (x > 0.0f)
@@ -2280,28 +2297,37 @@ bool CharacterController::updateWallJump(float duration)
 		if (x < 0.0f)
 			x += mWallJumpOriginalVelocity.x() / decreaserate;
 		if (y > 0.0f)
-			y -= mWallJumpOriginalVelocity.y() / decreaserate;
+			y -= decreaserate;
 		if (y < 0.0f)
-			y += mWallJumpOriginalVelocity.y() / decreaserate;
+			y += decreaserate;
 		if (z > 0.0f)
 			z -= mWallJumpOriginalVelocity.z() / decreaserate;
 		if (z < 0.0f)
 			z += mWallJumpOriginalVelocity.z() / decreaserate;
-		/*if (abs(x) < 10.0)
+		if (abs(x) < 15.0)
 			x = 0.0f;
-		if (abs(y) < 10.0)
+		if (abs(y) < 15.0)
 			y = 0.0f;
-		if (abs(z) < 10.0)
-			z = 0.0f;*/
+		if (abs(z) < 15.0)
+			z = 0.0f;
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
+		currentvelocity.x() = x;
+		currentvelocity.y() = y;
+		currentvelocity.z() = z;
+	
 	}
-	else //we are not in motion, turn around and leap!
+	else if (mWallJumpCameraTilt >= 45.0f)//we are not in motion, turn around and leap!
 	{
 		if (mWallJumpRotation < 180)
 		{
 			//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
 			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
 			mWallJumpRotation += turnspeed;
+			if (mWallJumpCameraTilt < 90)
+			{
+				mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate * 2);
+				mWallJumpCameraTilt += tiltrate * 2;
+			}
 		}
 		else
 		{
