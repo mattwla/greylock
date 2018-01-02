@@ -2267,6 +2267,7 @@ bool CharacterController::wallJump()
 		mWallJumpCameraTilt = 0.0f;
 		std::cout << mWallJumpOriginalVelocity.y() << std::endl;
 		currentvelocity = mWallJumpOriginalVelocity;
+		mWallJumpPause = 0.0f;
 		//mWallJumpOriginalVelocity = mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	}
 	return true;
@@ -2275,8 +2276,8 @@ bool CharacterController::wallJump()
 bool CharacterController::updateWallJump(float duration)
 {
 	float turnspeed = (180.0f) / (0.15 / duration);
-	float decreaserate = 10.0f / (0.5f / duration);
-	float tiltrate = 45.0 / (.2f / duration);
+	float decreaserate = 10.0f / (1.0f / duration);
+	float tiltrate = 35.0 / (.2f / duration);
 	//currentvelocity = mWallJumpOriginalVelocity;
 		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	float x = currentvelocity.x();
@@ -2284,7 +2285,7 @@ bool CharacterController::updateWallJump(float duration)
 	float z = currentvelocity.z();
 	//std::cout << x << y << z << std::endl;
 	std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;
-	if (mWallJumpCameraTilt < 45.0f)
+	if (mWallJumpCameraTilt < 35.0f)
 	{
 		mPtr.getClass().getMovementSettings(mPtr).mRotation[0] += osg::DegreesToRadians(tiltrate);
 		mWallJumpCameraTilt += tiltrate;
@@ -2316,7 +2317,11 @@ bool CharacterController::updateWallJump(float duration)
 		currentvelocity.z() = z;
 	
 	}
-	else if (mWallJumpCameraTilt >= 45.0f)//we are not in motion, turn around and leap!
+	else if (mWallJumpPause < 0.15f)
+	{
+		mWallJumpPause += duration;
+	}
+	else if (mWallJumpCameraTilt >= 35.0f)//we are not in motion, turn around and leap!
 	{
 		if (mWallJumpRotation < 180)
 		{
@@ -2325,12 +2330,17 @@ bool CharacterController::updateWallJump(float duration)
 			mWallJumpRotation += turnspeed;
 			
 		}
+	
 		else
 		{
 			if (mWallJumpCameraTilt < 90)
 			{
 				mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate * 2);
 				mWallJumpCameraTilt += tiltrate * 2;
+			}
+			else if (mWallJumpPause < 0.2f)
+			{
+				mWallJumpPause += duration; //MWX ugh make this better plzzz
 			}
 			else {
 
