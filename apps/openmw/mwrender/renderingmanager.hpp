@@ -125,6 +125,8 @@ namespace MWRender
 
 		float getFirstPersonCameraPitch();
 
+		float getCameraRoll();
+
         void removeObject(const MWWorld::Ptr& ptr);
 
         void setWaterEnabled(bool enabled);

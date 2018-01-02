@@ -2244,6 +2244,11 @@ namespace MWWorld
 		mRendering->rollCamera(angle, adjust);
 	}
 
+	float World::getCameraRoll()
+	{
+		return mRendering->getCameraRoll();
+	}
+
     void World::setupPlayer()
     {
         const ESM::NPC *player = mStore.get<ESM::NPC>().find("player");

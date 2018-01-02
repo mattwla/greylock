@@ -279,6 +279,8 @@ public:
 
 	float frontCollisionDistance(float raylength, float zoffset);
 
+	void recenterCameraRoll(float duration);
+
 	ClimbData checkLedge();
 
 	bool updateClimb(float duration);

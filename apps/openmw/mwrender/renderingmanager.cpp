@@ -605,6 +605,11 @@ namespace MWRender
 		return mCamera->getPitch();
 	}
 
+	float RenderingManager::getCameraRoll()
+	{
+		return mCamera->getRoll();
+	}
+
     void RenderingManager::removeObject(const MWWorld::Ptr &ptr)
     {
         mObjects->removeObject(ptr);

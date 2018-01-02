@@ -2061,24 +2061,24 @@ void CharacterController::update(float duration)
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
 
 		
-		//MWX OH GOD SPAGHETTI CODE FIX
-		if (mWallJumpIdx == 8)
-		{
-			if (mWallJumpPause < .1f)
-			{
-				float rotatestrength = .3 / (.1 / duration);
-				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-				mWallJumpPause += duration;
-			}
-			else
-				mWallJumpIdx += 1;
-		}
-		else
-		{
+		////MWX OH GOD SPAGHETTI CODE FIX
+		//if (mWallJumpIdx == 8)
+		//{
+		//	if (mWallJumpPause < .1f)
+		//	{
+		//		float rotatestrength = .3 / (.1 / duration);
+		//		MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+		//		mWallJumpPause += duration;
+		//	}
+		//	else
+		//		mWallJumpIdx += 1;
+		//}
+		//else
+		//{
 			mWallJumpIdx += 1;
 			mWallJumpPause = 0;
-		}
-		
+		/*}
+		*/
 	}
 	if (mPtr == getPlayer())
 	{
@@ -2100,6 +2100,8 @@ void CharacterController::update(float duration)
 			
 			//mWallJumpOriginalVelocity.y();
 			checkLedge();
+			if(MWBase::Environment::get().getWorld()->getCameraRoll() != 0)
+				recenterCameraRoll(duration);
 		}
 	}
 	
@@ -2120,6 +2122,19 @@ float CharacterController::frontCollisionDistance(float raylength, float zoffset
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, raylength , false); //check if there is an obstruciton in front of player.
 	return dist;
+}
+
+void CharacterController::recenterCameraRoll(float duration)
+{
+	float rotatestrength = .3 / (.3 / duration);
+	float roll = MWBase::Environment::get().getWorld()->getCameraRoll();
+	if ( roll > 0)
+		MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+	if (roll < 0)
+		MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+	if (abs(roll) < .01f)
+		MWBase::Environment::get().getWorld()->rollCamera(0, false);
+
 }
 
 ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
@@ -2254,7 +2269,7 @@ bool CharacterController::updateClimb(float duration) {
 
 			mClimbState = ClimbState_None;
 			std::cout << "climb done" << std::endl;
-			MWBase::Environment::get().getWorld()->rollCamera(0, false);
+			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
 		}
 	}
 	
