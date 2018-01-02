@@ -2234,6 +2234,11 @@ namespace MWWorld
 		mRendering->rotateCamera(x, y, z);
 	}
 
+	float World::getFirstPersonCameraPitch()
+	{
+		return mRendering->getFirstPersonCameraPitch();
+	}
+
 	void World::rollCamera(float angle, bool adjust)
 	{
 		mRendering->rollCamera(angle, adjust);

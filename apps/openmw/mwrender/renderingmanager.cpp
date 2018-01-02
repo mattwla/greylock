@@ -600,11 +600,18 @@ namespace MWRender
 		mCamera->rollCamera(angle, adjust);
 	}
 
+	float RenderingManager::getFirstPersonCameraPitch()
+	{
+		return mCamera->getPitch();
+	}
+
     void RenderingManager::removeObject(const MWWorld::Ptr &ptr)
     {
         mObjects->removeObject(ptr);
         mWater->removeEmitter(ptr);
     }
+
+	
 
     void RenderingManager::setWaterEnabled(bool enabled)
     {

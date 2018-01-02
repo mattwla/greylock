@@ -221,7 +221,9 @@ namespace MWBase
 
             virtual int getMasserPhase() const = 0;
 
-            virtual int getSecundaPhase() const = 0;
+			virtual float getFirstPersonCameraPitch() = 0;
+			
+			virtual int getSecundaPhase() const = 0;
 
             virtual void setMoonColour (bool red) = 0;
 

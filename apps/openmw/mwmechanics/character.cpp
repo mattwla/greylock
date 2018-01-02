@@ -765,7 +765,8 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
 	, landed(false)
 	, mClimbState(ClimbState_None)
 	, mClimbData()
-    , mWeaponType(WeapType_None)
+	, mInWallJump(false)
+	, mWeaponType(WeapType_None)
     , mAttackStrength(0.f)
     , mSkipAnim(false)
     , mSecondsOfSwimming(0)
@@ -2268,6 +2269,8 @@ bool CharacterController::wallJump()
 		std::cout << mWallJumpOriginalVelocity.y() << std::endl;
 		currentvelocity = mWallJumpOriginalVelocity;
 		mWallJumpPause = 0.0f;
+		mWallJumpIdx = 0;
+		
 		//mWallJumpOriginalVelocity = mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	}
 	return true;
@@ -2276,7 +2279,11 @@ bool CharacterController::wallJump()
 bool CharacterController::updateWallJump(float duration)
 {
 	float turnspeed = (180.0f) / (0.15 / duration);
-	float decreaserate = 10.0f / (1.0f / duration);
+	if (mWallJumpRotation + turnspeed > 180.0f)
+	{
+		turnspeed = 180.0f -mWallJumpRotation;
+	}
+	float decreaserate = 3.0f / (1.0f / duration);
 	float tiltrate = 35.0 / (.2f / duration);
 	//currentvelocity = mWallJumpOriginalVelocity;
 		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
@@ -2284,70 +2291,96 @@ bool CharacterController::updateWallJump(float duration)
 	float y = currentvelocity.y();
 	float z = currentvelocity.z();
 	//std::cout << x << y << z << std::endl;
-	std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;
-	if (mWallJumpCameraTilt < 35.0f)
-	{
-		mPtr.getClass().getMovementSettings(mPtr).mRotation[0] += osg::DegreesToRadians(tiltrate);
-		mWallJumpCameraTilt += tiltrate;
-	}
-	if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
+	//std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;
+	if (mWallJumpIdx == 0)
 	{
 		
-		if (x > 0.0f)
-			x -= mWallJumpOriginalVelocity.x() / decreaserate;
-		if (x < 0.0f)
-			x += mWallJumpOriginalVelocity.x() / decreaserate;
-		if (y > 0.0f)
-			y -= decreaserate;
-		if (y < 0.0f)
-			y += decreaserate;
-		if (z > 0.0f)
-			z -= mWallJumpOriginalVelocity.z() / decreaserate;
-		if (z < 0.0f)
-			z += mWallJumpOriginalVelocity.z() / decreaserate;
-		if (abs(x) < 15.0)
-			x = 0.0f;
-		if (abs(y) < 15.0)
-			y = 0.0f;
-		if (abs(z) < 15.0)
-			z = 0.0f;
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
-		currentvelocity.x() = x;
-		currentvelocity.y() = y;
-		currentvelocity.z() = z;
-	
+		std::cout << osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) << std::endl;
+		if (osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) > -40.0f)
+		{
+			mPtr.getClass().getMovementSettings(mPtr).mRotation[0] += osg::DegreesToRadians(tiltrate);
+			mWallJumpCameraTilt += tiltrate;
+		}
+		else {
+			mWallJumpIdx = 1;
+		}
+		if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
+		{
+
+			if (x > 0.0f)
+				x -= mWallJumpOriginalVelocity.x() / decreaserate;
+			if (x < 0.0f)
+				x += mWallJumpOriginalVelocity.x() / decreaserate;
+			if (y > 0.0f)
+				y -= decreaserate;
+			if (y < 0.0f)
+				y += decreaserate;
+			if (z > 0.0f)
+				z -= mWallJumpOriginalVelocity.z() / decreaserate;
+			if (z < 0.0f)
+				z += mWallJumpOriginalVelocity.z() / decreaserate;
+			if (abs(x) < 15.0)
+				x = 0.0f;
+			if (abs(y) < 15.0)
+				y = 0.0f;
+			if (abs(z) < 15.0)
+				z = 0.0f;
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
+			currentvelocity.x() = x;
+			currentvelocity.y() = y;
+			currentvelocity.z() = z;
+
+		}
+		
 	}
-	else if (mWallJumpPause < 0.15f)
+	else if (mWallJumpIdx == 1)
 	{
-		mWallJumpPause += duration;
+		if (mWallJumpPause < 0.1f)
+		{
+			mWallJumpPause += duration;
+		}
+		else
+		{
+			mWallJumpIdx = 2;
+			mWallJumpPause = 0.0f;
+		}
 	}
-	else if (mWallJumpCameraTilt >= 35.0f)//we are not in motion, turn around and leap!
+	else if (mWallJumpIdx == 2)
 	{
 		if (mWallJumpRotation < 180)
 		{
 			//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
 			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
 			mWallJumpRotation += turnspeed;
-			
-		}
-	
-		else
-		{
-			if (mWallJumpCameraTilt < 90)
-			{
-				mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate * 2);
-				mWallJumpCameraTilt += tiltrate * 2;
-			}
-			else if (mWallJumpPause < 0.2f)
-			{
-				mWallJumpPause += duration; //MWX ugh make this better plzzz
-			}
-			else {
 
+		}
+		else
+			mWallJumpIdx = 3;
+		//if (mWallJumpCameraTilt < 70)
+		if (osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) < 45.0f)
+		{
+			mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate * 2);
+			mWallJumpCameraTilt += tiltrate * 2;
+		}
+		
+
+	}
+	else if (mWallJumpIdx == 3)
+	{
+		if (mWallJumpPause < 0.25f)
+		{
+			mWallJumpPause += duration; //MWX ugh make this better plzzz
+		}
+		else
+			mWallJumpIdx = 4;
+	}
+	
+	else if (mWallJumpIdx == 4)//we are not in motion, turn around and leap!
+	{
 				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
 				mInWallJump = false;
-			}
-		}
+		
+		
 	}
 	
 	return true;
