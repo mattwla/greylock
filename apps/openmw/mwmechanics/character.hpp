@@ -219,6 +219,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 	bool mInWallJump;
 	float mWallJumpPause;
 	int mWallJumpIdx;
+	float mWallJumpInitialTilt;
 	osg::Vec3f mWallJumpOriginalVelocity;
 	osg::Vec3f currentvelocity;
 
