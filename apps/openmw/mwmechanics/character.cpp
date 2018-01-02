@@ -2055,6 +2055,13 @@ void CharacterController::update(float duration)
     // Update movement
     if(mMovementAnimationControlled && mPtr.getClass().isActor())
         world->queueMovement(mPtr, moved);
+
+	if (mWallJumpIdx == 5 || mWallJumpIdx == 6 || mWallJumpIdx == 7) //some redundency here seems to fix wall jump occassionally doing everything except jumping
+	{
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+		mWallJumpIdx += 1;
+		
+	}
 	if (mPtr == getPlayer())
 	{
 		if (mClimbState == ClimbState_Climbing)
@@ -2072,6 +2079,7 @@ void CharacterController::update(float duration)
 			{
 				mWallJumpOriginalVelocity = movement;
 			}
+			
 			//mWallJumpOriginalVelocity.y();
 			checkLedge();
 		}
@@ -2304,33 +2312,33 @@ bool CharacterController::updateWallJump(float duration)
 		else {
 			mWallJumpIdx = 1;
 		}
-		if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
-		{
+		//if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
+		//{
 
-			if (x > 0.0f)
-				x -= mWallJumpOriginalVelocity.x() / decreaserate;
-			if (x < 0.0f)
-				x += mWallJumpOriginalVelocity.x() / decreaserate;
-			if (y > 0.0f)
-				y -= decreaserate;
-			if (y < 0.0f)
-				y += decreaserate;
-			if (z > 0.0f)
-				z -= mWallJumpOriginalVelocity.z() / decreaserate;
-			if (z < 0.0f)
-				z += mWallJumpOriginalVelocity.z() / decreaserate;
-			if (abs(x) < 15.0)
-				x = 0.0f;
-			if (abs(y) < 15.0)
-				y = 0.0f;
-			if (abs(z) < 15.0)
-				z = 0.0f;
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
-			currentvelocity.x() = x;
-			currentvelocity.y() = y;
-			currentvelocity.z() = z;
+		//	if (x > 0.0f)
+		//		x -= mWallJumpOriginalVelocity.x() / decreaserate;
+		//	if (x < 0.0f)
+		//		x += mWallJumpOriginalVelocity.x() / decreaserate;
+		//	if (y > 0.0f)
+		//		y -= decreaserate;
+		//	if (y < 0.0f)
+		//		y += decreaserate;
+		//	if (z > 0.0f)
+		//		z -= mWallJumpOriginalVelocity.z() / decreaserate;
+		//	if (z < 0.0f)
+		//		z += mWallJumpOriginalVelocity.z() / decreaserate;
+		//	if (abs(x) < 15.0)
+		//		x = 0.0f;
+		//	if (abs(y) < 15.0)
+		//		y = 0.0f;
+		//	if (abs(z) < 15.0)
+		//		z = 0.0f;
+		//	MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
+		//	currentvelocity.x() = x;
+		//	currentvelocity.y() = y;
+		//	currentvelocity.z() = z;
 
-		}
+		//}
 		
 	}
 	else if (mWallJumpIdx == 1)
@@ -2377,12 +2385,16 @@ bool CharacterController::updateWallJump(float duration)
 	
 	else if (mWallJumpIdx == 4)//we are not in motion, turn around and leap!
 	{
-				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+				//MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
 				mInWallJump = false;
-		
+				mWallJumpIdx = 5;
 		
 	}
 	
+	if (true)
+	{
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0, 0, 0)); //always make sure some queue movement is applied to ensure jump isnt interupted
+	}
 	return true;
 }
 
