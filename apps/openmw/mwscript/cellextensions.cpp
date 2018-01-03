@@ -59,6 +59,7 @@ namespace MWScript
                         world->findInteriorPosition(cell, pos);
                         MWWorld::ActionTeleport(cell, pos, false).execute(world->getPlayerPtr());
                     }
+					
                 }
         };
 

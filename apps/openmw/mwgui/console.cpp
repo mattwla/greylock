@@ -118,6 +118,7 @@ namespace MWGui
 
             // remove duplicates
             mNames.erase( std::unique( mNames.begin(), mNames.end() ), mNames.end() );
+			
         }
     }
 

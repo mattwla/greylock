@@ -2110,7 +2110,7 @@ void CharacterController::update(float duration)
 			}
 			else
 			{
-				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false) //mwx fix me this means we are recalculating fov every darn frame no matter what.;
+				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false); //mwx fix me this means we are recalculating fov every darn frame no matter what.;
 			}
 
 		
