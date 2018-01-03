@@ -125,6 +125,8 @@ namespace MWRender
 
 		float getFirstPersonCameraPitch();
 
+		void setFieldOfView(float fov, bool adjust);
+
 		float getCameraRoll();
 
         void removeObject(const MWWorld::Ptr& ptr);

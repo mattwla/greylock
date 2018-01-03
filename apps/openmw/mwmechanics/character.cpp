@@ -774,6 +774,7 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mTurnAnimationThreshold(0)
     , mAttackingOrSpell(false)
     , mTimeUntilWake(0.f)
+	, mBaseFov(Settings::Manager::getFloat("field of view", "Camera"))
 {
     if(!mAnimation)
         return;
@@ -2102,7 +2103,20 @@ void CharacterController::update(float duration)
 			checkLedge();
 			if(MWBase::Environment::get().getWorld()->getCameraRoll() != 0)
 				recenterCameraRoll(duration);
+			float pitch = abs(osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()));
+			if (pitch > 70.0f)
+			{
+				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov + (pitch - 70), false);
+			}
+			else
+			{
+				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false) //mwx fix me this means we are recalculating fov every darn frame no matter what.;
+			}
+
+		
 		}
+	
+		
 	}
 	
 	
@@ -2140,7 +2154,7 @@ void CharacterController::recenterCameraRoll(float duration)
 ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
 {
 	bool canwalljump = false;
-	float zscan = 0;
+	float zscan = -50;
 	//How high above player center(?) we are scanning
 	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
 	const ESM::Position& refpos = getPlayer().getRefData().getPosition();

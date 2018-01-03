@@ -605,6 +605,17 @@ namespace MWRender
 		return mCamera->getPitch();
 	}
 
+	void RenderingManager::setFieldOfView(float fov, bool adjust)
+	{
+		if (adjust)
+			mFieldOfView += fov;
+		else
+			mFieldOfView = fov;
+
+		updateProjectionMatrix();
+
+	}
+
 	float RenderingManager::getCameraRoll()
 	{
 		return mCamera->getRoll();

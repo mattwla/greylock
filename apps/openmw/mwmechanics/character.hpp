@@ -222,6 +222,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 	float mWallJumpInitialTilt;
 	osg::Vec3f mWallJumpOriginalVelocity;
 	osg::Vec3f currentvelocity;
+	float mBaseFov;
 
     MWWorld::ConstPtr mHeadTrackTarget;
 
@@ -325,7 +326,7 @@ public:
 	bool isClimbing() const;
 
 	bool isWallJumping() const;
-
+	
     void setAttackingOrSpell(bool attackingOrSpell);
     void setAIAttackType(const std::string& attackType);
     static void setAttackTypeRandomly(std::string& attackType);

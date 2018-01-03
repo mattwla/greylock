@@ -2239,6 +2239,11 @@ namespace MWWorld
 		return mRendering->getFirstPersonCameraPitch();
 	}
 
+	void World::setFieldOfView(float fov, bool adjust)
+	{
+		mRendering->setFieldOfView(fov, adjust);
+	}
+
 	void World::rollCamera(float angle, bool adjust)
 	{
 		mRendering->rollCamera(angle, adjust);

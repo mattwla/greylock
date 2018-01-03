@@ -514,6 +514,8 @@ namespace MWWorld
 
 			float getFirstPersonCameraPitch() override;
 
+			void setFieldOfView(float fov, bool adjust) override;
+
 			void rollCamera(float angle, bool adjust) override;
 
 			float getCameraRoll() override;

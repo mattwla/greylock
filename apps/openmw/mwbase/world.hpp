@@ -221,6 +221,8 @@ namespace MWBase
 
             virtual int getMasserPhase() const = 0;
 
+			virtual void setFieldOfView(float fov, bool adjust) = 0;
+
 			virtual float getFirstPersonCameraPitch() = 0;
 
 			virtual float getCameraRoll() = 0;
