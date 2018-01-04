@@ -95,11 +95,11 @@ namespace MWTasks
 		mLastTimeReported = hours;
 		mTimeAccumulator += mTimePassed;
 		std::cout << mTimeAccumulator<< std::endl;
-		if (mTimeAccumulator > 1.0f)
+		if (mTimeAccumulator > min)
 		{
-			int ticks = mTimePassed / (1.0 / 60); //How many minutes have passed?
-			mTimeAccumulator = 0.0f;
-			std::cout << "An hour has passed" << std::endl;
+			int ticks = mTimeAccumulator / min; //How many minutes have passed?
+			mTimeAccumulator -= ticks * min;
+			std::cout << "minutes passed: " << ticks << std::endl;
 		}
 		
 		
