@@ -33,7 +33,7 @@ namespace MWAISchedule
 
 			virtual bool checkScheduleGlobal(std::string global);
 			
-			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec);
+			virtual std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec);
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
@@ -41,7 +41,7 @@ namespace MWAISchedule
 
 			//virtual void updateJourneys();
 
-			virtual void taskRouter(std::string npcID, std::string task);
+			virtual void taskRouter(std::string npcID, std::string task, int priority);
 
 			//virtual void clearJourneys();
 

@@ -42,7 +42,7 @@ namespace MWTasks
 
 		Task* mSubTask = nullptr;
 
-
+		int priority = 4; //default low priority
 
 	};
 }

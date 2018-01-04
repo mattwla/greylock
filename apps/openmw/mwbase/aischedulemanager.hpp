@@ -54,7 +54,19 @@ namespace MWBase
 
         public:
 
-		
+			struct TaskPriorityPair
+			{
+				std::string npcId;
+				std::string task;
+				int priority;
+				TaskPriorityPair(std::string npcId, std::string task, int priority):
+					npcId(npcId)
+					, task(task)
+					, priority(priority)
+				{
+
+				}
+			};
 
 
 			
@@ -72,11 +84,11 @@ namespace MWBase
 
 			virtual std::string fetchCurrentScheduledTask(std::string npcId) = 0;
 			
-			virtual  std::map<std::string, std::string> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
+			virtual  std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
 
 			virtual bool checkScheduleGlobal(std::string global) = 0;
 
-			virtual void taskRouter(std::string npcID, std::string task) = 0;
+			virtual void taskRouter(std::string npcID, std::string task, int priority) = 0;
 
 			virtual void updateSchedules() = 0;
 
@@ -124,6 +136,8 @@ namespace MWBase
                 PT_Bribe100,
                 PT_Bribe1000
             };
+
+			
       
     };
 }

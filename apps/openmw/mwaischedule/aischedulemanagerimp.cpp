@@ -122,17 +122,28 @@ namespace MWAISchedule
 		return false;
 	}
 
-	std::map<std::string, std::string> AIScheduleManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
+	std::vector<AIScheduleManager::TaskPriorityPair*> AIScheduleManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
 	{
-		
-		std::map<std::string, std::string> schedule;
+		//mwx fix me pointer madness
+		std::vector<TaskPriorityPair*> schedule;
 
 		for (unsigned int i = 0; i < vecvec.size(); i++)
 		{
-			if (schedule.count(vecvec[i][0]) == 1)
+			bool alreadyassigned = false;
+			
+			for (unsigned int npcidsearch = 0; npcidsearch < schedule.size(); npcidsearch++) //loop to see if npc has already been assigned a task
 			{
-				continue; //if we already have a task for this npc, skip to next line
+				if (schedule[npcidsearch]->npcId == vecvec[i][0])
+					alreadyassigned = true;
 			}
+
+			if (alreadyassigned)
+				continue;
+			
+			//if (schedule.count(vecvec[i][0]) == 1)
+			//{
+			//	continue; //if we already have a task for this npc, skip to next line
+			//}
 			else
 			{
 				bool passed = true;
@@ -147,7 +158,10 @@ namespace MWAISchedule
 
 				if (passed)
 				{
-					schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
+					//schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
+					schedule.push_back(new TaskPriorityPair(vecvec[i][0], vecvec[i][1], 4));
+
+
 				}
 
 			}
@@ -187,18 +201,18 @@ namespace MWAISchedule
 		}
 
 		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		std::map<std::string, std::string> schedule = mapSchedule(vecvec);
+		std::vector<AIScheduleManager::TaskPriorityPair*> schedule = mapSchedule(vecvec);
 
 		for (auto const& x : schedule)
 		{
 			
-			taskRouter(x.first, x.second);
+			taskRouter(x->npcId, x->task, x->priority);
 			
 		}
 		//updateJourneys();
 	}
 
-	void AIScheduleManager::taskRouter(std::string npcID, std::string task)
+	void AIScheduleManager::taskRouter(std::string npcID, std::string task, int priority)
 	{
 		MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(npcID, false);
 
@@ -342,14 +356,14 @@ namespace MWAISchedule
 		}
 
 		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		std::map<std::string, std::string> schedule = mapSchedule(vecvec);
+		std::vector<TaskPriorityPair*> schedule = mapSchedule(vecvec);
 
 		for (auto const& x : schedule)
 		{
 
-			if (x.first == npcId)
+			if (x->npcId == npcId)
 			{
-				return x.second;
+				return x->task;
 			}
 			
 			//taskRouter(x.first, x.second);

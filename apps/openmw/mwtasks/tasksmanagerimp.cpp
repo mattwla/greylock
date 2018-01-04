@@ -153,8 +153,7 @@ namespace MWTasks
 	{
 		//mwx fix me some bad redundency here against actors.cpp
 		const float aiProcessingDistance = 7168;
-		//50000;
-		//
+	
 		const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 		MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
 		MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(npcId, false);
