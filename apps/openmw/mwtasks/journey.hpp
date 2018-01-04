@@ -14,6 +14,7 @@ namespace MWTasks
 	class Journey : public Task
 	{
 		
+		bool mWasActiveLastUpdate;
 		
 	public:
 

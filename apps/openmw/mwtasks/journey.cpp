@@ -18,6 +18,7 @@
 #include "../mwworld/ptr.hpp"
 
 #include "../mwbase/environment.hpp"
+#include "../mwbase/tasksmanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/dialoguemanager.hpp"
@@ -56,6 +57,7 @@ namespace MWTasks
 	Journey::Journey(MWWorld::Ptr dest):
 		mDestination(dest)
 	{
+		
 		mStep = 0;
 		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		mDone = false;
@@ -64,6 +66,7 @@ namespace MWTasks
 	Journey::Journey(std::string destId, std::string npcId):
 		mDestId(destId)
 	{
+		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(npcId);
 		mNpcId = npcId;
 		mStep = 0;
 		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
@@ -76,6 +79,12 @@ namespace MWTasks
 	{
 		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+
+		if (currentlyActive != mWasActiveLastUpdate)
+		{
+			std::cout << "swapping active status..." << std::endl;
+		}
 
 		if (mReadyForUpdate == true || seq.getTypeId() == -1)
 		{
