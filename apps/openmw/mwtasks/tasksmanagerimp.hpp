@@ -37,6 +37,8 @@ namespace MWTasks
 
 		virtual Task* getScheduledTask(std::string npcId);
 
+		bool isInActiveRange(std::string npcId);
+
 	};
 }
 

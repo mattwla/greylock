@@ -83,6 +83,7 @@ namespace MWTasks
 
 	void TasksManager::update(float hours, bool incremental)
 	{
+		int ticks = 0;
 		//std::cout << "updating task manager" << std::endl;
 		float min = 1.0 / 60.0; //define a minute
 		
@@ -94,23 +95,27 @@ namespace MWTasks
 		mTimePassed = hours - mLastTimeReported;
 		mLastTimeReported = hours;
 		mTimeAccumulator += mTimePassed;
-		std::cout << mTimeAccumulator<< std::endl;
+		//std::cout << mTimeAccumulator<< std::endl;
 		if (mTimeAccumulator > min)
 		{
-			int ticks = mTimeAccumulator / min; //How many minutes have passed?
+			ticks = mTimeAccumulator / min; //How many minutes have passed?
 			mTimeAccumulator -= ticks * min;
 			std::cout << "minutes passed: " << ticks << std::endl;
 		}
 		
 		
 
-		//process hours into 'ticks', for each tick poke our tasks.
+		//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
 		
-
-		for (auto& sm_pair : mNpcMap)
+		while (ticks > 0)
 		{
-			sm_pair.second->update();
-			//Make a seperate vector just for updating?.... not a horrible idea.
+			for (auto& sm_pair : mNpcMap)
+			{
+				sm_pair.second->update();
+				std::cout << isInActiveRange(sm_pair.first) << std::endl;
+				//Make a seperate vector just for updating?.... not a horrible idea.
+			}
+			ticks -= 1;
 		}
 
 		//thanks JLBorges at cplusplus.com
@@ -144,7 +149,24 @@ namespace MWTasks
 	}
 
 
+	bool TasksManager::isInActiveRange(std::string npcId)
+	{
+		//mwx fix me some bad redundency here against actors.cpp
+		const float aiProcessingDistance = 7168;
+		//50000;
+		//
+		const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
+		MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
+		MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(npcId, false);
+		
+		bool inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
 
+		//inProcessingRange = true; //MWX
+
+		//iter->second->getCharacterController()->setActive(inProcessingRange);
+		return inProcessingRange;
+
+	}
 	
 
 

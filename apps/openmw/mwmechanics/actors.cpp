@@ -140,8 +140,9 @@ void getRestorationPerHourOfSleep (const MWWorld::Ptr& ptr, float& health, float
 namespace MWMechanics
 {
 
-	const float aiProcessingDistance = 50000;
-		//7168;
+	const float aiProcessingDistance = 7168;
+		//50000;
+		//
     const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 
     class SoulTrap : public MWMechanics::EffectSourceVisitor

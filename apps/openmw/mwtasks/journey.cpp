@@ -96,6 +96,11 @@ namespace MWTasks
 					tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
 				}
 
+				if (MWBase::Environment::get().getWorld()->searchPtr(tnodeId, true))
+					std::cout << "dest in cell" << std::endl;
+				else
+					std::cout << "dest outside of cell" << std::endl;
+
 				std::cout << "tnode is: " << tnodeId << std::endl;
 				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
 				//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
