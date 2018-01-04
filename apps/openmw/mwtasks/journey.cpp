@@ -77,14 +77,28 @@ namespace MWTasks
 
 	void Journey::update()
 	{
+		
+		
 		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 
+		
+
+
 		if (currentlyActive != mWasActiveLastUpdate)
 		{
 			std::cout << "swapping active status..." << std::endl;
+			leftActiveCells();
+			return;
 		}
+		else if (!currentlyActive)
+		{
+			inactiveUpdate();
+			return;
+		}
+		
+		//all this below and heck probably above likely needs to be refactored mwx fix me
 
 		if (mReadyForUpdate == true || seq.getTypeId() == -1)
 		{
@@ -120,6 +134,46 @@ namespace MWTasks
 			}
 		}
 
+	}
+
+	void Journey::leftActiveCells()
+	{
+		mWasActiveLastUpdate = false;
+
+	}
+
+	void Journey::inactiveUpdate()
+	{
+		if (mStep == mTravelNodeItinerary.size())
+		{
+			mDone = true;
+			return;
+
+		}
+		mTickCount += 1;
+		if (mTickCount >= 5)
+		{
+			std::string tnodeId;
+			mTickCount = 0;
+			mStep += 1;
+			if (mStep == mTravelNodeItinerary.size())
+			{
+				tnodeId = mDestId;
+			}
+			else
+			{
+				tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+			}
+			std::cout << "teleporting to... " + tnodeId << std::endl;
+			//This double string movement method really should be a method.
+			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			ESM::Position markerPos = marker.getRefData().getPosition();
+			MWWorld::CellStore* store = marker.getCell();
+			MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+		}
+		
+		return;
 	}
 
 	//void Journey::update() //journey should become a task

@@ -15,6 +15,8 @@ namespace MWTasks
 	{
 		
 		bool mWasActiveLastUpdate;
+
+		int mTickCount;
 		
 	public:
 
@@ -37,6 +39,10 @@ namespace MWTasks
 		MWWorld::TimeStamp mStartTime;
 
 		virtual void update();
+
+		void leftActiveCells();
+
+		void inactiveUpdate();
 
 		virtual int getTypeId() const;
 
