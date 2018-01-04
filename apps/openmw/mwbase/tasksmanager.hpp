@@ -57,6 +57,9 @@ namespace MWBase
 
 	TasksManager& operator= (const TasksManager&);
 	///< not implemented
+
+
+
 	
 	public:
 
@@ -65,9 +68,9 @@ namespace MWBase
 
 		virtual ~TasksManager() {}
 
-		std::map<std::string, MWTasks::Task*>  mNpcMap;
+		std::map<std::string, MWTasks::Task*>  mNpcMap; // maps NPC string id to a pointer to their life task.
 
-		virtual void update() = 0;
+		virtual void update(float hours, bool incremental = false) = 0;
 
 		virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
 

@@ -282,7 +282,7 @@ namespace MWGui
             MWBase::Environment::get().getWindowManager()->pushGuiMode (GM_Levelup);
         }
 
-		MWBase::Environment::get().getAIScheduleManager()->updateSchedules(); //MWX
+		//MWBase::Environment::get().getAIScheduleManager()->updateSchedules(); //MWX
     }
 
     void WaitDialog::setCanRest (bool canRest)

@@ -22,11 +22,18 @@ namespace MWTasks
 
 		std::map<std::string, MWTasks::Task*> buildNpcMap();
 
+
+		float mLastTimeReported;
+
+		float mTimePassed;
+
+		float mTimeAccumulator;
+
 	public:
 
 		TasksManager();
 
-		virtual void update();
+		virtual void update(float hours, bool incremental = false);
 
 		virtual Task* getScheduledTask(std::string npcId);
 

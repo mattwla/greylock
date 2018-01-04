@@ -845,8 +845,8 @@ namespace MWWorld
         if (days>0)
             mDaysPassed->setInteger (
                 days + mDaysPassed->getInteger());
-
-		MWBase::Environment::get().getTasksManager()->update(); //mwx
+		//std::cout << hours << std::endl;
+		MWBase::Environment::get().getTasksManager()->update(hours, incremental); //mwx
     }
 
     void World::setHour (double hour)

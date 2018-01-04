@@ -73,13 +73,40 @@ namespace MWTasks
 	}
 
 
-	TasksManager::TasksManager()
+	TasksManager::TasksManager() :
+		mLastTimeReported(0.0f)
+		, mTimePassed(0.0f)
+		, mTimeAccumulator(0.0f)
 	{
 		mNpcMap = buildNpcMap();
 	}
 
-	void TasksManager::update()
+	void TasksManager::update(float hours, bool incremental)
 	{
+		//std::cout << "updating task manager" << std::endl;
+		float min = 1.0 / 60.0; //define a minute
+		
+		if (mLastTimeReported == 0.0f) //our first update of current session, just log the time.
+		{
+			mLastTimeReported = hours;
+			return;
+		}
+		mTimePassed = hours - mLastTimeReported;
+		mLastTimeReported = hours;
+		mTimeAccumulator += mTimePassed;
+		std::cout << mTimeAccumulator<< std::endl;
+		if (mTimeAccumulator > 1.0f)
+		{
+			int ticks = mTimePassed / (1.0 / 60); //How many minutes have passed?
+			mTimeAccumulator = 0.0f;
+			std::cout << "An hour has passed" << std::endl;
+		}
+		
+		
+
+		//process hours into 'ticks', for each tick poke our tasks.
+		
+
 		for (auto& sm_pair : mNpcMap)
 		{
 			sm_pair.second->update();

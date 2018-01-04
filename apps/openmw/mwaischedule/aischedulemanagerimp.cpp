@@ -87,10 +87,10 @@ namespace MWAISchedule
 			schedule = "";
 		}
 		std::ifstream in(schedule.c_str());
-		if (!in.is_open())
+		/*if (!in.is_open())
 			std::cout << "Not open" << std::endl;
 		else
-			std::cout << "Open " << schedule <<  std::endl;
+			std::cout << "Open " << schedule <<  std::endl;*/
 
 		return in;
 	}
