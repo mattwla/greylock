@@ -73,6 +73,7 @@ namespace MWTasks
 		init();
 		mReadyForUpdate = true;
 		mDone = false;
+		mTickCount = 0;
 	}
 
 	void Journey::update()
