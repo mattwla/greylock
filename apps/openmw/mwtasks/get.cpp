@@ -18,6 +18,7 @@
 #include "../mwworld/ptr.hpp"
 
 #include "../mwbase/environment.hpp"
+#include "../mwbase/tasksmanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/dialoguemanager.hpp"
@@ -105,12 +106,21 @@ namespace MWTasks
 
 	bool Get::pickupItem()
 	{
-		
+
 		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-		seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
-		std::cout << "activated" << std::endl;
+
+		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+		if (currentlyActive)
+		{
+			seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
+			std::cout << "activated" << std::endl;
+		}
+		else
+		{
+			MWBase::Environment::get().getWorld()->activate(itemPtr, npcPtr);
+		}
 		//npcPtr.getClass().activate(itemPtr, npcPtr);
 		return true;
 	}
