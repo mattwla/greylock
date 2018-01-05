@@ -77,12 +77,20 @@ namespace MWTasks
 
 	void Journey::update()
 	{
-		
-		
+
+
 		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 
+		if (hasArrived())
+		{
+			mDone = true;
+			seq.clear();
+			return;
+		}
+		
+	
 		
 
 
@@ -140,6 +148,19 @@ namespace MWTasks
 	{
 		mWasActiveLastUpdate = false;
 
+	}
+
+	bool Journey::hasArrived()
+	{
+
+	
+		MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWWorld::Ptr dest = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
+
+		bool inRange = (npc.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= 25.0f;
+
+		
+		return inRange;
 	}
 
 	void Journey::inactiveUpdate()

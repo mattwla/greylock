@@ -42,6 +42,8 @@ namespace MWTasks
 
 		void leftActiveCells();
 
+		bool hasArrived();
+
 		void inactiveUpdate();
 
 		virtual int getTypeId() const;

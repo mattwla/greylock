@@ -313,6 +313,7 @@ namespace MWGui
     virtual bool getJournalAllowed() { return (mAllowed & GW_Magic) != 0; }
 
     virtual bool getPlayerSleeping();
+	virtual bool getPlayerSleepingOrWaiting();
     virtual void wakeUpPlayer();
 
     virtual void updatePlayer();

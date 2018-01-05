@@ -80,6 +80,7 @@ namespace MWTasks
 		if (MWBase::Environment::get().getWorld()->getTimeStamp() > mStartTime + 9)
 		{
 			std::cout << "time to end hunt" << std::endl;
+			
 			mDone = true;
 		}
 		else if (mStep == 0)

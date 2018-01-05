@@ -282,6 +282,7 @@ namespace MWBase
             virtual bool getJournalAllowed() = 0; 
 
             virtual bool getPlayerSleeping() = 0;
+			virtual bool getPlayerSleepingOrWaiting() = 0;
             virtual void wakeUpPlayer() = 0;
 
             virtual void showSoulgemDialog (MWWorld::Ptr item) = 0;

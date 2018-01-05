@@ -38,7 +38,8 @@ namespace MWGui
         void onFrame(float dt);
 
         bool getSleeping() { return mTimeAdvancer.isRunning() && mSleeping; }
-        void wakeUp();
+		bool getSleepingOrWaiting() { return mTimeAdvancer.isRunning(); }
+		void wakeUp();
         void autosave();
 
         WindowBase* getProgressBar() { return &mProgressBar; }

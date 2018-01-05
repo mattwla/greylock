@@ -1624,6 +1624,11 @@ namespace MWGui
         return mWaitDialog->getSleeping();
     }
 
+	bool WindowManager::getPlayerSleepingOrWaiting()
+	{
+		return mWaitDialog->getSleepingOrWaiting();
+	}
+
     void WindowManager::wakeUpPlayer()
     {
         mWaitDialog->wakeUp();

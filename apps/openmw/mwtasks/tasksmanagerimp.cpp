@@ -160,9 +160,12 @@ namespace MWTasks
 		
 		bool inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
 
-		//inProcessingRange = true; //MWX
+		
+		//If player is resting, no one is in active range....
+		if(inProcessingRange)
+			inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
+		
 
-		//iter->second->getCharacterController()->setActive(inProcessingRange);
 		return inProcessingRange;
 
 	}
