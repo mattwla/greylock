@@ -100,7 +100,7 @@ namespace MWTasks
 		{
 			ticks = mTimeAccumulator / min; //How many minutes have passed?
 			mTimeAccumulator -= ticks * min;
-			std::cout << "minutes passed: " << ticks << std::endl;
+			//std::cout << "minutes passed: " << ticks << std::endl;
 		}
 		
 		

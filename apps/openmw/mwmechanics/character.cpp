@@ -2163,7 +2163,11 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
 	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
-	float dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
+	float dist = 0.0f;
+	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
+		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
+	else
+		dist = 100.0f;
 	if (dist < 100.0f)
 	{
 		const MWWorld::Class &cls = mPtr.getClass();
