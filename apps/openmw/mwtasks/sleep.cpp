@@ -1,4 +1,4 @@
-#include "Get.hpp"
+#include "sleep.hpp"
 
 #include <limits.h>
 #include <iostream>
@@ -40,23 +40,23 @@
 namespace MWTasks
 {
 
-	/**Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
+	/**Sleep::Sleep(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
 	{
 	}
 
-	Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
+	Sleep::Sleep(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
 	{
 	}
 
 	*/
 
-	Get::Get()
+	Sleep::Sleep()
 	{
 	}
 
-	Get::Get(MWWorld::Ptr dest) :
+	Sleep::Sleep(MWWorld::Ptr dest) :
 		mDestination(dest)
 	{
 		mStep = 0;
@@ -64,7 +64,7 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Get::Get(std::string destId, std::string npcId) :
+	Sleep::Sleep(std::string destId, std::string npcId) :
 		mDestId(destId)
 	{
 		mNpcId = npcId;
@@ -75,7 +75,7 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	void Get::update()
+	void Sleep::update()
 	{
 		if (mStep == 0)
 		{
@@ -107,7 +107,7 @@ namespace MWTasks
 		
 	}
 
-	bool Get::pickupItem()
+	bool Sleep::pickupItem()
 	{
 
 		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
@@ -129,13 +129,13 @@ namespace MWTasks
 	}
 
 
-	int Get::getTypeId() const
+	int Sleep::getTypeId() const
 	{
-		return TypeIDGet;
+		return TypeIDSleep;
 	}
 
 
-	bool Get::init()
+	bool Sleep::init()
 	{
 		return true;
 	}

@@ -23,7 +23,8 @@ namespace MWTasks
 			TypeIDLife = 0,
 			TypeIDJourney = 1,
 			TypeIDGet = 2,
-			TypeIDHunt = 3
+			TypeIDHunt = 3,
+			TypeIDSleep = 4
 		};
 		
 		Task();

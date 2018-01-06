@@ -2555,9 +2555,11 @@ void CharacterController::unpersistAnimationState()
 
 bool CharacterController::playGroup(const std::string &groupname, int mode, int count, bool persist)
 {
-    if(!mAnimation || !mAnimation->hasAnimation(groupname))
-        return false;
-
+	if (!mAnimation || !mAnimation->hasAnimation(groupname))
+	{
+		std::cout << "can't find anim group" << std::endl;
+		return false;
+	}
     // If this animation is a looped animation (has a "loop start" key) that is already playing
     // and has not yet reached the end of the loop, allow it to continue animating with its existing loop count
     // and remove any other animations that were queued.

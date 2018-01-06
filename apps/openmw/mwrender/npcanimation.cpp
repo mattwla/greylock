@@ -488,8 +488,15 @@ void NpcAnimation::updateNpcBase()
 
         if(!isWerewolf)
         {
-            if(mNpc->mModel.length() > 0)
-                addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\" + mNpc->mModel, mResourceSystem->getVFS()), smodel);
+			//if (mNpc->mModel.length() > 0)
+			if (true)
+			{
+				//addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\" + mNpc->mModel, mResourceSystem->getVFS()), smodel);
+				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\Xanim_rocknroll.nif", mResourceSystem->getVFS()), smodel);
+				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\Xanim_lydown_female_02a.nif", mResourceSystem->getVFS()), smodel);
+				
+				
+			}
             if(Misc::StringUtils::lowerCase(mNpc->mRace).find("argonian") != std::string::npos)
                 addAnimSource("meshes\\xargonian_swimkna.nif", smodel);
         }

@@ -35,6 +35,7 @@
 #include "../mwtasks/journey.hpp"
 #include "../mwtasks/get.hpp"
 #include "../mwtasks/hunt.hpp"
+#include "../mwtasks/sleep.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
