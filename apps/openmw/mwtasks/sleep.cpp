@@ -96,11 +96,8 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			if(pickupItem())
-			{
-				
-				mDone = true;
-			}
+			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "lay", 0, 1);
 		}
 
 

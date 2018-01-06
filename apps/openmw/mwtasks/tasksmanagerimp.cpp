@@ -143,6 +143,14 @@ namespace MWTasks
 			MWTasks::Hunt * rtask = new MWTasks::Hunt(destId, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 		}
+		if (stask == "sleep")
+		{
+			
+			std::string destId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
+			std::cout << npcId + " wants to sleep." << std::endl;
+			MWTasks::Sleep * rtask = new MWTasks::Sleep(destId, npcId);
+			return rtask;
+		}
 
 
 		

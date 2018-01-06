@@ -270,6 +270,13 @@ namespace MWAISchedule
 		return marker;
 	}
 
+	std::string AIScheduleManager::getBed(std::string npcId)
+	{
+		//issue here with using ptr?
+		std::string bedNumber = std::to_string(MWBase::Environment::get().getWorld()->getGlobalInt(npcId + "bed"));
+		return "bed_" + bedNumber;
+	}
+
 	
 
 	bool AIScheduleManager::goHome(MWWorld::Ptr npc)

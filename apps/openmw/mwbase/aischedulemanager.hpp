@@ -95,6 +95,8 @@ namespace MWBase
 			//virtual void updateJourneys() = 0;
 
 			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc) = 0;
+
+			virtual std::string getBed(std::string npcId) = 0;
 			
 			virtual bool goHome(MWWorld::Ptr npc) = 0;
 			
