@@ -102,7 +102,7 @@ namespace MWTasks
 			
 			if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "lay"))
 			{
-				MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
+			
 				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "lay", 0, 1);
 			}
 		}

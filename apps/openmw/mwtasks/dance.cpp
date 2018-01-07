@@ -88,6 +88,7 @@ namespace MWTasks
 		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "rock"))
 		{
 			MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
+			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
 		}
 
 	}
@@ -116,7 +117,7 @@ namespace MWTasks
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
-			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
+			
 		}
 
 

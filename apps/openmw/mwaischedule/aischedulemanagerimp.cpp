@@ -390,7 +390,7 @@ namespace MWAISchedule
 			//taskRouter(x.first, x.second);
 		}
 
-		std::cout << "delivered task: " + task << std::endl;
+		std::cout << "suggested scheduled task: " + task << std::endl;
 		return task;
 	}
 
