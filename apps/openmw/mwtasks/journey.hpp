@@ -17,6 +17,8 @@ namespace MWTasks
 		bool mWasActiveLastUpdate;
 
 		int mTickCount;
+
+		float mRange; //how close npc can get to goal before they stop, also plan on allowing them to stop somewhere in random radius.
 		
 	public:
 
@@ -24,7 +26,7 @@ namespace MWTasks
 
 		Journey(MWWorld::Ptr dest);
 
-		Journey(std::string destId, std::string npcId);
+		Journey(std::string destId, std::string npcId, float range = 25.0f);
 		
 		//Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 

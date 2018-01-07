@@ -103,7 +103,7 @@ add_openmw_dir (mwaischedule
     )
 
 add_openmw_dir (mwtasks
-tasksmanagerimp task life journey get hunt sleep
+tasksmanagerimp task life journey get hunt sleep dance
 )
 
 add_openmw_dir (mwtravelnodes

@@ -341,6 +341,8 @@ namespace MWAISchedule
 	std::string AIScheduleManager::fetchCurrentScheduledTask(std::string npcId)
 	{
 
+		std::string task = "";
+		
 		//MWX WILL NEED REFACTORING
 
 		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
@@ -370,15 +372,26 @@ namespace MWAISchedule
 
 			if (x->npcId == npcId)
 			{
-				return x->task;
+				
+				task = x->task;
+				break;
+				//return x->task;
 			}
 			
 			//taskRouter(x.first, x.second);
 
 		}
 		
-		
-		return "";
+		for (auto const& x : schedule)
+		{
+
+			delete x;
+			//clean up those pointers.
+			//taskRouter(x.first, x.second);
+		}
+
+		std::cout << "delivered task: " + task << std::endl;
+		return task;
 	}
 
 	

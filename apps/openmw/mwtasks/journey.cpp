@@ -63,8 +63,9 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Journey::Journey(std::string destId, std::string npcId):
+	Journey::Journey(std::string destId, std::string npcId, float range):
 		mDestId(destId)
+		, mRange(range)
 	{
 		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(npcId);
 		mNpcId = npcId;
@@ -154,13 +155,13 @@ namespace MWTasks
 	bool Journey::hasArrived()
 	{
 
-	
+
 		MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWWorld::Ptr dest = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 
-		bool inRange = (npc.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= 25.0f;
+		bool inRange = (npc.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= mRange;
 
-		
+
 		return inRange;
 	}
 

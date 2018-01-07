@@ -36,6 +36,7 @@
 #include "../mwtasks/get.hpp"
 #include "../mwtasks/hunt.hpp"
 #include "../mwtasks/sleep.hpp"
+#include "../mwtasks/dance.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -149,6 +150,12 @@ namespace MWTasks
 			std::string destId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
 			std::cout << npcId + " wants to sleep." << std::endl;
 			MWTasks::Sleep * rtask = new MWTasks::Sleep(destId, npcId);
+			return rtask;
+		}
+		if (stask == "dance")
+		{
+			std::string destId = "tnode1";
+			MWTasks::Dance * rtask = new MWTasks::Dance(destId, npcId);
 			return rtask;
 		}
 
