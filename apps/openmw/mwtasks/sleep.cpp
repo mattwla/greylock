@@ -96,34 +96,22 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
+			
+			
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "lay", 0, 1);
+			
+			if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "lay"))
+			{
+				MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
+				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "lay", 0, 1);
+			}
 		}
 
 
 		
 	}
 
-	bool Sleep::pickupItem()
-	{
 
-		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
-		if (currentlyActive)
-		{
-			seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
-			std::cout << "activated" << std::endl;
-		}
-		else
-		{
-			MWBase::Environment::get().getWorld()->activate(itemPtr, npcPtr);
-		}
-		//npcPtr.getClass().activate(itemPtr, npcPtr);
-		return true;
-	}
 
 
 	int Sleep::getTypeId() const

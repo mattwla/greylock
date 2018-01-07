@@ -45,6 +45,7 @@ namespace MWTasks
 	Life::Life(std::string npcId)
 	{
 		mNpcId = npcId;
+		mTickCounter = 0;
 	}
 
 	int Life::getTypeId() const
@@ -54,15 +55,31 @@ namespace MWTasks
 
 	void Life::update()
 	{
+		//MWX fix me no logic yet really for not having a scheduled task.
+
+	
+		mTickCounter += 1;
 		if (!mSubTask)
 		{
+
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
 			//{
 			//	mSubTask->mNpcId = mNpcId;
-				
+
 			//}
 
+		}
+		else if (mTickCounter > 5) 	//check for scheduled task every 5 minutes or if there is no mSubTask
+		{
+			std::cout << "checking schedule" << std::endl;;
+			mTickCounter = 0;
+			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
+			if (mSubTask->getTypeId() != taskholder->getTypeId())
+			{
+				delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
+				mSubTask = taskholder;
+			}
 		}
 		else
 		{

@@ -94,7 +94,13 @@ namespace MWTasks
 			mLastTimeReported = hours;
 			return;
 		}
+		
 		mTimePassed = hours - mLastTimeReported;
+		if (mTimePassed < 0)
+		{
+			mTimePassed += 24.0f;
+			std::cout << "midnight time boost, mtimepassed now = " + std::to_string(mTimePassed) << std::endl;
+		}
 		mLastTimeReported = hours;
 		mTimeAccumulator += mTimePassed;
 		//std::cout << mTimeAccumulator<< std::endl;
@@ -111,6 +117,7 @@ namespace MWTasks
 		
 		while (ticks > 0)
 		{
+			std::cout << "ticking..." << std::endl;
 			for (auto& sm_pair : mNpcMap)
 			{
 				sm_pair.second->update();
@@ -148,7 +155,7 @@ namespace MWTasks
 		{
 			
 			std::string destId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
-			std::cout << npcId + " wants to sleep." << std::endl;
+			//std::cout << npcId + " wants to sleep." << std::endl;
 			MWTasks::Sleep * rtask = new MWTasks::Sleep(destId, npcId);
 			return rtask;
 		}

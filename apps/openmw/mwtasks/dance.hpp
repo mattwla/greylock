@@ -25,6 +25,8 @@ namespace MWTasks
 
 		Dance(std::string destId, std::string npcId);
 
+		~Dance();
+
 		//Dance(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 
 		unsigned int mStep;

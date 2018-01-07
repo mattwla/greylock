@@ -15,7 +15,6 @@ namespace MWTasks
 	{
 	private:
 
-		bool pickupItem();
 
 	public:
 

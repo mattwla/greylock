@@ -75,6 +75,23 @@ namespace MWTasks
 		mDone = false;
 	}
 
+	Dance::~Dance()
+	{
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+
+		std::cout << "deleting dance subtask" << std::endl;
+		if (mSubTask)
+		{
+			delete mSubTask;
+		}
+		
+		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "rock"))
+		{
+			MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
+		}
+
+	}
+
 	void Dance::update()
 	{
 		if (mStep == 0)
@@ -99,6 +116,7 @@ namespace MWTasks
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
+			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
 		}
 
 

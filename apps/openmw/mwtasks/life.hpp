@@ -20,6 +20,8 @@ namespace MWTasks
 
 		virtual void update();
 
+		int mTickCounter;
+
 	};
 
 }
