@@ -75,7 +75,7 @@ namespace MWTasks
 			std::cout << "checking schedule" << std::endl;;
 			mTickCounter = 0;
 			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
-			if (mSubTask->getTypeId() != taskholder->getTypeId())
+			if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
 			{
 				delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
 				mSubTask = taskholder;
