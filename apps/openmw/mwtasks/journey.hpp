@@ -19,6 +19,8 @@ namespace MWTasks
 		int mTickCount;
 
 		float mRange; //how close npc can get to goal before they stop, also plan on allowing them to stop somewhere in random radius.
+
+		bool mHeadedToDoor;
 		
 	public:
 

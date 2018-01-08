@@ -54,6 +54,7 @@ namespace MWTasks
 
 	Sleep::Sleep()
 	{
+		std::cout << mNpcId + " wants to sleep" << std::endl;
 	}
 
 	Sleep::Sleep(MWWorld::Ptr dest) :

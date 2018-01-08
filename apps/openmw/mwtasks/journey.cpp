@@ -66,6 +66,7 @@ namespace MWTasks
 	Journey::Journey(std::string destId, std::string npcId, float range):
 		mDestId(destId)
 		, mRange(range)
+		, mHeadedToDoor(false)
 	{
 		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(npcId);
 		mNpcId = npcId;
@@ -117,6 +118,16 @@ namespace MWTasks
 				mDone = true;
 				
 			}
+			else if (mHeadedToDoor)
+			{
+				mHeadedToDoor = false;
+				auto tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+				MWBase::Environment::get().getWorld()->activate(tnode, npcPtr);
+				std::cout << "attempted to open door" << std::endl;
+
+			}
+				
 			else {
 				std::string tnodeId;
 				mStep += 1;
@@ -138,9 +149,17 @@ namespace MWTasks
 				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false); //find transition node.
 				//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 				ESM::Position tnodePos = tnode.getRefData().getPosition();
+				if (tnode.getClass().isDoor())
+				{
+					mHeadedToDoor = true;
+				}
 				//MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
 				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
 				mReadyForUpdate = false;
+				if (mNpcId == "barnabas")
+				{
+					std::cout << "barnabas journey" << std::endl;
+				}
 			}
 		}
 
