@@ -100,6 +100,7 @@ namespace MWBase
 				float mTime;
 				std::vector<TaskPriorityPair*> mPossibleTasks;
 				std::string getPossibleTask();
+				bool checkScheduleGlobals(std::vector<std::string>);
 			};
 
 			struct Schedule

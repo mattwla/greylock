@@ -78,9 +78,9 @@ namespace MWTasks
 
 	void Sleep::update()
 	{
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+		/*bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 		if (!currentlyActive)
-			return;
+			return;*/
 		
 		if (mStep == 0)
 		{

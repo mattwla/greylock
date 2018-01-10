@@ -92,7 +92,7 @@ namespace MWBase
 			if (hour < 0)
 				hour = 23.0f;
 		}
-		//mwx fix me what of a case where there is a time block but none of the tasks are possible
+		//mwx fix me what of a case where there is a time block but none of the tasks are possible?
 		return mTimeBlocks[hour]->getPossibleTask();
 		//return "blah";
 	}
@@ -104,7 +104,38 @@ namespace MWBase
 		unsigned int idx = 0;
 		while (idx < mPossibleTasks.size())
 		{
-			return mPossibleTasks[idx]->task;
+			if (checkScheduleGlobals(mPossibleTasks[idx]->mGlobals))
+				return mPossibleTasks[idx]->task;
+			else
+				idx += 1;
 		}
+	}
+
+	bool AIScheduleManager::TimeBlock::checkScheduleGlobals(std::vector<std::string> globals) {
+	
+		for (unsigned int i = 0; i < globals.size(); i++)
+		{
+			std::string global = globals[i];
+			//takes a string such as JacobIsAlive=1, splits it into the varname and value, evaluates if value specified in schedule is true.
+			std::vector<std::string> split;
+			std::string delim = "=";
+			auto start = 0U;
+			auto end = global.find(delim);
+			while (end != std::string::npos)
+			{
+				split.push_back(global.substr(start, end - start));
+				start = end + delim.length();
+				end = global.find(delim, start);
+			}
+
+			split.push_back(global.substr(start, end));
+
+			if (MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) != std::stoi(split[1])) //not a match, return false
+			{
+				return false;
+			}
+
+		}
+		return true; //all passed, return true
 	}
 }
