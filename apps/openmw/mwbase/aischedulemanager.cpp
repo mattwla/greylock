@@ -18,17 +18,23 @@ namespace MWBase
 
 	AIScheduleManager::Schedule::Schedule(std::string npcId)
 	{
+		//logic to build schedule
+		//open the npcs schedule file
 		std::ifstream in = getCSV(npcId);
 
+		//set up the parsers default state
 		ScheduleParserExpecting expecting = Time;
 
+		//get tokenizer ready for seperating values by commas
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 		std::vector<std::vector<std::string>> vecvec;
 
 		std::string line;
 		float time;
+		//get a timeblock pointer ready, timeblock contains all the tasks an npc is scheduled to do at a given time
 		TimeBlock * timeblock = NULL;
 
+		//iterate through csv
 		while (getline(in, line))
 		{
 			if (line[0] == *"#") //skip comment lines
@@ -45,29 +51,23 @@ namespace MWBase
 			}
 			if (expecting == Task)
 			{
-				if (line[0] == *"=")
+				if (line[0] == *"=") //= is used to say when it is time for the next hour
 				{
-					if (timeblock)
+					if (timeblock) //if the time block pointer is pointing to a timeblock, log it (won't be if NPC isn't scheduled to do anything)
 					{
 						mTimeBlocks[time] = timeblock;
-						timeblock = NULL;
+						timeblock = NULL; //be sure to clear timeblock pointer for next timeslot
 					}
-					expecting = Time;
+					expecting = Time; //get ready to read the time
 					continue;
 				}
-				timeblock = new TimeBlock;
+				if(!timeblock) //if we haven't yet made a time block, make one
+					timeblock = new TimeBlock;
 				timeblock->mPossibleTasks.push_back(new TaskPriorityPair(line));
 				//TaskPriorityPair * task = new TaskPriorityPair(line);
 
 
 			}
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
 		}
 	}
 
@@ -86,12 +86,13 @@ namespace MWBase
 	std::string AIScheduleManager::Schedule::getScheduledTask()
 	{
 		float hour = floor(MWBase::Environment::get().getWorld()->getTimeStamp().getHour());
-		while (mTimeBlocks[hour] == NULL)
+		while (mTimeBlocks[hour] == NULL) //if nothing scheduled for this time block, go back in time until we can find something.
 		{
 			hour -= 1;
 			if (hour < 0)
 				hour = 23.0f;
 		}
+		//mwx fix me what of a case where there is a time block but none of the tasks are possible
 		return mTimeBlocks[hour]->getPossibleTask();
 		//return "blah";
 	}
@@ -99,6 +100,7 @@ namespace MWBase
 	std::string AIScheduleManager::TimeBlock::getPossibleTask()
 	{
 		//checks globals for each task, returns the first one that passes the checks.
+		//for now just returns the first one
 		unsigned int idx = 0;
 		while (idx < mPossibleTasks.size())
 		{

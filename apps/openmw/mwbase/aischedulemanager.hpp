@@ -82,12 +82,12 @@ namespace MWBase
 					int idx = 0;
 					for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
 					{
-						if (idx == 0)
+						if (idx == 0) //first item is the task
 						{
 							task = *it;
 							idx += 1;
 						}
-						else
+						else //rest are conditions... for now
 							mGlobals.push_back(*it);
 						//vec.push_back(*it);
 					}
