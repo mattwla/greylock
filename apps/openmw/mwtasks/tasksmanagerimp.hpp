@@ -35,7 +35,9 @@ namespace MWTasks
 
 		virtual void update(float hours, bool incremental = false);
 
-		virtual Task* getScheduledTask(std::string npcId);
+		virtual Task * getScheduledTask(std::string npcId, std::string stask);
+
+		//virtual Task* getScheduledTask(std::string npcId);
 
 		bool isInActiveRange(std::string npcId);
 

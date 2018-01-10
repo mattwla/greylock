@@ -78,6 +78,10 @@ namespace MWTasks
 
 	void Sleep::update()
 	{
+		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+		if (!currentlyActive)
+			return;
+		
 		if (mStep == 0)
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);

@@ -117,11 +117,11 @@ namespace MWTasks
 		
 		while (ticks > 0)
 		{
-			std::cout << "ticking..." << std::endl;
+			//std::cout << "ticking..." << std::endl;
 			for (auto& sm_pair : mNpcMap)
 			{
 				sm_pair.second->update();
-				std::cout << isInActiveRange(sm_pair.first) << std::endl;
+				//std::cout << isInActiveRange(sm_pair.first) << std::endl;
 				//Make a seperate vector just for updating?.... not a horrible idea.
 			}
 			ticks -= 1;
@@ -130,9 +130,9 @@ namespace MWTasks
 		//thanks JLBorges at cplusplus.com
 	}
 
-	Task * TasksManager::getScheduledTask(std::string npcId)
+	Task * TasksManager::getScheduledTask(std::string npcId, std::string stask)
 	{
-		std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
+		//std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
 
 		if (stask == "journey")
 		{

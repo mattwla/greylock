@@ -16,6 +16,12 @@
 
 #include "../mwworld/ptr.hpp"
 
+
+#include <boost/tokenizer.hpp>
+#include <iterator>
+#include <algorithm>
+
+
 namespace osg
 {
     class Vec3f;
@@ -54,10 +60,11 @@ namespace MWBase
 
         public:
 
-			struct TaskPriorityPair
+			struct TaskPriorityPair //a task, a priority, and the global checks.
 			{
 				std::string npcId;
 				std::string task;
+				std::vector<std::string> mGlobals;
 				int priority;
 				TaskPriorityPair(std::string npcId, std::string task, int priority):
 					npcId(npcId)
@@ -66,6 +73,52 @@ namespace MWBase
 				{
 
 				}
+
+				TaskPriorityPair(std::string line)
+				{
+					//MWX fix me really should not be defining this here.
+					typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+					Tokenizer tok(line);
+					int idx = 0;
+					for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+					{
+						if (idx == 0)
+						{
+							task = *it;
+							idx += 1;
+						}
+						else
+							mGlobals.push_back(*it);
+						//vec.push_back(*it);
+					}
+					priority = 4;
+				}
+			};
+
+			struct TimeBlock //All the things an NPC could be doing at a possible time. Generally first one that passes will be used, so order is important!
+			{
+				float mTime;
+				std::vector<TaskPriorityPair*> mPossibleTasks;
+				std::string getPossibleTask();
+			};
+
+			struct Schedule
+			{
+				enum ScheduleParserExpecting {
+					Time,
+					Task
+				};
+				
+				
+				std::map<float, TimeBlock*> mTimeBlocks;
+
+				Schedule(std::string npcId);
+
+				std::ifstream getCSV(std::string npcId);
+
+				std::string getScheduledTask();
+
+
 			};
 
 
@@ -80,7 +133,7 @@ namespace MWBase
 
             virtual ~AIScheduleManager() {}
 
-			virtual std::ifstream fetchSchedule() = 0;
+			virtual std::ifstream fetchSchedule(std::string npcId) = 0;
 
 			virtual std::string fetchCurrentScheduledTask(std::string npcId) = 0;
 			
@@ -142,6 +195,9 @@ namespace MWBase
 			
       
     };
+
+	//TaskPriorityPair * buildTaskPriorityPair(std::string line);
+
 }
 
 #endif

@@ -97,7 +97,7 @@ namespace MWTasks
 	{
 		if (mStep == 0)
 		{
-			std::cout << "nadia wants to dance" << std::endl;
+			std::cout << mNpcId + "wants to dance" << std::endl;
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);

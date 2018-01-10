@@ -29,7 +29,7 @@ namespace MWAISchedule
 
           
 			
-			virtual std::ifstream fetchSchedule();
+			virtual std::ifstream fetchSchedule(std::string npcId);
 
 			virtual bool checkScheduleGlobal(std::string global);
 			

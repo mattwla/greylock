@@ -2,6 +2,7 @@
 #define GAME_TASKS_LIFE_H
 
 #include "task.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 #include "../mwworld/cellstore.hpp" // for Doors
 
@@ -21,6 +22,8 @@ namespace MWTasks
 		virtual void update();
 
 		int mTickCounter;
+
+		MWBase::AIScheduleManager::Schedule * mSchedule;
 
 	};
 

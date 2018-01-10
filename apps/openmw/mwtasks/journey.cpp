@@ -88,6 +88,7 @@ namespace MWTasks
 
 		if (hasArrived())
 		{
+			std::cout << "has arrived shortcut" << std::endl;
 			mDone = true;
 			seq.clear();
 			return;
@@ -99,7 +100,7 @@ namespace MWTasks
 
 		if (currentlyActive != mWasActiveLastUpdate)
 		{
-			std::cout << "swapping active status..." << std::endl;
+			//std::cout << "swapping active status..." << std::endl;
 			leftActiveCells();
 			return;
 		}
@@ -137,7 +138,7 @@ namespace MWTasks
 				}
 				else
 				{
-					tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+					tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]); //this back to strings
 				}
 
 				if (MWBase::Environment::get().getWorld()->searchPtr(tnodeId, true))

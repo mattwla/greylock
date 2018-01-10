@@ -72,7 +72,9 @@ namespace MWBase
 
 		virtual void update(float hours, bool incremental = false) = 0;
 
-		virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
+		//virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
+
+		virtual MWTasks::Task * getScheduledTask(std::string npcId, std::string stask) = 0;
 
 		virtual bool isInActiveRange(std::string npcId) = 0;
 

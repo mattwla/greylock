@@ -50,9 +50,10 @@ namespace MWAISchedule
 {
 	AIScheduleManager::AIScheduleManager()
 	{
-		
+	
 		
 	}
+
 
 
 	
@@ -61,11 +62,11 @@ namespace MWAISchedule
 	
 	//ESM::Pathgrid::Point dest = target.getRefData().getPosition().pos;
 
-	std::ifstream AIScheduleManager::fetchSchedule()
+	std::ifstream AIScheduleManager::fetchSchedule(std::string npcId)
 	{
 		std::string schedule;
 		std::string pod = MWBase::Environment::get().getWorld()->getTimeStamp().getPartOfDay();
-
+		
 		if (pod == "day")
 		{
 			schedule = ("schedules/summerday.csv");
@@ -86,6 +87,7 @@ namespace MWAISchedule
 		{
 			schedule = "";
 		}
+		schedule = npcId;
 		std::ifstream in(schedule.c_str());
 		/*if (!in.is_open())
 			std::cout << "Not open" << std::endl;
@@ -181,8 +183,8 @@ namespace MWAISchedule
 		mtravelPathGridGraph.load(); */
 		//HACK FIX TO DEAL WITH CHANGING POINTERS
 
-		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
-		
+		//std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+		std::ifstream in;
 		//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 		std::vector<std::vector<std::string>> vecvec;
@@ -345,7 +347,7 @@ namespace MWAISchedule
 		
 		//MWX WILL NEED REFACTORING
 
-		std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+		std::ifstream in = fetchSchedule(npcId); //find our csv of AI schedules, returns one for appropriate season and time of day
 
 											//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;

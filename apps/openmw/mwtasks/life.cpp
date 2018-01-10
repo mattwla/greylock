@@ -46,6 +46,7 @@ namespace MWTasks
 	{
 		mNpcId = npcId;
 		mTickCounter = 0;
+		mSchedule = new MWBase::AIScheduleManager::Schedule(npcId);
 	}
 
 	int Life::getTypeId() const
@@ -61,8 +62,8 @@ namespace MWTasks
 		mTickCounter += 1;
 		if (!mSubTask)
 		{
-
-			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
+			std::string task = mSchedule->getScheduledTask();
+			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
 			//{
 			//	mSubTask->mNpcId = mNpcId;
@@ -72,9 +73,11 @@ namespace MWTasks
 		}
 		else if (mTickCounter > 5) 	//check for scheduled task every 5 minutes or if there is no mSubTask
 		{
-			std::cout << "checking schedule" << std::endl;;
+			//std::cout << "checking schedule" << std::endl;;
 			mTickCounter = 0;
-			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId);
+			std::string task = mSchedule->getScheduledTask();
+			
+			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
 			if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
 			{
 				delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
