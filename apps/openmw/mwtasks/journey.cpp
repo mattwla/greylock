@@ -193,7 +193,10 @@ namespace MWTasks
 			}
 			else
 			{
-				tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+				//this might be better if I teleport them to the actual t node, as opposed to the transition node. Also would border node be better? Yes.
+				//tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+				tnodeId = "bn_" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker + "to" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker;
+				//std::cout << altid << std::endl;
 			}
 			std::cout << "teleporting to... " + tnodeId << std::endl;
 			//This double string movement method really should be a method.

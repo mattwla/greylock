@@ -63,6 +63,8 @@ namespace MWTasks
 		if (!mSubTask)
 		{
 			std::string task = mSchedule->getScheduledTask();
+			if (task == "")
+				return;
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
 			//{

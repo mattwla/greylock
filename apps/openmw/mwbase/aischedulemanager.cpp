@@ -21,7 +21,7 @@ namespace MWBase
 		//logic to build schedule
 		//open the npcs schedule file
 		std::ifstream in = getCSV(npcId);
-
+		std::cout << "SCHEDULE FOR =" + npcId << std::endl;
 		//set up the parsers default state
 		ScheduleParserExpecting expecting = Time;
 
@@ -64,11 +64,13 @@ namespace MWBase
 				if(!timeblock) //if we haven't yet made a time block, make one
 					timeblock = new TimeBlock;
 				timeblock->mPossibleTasks.push_back(new TaskPriorityPair(line));
+				std::cout << "adding task..." + line << std::endl;
 				//TaskPriorityPair * task = new TaskPriorityPair(line);
 
 
 			}
 		}
+
 	}
 
 	std::ifstream AIScheduleManager::Schedule::getCSV(std::string npcId)
@@ -109,6 +111,7 @@ namespace MWBase
 			else
 				idx += 1;
 		}
+		return "";
 	}
 
 	bool AIScheduleManager::TimeBlock::checkScheduleGlobals(std::vector<std::string> globals) {

@@ -42,6 +42,7 @@ namespace MWTravelNodes
 		buildPathGrid(&mtravelPathGrid);
 		mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
 		mtravelPathGridGraph.load();
+	
 
 	}
 
@@ -93,6 +94,8 @@ namespace MWTravelNodes
 			tn->point = *point;
 			//vecvec[i];
 			nodeMap[i] = tn;
+			mIdToItx[tn->marker] = tn->id; // log a map of the id to the itx, used for building edge list.
+			
 			//id,index,num of connections, connected to
 
 			MWWorld::CellStore* store = markerPtr.getCell(); //Where will this ptr go? Probably away so figure out how to make this crash.
@@ -138,15 +141,19 @@ namespace MWTravelNodes
 
 		for (unsigned int i = 0; i < vecvec.size(); i++)
 		{
-			ESM::Pathgrid::Edge e;
-			e.mV0 = std::stoi(vecvec[i][0]);
-			e.mV1 = std::stoi(vecvec[i][1]);
+			ESM::Pathgrid::Edge e; //mwx fix me what is the scope of this?
+			e.mV0 = idToIdx(vecvec[i][0]);
+			e.mV1 = idToIdx(vecvec[i][1]);
 			grid->mEdges.push_back(e);
 		}
 
 
 	}
 
+	int TravelNodesManager::idToIdx(std::string id)
+	{
+		return mIdToItx[id];
+	}
 
 }
 

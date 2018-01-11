@@ -116,7 +116,7 @@ namespace MWTasks
 				mStep += 1;
 				if (mStep % 2 == 0)
 				{
-					mSubTask = new MWTasks::Journey("tnode3", mNpcId);
+					mSubTask = new MWTasks::Journey("tn_slt2", mNpcId);
 				}
 				else
 				{

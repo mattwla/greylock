@@ -27,6 +27,8 @@ namespace MWTravelNodes
 
 		virtual void buildPathGrid(ESM::Pathgrid *grid);
 
+		virtual int idToIdx(std::string id);
+
 	};
 }
 

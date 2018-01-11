@@ -52,12 +52,16 @@ namespace MWBase
 		TravelNodesManager& operator= (const TravelNodesManager&);
 		///< not implemented
 
+		
+
 	public:
 
 
 		TravelNodesManager() {}
 
 		virtual ~TravelNodesManager() {}
+
+		std::map<std::string, int> mIdToItx;
 
 		struct TravelNode
 		{
@@ -73,6 +77,8 @@ namespace MWBase
 
 		std::map<MWWorld::CellStore*, TravelNode*> mCellToNodeMap;
 
+
+		
 		ESM::Pathgrid mtravelPathGrid;
 
 		MWMechanics::PathgridGraph mtravelPathGridGraph;
@@ -80,6 +86,8 @@ namespace MWBase
 		virtual std::map<int, TravelNode*> buildTravelNodes() = 0;
 
 		virtual void buildPathGrid(ESM::Pathgrid *grid) = 0;
+		
+		virtual int idToIdx(std::string id) = 0;
 
 
 	};

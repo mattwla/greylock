@@ -684,7 +684,7 @@ void OMW::Engine::go()
         try
         {
             // Is there an ini setting for this filename or something? MWX
-            mEnvironment.getSoundManager()->streamMusic("Special/theme.ogg");
+            //mEnvironment.getSoundManager()->streamMusic("Special/theme.ogg");
 
             std::string logo = mFallbackMap["Movies_Morrowind_Logo"];
             /*if (!logo.empty())
@@ -720,7 +720,7 @@ void OMW::Engine::go()
             mViewer->updateTraversal();
 
             mEnvironment.getWorld()->updateWindowManager();
-
+			 
             mViewer->renderingTraversals();
 
             bool guiActive = mEnvironment.getWindowManager()->isGuiMode();
