@@ -86,7 +86,7 @@ namespace MWTasks
 		
 
 
-		if (currentlyActive != mWasActiveLastUpdate)
+		if (mWasActiveLastUpdate && !currentlyActive)
 		{
 			//std::cout << "swapping active status..." << std::endl;
 			leftActiveCells();
@@ -126,7 +126,7 @@ namespace MWTasks
 				}
 				else
 				{
-					tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]); //this back to strings
+					tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
 				}
 
 				if (MWBase::Environment::get().getWorld()->searchPtr(tnodeId, true))
@@ -195,11 +195,13 @@ namespace MWTasks
 			{
 				//this might be better if I teleport them to the actual t node, as opposed to the transition node. Also would border node be better? Yes.
 				//tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
-				tnodeId = "bn_" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker + "to" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker;
+				tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
+				//tnodeId = "bn_" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker + "to" + mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker;
+				//mwx fix me program crashes without any useful error if node can't be found.
 				//std::cout << altid << std::endl;
 			}
 			std::cout << "teleporting to... " + tnodeId << std::endl;
-			//This double string movement method really should be a method.
+			//This double string movement method really should be a method. mwx fix me
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
@@ -217,13 +219,24 @@ namespace MWTasks
 		return TypeIDJourney;
 	}
 
+	std::string Journey::getBorderNodeId(std::string tnode1, std::string tnode2)
+	{
+		//example, input is v1 and vhome1
+		//output is bn_v1tovhome1
+		tnode1.erase(0, 3);
+		tnode2.erase(0, 3);
+
+		
+		return "bn_"+tnode1+"to"+tnode2;
+	}
 
 	bool Journey::init()
 	{
+		std::cout << mNpcId + "is searching for dest id: " + mDestId << std::endl;
 		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWWorld::Ptr destPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 
-
+		
 		int currentNode = mTravelNodesManager->mCellToNodeMap[npcPtr.getCell()]->id;
 		int destNode = mTravelNodesManager->mCellToNodeMap[destPtr.getCell()]->id;
 

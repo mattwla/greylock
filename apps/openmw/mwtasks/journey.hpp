@@ -52,6 +52,8 @@ namespace MWTasks
 
 		virtual int getTypeId() const;
 
+		std::string getBorderNodeId(std::string tnode1, std::string tnode2);
+
 		bool init();
 
 		bool mInitialized = false;
