@@ -110,7 +110,8 @@ namespace MWTasks
 			else if (mHeadedToDoor)
 			{
 				mHeadedToDoor = false;
-				auto tnodeId = "tn_" + std::to_string((mTravelNodeItinerary[mStep - 1])) + "to" + std::to_string(mTravelNodeItinerary[mStep]);
+				auto tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
+				
 				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
 				MWBase::Environment::get().getWorld()->activate(tnode, npcPtr);
 				std::cout << "attempted to open door" << std::endl;
