@@ -42,7 +42,7 @@
 #include <iterator>
 #include <algorithm>
 #include <map>
-
+typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 
 namespace MWTasks
 {
@@ -81,7 +81,8 @@ namespace MWTasks
 		, mTimePassed(0.0f)
 		, mTimeAccumulator(0.0f)
 	{
-		mNpcMap = buildNpcMap();
+		mNpcMap = buildNpcMap(); //maps npcs to their life task, also builds npc zone preference map
+		buildZoneAvailabilities(); 
 	}
 
 	void TasksManager::update(float hours, bool incremental)
@@ -214,7 +215,7 @@ namespace MWTasks
 		//set up the parsers default state, first we need to skip all the schedule info preceding zone info
 		ZoneParserExpecting expecting = Skip;
 		//get tokenizer ready for seperating values by commas
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		
 		std::vector<std::vector<std::string>> vecvec;
 		std::string line;
 		//Make z zgp pointer, for use in caching a line before storing it
@@ -270,6 +271,69 @@ namespace MWTasks
 
 		return zmap;
 
+	}
+
+	std::string TasksManager::getZoneAvailability(std::string zoneId)
+	{
+		//mwx fix me, what if no slots available?
+		auto zone = mZoneAvailabilities[zoneId];
+		unsigned int idx = 0;
+		while (idx < zone->mAvailable.size())
+		{
+			if (zone->mAvailable[idx] == true)
+			{
+				zone->mAvailable[idx] = false;
+				return zoneId + "_" + std::to_string(idx + 1);
+			}
+			idx += 1;
+		}
+
+		return "full";
+	}
+
+	void TasksManager::buildZoneAvailabilities()
+	{
+		std::string zones = "schedules/zones.csv";
+		std::ifstream in(zones.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open " << zones << std::endl;
+		
+		std::string line;
+		while (getline(in, line))
+		{
+	
+			int idx = 0;
+			ZoneAvailability* za = new ZoneAvailability;
+			Tokenizer tok(line);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
+			{
+				if (idx == 0)
+				{
+					mZoneAvailabilities[*it];
+					za->mZoneId = *it;
+					idx += 1;
+				}
+				else
+				{
+					int n = std::stoi(*it);
+					za->mZoneSlots = n;
+					int idx2 = 0;
+					while (idx2 < n)
+					{
+						za->mAvailable.push_back(true);
+						idx2 += 1;
+					}
+
+				}
+			}
+			std::cout << "zone" + za->mZoneId + "has " << std::endl;
+			std::cout << za->mZoneSlots << std::endl;
+			
+			mZoneAvailabilities[za->mZoneId] = za;
+		}
+		
 	}
 
 

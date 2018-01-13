@@ -33,6 +33,10 @@ namespace MWTasks
 
 		std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);
 
+		virtual std::string getZoneAvailability(std::string zoneId);
+
+		void buildZoneAvailabilities();
+
 		std::ifstream getCSV(std::string npcId);
 
 		float mLastTimeReported;

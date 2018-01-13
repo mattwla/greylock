@@ -69,6 +69,12 @@ namespace MWBase
 			std::vector<std::string> mGlobals;
 		};
 
+		struct ZoneAvailability
+		{
+			std::string mZoneId;
+			int mZoneSlots;
+			std::vector<bool> mAvailable;
+		};
 		TasksManager() {};
 
 		virtual ~TasksManager() {}
@@ -78,6 +84,10 @@ namespace MWBase
 		std::map<std::string, std::vector<ZoneGlobalPair*>> mZoneMap; //a map of tasks, linked to where NPC prefers to do each task.
 
 		std::map<std::string, std::map<std::string, std::vector<ZoneGlobalPair*>> > mNpcIdToZones; //mwx fix me oh my god this is a data structure mess.
+
+		std::map<std::string, ZoneAvailability*> mZoneAvailabilities;
+
+		virtual std::string getZoneAvailability(std::string zoneId) = 0;
 
 		virtual void update(float hours, bool incremental = false) = 0;
 

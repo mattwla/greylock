@@ -104,7 +104,7 @@ namespace MWTasks
 				//request a spot in the dance zone
 
 			//make a journey to that quest
-			
+			mDestId = MWBase::Environment::get().getTasksManager()->getZoneAvailability(zone_id);
 			std::cout << mNpcId + "wants to dance" << std::endl;
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
