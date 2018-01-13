@@ -15,15 +15,22 @@ namespace MWTasks
 	{
 	
 	public:
+		
+		
+		
 		Life(std::string npcId);
 		
 		virtual int getTypeId() const;
 
 		virtual void update();
 
+		std::string getZoneId(std::string task);
+
 		int mTickCounter;
 
 		MWBase::AIScheduleManager::Schedule * mSchedule;
+
+		
 
 	};
 

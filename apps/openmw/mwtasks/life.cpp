@@ -98,6 +98,11 @@ namespace MWTasks
 
 	}
 
+	std::string Life::getZoneId(std::string task)
+	{
+		return "";
+	}
 
+	
 
 }

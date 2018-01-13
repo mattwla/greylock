@@ -39,6 +39,8 @@ namespace MWBase
 		{
 			if (line[0] == *"#") //skip comment lines
 				continue;
+			if (line == "ZONESSTART")
+				break;
 			if (expecting == Time) //expecting a time, so turn the line into a float and add it to the mTimeBlocks structure
 			{
 				char *end;

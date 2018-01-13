@@ -66,6 +66,7 @@ namespace MWTasks
 			MWTasks::Task* newlife = new MWTasks::Life(npc);
 			
 			npcmap[npc] = newlife;
+			mNpcIdToZones[npc] = buildZoneMap(npc);
 			//CREATE AND ASSIGN NEW LIFE TASK HERE MWX
 		}
 
@@ -73,7 +74,7 @@ namespace MWTasks
 
 		return npcmap;
 	}
-
+	
 
 	TasksManager::TasksManager() :
 		mLastTimeReported(0.0f)
@@ -192,9 +193,111 @@ namespace MWTasks
 		return inProcessingRange;
 
 	}
+
+	std::string TasksManager::getZoneId(std::string npcId, std::string task)
+	{
+		//mNpcMap[npcId]->
+		auto npcmap = mNpcIdToZones[npcId];
+		auto taskmap = npcmap[task];
+		return taskmap[0]->mZoneId;
+		
+		//return std::string();
+	}
 	
 
+	std::map<std::string, std::vector<TasksManager::ZoneGlobalPair*>> TasksManager::buildZoneMap(std::string npcId)
+	{
+
+		
+		//open the npcs schedule file
+		std::ifstream in = getCSV(npcId);
+		//set up the parsers default state, first we need to skip all the schedule info preceding zone info
+		ZoneParserExpecting expecting = Skip;
+		//get tokenizer ready for seperating values by commas
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		std::vector<std::vector<std::string>> vecvec;
+		std::string line;
+		//Make z zgp pointer, for use in caching a line before storing it
+		//ZoneGlobalPair * zoneglobalpair = NULL;
+		std::string currentTask;
+		std::map<std::string, std::vector<TasksManager::ZoneGlobalPair*>> zmap;
+
+		//iterate through csv
+		while (getline(in, line))
+		{
+			if (expecting == Skip)
+			{
+				if (line != "ZONESSTART") //skip all lines until we get to the starting marker
+					continue;
+				else
+				{
+					expecting = TaskName;
+					continue;
+				}
+			}
+			if (expecting == TaskName) //expecting a task, so store this in our map of tasks
+			{
+				zmap[line];
+				currentTask = line;
+				expecting = Zone;
+				continue;
+			}
+			if (expecting == Zone)
+			{
+				if (line[0] == *"=") //= is used to say when it is time for the next task
+				{
+					expecting = TaskName;
+					continue;
+				}
+				ZoneGlobalPair * zgp = new ZoneGlobalPair;
+				int idx = 0;
+				Tokenizer tok(line);
+				for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
+				{
+					if (idx == 0) //first item in line is the zone
+						zgp->mZoneId = *it;
+					else //everything else are the conditions needed to use that zone.
+						zgp->mGlobals.push_back(*it);
+					idx += 1;
+				}
+				zmap[currentTask].push_back(zgp); //We have made a struct which contains a zone and the globals needed to use that zone, push it to the map that links tasks with the possible zones.
+
+
+												
+
+			}
+		}
+
+		return zmap;
+
+	}
+
+
+
+	std::ifstream TasksManager::getCSV(std::string npcId)
+	{
+		std::string schedule = "schedules/" + npcId + ".csv";
+		std::ifstream in(schedule.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open " << schedule << std::endl;
+
+		return in;
+	}
+
+	
+
+
+	//std::map<std::string, std::vector<TasksManager::ZoneGlobalPair*>> TasksManager::buildZoneMap(std::string npcId)
+	//{
+	//	return std::map<std::string, std::vector<ZoneGlobalPair*>>();
+	//}
 
 }
 
 
+//to do
+//add zone info for all npcs
+//Add nadia fire pit dance node
+//Add method of looking up and assigning node

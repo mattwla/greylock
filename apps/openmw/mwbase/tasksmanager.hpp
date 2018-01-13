@@ -58,17 +58,26 @@ namespace MWBase
 	TasksManager& operator= (const TasksManager&);
 	///< not implemented
 
-
+	
 
 	
 	public:
 
-	
+		struct ZoneGlobalPair  //where an npc likes to do a given task, with the conditions the npc likes to do it under.
+		{
+			std::string mZoneId;
+			std::vector<std::string> mGlobals;
+		};
+
 		TasksManager() {};
 
 		virtual ~TasksManager() {}
 
 		std::map<std::string, MWTasks::Task*>  mNpcMap; // maps NPC string id to a pointer to their life task.
+
+		std::map<std::string, std::vector<ZoneGlobalPair*>> mZoneMap; //a map of tasks, linked to where NPC prefers to do each task.
+
+		std::map<std::string, std::map<std::string, std::vector<ZoneGlobalPair*>> > mNpcIdToZones; //mwx fix me oh my god this is a data structure mess.
 
 		virtual void update(float hours, bool incremental = false) = 0;
 
@@ -78,7 +87,7 @@ namespace MWBase
 
 		virtual bool isInActiveRange(std::string npcId) = 0;
 
-
+		virtual std::string getZoneId(std::string npcId, std::string task) = 0;
 	
 	
 	};

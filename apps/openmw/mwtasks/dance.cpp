@@ -97,10 +97,20 @@ namespace MWTasks
 	{
 		if (mStep == 0)
 		{
+			//find a place to dance
+			//get dance zone
+			std::string zone_id = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "dance");
+			std::cout << "zone is" + zone_id << std::endl;
+				//request a spot in the dance zone
+
+			//make a journey to that quest
+			
 			std::cout << mNpcId + "wants to dance" << std::endl;
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+
+			//instead, find a d
 			mStep += 1;
 		}
 		else if (mStep == 1)

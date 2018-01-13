@@ -20,14 +20,28 @@ namespace MWTasks
 
 	private:
 
+	
+
+		enum ZoneParserExpecting
+		{
+			TaskName,
+			Zone,
+			Skip
+		};
+
 		std::map<std::string, MWTasks::Task*> buildNpcMap();
 
+		std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);
+
+		std::ifstream getCSV(std::string npcId);
 
 		float mLastTimeReported;
 
 		float mTimePassed;
 
 		float mTimeAccumulator;
+
+	
 
 	public:
 
@@ -40,6 +54,8 @@ namespace MWTasks
 		//virtual Task* getScheduledTask(std::string npcId);
 
 		bool isInActiveRange(std::string npcId);
+
+		virtual std::string getZoneId(std::string npcId, std::string task);
 
 	};
 }
