@@ -33,7 +33,9 @@ namespace MWTasks
 
 		std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);
 
-		virtual std::string getZoneAvailability(std::string zoneId);
+		virtual int getZoneAvailability(std::string zoneId);
+
+		virtual void freeZoneSlot(std::string zoneId, int idx);
 
 		void buildZoneAvailabilities();
 

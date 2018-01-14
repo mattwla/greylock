@@ -91,6 +91,8 @@ namespace MWTasks
 			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
 		}
 
+
+		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
 	void Dance::update()
@@ -99,12 +101,12 @@ namespace MWTasks
 		{
 			//find a place to dance
 			//get dance zone
-			std::string zone_id = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "dance");
-			std::cout << "zone is" + zone_id << std::endl;
+			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "dance");
+			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
 				//request a spot in the dance zone
 
 			//make a journey to that quest
-			mDestId = MWBase::Environment::get().getTasksManager()->getZoneAvailability(zone_id);
+			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			std::cout << mNpcId + "wants to dance" << std::endl;
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);

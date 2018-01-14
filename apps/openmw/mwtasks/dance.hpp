@@ -41,7 +41,9 @@ namespace MWTasks
 
 		virtual void update();
 
-	
+		int mZoneSlotIdx;
+
+		std::string mZoneId;
 
 		virtual int getTypeId() const;
 

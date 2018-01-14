@@ -87,7 +87,9 @@ namespace MWBase
 
 		std::map<std::string, ZoneAvailability*> mZoneAvailabilities;
 
-		virtual std::string getZoneAvailability(std::string zoneId) = 0;
+		virtual int getZoneAvailability(std::string zoneId) = 0;
+
+		virtual void freeZoneSlot(std::string zoneId, int idx) = 0;
 
 		virtual void update(float hours, bool incremental = false) = 0;
 

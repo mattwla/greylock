@@ -201,7 +201,7 @@ namespace MWTasks
 		auto npcmap = mNpcIdToZones[npcId];
 		auto taskmap = npcmap[task];
 		return taskmap[0]->mZoneId;
-		
+		//mwx fix me doesn't go globals yet
 		//return std::string();
 	}
 	
@@ -273,7 +273,7 @@ namespace MWTasks
 
 	}
 
-	std::string TasksManager::getZoneAvailability(std::string zoneId)
+	int TasksManager::getZoneAvailability(std::string zoneId)
 	{
 		//mwx fix me, what if no slots available?
 		auto zone = mZoneAvailabilities[zoneId];
@@ -283,12 +283,20 @@ namespace MWTasks
 			if (zone->mAvailable[idx] == true)
 			{
 				zone->mAvailable[idx] = false;
-				return zoneId + "_" + std::to_string(idx + 1);
+				return idx + 1;
+					//zoneId + "_" + std::to_string(idx + 1);
 			}
 			idx += 1;
 		}
 
-		return "full";
+		//return "full";
+		return -1;
+	}
+
+	void TasksManager::freeZoneSlot(std::string zoneId, int idx)
+	{
+		auto zone = mZoneAvailabilities[zoneId];
+		zone->mAvailable[idx - 1] = true;
 	}
 
 	void TasksManager::buildZoneAvailabilities()
