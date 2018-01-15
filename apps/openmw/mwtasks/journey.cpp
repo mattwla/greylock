@@ -89,6 +89,9 @@ namespace MWTasks
 		if (mWasActiveLastUpdate && !currentlyActive)
 		{
 			//std::cout << "swapping active status..." << std::endl;
+			//MWX fix me sloppy function use here
+			//MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
+			seq.clear();
 			leftActiveCells();
 			return;
 		}
@@ -146,9 +149,10 @@ namespace MWTasks
 				//MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
 				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
 				mReadyForUpdate = false;
-				if (mNpcId == "barnabas")
+				if (mNpcId == "jacob")
 				{
-					std::cout << "barnabas journey" << std::endl;
+					std::cout << "jacob journey" << std::endl;
+					std::cout << tnodeId << std::endl;
 				}
 			}
 		}
@@ -157,6 +161,7 @@ namespace MWTasks
 
 	void Journey::leftActiveCells()
 	{
+
 		mWasActiveLastUpdate = false;
 
 	}
@@ -204,6 +209,10 @@ namespace MWTasks
 			std::cout << "teleporting to... " + tnodeId << std::endl;
 			//This double string movement method really should be a method. mwx fix me
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+			if (marker.getClass().isDoor())
+			{
+				mHeadedToDoor = true;
+			}
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();
