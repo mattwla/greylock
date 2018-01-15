@@ -37,6 +37,7 @@
 #include "../mwtasks/hunt.hpp"
 #include "../mwtasks/sleep.hpp"
 #include "../mwtasks/dance.hpp"
+#include "../mwtasks/pestle.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -165,6 +166,11 @@ namespace MWTasks
 		{
 			std::string destId = "tn_v1";
 			MWTasks::Dance * rtask = new MWTasks::Dance(destId, npcId);
+			return rtask;
+		}
+		if (stask == "pestle")
+		{
+			MWTasks::Pestle * rtask = new MWTasks::Pestle("", npcId);
 			return rtask;
 		}
 
