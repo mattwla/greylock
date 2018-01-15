@@ -201,6 +201,7 @@ namespace MWTasks
 			{
 				mHeadedToDoor = true; //if our destination is door, mark it as such so npc can open it if they end up in active cell
 			}
+			
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();

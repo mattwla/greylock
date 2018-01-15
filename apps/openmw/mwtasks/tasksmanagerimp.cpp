@@ -38,6 +38,7 @@
 #include "../mwtasks/sleep.hpp"
 #include "../mwtasks/dance.hpp"
 #include "../mwtasks/pestle.hpp"
+#include "../mwtasks/fish.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -171,6 +172,11 @@ namespace MWTasks
 		if (stask == "pestle")
 		{
 			MWTasks::Pestle * rtask = new MWTasks::Pestle("", npcId);
+			return rtask;
+		}
+		if (stask == "fish")
+		{
+			MWTasks::Fish * rtask = new MWTasks::Fish("", npcId);
 			return rtask;
 		}
 

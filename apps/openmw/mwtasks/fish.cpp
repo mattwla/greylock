@@ -1,4 +1,4 @@
-#include "pestle.hpp"
+#include "fish.hpp"
 
 #include <limits.h>
 #include <iostream>
@@ -40,24 +40,24 @@
 namespace MWTasks
 {
 
-	/**Pestle::Pestle(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
+	/**Fish::Fish(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
 	{
 	}
 
-	Pestle::Pestle(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
+	Fish::Fish(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
 	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
 	{
 	}
 
 	*/
 
-	Pestle::Pestle()
+	Fish::Fish()
 	{
-		std::cout << mNpcId + " wants to Pestle" << std::endl;
+		std::cout << mNpcId + " wants to Fish" << std::endl;
 	}
 
-	Pestle::Pestle(MWWorld::Ptr dest) :
+	Fish::Fish(MWWorld::Ptr dest) :
 		mDestination(dest)
 	{
 		mStep = 0;
@@ -65,7 +65,7 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Pestle::Pestle(std::string destId, std::string npcId) :
+	Fish::Fish(std::string destId, std::string npcId) :
 		mDestId(destId)
 	{
 		mNpcId = npcId;
@@ -76,12 +76,12 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Pestle::~Pestle()
+	Fish::~Fish()
 	{
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
-	void Pestle::update()
+	void Fish::update()
 	{
 		/*bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 		if (!currentlyActive)
@@ -91,7 +91,7 @@ namespace MWTasks
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
-			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "pestle");
+			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "fish");
 			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
 			//request a spot in the dance zone
 
@@ -120,10 +120,10 @@ namespace MWTasks
 			//markerPos.rot[2];
 			MWBase::Environment::get().getWorld()->rotateObject(npcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) {
-				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "grind"))
+				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "fish"))
 				{
 
-					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "grind", 0, 1);
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "fish", 0, 1);
 				}
 			}
 		}
@@ -135,13 +135,13 @@ namespace MWTasks
 
 
 
-	int Pestle::getTypeId() const
+	int Fish::getTypeId() const
 	{
-		return TypeIDPestle;
+		return TypeIDFish;
 	}
 
 
-	bool Pestle::init()
+	bool Fish::init()
 	{
 		return true;
 	}

@@ -26,7 +26,8 @@ namespace MWTasks
 			TypeIDHunt = 3,
 			TypeIDSleep = 4,
 			TypeIDDance = 5,
-			TypeIDPestle = 6
+			TypeIDPestle = 6,
+			TypeIDFish = 7
 		};
 		
 		Task();
