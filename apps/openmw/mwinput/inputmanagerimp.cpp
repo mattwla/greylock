@@ -629,7 +629,7 @@ namespace MWInput
                         //disable preview mode
                         MWBase::Environment::get().getWorld()->togglePreviewMode(false);
                         if (mPreviewPOVDelay > 0.f && mPreviewPOVDelay <= 0.5) {
-                            MWBase::Environment::get().getWorld()->togglePOV();
+                            //MWBase::Environment::get().getWorld()->togglePOV(); MWX
                         }
                         mPreviewPOVDelay = 0.f;
                     }
@@ -742,7 +742,7 @@ namespace MWInput
             /// \fixme maybe crouching at this time
             mPlayer->setUpDown(0);
         } else if (sw == "vanitymode") {
-            MWBase::Environment::get().getWorld()->allowVanityMode(value);
+            MWBase::Environment::get().getWorld()->allowVanityMode(false); //mwx false used to be value
         } else if (sw == "playerlooking") {
             MWBase::Environment::get().getWorld()->togglePlayerLooking(value);
         }
