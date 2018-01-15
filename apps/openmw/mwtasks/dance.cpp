@@ -129,7 +129,8 @@ namespace MWTasks
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence().clear();
-			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId))
+				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			
 		}
 

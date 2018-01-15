@@ -115,11 +115,12 @@ namespace MWTasks
 			
 			
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			
-			if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "grind"))
-			{
-			
-				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "grind", 0, 1);
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) {
+				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "grind"))
+				{
+
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "grind", 0, 1);
+				}
 			}
 		}
 
