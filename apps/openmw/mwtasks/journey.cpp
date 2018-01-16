@@ -103,16 +103,17 @@ namespace MWTasks
 				mDone = true;
 				
 			}
-			else if (mHeadedToDoor)
-			{
-				mHeadedToDoor = false;
-				auto tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
-				MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
-				MWBase::Environment::get().getWorld()->activate(tnode, npcPtr);
-				std::cout << "attempted to open door" << std::endl;
-			}
-			else 
-			{
+			else {
+				if (mHeadedToDoor)
+				{
+					mHeadedToDoor = false;
+					auto tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
+					MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+					MWBase::Environment::get().getWorld()->activate(tnode, npcPtr);
+					std::cout << "attempted to open door" << std::endl;
+				}
+				/*else
+				{*/
 				std::string tnodeId;
 				mStep += 1;
 				if (mStep == mTravelNodeItinerary.size())
@@ -146,6 +147,7 @@ namespace MWTasks
 					std::cout << tnodeId << std::endl;
 				}
 			}
+			/*}*/
 		}
 
 	}
