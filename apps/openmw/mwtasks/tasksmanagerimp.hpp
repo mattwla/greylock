@@ -53,6 +53,8 @@ namespace MWTasks
 
 		TasksManager();
 
+		virtual void forceUpdate();
+
 		virtual void update(float hours, bool incremental = false);
 
 		virtual Task * getScheduledTask(std::string npcId, std::string stask);

@@ -612,7 +612,7 @@ namespace MWRender
 		else
 			mFieldOfView = fov;
 
-		updateProjectionMatrix();
+		updateProjectionMatrix(); //mwx was this here?
 
 	}
 

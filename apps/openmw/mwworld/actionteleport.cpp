@@ -3,6 +3,7 @@
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/tasksmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 
@@ -58,6 +59,7 @@ namespace MWWorld
             else
                 world->moveObject(actor,world->getInterior(mCellName),mPosition.pos[0],mPosition.pos[1],mPosition.pos[2]);
         }
+		
     }
 
     void ActionTeleport::getFollowersToTeleport(const MWWorld::Ptr& actor, std::set<MWWorld::Ptr>& out) {

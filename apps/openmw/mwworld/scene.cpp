@@ -9,11 +9,13 @@
 #include <components/resource/resourcesystem.hpp>
 #include <components/resource/scenemanager.hpp>
 
+
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
+#include "../mwbase/tasksmanager.hpp"
 
 #include "../mwrender/renderingmanager.hpp"
 #include "../mwrender/landmanager.hpp"
@@ -470,7 +472,7 @@ namespace MWWorld
         mPhysics->updatePtr(old, player);
 
         MWBase::Environment::get().getWorld()->adjustSky();
-
+		MWBase::Environment::get().getTasksManager()->forceUpdate(); // mwx
         mLastPlayerPos = pos.asVec3();
     }
 

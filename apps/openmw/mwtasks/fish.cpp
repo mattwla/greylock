@@ -79,6 +79,23 @@ namespace MWTasks
 	Fish::~Fish()
 	{
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
+
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+
+		std::cout << "deleting dance subtask" << std::endl;
+		if (mSubTask)
+		{
+			delete mSubTask;
+		}
+
+		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "fish"))
+		{
+			MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
+			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
+		}
+
+
+		//MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
 	void Fish::update()
@@ -100,7 +117,7 @@ namespace MWTasks
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
-		else if (mStep == 1)
+		if (mStep == 1)
 		{
 			mSubTask->update();
 			if (mSubTask->mDone)
@@ -110,7 +127,7 @@ namespace MWTasks
 				mStep += 1;
 			}
 		}
-		else if (mStep == 2)
+		if (mStep == 2)
 		{
 			
 			

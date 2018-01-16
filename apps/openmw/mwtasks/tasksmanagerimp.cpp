@@ -87,6 +87,16 @@ namespace MWTasks
 		buildZoneAvailabilities(); 
 	}
 
+	void TasksManager::forceUpdate()
+	{
+		for (auto& sm_pair : mNpcMap)
+		{
+			sm_pair.second->update();
+			//std::cout << isInActiveRange(sm_pair.first) << std::endl;
+			//Make a seperate vector just for updating?.... not a horrible idea.
+		}
+	}
+
 	void TasksManager::update(float hours, bool incremental)
 	{
 		int ticks = 0;

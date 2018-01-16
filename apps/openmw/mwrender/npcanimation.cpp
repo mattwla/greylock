@@ -496,6 +496,7 @@ void NpcAnimation::updateNpcBase()
 				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\Xanim_lydown_female_02a.nif", mResourceSystem->getVFS()), smodel);
 				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\xAM_Fishman.nif", mResourceSystem->getVFS()), smodel);
 				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\xAM_Alchemist.nif", mResourceSystem->getVFS()), smodel);
+				addAnimSource(Misc::ResourceHelpers::correctActorModelPath("meshes\\xMiner2.nif", mResourceSystem->getVFS()), smodel);
 				
 				
 			}

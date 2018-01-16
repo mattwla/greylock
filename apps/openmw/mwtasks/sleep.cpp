@@ -89,7 +89,7 @@ namespace MWTasks
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
-		else if (mStep == 1)
+		if (mStep == 1)
 		{
 			mSubTask->update();
 			if (mSubTask->mDone)
@@ -99,7 +99,7 @@ namespace MWTasks
 				mStep += 1;
 			}
 		}
-		else if (mStep == 2)
+		if (mStep == 2)
 		{
 			
 			
