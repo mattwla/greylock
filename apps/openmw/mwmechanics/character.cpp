@@ -2202,7 +2202,8 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 				auto slopediff = abs(slopecheck - ledgecheck);
 				/*std::cout << slopediff << std::endl;*/
 				if (slopediff < 50.0f)
-					std::cout << "too steep" << slopediff << std::endl;
+				{
+				}//std::cout << "too steep" << slopediff << std::endl;
 				else
 				{
 					//std::cout << "here" << std::endl;
@@ -2229,7 +2230,7 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 				//mPtr.getRefData().setPosition(ledgeesmpos);
 				//mPtr.getClass().getMovementSettings(mPtr).mPosition[2] = 1.0f;
 				//MWBase::Environment::get().getWorld()->moveObject(mPtr, ledgepos.x(), ledgepos.y(), ledgepos.z() + 200.0f);
-			}
+				}
 			zscan += 10.0f;
 		}
 		/*std::cout << "Object in way of jump" << std::endl;

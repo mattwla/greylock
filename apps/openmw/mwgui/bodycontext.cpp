@@ -98,7 +98,7 @@ namespace MWGui
 
     void BodyContextManager::createBodyContext (const std::string& message, bool stat)
     {
-		std::cout << "making context" << std::endl;
+		//std::cout << "making context" << std::endl;
 		BodyContext *box = new BodyContext(*this, message);
         box->mCurrentTime = 0;
         std::string realMessage = MyGUI::LanguageManager::getInstance().replaceTags(message);

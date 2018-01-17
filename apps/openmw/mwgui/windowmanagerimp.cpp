@@ -947,7 +947,7 @@ namespace MWGui
 
 	void WindowManager::BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode)
 	{
-		std::cout << "wm body context" << std::endl;
+		//std::cout << "wm body context" << std::endl;
 		//if (getMode() == GM_Dialogue && showInDialogueMode != MWGui::ShowInDialogueMode_Never) {
 		//	mDialogueWindow->addMessageBox(MyGUI::LanguageManager::getInstance().replaceTags(message));
 		//}
