@@ -187,7 +187,7 @@ namespace MWTasks
 		}
 		if (stask == "fish")
 		{
-			MWTasks::Fish * rtask = new MWTasks::Fish("", npcId);
+			MWTasks::Fish * rtask = new MWTasks::Fish(npcId);
 			return rtask;
 		}
 		if (stask == "sitground")
