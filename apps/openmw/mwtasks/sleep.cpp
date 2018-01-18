@@ -25,6 +25,7 @@
 #include "../mwbase/travelnodesmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -40,52 +41,20 @@
 namespace MWTasks
 {
 
-	/**Sleep::Sleep(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
+	Sleep::Sleep(std::string npcId) 
 	{
-	}
-
-	Sleep::Sleep(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-	{
-	}
-
-	*/
-
-	Sleep::Sleep()
-	{
-		std::cout << mNpcId + " wants to sleep" << std::endl;
-	}
-
-	Sleep::Sleep(MWWorld::Ptr dest) :
-		mDestination(dest)
-	{
-		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		mDone = false;
-	}
-
-	Sleep::Sleep(std::string destId, std::string npcId) :
-		mDestId(destId)
-	{
+		mDestId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
 		mNpcId = npcId;
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
+		mPermNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 	}
 
 	void Sleep::update()
 	{
-		/*bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
-		if (!currentlyActive)
-			return;*/
-		
 		if (mStep == 0)
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
@@ -101,20 +70,12 @@ namespace MWTasks
 		}
 		if (mStep == 2)
 		{
-			
-			
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) {
-				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "lay"))
-				{
-
-					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "lay", 0, 1);
-				}
-			}
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) 
+				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mPermNpcPtr, "lay"))
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mPermNpcPtr, "lay", 0, 1);
+			
 		}
-
-
-		
 	}
 
 
@@ -125,10 +86,5 @@ namespace MWTasks
 		return TypeIDSleep;
 	}
 
-
-	bool Sleep::init()
-	{
-		return true;
-	}
 }
 

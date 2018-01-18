@@ -50,7 +50,7 @@ namespace MWTasks
 	Fish::~Fish()
 	{
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me... how many darn times am I doing this. How do I just capture it as a member variable? For life? And could be called on?? Oh man big.
 		std::cout << "deleting fish subtask" << std::endl;
 		if (mSubTask)
 		{

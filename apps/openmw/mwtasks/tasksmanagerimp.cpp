@@ -168,10 +168,7 @@ namespace MWTasks
 		}
 		if (stask == "sleep")
 		{
-			
-			std::string destId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
-			//std::cout << npcId + " wants to sleep." << std::endl;
-			MWTasks::Sleep * rtask = new MWTasks::Sleep(destId, npcId);
+			MWTasks::Sleep * rtask = new MWTasks::Sleep(npcId);
 			return rtask;
 		}
 		if (stask == "dance")
