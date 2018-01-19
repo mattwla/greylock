@@ -182,14 +182,14 @@ namespace MWTasks
 			MWTasks::Pestle * rtask = new MWTasks::Pestle("", npcId);
 			return rtask;
 		}
-		if (task == MWTasks::Task::TypeIDPestle)
+		if (task == MWTasks::Task::TypeIDFish)
 		{
 			MWTasks::Fish * rtask = new MWTasks::Fish(npcId);
 			return rtask;
 		}
 		if (task == MWTasks::Task::TypeIDSitground)
 		{
-			MWTasks::Sitground * rtask = new MWTasks::Sitground("", npcId);
+			MWTasks::Sitground * rtask = new MWTasks::Sitground(npcId);
 			return rtask;
 		}
 

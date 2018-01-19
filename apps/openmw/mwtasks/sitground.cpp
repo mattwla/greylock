@@ -52,32 +52,25 @@ namespace MWTasks
 
 	*/
 
-	Sitground::Sitground()
-	{
-	}
-
-	Sitground::Sitground(MWWorld::Ptr dest) :
-		mDestination(dest)
+	
+	Sitground::Sitground() 
 	{
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		mDone = false;
 	}
 
-	Sitground::Sitground(std::string destId, std::string npcId) :
-		mDestId(destId)
+	Sitground::Sitground(std::string npcId)
+	
 	{
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
 	}
 
 	Sitground::~Sitground()
 	{
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 
 		std::cout << "deleting Sitground subtask" << std::endl;
 		if (mSubTask)
@@ -85,10 +78,10 @@ namespace MWTasks
 			delete mSubTask;
 		}
 		
-		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "sitground"))
+		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "sitground"))
 		{
-			MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
-			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
+			MWBase::Environment::get().getMechanicsManager()->skipAnimation(mNpcPtr);
+			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(mNpcPtr);
 		}
 
 
@@ -108,7 +101,7 @@ namespace MWTasks
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			std::cout << mNpcId + "wants to sitground" << std::endl;
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 
@@ -130,12 +123,12 @@ namespace MWTasks
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			//markerPos.rot[2];
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			MWBase::Environment::get().getWorld()->rotateObject(npcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
 			
-			npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence().clear();
+			mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence().clear();
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId))
-				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "sitground", 0, 1);
+				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "sitground", 0, 1);
 			
 		}
 
@@ -143,37 +136,12 @@ namespace MWTasks
 		
 	}
 
-	bool Sitground::pickupItem()
-	{
-
-		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
-		if (currentlyActive)
-		{
-			seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
-			std::cout << "activated" << std::endl;
-		}
-		else
-		{
-			MWBase::Environment::get().getWorld()->activate(itemPtr, npcPtr);
-		}
-		//npcPtr.getClass().activate(itemPtr, npcPtr);
-		return true;
-	}
-
-
 	int Sitground::getTypeId() const
 	{
 		return TypeIDSitground;
 	}
 
 
-	bool Sitground::init()
-	{
-		return true;
-	}
+	
 }
 

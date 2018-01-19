@@ -86,6 +86,7 @@ namespace MWTasks
 		}
 		if (mStep == 2)
 		{
+			std::cout << "fish anim time" << std::endl;
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();

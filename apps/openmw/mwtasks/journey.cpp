@@ -69,7 +69,8 @@ namespace MWTasks
 		{
 			seq.clear(); //wherever npc was walking to, stop walking there.
 			mWasActiveLastUpdate = false; //flag that npc was no active this update
-			mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
+			if(mStep > 0)
+				mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
 			//leftActiveCells();
 			return;
 		}
