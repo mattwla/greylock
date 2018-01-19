@@ -97,7 +97,7 @@ namespace MWBase
 
 		//virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
 
-		virtual MWTasks::Task * getScheduledTask(std::string npcId, std::string stask) = 0;
+		virtual MWTasks::Task * getScheduledTask(std::string npcId, MWTasks::Task::TypeID task) = 0;
 
 		virtual bool isInActiveRange(std::string npcId) = 0;
 

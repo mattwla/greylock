@@ -33,11 +33,11 @@ namespace MWAISchedule
 
 			virtual bool checkScheduleGlobal(std::string global);
 			
-			virtual std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec);
+			/*virtual std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec);*/
             ///< If the player is sleeping or waiting, this should be called every hour.
             /// @param sleep is the player sleeping or waiting?
 
-			virtual void updateSchedules();
+			//virtual void updateSchedules();
 
 			//virtual void updateJourneys();
 
@@ -61,7 +61,7 @@ namespace MWAISchedule
 
 			virtual bool crossBalmora(MWWorld::Ptr npc);
 
-			virtual std::string fetchCurrentScheduledTask(std::string npcId);
+			/*virtual std::string fetchCurrentScheduledTask(std::string npcId);*/
 			
 		
 

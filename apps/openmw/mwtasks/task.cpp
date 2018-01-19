@@ -5,9 +5,13 @@ MWTasks::Task::Task()
 {
 }
 
-MWTasks::Task::Task(std::string npcId) : mNpcId(npcId)
+MWTasks::Task::Task(MWWorld::Ptr npcPtr)
 {
 }
+
+//MWTasks::Task::Task(std::string npcId) : mNpcId(npcId)
+//{
+//}
 
 MWTasks::Task::~Task()
 {

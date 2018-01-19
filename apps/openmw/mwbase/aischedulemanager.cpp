@@ -15,7 +15,7 @@ typedef MWBase::AIScheduleManager::TimeBlock TimeBlock;
 
 namespace MWBase
 {
-
+	//MWTasks::Task::TypeID bob = MWTasks::Task::TypeIDDance;
 	AIScheduleManager::Schedule::Schedule(std::string npcId)
 	{
 		//logic to build schedule
@@ -87,7 +87,7 @@ namespace MWBase
 		return in;
 	}
 
-	std::string AIScheduleManager::Schedule::getScheduledTask()
+	MWTasks::Task::TypeID AIScheduleManager::Schedule::getScheduledTask()
 	{
 		float hour = floor(MWBase::Environment::get().getWorld()->getTimeStamp().getHour());
 		while (mTimeBlocks[hour] == NULL) //if nothing scheduled for this time block, go back in time until we can find something.
@@ -98,10 +98,10 @@ namespace MWBase
 		}
 		//mwx fix me what of a case where there is a time block but none of the tasks are possible?
 		return mTimeBlocks[hour]->getPossibleTask();
-		//return "blah";
+		return MWTasks::Task::TypeID::TypeIDGet; //use get as blank task for now, it will never be in schedule.
 	}
 
-	std::string AIScheduleManager::TimeBlock::getPossibleTask()
+	MWTasks::Task::TypeID AIScheduleManager::TimeBlock::getPossibleTask()
 	{
 		//checks globals for each task, returns the first one that passes the checks.
 		//for now just returns the first one
@@ -113,7 +113,7 @@ namespace MWBase
 			else
 				idx += 1;
 		}
-		return "";
+		return MWTasks::Task::TypeIDGet;
 	}
 
 	bool AIScheduleManager::TimeBlock::checkScheduleGlobals(std::vector<std::string> globals) {

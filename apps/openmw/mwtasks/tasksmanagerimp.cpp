@@ -145,11 +145,11 @@ namespace MWTasks
 		//thanks JLBorges at cplusplus.com
 	}
 
-	Task * TasksManager::getScheduledTask(std::string npcId, std::string stask)
+	Task * TasksManager::getScheduledTask(std::string npcId, MWTasks::Task::TypeID task)
 	{
 		//std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
 
-		if (stask == "journey")
+		if (task == MWTasks::Task::TypeIDJourney)
 		{
 			std::string destID = "tn_sl";
 			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
@@ -158,7 +158,7 @@ namespace MWTasks
 			
 			//JOURNEY
 		}
-		if (stask == "hunt")
+		if (task == MWTasks::Task::TypeIDHunt)
 		{
 
 			std::string destId = "tn_slt3";
@@ -166,28 +166,28 @@ namespace MWTasks
 			MWTasks::Hunt * rtask = new MWTasks::Hunt(destId, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 		}
-		if (stask == "sleep")
+		if (task == MWTasks::Task::TypeIDSleep)
 		{
 			MWTasks::Sleep * rtask = new MWTasks::Sleep(npcId);
 			return rtask;
 		}
-		if (stask == "dance")
+		if (task == MWTasks::Task::TypeIDDance)
 		{
 			std::string destId = "tn_v1";
 			MWTasks::Dance * rtask = new MWTasks::Dance(destId, npcId);
 			return rtask;
 		}
-		if (stask == "pestle")
+		if (task == MWTasks::Task::TypeIDPestle)
 		{
 			MWTasks::Pestle * rtask = new MWTasks::Pestle("", npcId);
 			return rtask;
 		}
-		if (stask == "fish")
+		if (task == MWTasks::Task::TypeIDPestle)
 		{
 			MWTasks::Fish * rtask = new MWTasks::Fish(npcId);
 			return rtask;
 		}
-		if (stask == "sitground")
+		if (task == MWTasks::Task::TypeIDSitground)
 		{
 			MWTasks::Sitground * rtask = new MWTasks::Sitground("", npcId);
 			return rtask;

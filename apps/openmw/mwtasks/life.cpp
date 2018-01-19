@@ -62,8 +62,8 @@ namespace MWTasks
 		mTickCounter += 1;
 		if (!mSubTask)
 		{
-			std::string task = mSchedule->getScheduledTask();
-			if (task == "")
+			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
+			if (task == MWTasks::Task::TypeID::TypeIDGet)
 				return;
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
@@ -77,8 +77,7 @@ namespace MWTasks
 		{
 			//std::cout << "checking schedule" << std::endl;;
 			mTickCounter = 0;
-			std::string task = mSchedule->getScheduledTask();
-			
+			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
 			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
 			if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
 			{

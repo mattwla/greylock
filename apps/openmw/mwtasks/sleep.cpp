@@ -47,7 +47,7 @@ namespace MWTasks
 		mNpcId = npcId;
 		mStep = 0;
 		mDone = false;
-		mPermNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 	}
 
 	void Sleep::update()
@@ -72,8 +72,8 @@ namespace MWTasks
 		{
 			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) 
-				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mPermNpcPtr, "lay"))
-					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mPermNpcPtr, "lay", 0, 1);
+				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "lay"))
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "lay", 0, 1);
 			
 		}
 	}

@@ -22,7 +22,7 @@ namespace MWTasks
 		virtual void update();
 		virtual int getTypeId() const;
 		std::string mDestId;
-		MWWorld::Ptr mPermNpcPtr;
+		
 	};
 
 }

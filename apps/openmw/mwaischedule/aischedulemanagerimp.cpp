@@ -124,95 +124,95 @@ namespace MWAISchedule
 		return false;
 	}
 
-	std::vector<AIScheduleManager::TaskPriorityPair*> AIScheduleManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
-	{
-		//mwx fix me pointer madness
-		std::vector<TaskPriorityPair*> schedule;
+	//std::vector<AIScheduleManager::TaskPriorityPair*> AIScheduleManager::mapSchedule(std::vector<std::vector<std::string>> vecvec)
+	//{
+	//	//mwx fix me pointer madness
+	//	std::vector<TaskPriorityPair*> schedule;
 
-		for (unsigned int i = 0; i < vecvec.size(); i++)
-		{
-			bool alreadyassigned = false;
-			
-			for (unsigned int npcidsearch = 0; npcidsearch < schedule.size(); npcidsearch++) //loop to see if npc has already been assigned a task
-			{
-				if (schedule[npcidsearch]->npcId == vecvec[i][0])
-					alreadyassigned = true;
-			}
+	//	for (unsigned int i = 0; i < vecvec.size(); i++)
+	//	{
+	//		bool alreadyassigned = false;
+	//		
+	//		for (unsigned int npcidsearch = 0; npcidsearch < schedule.size(); npcidsearch++) //loop to see if npc has already been assigned a task
+	//		{
+	//			if (schedule[npcidsearch]->npcId == vecvec[i][0])
+	//				alreadyassigned = true;
+	//		}
 
-			if (alreadyassigned)
-				continue;
-			
-			//if (schedule.count(vecvec[i][0]) == 1)
-			//{
-			//	continue; //if we already have a task for this npc, skip to next line
-			//}
-			else
-			{
-				bool passed = true;
-				
-				for (unsigned int i2 = 2; i2 < vecvec[i].size(); i2++) //global requirements start at third element and go until end of vector
-				{
-					if (!checkScheduleGlobal(vecvec[i][i2])) {
-						passed = false; //did not meet global requirements, don't check any more break.
-						break;
-					}
-				}
+	//		if (alreadyassigned)
+	//			continue;
+	//		
+	//		//if (schedule.count(vecvec[i][0]) == 1)
+	//		//{
+	//		//	continue; //if we already have a task for this npc, skip to next line
+	//		//}
+	//		else
+	//		{
+	//			bool passed = true;
+	//			
+	//			for (unsigned int i2 = 2; i2 < vecvec[i].size(); i2++) //global requirements start at third element and go until end of vector
+	//			{
+	//				if (!checkScheduleGlobal(vecvec[i][i2])) {
+	//					passed = false; //did not meet global requirements, don't check any more break.
+	//					break;
+	//				}
+	//			}
 
-				if (passed)
-				{
-					//schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
-					schedule.push_back(new TaskPriorityPair(vecvec[i][0], vecvec[i][1], 4));
+	//			if (passed)
+	//			{
+	//				//schedule[vecvec[i][0]] = vecvec[i][1]; //We passed all tests, store the npcs name and the npcs aipackage string
+	//				schedule.push_back(new TaskPriorityPair(vecvec[i][0], vecvec[i][1], 4));
 
 
-				}
+	//			}
 
-			}
-		}
+	//		}
+	//	}
 
-		return schedule;
-	}
+	//	return schedule;
+	//}
 
 
 	
-	void AIScheduleManager::updateSchedules()
-	{
-		
-		/*mtravelNodeMap = buildTravelNodes();
-		buildPathGrid(&mtravelPathGrid);
-		mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
-		mtravelPathGridGraph.load(); */
-		//HACK FIX TO DEAL WITH CHANGING POINTERS
+	//void AIScheduleManager::updateSchedules()
+	//{
+	//	
+	//	/*mtravelNodeMap = buildTravelNodes();
+	//	buildPathGrid(&mtravelPathGrid);
+	//	mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
+	//	mtravelPathGridGraph.load(); */
+	//	//HACK FIX TO DEAL WITH CHANGING POINTERS
 
-		//std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
-		std::ifstream in;
-		//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-		std::vector<std::vector<std::string>> vecvec;
-		
-		std::string line;
+	//	//std::ifstream in = fetchSchedule(); //find our csv of AI schedules, returns one for appropriate season and time of day
+	//	std::ifstream in;
+	//	//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
+	//	typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+	//	std::vector<std::vector<std::string>> vecvec;
+	//	
+	//	std::string line;
 
-		while (getline(in, line))
-		{
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
-		}
+	//	while (getline(in, line))
+	//	{
+	//		std::vector<std::string> vec;
+	//		Tokenizer tok(line);
+	//		for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+	//		{
+	//			vec.push_back(*it);
+	//		}
+	//		vecvec.push_back(vec);
+	//	}
 
-		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		std::vector<AIScheduleManager::TaskPriorityPair*> schedule = mapSchedule(vecvec);
+	//	//parse our vector of vectors, get a map back of what each NPC should be doing.
+	//	std::vector<AIScheduleManager::TaskPriorityPair*> schedule = mapSchedule(vecvec);
 
-		for (auto const& x : schedule)
-		{
-			
-			taskRouter(x->npcId, x->task, x->priority);
-			
-		}
-		//updateJourneys();
-	}
+	//	for (auto const& x : schedule)
+	//	{
+	//		
+	//		taskRouter(x->npcId, x->task, x->priority);
+	//		
+	//	}
+	//	//updateJourneys();
+	//}
 
 	void AIScheduleManager::taskRouter(std::string npcID, std::string task, int priority)
 	{
@@ -340,61 +340,61 @@ namespace MWAISchedule
 		return true;
 	}
 
-	std::string AIScheduleManager::fetchCurrentScheduledTask(std::string npcId)
-	{
+	//std::string AIScheduleManager::fetchCurrentScheduledTask(std::string npcId)
+	//{
 
-		std::string task = "";
-		
-		//MWX WILL NEED REFACTORING
+	//	std::string task = "";
+	//	
+	//	//MWX WILL NEED REFACTORING
 
-		std::ifstream in = fetchSchedule(npcId); //find our csv of AI schedules, returns one for appropriate season and time of day
+	//	std::ifstream in = fetchSchedule(npcId); //find our csv of AI schedules, returns one for appropriate season and time of day
 
-											//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
-		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
-		std::vector<std::vector<std::string>> vecvec;
+	//										//Scan through csv with boost's tokenizer, values on a line make up elements of a vector vec, each line is in turn stored in a vector vecvec
+	//	typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+	//	std::vector<std::vector<std::string>> vecvec;
 
-		std::string line;
+	//	std::string line;
 
-		while (getline(in, line))
-		{
-			std::vector<std::string> vec;
-			Tokenizer tok(line);
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
-			{
-				vec.push_back(*it);
-			}
-			vecvec.push_back(vec);
-		}
+	//	while (getline(in, line))
+	//	{
+	//		std::vector<std::string> vec;
+	//		Tokenizer tok(line);
+	//		for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it)
+	//		{
+	//			vec.push_back(*it);
+	//		}
+	//		vecvec.push_back(vec);
+	//	}
 
-		//parse our vector of vectors, get a map back of what each NPC should be doing.
-		std::vector<TaskPriorityPair*> schedule = mapSchedule(vecvec);
+	//	//parse our vector of vectors, get a map back of what each NPC should be doing.
+	//	std::vector<TaskPriorityPair*> schedule = mapSchedule(vecvec);
 
-		for (auto const& x : schedule)
-		{
+	//	for (auto const& x : schedule)
+	//	{
 
-			if (x->npcId == npcId)
-			{
-				
-				task = x->task;
-				break;
-				//return x->task;
-			}
-			
-			//taskRouter(x.first, x.second);
+	//		if (x->npcId == npcId)
+	//		{
+	//			
+	//			task = x->task;
+	//			break;
+	//			//return x->task;
+	//		}
+	//		
+	//		//taskRouter(x.first, x.second);
 
-		}
-		
-		for (auto const& x : schedule)
-		{
+	//	}
+	//	
+	//	for (auto const& x : schedule)
+	//	{
 
-			delete x;
-			//clean up those pointers.
-			//taskRouter(x.first, x.second);
-		}
+	//		delete x;
+	//		//clean up those pointers.
+	//		//taskRouter(x.first, x.second);
+	//	}
 
-		std::cout << "suggested scheduled task: " + task << std::endl;
-		return task;
-	}
+	//	std::cout << "suggested scheduled task: " + task << std::endl;
+	//	return task;
+	//}
 
 	
 

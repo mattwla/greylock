@@ -33,7 +33,9 @@ namespace MWTasks
 		
 		Task();
 
-		Task(std::string npcId);
+		Task(MWWorld::Ptr npcPtr);
+
+		MWWorld::Ptr mNpcPtr;
 
 		virtual ~Task();
 

@@ -15,11 +15,13 @@
 #include "../mwworld/timestamp.hpp"
 
 #include "../mwworld/ptr.hpp"
+#include "../mwtasks/task.hpp"
 
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
+
 
 
 namespace osg
@@ -59,14 +61,32 @@ namespace MWBase
             ///< not implemented
 
         public:
-
+			
+		
 			struct TaskPriorityPair //a task, a priority, and the global checks.
 			{
+				std::map<std::string, MWTasks::Task::TypeID> taskStringToEnum =
+				{
+					{ "life", MWTasks::Task::TypeIDLife },
+					{ "journey", MWTasks::Task::TypeIDJourney },
+					{ "get", MWTasks::Task::TypeIDGet },
+					{ "hunt", MWTasks::Task::TypeIDHunt },
+					{ "sleep", MWTasks::Task::TypeIDSleep },
+					{ "dance", MWTasks::Task::TypeIDDance },
+					{ "pestle", MWTasks::Task::TypeIDPestle },
+					{ "fish", MWTasks::Task::TypeIDFish },
+					{ "sitground", MWTasks::Task::TypeIDSitground }
+
+
+				};
+
+				
+				
 				std::string npcId;
-				std::string task;
+				MWTasks::Task::TypeID task;
 				std::vector<std::string> mGlobals;
 				int priority;
-				TaskPriorityPair(std::string npcId, std::string task, int priority):
+				TaskPriorityPair(std::string npcId, MWTasks::Task::TypeID task, int priority):
 					npcId(npcId)
 					, task(task)
 					, priority(priority)
@@ -84,7 +104,7 @@ namespace MWBase
 					{
 						if (idx == 0) //first item is the task
 						{
-							task = *it;
+							task = taskStringToEnum[*it];
 							idx += 1;
 						}
 						else //rest are conditions... for now
@@ -99,7 +119,7 @@ namespace MWBase
 			{
 				float mTime;
 				std::vector<TaskPriorityPair*> mPossibleTasks;
-				std::string getPossibleTask();
+				MWTasks::Task::TypeID getPossibleTask();
 				bool checkScheduleGlobals(std::vector<std::string>);
 			};
 
@@ -117,7 +137,7 @@ namespace MWBase
 
 				std::ifstream getCSV(std::string npcId);
 
-				std::string getScheduledTask();
+				MWTasks::Task::TypeID getScheduledTask();
 
 
 			};
@@ -136,15 +156,15 @@ namespace MWBase
 
 			virtual std::ifstream fetchSchedule(std::string npcId) = 0;
 
-			virtual std::string fetchCurrentScheduledTask(std::string npcId) = 0;
+			/*virtual std::string fetchCurrentScheduledTask(std::string npcId) = 0;*/
 			
-			virtual  std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;
+			/*virtual  std::vector<AIScheduleManager::TaskPriorityPair*> mapSchedule(std::vector<std::vector<std::string>> vecvec) = 0;*/
 
 			virtual bool checkScheduleGlobal(std::string global) = 0;
 
 			virtual void taskRouter(std::string npcID, std::string task, int priority) = 0;
 
-			virtual void updateSchedules() = 0;
+			//virtual void updateSchedules() = 0;
 
 			//virtual void updateJourneys() = 0;
 
