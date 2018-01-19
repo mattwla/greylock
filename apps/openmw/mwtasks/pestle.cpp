@@ -40,39 +40,11 @@
 namespace MWTasks
 {
 
-	/**Pestle::Pestle(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
-	{
-	}
-
-	Pestle::Pestle(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-	{
-	}
-
-	*/
-
-	Pestle::Pestle()
-	{
-		std::cout << mNpcId + " wants to Pestle" << std::endl;
-	}
-
-	Pestle::Pestle(MWWorld::Ptr dest) :
-		mDestination(dest)
-	{
-		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		mDone = false;
-	}
-
-	Pestle::Pestle(std::string destId, std::string npcId) :
-		mDestId(destId)
+	Pestle::Pestle(std::string npcId) 	
 	{
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
 	}
 
@@ -83,18 +55,14 @@ namespace MWTasks
 
 	void Pestle::update()
 	{
-		/*bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
-		if (!currentlyActive)
-			return;*/
-		
+	
 		if (mStep == 0)
 		{
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "pestle");
 			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
 			//request a spot in the dance zone
-
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
@@ -112,38 +80,24 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			
-			
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			//markerPos.rot[2];
-			MWBase::Environment::get().getWorld()->rotateObject(npcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
+			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) {
-				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "grind"))
+				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "grind"))
 				{
-
-					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "grind", 0, 1);
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "grind", 0, 1);
 				}
 			}
 		}
-
-
-		
 	}
-
-
-
 
 	int Pestle::getTypeId() const
 	{
 		return TypeIDPestle;
 	}
 
-
-	bool Pestle::init()
-	{
-		return true;
-	}
 }
 

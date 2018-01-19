@@ -45,6 +45,7 @@ namespace MWTasks
 	Life::Life(std::string npcId)
 	{
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mTickCounter = 0;
 		mSchedule = new MWBase::AIScheduleManager::Schedule(npcId);
 	}

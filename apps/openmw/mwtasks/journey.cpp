@@ -45,6 +45,7 @@ namespace MWTasks
 	{
 		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(npcId); //when task was created, was npc in active range of player?
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
 		//mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		mDone = false;
@@ -54,8 +55,8 @@ namespace MWTasks
 
 	void Journey::update()
 	{
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
+		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
+		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 
 		if (hasArrived())
@@ -96,7 +97,7 @@ namespace MWTasks
 					mHeadedToDoor = false;
 					auto tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
 					MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
-					MWBase::Environment::get().getWorld()->activate(tnode, npcPtr);
+					MWBase::Environment::get().getWorld()->activate(tnode, mNpcPtr);
 					std::cout << "attempted to open door" << std::endl;
 				}
 				std::string tnodeId;
@@ -114,7 +115,7 @@ namespace MWTasks
 				ESM::Position tnodePos = tnode.getRefData().getPosition();
 				if (tnode.getClass().isDoor())
 					mHeadedToDoor = true;
-				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), npcPtr);
+				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), mNpcPtr);
 			}
 		}
 
@@ -127,9 +128,9 @@ namespace MWTasks
 
 	bool Journey::hasArrived()
 	{
-		MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWWorld::Ptr dest = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		bool inRange = (npc.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= mRange;
+		bool inRange = (mNpcPtr.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= mRange;
 		return inRange;
 	}
 
@@ -158,10 +159,10 @@ namespace MWTasks
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
 			if (marker.getClass().isDoor())
 				mHeadedToDoor = true; //if our destination is door, mark it as such so npc can open it if they end up in active cell
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();
-			MWBase::Environment::get().getWorld()->moveObject(npcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+			MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 		}
 		
 		return;
@@ -186,9 +187,9 @@ namespace MWTasks
 	bool Journey::init()
 	{
 		std::cout << mNpcId + "is searching for dest id: " + mDestId << std::endl;
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWWorld::Ptr destPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		int currentNode = mTravelNodesManager->mCellToNodeMap[npcPtr.getCell()]->id;
+		int currentNode = mTravelNodesManager->mCellToNodeMap[mNpcPtr.getCell()]->id;
 		int destNode = mTravelNodesManager->mCellToNodeMap[destPtr.getCell()]->id;
 		auto path = mTravelNodesManager->mtravelPathGridGraph.aStarSearch(currentNode, destNode); //WANT CURRENT NODE END NODE
 		for (std::list<ESM::Pathgrid::Point>::iterator it = path.begin(); it != path.end(); it++)

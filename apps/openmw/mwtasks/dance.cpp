@@ -39,45 +39,17 @@
 
 namespace MWTasks
 {
-
-	/**Dance::Dance(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
-	{
-	}
-
-	Dance::Dance(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-	{
-	}
-
-	*/
-
-	Dance::Dance()
-	{
-	}
-
-	Dance::Dance(MWWorld::Ptr dest) :
-		mDestination(dest)
-	{
-		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		mDone = false;
-	}
-
-	Dance::Dance(std::string destId, std::string npcId) :
-		mDestId(destId)
+	Dance::Dance(std::string npcId)
 	{
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
 	}
 
 	Dance::~Dance()
 	{
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 
 		std::cout << "deleting dance subtask" << std::endl;
 		if (mSubTask)
@@ -85,12 +57,11 @@ namespace MWTasks
 			delete mSubTask;
 		}
 		
-		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(npcPtr, "rock"))
+		if (MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "rock"))
 		{
-			MWBase::Environment::get().getMechanicsManager()->skipAnimation(npcPtr);
-			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(npcPtr);
+			MWBase::Environment::get().getMechanicsManager()->skipAnimation(mNpcPtr);
+			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(mNpcPtr);
 		}
-
 
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
@@ -108,7 +79,7 @@ namespace MWTasks
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			std::cout << mNpcId + "wants to dance" << std::endl;
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 
@@ -127,36 +98,15 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence().clear();
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence().clear();
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId))
-				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
+				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "rock", 0, 1);
 			
 		}
 
 
 		
-	}
-
-	bool Dance::pickupItem()
-	{
-
-		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
-		if (currentlyActive)
-		{
-			seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
-			std::cout << "activated" << std::endl;
-		}
-		else
-		{
-			MWBase::Environment::get().getWorld()->activate(itemPtr, npcPtr);
-		}
-		//npcPtr.getClass().activate(itemPtr, npcPtr);
-		return true;
 	}
 
 
@@ -165,10 +115,5 @@ namespace MWTasks
 		return TypeIDDance;
 	}
 
-
-	bool Dance::init()
-	{
-		return true;
-	}
 }
 

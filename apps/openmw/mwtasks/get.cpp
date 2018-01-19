@@ -39,39 +39,13 @@
 
 namespace MWTasks
 {
-
-	/**Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
-	{
-	}
-
-	Get::Get(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-	{
-	}
-
-	*/
-
-	Get::Get()
-	{
-	}
-
-	Get::Get(MWWorld::Ptr dest) :
-		mDestination(dest)
-	{
-		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		mDone = false;
-	}
-
+	
 	Get::Get(std::string destId, std::string npcId) :
 		mDestId(destId)
 	{
 		mNpcId = npcId;
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
 	}
 
@@ -79,8 +53,6 @@ namespace MWTasks
 	{
 		if (mStep == 0)
 		{
-			/*MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);*/
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
@@ -98,7 +70,6 @@ namespace MWTasks
 		{
 			if(pickupItem())
 			{
-				
 				mDone = true;
 			}
 		}
@@ -109,23 +80,20 @@ namespace MWTasks
 
 	bool Get::pickupItem()
 	{
-
 		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-		MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWMechanics::AiSequence& seq = npcPtr.getClass().getCreatureStats(npcPtr).getAiSequence();
-
+		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 		if (currentlyActive)
 		{
-			seq.stack(MWMechanics::AiActivate(mDestId), npcPtr);
+			seq.stack(MWMechanics::AiActivate(mDestId), mNpcPtr);
 			std::cout << "activated" << std::endl;
 		}
 		else
 		{
-			MWBase::Environment::get().getWorld()->activate(itemPtr, npcPtr);
+			MWBase::Environment::get().getWorld()->activate(itemPtr, mNpcPtr);
 		}
-		//npcPtr.getClass().activate(itemPtr, npcPtr);
-		return true;
+		return true; //mwx fix me... what if we didn't get item?
 	}
 
 
@@ -134,10 +102,5 @@ namespace MWTasks
 		return TypeIDGet;
 	}
 
-
-	bool Get::init()
-	{
-		return true;
-	}
 }
 

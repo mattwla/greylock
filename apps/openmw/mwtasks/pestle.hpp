@@ -18,11 +18,8 @@ namespace MWTasks
 
 	public:
 
-		Pestle();
-
-		Pestle(MWWorld::Ptr dest);
-
-		Pestle(std::string destId, std::string npcId);
+		
+		Pestle(std::string npcId);
 
 		~Pestle();
 
@@ -30,13 +27,6 @@ namespace MWTasks
 
 		unsigned int mStep;
 
-		MWBase::TravelNodesManager * mTravelNodesManager = MWBase::Environment::get().getTravelNodesManager();
-
-		std::vector<int> mTravelNodeItinerary;
-
-		MWWorld::Ptr mDestination;
-
-		MWWorld::TimeStamp mStartTime;
 
 		virtual void update();
 
@@ -44,16 +34,10 @@ namespace MWTasks
 
 		int mZoneSlotIdx;
 	
-
 		virtual int getTypeId() const;
-
-		bool init();
-
-		bool mInitialized = false;
 
 		std::string mDestId;
 
-		bool mReadyForUpdate;
 
 	};
 

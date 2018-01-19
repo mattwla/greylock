@@ -15,29 +15,14 @@ namespace MWTasks
 	{
 	private:
 
-		bool pickupItem();
 
 	public:
 
-		Dance();
-
-		Dance(MWWorld::Ptr dest);
-
-		Dance(std::string destId, std::string npcId);
+		Dance(std::string npcId);
 
 		~Dance();
 
-		//Dance(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
-
 		unsigned int mStep;
-
-		MWBase::TravelNodesManager * mTravelNodesManager = MWBase::Environment::get().getTravelNodesManager();
-
-		std::vector<int> mTravelNodeItinerary;
-
-		MWWorld::Ptr mDestination;
-
-		MWWorld::TimeStamp mStartTime;
 
 		virtual void update();
 
@@ -46,10 +31,6 @@ namespace MWTasks
 		std::string mZoneId;
 
 		virtual int getTypeId() const;
-
-		bool init();
-
-		bool mInitialized = false;
 
 		std::string mDestId;
 

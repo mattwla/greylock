@@ -54,7 +54,7 @@ namespace MWTasks
 	{
 		if (mStep == 0)
 		{
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
@@ -70,7 +70,7 @@ namespace MWTasks
 		}
 		if (mStep == 2)
 		{
-			MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) 
 				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "lay"))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "lay", 0, 1);

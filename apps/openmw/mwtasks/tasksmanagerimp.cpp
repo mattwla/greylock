@@ -160,10 +160,7 @@ namespace MWTasks
 		}
 		if (task == MWTasks::Task::TypeIDHunt)
 		{
-
-			std::string destId = "tn_slt3";
-			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
-			MWTasks::Hunt * rtask = new MWTasks::Hunt(destId, npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
+			MWTasks::Hunt * rtask = new MWTasks::Hunt(npcId); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
 		}
 		if (task == MWTasks::Task::TypeIDSleep)
@@ -173,13 +170,12 @@ namespace MWTasks
 		}
 		if (task == MWTasks::Task::TypeIDDance)
 		{
-			std::string destId = "tn_v1";
-			MWTasks::Dance * rtask = new MWTasks::Dance(destId, npcId);
+			MWTasks::Dance * rtask = new MWTasks::Dance(npcId);
 			return rtask;
 		}
 		if (task == MWTasks::Task::TypeIDPestle)
 		{
-			MWTasks::Pestle * rtask = new MWTasks::Pestle("", npcId);
+			MWTasks::Pestle * rtask = new MWTasks::Pestle(npcId);
 			return rtask;
 		}
 		if (task == MWTasks::Task::TypeIDFish)

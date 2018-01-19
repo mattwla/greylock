@@ -39,51 +39,17 @@
 
 namespace MWTasks
 {
-
-	/**Hunt::Hunt(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp starttime) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mStartTime(starttime)
-	{
-	}
-
-	Hunt::Hunt(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, std::string task) :
-	mNpcId(mNpcId), mTravelNodeItinerary(mTravelNodeItinerary), mDestination(mDestination), mStep(0), mOnCompleteTask(task)
-	{
-	}
-
-	*/
-
-	Hunt::Hunt()
-	{
-	}
-
-	Hunt::Hunt(MWWorld::Ptr dest) :
-		mDestination(dest)
-	{
-		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		mDone = false;
-	}
-
-	Hunt::Hunt(std::string destId, std::string npcId) :
-		mDestId(destId)
+	
+	Hunt::Hunt(std::string npcId) 
 	{
 		mNpcId = npcId;
 		mStep = 0;
-		mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
-		init();
-		mReadyForUpdate = true;
 		mDone = false;
 	}
 
 	void Hunt::update()
 	{
-		if (MWBase::Environment::get().getWorld()->getTimeStamp() > mStartTime + 9)
-		{
-			std::cout << "time to end hunt" << std::endl;
-			
-			mDone = true;
-		}
-		else if (mStep == 0)
+		if (mStep == 0)
 		{
 			std::cout << "getting bow..." << std::endl;
 			mSubTask = new MWTasks::Get("nadia bow", mNpcId);
@@ -101,7 +67,7 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			std::cout << "first journey..." << std::endl;
+			mDestId = "tn_slt3";
 			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
 			mStep += 1;
 		}
@@ -136,10 +102,5 @@ namespace MWTasks
 		return TypeIDHunt;
 	}
 
-
-	bool Hunt::init()
-	{
-		return true;
-	}
 }
 
