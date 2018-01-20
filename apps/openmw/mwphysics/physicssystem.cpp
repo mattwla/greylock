@@ -1037,7 +1037,10 @@ namespace MWPhysics
 
         osg::Vec3f pos1 (physactor1->getCollisionObjectPosition() + osg::Vec3f(0,0,physactor1->getHalfExtents().z() * 0.9)); // eye level
         osg::Vec3f pos2 (physactor2->getCollisionObjectPosition() + osg::Vec3f(0,0,physactor2->getHalfExtents().z() * 0.9));
-
+		if (pos1 == pos2)//mwx potential fix for crash when npcs on top of eachother
+		{
+			return true;
+		}
         RayResult result = castRay(pos1, pos2, MWWorld::ConstPtr(), std::vector<MWWorld::Ptr>(), CollisionType_World|CollisionType_HeightMap|CollisionType_Door);
 
         return !result.mHit;

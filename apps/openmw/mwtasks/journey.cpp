@@ -55,6 +55,7 @@ namespace MWTasks
 
 	void Journey::update()
 	{
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
@@ -70,7 +71,7 @@ namespace MWTasks
 		{
 			seq.clear(); //wherever npc was walking to, stop walking there.
 			mWasActiveLastUpdate = false; //flag that npc was no active this update
-			if(mStep > 0)
+			if(mStep > 0 && mTravelNodeItinerary.size() == 2)
 				mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
 			//leftActiveCells();
 			return;

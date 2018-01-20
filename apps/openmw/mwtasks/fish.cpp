@@ -66,6 +66,7 @@ namespace MWTasks
 
 	void Fish::update()
 	{
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		if (mStep == 0)
 		{
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
