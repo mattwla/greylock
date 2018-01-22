@@ -46,7 +46,9 @@ namespace MWTasks
 
 		void leftActiveCells();
 
-		bool hasArrived();
+		bool hasArrived(std::string destid);
+
+		//bool hasArrived();
 
 		void inactiveUpdate();
 

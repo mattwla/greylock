@@ -60,7 +60,7 @@ namespace MWTasks
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
 
-		if (hasArrived())
+		if (hasArrived(mDestId))
 		{
 			std::cout << mNpcId + " has arrived within radius of dest" << std::endl;
 			seq.clear();
@@ -85,7 +85,7 @@ namespace MWTasks
 		
 		//all this below and heck probably above likely needs to be refactored mwx fix me
 
-		if (seq.getTypeId() == -1) //nothing in seq means AI is no longer walking, waiting for next dest.
+		if (seq.getTypeId() == -1 || seq.getTypeId() == 0) //nothing in seq means AI is no longer walking, waiting for next dest.
 		{
 			if (mStep == mTravelNodeItinerary.size())
 			{
@@ -102,7 +102,10 @@ namespace MWTasks
 					std::cout << "attempted to open door" << std::endl;
 				}
 				std::string tnodeId;
-				mStep += 1;
+				
+				//if (hasArrived(getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker)))
+					mStep += 1;
+				
 				if (mStep == mTravelNodeItinerary.size())
 					tnodeId = mDestId;
 				else
@@ -127,10 +130,10 @@ namespace MWTasks
 		mWasActiveLastUpdate = false;
 	}
 
-	bool Journey::hasArrived()
+	bool Journey::hasArrived(std::string destid)
 	{
 		//MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-		MWWorld::Ptr dest = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
+		MWWorld::Ptr dest = MWBase::Environment::get().getWorld()->searchPtr(destid, false);
 		bool inRange = (mNpcPtr.getRefData().getPosition().asVec3() - dest.getRefData().getPosition().asVec3()).length2() <= mRange;
 		return inRange;
 	}
@@ -187,6 +190,7 @@ namespace MWTasks
 
 	bool Journey::init()
 	{
+		
 		std::cout << mNpcId + "is searching for dest id: " + mDestId << std::endl;
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWWorld::Ptr destPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);

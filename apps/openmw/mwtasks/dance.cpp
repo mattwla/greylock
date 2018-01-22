@@ -63,7 +63,8 @@ namespace MWTasks
 			MWBase::Environment::get().getMechanicsManager()->forceStateUpdate(mNpcPtr);
 		}
 
-		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
+		if (mZoneSlotIdx != -1)
+			MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
 	void Dance::update()
@@ -75,7 +76,11 @@ namespace MWTasks
 			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "dance");
 			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
 				//request a spot in the dance zone
-
+			if (mZoneSlotIdx == -1) //MWX FIX ME, hack to stop crashing when all zoneslots are full.
+			{
+				mDone = true;
+				return;
+			}
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			std::cout << mNpcId + "wants to dance" << std::endl;
