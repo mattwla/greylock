@@ -86,7 +86,7 @@ namespace MWTasks
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			//markerPos.rot[2];
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) {
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr)) {
 				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "grind"))
 				{
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "grind", 0, 1);

@@ -65,7 +65,7 @@ namespace MWTasks
 
 		//virtual Task* getScheduledTask(std::string npcId);
 
-		bool isInActiveRange(std::string npcId);
+		bool isInActiveRange(MWWorld::Ptr);
 
 		virtual std::string getZoneId(std::string npcId, std::string task);
 

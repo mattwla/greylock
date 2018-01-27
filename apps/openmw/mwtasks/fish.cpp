@@ -67,7 +67,7 @@ namespace MWTasks
 
 	MWWorld::Ptr Fish::update()
 	{
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		if (mStep == 0)
 		{
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
@@ -89,12 +89,12 @@ namespace MWTasks
 		}
 		if (mStep == 2)
 		{
-			std::cout << "fish anim time" << std::endl;
+			//std::cout << "fish anim time" << std::endl;
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId)) 
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr)) 
 				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "fish"))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "fish", 0, 1);
 		}

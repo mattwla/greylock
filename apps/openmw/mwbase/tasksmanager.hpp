@@ -101,7 +101,7 @@ namespace MWBase
 
 		virtual MWTasks::Task * getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task) = 0;
 
-		virtual bool isInActiveRange(std::string npcId) = 0;
+		virtual bool isInActiveRange(MWWorld::Ptr) = 0;
 
 		virtual std::string getZoneId(std::string npcId, std::string task) = 0;
 

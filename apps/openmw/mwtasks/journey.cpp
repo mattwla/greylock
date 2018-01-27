@@ -45,8 +45,9 @@ namespace MWTasks
 	{
 		mLifeTask = lifetask;
 		mNpcId = mLifeTask->mNpcId;
-		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId); //when task was created, was npc in active range of player?
 		mNpcPtr = mLifeTask->mNpcPtr;
+		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr); //when task was created, was npc in active range of player?
+		
 		//MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
 		//mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
@@ -57,10 +58,10 @@ namespace MWTasks
 
 	MWWorld::Ptr Journey::update()
 	{
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		//mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr);
 
 		if (hasArrived(mDestId))
 		{

@@ -84,7 +84,7 @@ namespace MWTasks
 		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId);
+		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr);
 		if (currentlyActive)
 		{
 			seq.stack(MWMechanics::AiActivate(mDestId), mNpcPtr);

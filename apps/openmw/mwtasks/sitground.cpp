@@ -128,7 +128,7 @@ namespace MWTasks
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
 			
 			mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence().clear();
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId))
+			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
 				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "sitground", 0, 1);
 			
 		}

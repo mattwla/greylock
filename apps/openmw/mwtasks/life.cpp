@@ -44,6 +44,7 @@ namespace MWTasks
 
 	Life::Life(std::string npcId)
 	{
+		mLifeTask = this;
 		mNpcId = npcId;
 		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mTickCounter = 0;
