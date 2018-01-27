@@ -40,8 +40,8 @@
 namespace MWTasks
 {
 
-	
-
+	//Plan for interupts, interface with senses?
+	//life can ping tasks with informaiton. Poke subtask with an impulse (seen player, seen combat). Subs can over ride of default to parent for judgement. Life can have a bunch of defaults.
 	Life::Life(std::string npcId)
 	{
 		mLifeTask = this;

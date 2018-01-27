@@ -72,10 +72,18 @@ namespace MWTasks
 		if (mStep == 2)
 		{
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr)) 
-				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "lay"))
-					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "lay", 0, 1);
-			
+
+
+			auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
+
+
+			if (seq.getTypeId() != 5) //if not in combat, do this task.
+			{
+				seq.clear();
+				if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+					if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "lay"))
+						MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "lay", 0, 1);
+			}
 		}
 		return mNpcPtr;
 	}

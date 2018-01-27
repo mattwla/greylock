@@ -104,10 +104,16 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
+			auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
+			
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence().clear();
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
-				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "rock", 0, 1);
+			
+			if (seq.getTypeId() != 5) //if not in combat, do this task.
+			{
+				seq.clear();
+				if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "rock", 0, 1);
+			}
 			
 		}
 

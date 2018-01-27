@@ -127,10 +127,15 @@ namespace MWTasks
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
 			
-			mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence().clear();
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
-				MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "sitground", 0, 1);
-			
+			auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
+
+	
+			if (seq.getTypeId() != 5) //if not in combat, do this task.
+			{
+				seq.clear();
+				if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "sitground", 0, 1);
+			}
 		}
 
 
