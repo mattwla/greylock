@@ -104,7 +104,7 @@ namespace MWTasks
 		//std::cout << "updating task manager" << std::endl;
 		float min = 1.0 / 60.0; //define a minute
 		
-		if (mLastTimeReported == 0.0f) //our first update of current session, just log the time.
+		if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. 
 		{
 			mLastTimeReported = hours;
 			return;
@@ -136,6 +136,8 @@ namespace MWTasks
 			for (auto& sm_pair : mNpcMap)
 			{
 				sm_pair.second->update();
+				if (sm_pair.second->mDone)
+					delete sm_pair.second;
 				//std::cout << isInActiveRange(sm_pair.first) << std::endl;
 				//Make a seperate vector just for updating?.... not a horrible idea.
 			}
@@ -225,6 +227,12 @@ namespace MWTasks
 		return taskmap[0]->mZoneId;
 		//mwx fix me doesn't go globals yet
 		//return std::string();
+	}
+
+	void TasksManager::endLife(std::string npcId)
+	{
+		std::cout << npcId + " has died"  << std::endl;
+		mNpcMap.erase(npcId);
 	}
 	
 

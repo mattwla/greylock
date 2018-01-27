@@ -105,6 +105,8 @@ namespace MWBase
 
 		virtual std::string getZoneId(std::string npcId, std::string task) = 0;
 
+		virtual void endLife(std::string npcId) = 0;
+
 
 	
 	

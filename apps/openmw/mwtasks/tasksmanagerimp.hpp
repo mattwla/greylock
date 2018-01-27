@@ -69,6 +69,8 @@ namespace MWTasks
 
 		virtual std::string getZoneId(std::string npcId, std::string task);
 
+		virtual void endLife(std::string npcId);
+
 	};
 }
 

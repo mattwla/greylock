@@ -31,6 +31,7 @@
 #include "../mwmechanics/aiwave.hpp"
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/pathgrid.hpp"
+#include "../mwworld/customdata.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -49,6 +50,15 @@ namespace MWTasks
 		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mTickCounter = 0;
 		mSchedule = new MWBase::AIScheduleManager::Schedule(npcId);
+		mDone = false;
+	}
+
+	Life::~Life()
+	{
+		if (mSubTask)
+			delete mSubTask;
+
+		MWBase::Environment::get().getTasksManager()->endLife(mNpcId);
 	}
 
 	int Life::getTypeId() const
@@ -58,8 +68,20 @@ namespace MWTasks
 
 	MWWorld::Ptr Life::update()
 	{
-		//MWX fix me no logic yet really for not having a scheduled task.
 
+
+		bool dead = mNpcPtr.getClass().getCreatureStats(mNpcPtr).isDead();
+		//
+
+		if (dead)  //a simplified deployment of this concept, perhaps life "continues" after death, meaning, the echoes of npcs actions might still be calculated based on data stored in life. Also, rotting corpses. MWX
+		{
+			mDone = true;
+			return mNpcPtr;
+			
+		}
+
+		//MWX fix me no logic yet really for not having a scheduled task.
+		
 	
 		mTickCounter += 1;
 		if (!mSubTask)
