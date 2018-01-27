@@ -19,11 +19,11 @@ namespace MWTasks
 
 	public:
 
-		Get(std::string destId, std::string npcId);
+		Get(std::string destId, MWTasks::Task* lifetask);
 
 		unsigned int mStep;
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		virtual int getTypeId() const;
 

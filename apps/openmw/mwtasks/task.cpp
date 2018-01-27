@@ -17,6 +17,7 @@ MWTasks::Task::~Task()
 {
 }
 
-void MWTasks::Task::update()
+MWWorld::Ptr MWTasks::Task::update()
 {
+	return MWWorld::Ptr();
 }

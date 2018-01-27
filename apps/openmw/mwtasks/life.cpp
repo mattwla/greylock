@@ -55,7 +55,7 @@ namespace MWTasks
 		return TypeIDLife;
 	}
 
-	void Life::update()
+	MWWorld::Ptr Life::update()
 	{
 		//MWX fix me no logic yet really for not having a scheduled task.
 
@@ -65,8 +65,8 @@ namespace MWTasks
 		{
 			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
 			if (task == MWTasks::Task::TypeID::TypeIDGet)
-				return;
-			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
+				return mNpcPtr;
+			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
 			//{
 			//	mSubTask->mNpcId = mNpcId;
@@ -79,7 +79,7 @@ namespace MWTasks
 			//std::cout << "checking schedule" << std::endl;;
 			mTickCounter = 0;
 			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
-			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(mNpcId, task);
+			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
 			if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
 			{
 				delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
@@ -88,13 +88,14 @@ namespace MWTasks
 		}
 		else
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
 				mSubTask = NULL;
 			}
 		}
+		return mNpcPtr;
 
 	}
 

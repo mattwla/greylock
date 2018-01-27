@@ -17,9 +17,9 @@ namespace MWTasks
 
 
 	public:
-		Sleep(std::string npcId);
+		Sleep(MWTasks::Task* lifetask);
 		unsigned int mStep;
-		virtual void update();
+		virtual MWWorld::Ptr update();
 		virtual int getTypeId() const;
 		std::string mDestId;
 		

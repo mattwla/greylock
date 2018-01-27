@@ -20,11 +20,11 @@ namespace MWTasks
 
 		Sitground();
 
-		Sitground(std::string npcId);
+		Sitground(MWTasks::Task* lifetask);
 
 		~Sitground();
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		virtual int getTypeId() const;
 

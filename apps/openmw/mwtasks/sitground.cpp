@@ -59,11 +59,12 @@ namespace MWTasks
 		mDone = false;
 	}
 
-	Sitground::Sitground(std::string npcId)
+	Sitground::Sitground(MWTasks::Task* lifetask)
 	
 	{
-		mNpcId = npcId;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
+		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
 	}
@@ -88,7 +89,7 @@ namespace MWTasks
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
-	void Sitground::update()
+	MWWorld::Ptr Sitground::update()
 	{
 		if (mStep == 0)
 		{
@@ -103,14 +104,14 @@ namespace MWTasks
 			std::cout << mNpcId + "wants to sitground" << std::endl;
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 
 			//instead, find a d
 			mStep += 1;
 		}
 		else if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -133,7 +134,7 @@ namespace MWTasks
 		}
 
 
-		
+		return mNpcPtr;
 	}
 
 	int Sitground::getTypeId() const

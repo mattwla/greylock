@@ -28,7 +28,7 @@ namespace MWTasks
 
 		Journey(MWWorld::Ptr dest);
 
-		Journey(std::string destId, std::string npcId, float range = 25.0f);
+		Journey(std::string destId, MWTasks::Task * lifetask, float range = 25.0f);
 		
 		//Journey(std::string mNpcId, std::vector<int> mTravelNodeItinerary, MWWorld::Ptr mDestination, MWWorld::TimeStamp endtime);
 
@@ -42,7 +42,7 @@ namespace MWTasks
 		
 		MWWorld::TimeStamp mStartTime;
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		void leftActiveCells();
 

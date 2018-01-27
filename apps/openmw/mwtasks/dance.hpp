@@ -18,13 +18,13 @@ namespace MWTasks
 
 	public:
 
-		Dance(std::string npcId);
+		Dance(MWTasks::Task* lifetask);
 
 		~Dance();
 
 		unsigned int mStep;
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		int mZoneSlotIdx;
 

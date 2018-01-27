@@ -22,7 +22,7 @@ namespace MWTasks
 		
 		virtual int getTypeId() const;
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		std::string getZoneId(std::string task);
 

@@ -40,24 +40,26 @@
 namespace MWTasks
 {
 	
-	Hunt::Hunt(std::string npcId) 
+	Hunt::Hunt(MWTasks::Task* lifetask) 
 	{
-		mNpcId = npcId;
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
+		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
 	}
 
-	void Hunt::update()
+	MWWorld::Ptr Hunt::update()
 	{
 		if (mStep == 0)
 		{
 			std::cout << "getting bow..." << std::endl;
-			mSubTask = new MWTasks::Get("nadia bow", mNpcId);
+			mSubTask = new MWTasks::Get("nadia bow", mLifeTask);
 			mStep += 1;
 		}
 		else if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -68,12 +70,12 @@ namespace MWTasks
 		else if (mStep == 2)
 		{
 			mDestId = "tn_slt3";
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;
 		}
 		else if (mStep >= 3)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				std::cout << "looping journey" << std::endl;
@@ -82,17 +84,17 @@ namespace MWTasks
 				mStep += 1;
 				if (mStep % 2 == 0)
 				{
-					mSubTask = new MWTasks::Journey("tn_slt2", mNpcId);
+					mSubTask = new MWTasks::Journey("tn_slt2", mLifeTask);
 				}
 				else
 				{
-					mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+					mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 				}
 			}
 		}
 	
 
-
+		return mNpcPtr;
 	}
 
 

@@ -57,7 +57,9 @@ namespace MWTasks
 
 		virtual void update(float hours, bool incremental = false);
 
-		virtual Task * getScheduledTask(std::string npcId, MWTasks::Task::TypeID task);
+		virtual Task * getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task);
+
+		//virtual Task * getScheduledTask(std::string npcId, MWTasks::Task::TypeID task);
 
 		//virtual Task * getScheduledTask(std::string npcId, std::string stask);
 

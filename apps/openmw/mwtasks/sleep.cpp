@@ -41,26 +41,27 @@
 namespace MWTasks
 {
 
-	Sleep::Sleep(std::string npcId) 
+	Sleep::Sleep(MWTasks::Task* lifetask) 
 	{
-		mDestId = MWBase::Environment::get().getAIScheduleManager()->getBed(npcId);
-		mNpcId = npcId;
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask -> mNpcId;
+		mDestId = MWBase::Environment::get().getAIScheduleManager()->getBed(mNpcId);
 		mStep = 0;
 		mDone = false;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mNpcPtr = mLifeTask->mNpcPtr;
 	}
 
-	void Sleep::update()
+	MWWorld::Ptr Sleep::update()
 	{
 		if (mStep == 0)
 		{
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;
 		}
 		if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -76,6 +77,7 @@ namespace MWTasks
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "lay", 0, 1);
 			
 		}
+		return mNpcPtr;
 	}
 
 

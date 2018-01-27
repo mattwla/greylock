@@ -19,7 +19,7 @@ namespace MWTasks
 	public:
 
 		
-		Pestle(std::string npcId);
+		Pestle(MWTasks::Task* lifetask);
 
 		~Pestle();
 
@@ -27,8 +27,7 @@ namespace MWTasks
 
 		unsigned int mStep;
 
-
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		std::string mZoneId;
 

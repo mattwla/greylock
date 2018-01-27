@@ -38,14 +38,16 @@
 namespace MWTasks
 {
 
-	Journey::Journey(std::string destId, std::string npcId, float range):
+	Journey::Journey(std::string destId, MWTasks::Task * lifetask, float range):
 		mDestId(destId)
 		, mRange(range)
 		, mHeadedToDoor(false)
 	{
-		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(npcId); //when task was created, was npc in active range of player?
-		mNpcId = npcId;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
+		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcId); //when task was created, was npc in active range of player?
+		mNpcPtr = mLifeTask->mNpcPtr;
+		//MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
 		//mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		mDone = false;
@@ -53,7 +55,7 @@ namespace MWTasks
 		init();
 	}
 
-	void Journey::update()
+	MWWorld::Ptr Journey::update()
 	{
 		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
@@ -65,7 +67,7 @@ namespace MWTasks
 			std::cout << mNpcId + " has arrived within radius of dest" << std::endl;
 			seq.clear();
 			mDone = true;
-			return;
+			return mNpcPtr;
 		}
 		if (mWasActiveLastUpdate && !currentlyActive) //npc has left active range since last update
 		{
@@ -74,13 +76,13 @@ namespace MWTasks
 			if(mStep > 0 && mTravelNodeItinerary.size() == 2)
 				mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
 			//leftActiveCells();
-			return;
+			return mNpcPtr;
 		}
 		else if (!currentlyActive) //not active, so just run inactive logic.
 		{
 			seq.clear(); //mwx fix me so darn messy this use of clear()
 			inactiveUpdate();
-			return;
+			return mNpcPtr;
 		}
 		
 		//all this below and heck probably above likely needs to be refactored mwx fix me
@@ -123,6 +125,8 @@ namespace MWTasks
 			}
 		}
 
+
+		return mNpcPtr;
 	}
 
 	void Journey::leftActiveCells()
@@ -166,7 +170,7 @@ namespace MWTasks
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();
-			MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+			mNpcPtr = MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 		}
 		
 		return;

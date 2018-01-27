@@ -40,12 +40,13 @@
 namespace MWTasks
 {
 	
-	Fish::Fish(std::string npcId)
+	Fish::Fish(MWTasks::Task* lifetask)
 	{
-		mNpcId = npcId;
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
 		mStep = 0;
 		mDone = false;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mNpcPtr = mLifeTask->mNpcPtr;
 	}
 
 	Fish::~Fish()
@@ -64,7 +65,7 @@ namespace MWTasks
 		}
 	}
 
-	void Fish::update()
+	MWWorld::Ptr Fish::update()
 	{
 		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		if (mStep == 0)
@@ -73,12 +74,12 @@ namespace MWTasks
 			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "fish");
 			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;
 		}
 		if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -97,6 +98,8 @@ namespace MWTasks
 				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "fish"))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "fish", 0, 1);
 		}
+
+		return mNpcPtr;
 }
 
 	int Fish::getTypeId() const

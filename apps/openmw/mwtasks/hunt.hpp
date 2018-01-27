@@ -17,9 +17,9 @@ namespace MWTasks
 	public:
 
 			
-		Hunt(std::string npcId);
+		Hunt(MWTasks::Task* lifetask);
 
-		virtual void update();
+		virtual MWWorld::Ptr update();
 
 		virtual int getTypeId() const;
 

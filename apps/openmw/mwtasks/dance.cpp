@@ -39,10 +39,11 @@
 
 namespace MWTasks
 {
-	Dance::Dance(std::string npcId)
+	Dance::Dance(MWTasks::Task* lifetask)
 	{
-		mNpcId = npcId;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask -> mNpcId;
+		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
 	}
@@ -67,7 +68,7 @@ namespace MWTasks
 			MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
-	void Dance::update()
+	MWWorld::Ptr Dance::update()
 	{
 		if (mStep == 0)
 		{
@@ -79,21 +80,21 @@ namespace MWTasks
 			if (mZoneSlotIdx == -1) //MWX FIX ME, hack to stop crashing when all zoneslots are full.
 			{
 				mDone = true;
-				return;
+				return mNpcPtr;
 			}
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
 			std::cout << mNpcId + "wants to dance" << std::endl;
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 
 			//instead, find a d
 			mStep += 1;
 		}
 		else if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -111,7 +112,7 @@ namespace MWTasks
 		}
 
 
-		
+		return mNpcPtr;
 	}
 
 

@@ -13,10 +13,10 @@ namespace MWTasks
 
 
 	public:
-		Fish(std::string npcId);
+		Fish(MWTasks::Task* lifetask);
 		~Fish();
 		unsigned int mStep;
-		virtual void update();
+		virtual MWWorld::Ptr update();
 		std::string mZoneId;
 		int mZoneSlotIdx;
 		virtual int getTypeId() const;

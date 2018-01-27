@@ -40,10 +40,11 @@
 namespace MWTasks
 {
 
-	Pestle::Pestle(std::string npcId) 	
+	Pestle::Pestle(MWTasks::Task* lifetask) 	
 	{
-		mNpcId = npcId;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
+		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
 	}
@@ -53,7 +54,7 @@ namespace MWTasks
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
 	}
 
-	void Pestle::update()
+	MWWorld::Ptr Pestle::update()
 	{
 	
 		if (mStep == 0)
@@ -65,12 +66,12 @@ namespace MWTasks
 			//request a spot in the dance zone
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;
 		}
 		else if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -92,6 +93,8 @@ namespace MWTasks
 				}
 			}
 		}
+	
+		return mNpcPtr;
 	}
 
 	int Pestle::getTypeId() const

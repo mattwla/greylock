@@ -40,25 +40,26 @@
 namespace MWTasks
 {
 	
-	Get::Get(std::string destId, std::string npcId) :
+	Get::Get(std::string destId, MWTasks::Task* lifetask) :
 		mDestId(destId)
 	{
-		mNpcId = npcId;
-		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask = lifetask;
+		mNpcId = mLifeTask->mNpcId;
+		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
 	}
 
-	void Get::update()
+	MWWorld::Ptr Get::update()
 	{
 		if (mStep == 0)
 		{
-			mSubTask = new MWTasks::Journey(mDestId, mNpcId);
+			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;
 		}
 		else if (mStep == 1)
 		{
-			mSubTask->update();
+			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
@@ -74,7 +75,7 @@ namespace MWTasks
 			}
 		}
 
-
+		return mNpcPtr;
 		
 	}
 
