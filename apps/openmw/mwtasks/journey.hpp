@@ -63,6 +63,10 @@ namespace MWTasks
 		std::string mDestId;
 
 		bool mReadyForUpdate;
+
+		bool mDeliveredByInactive;
+
+//		MWMechanics::AiPackage* mCurrentTravelPackage;
 	
 	};
 

@@ -2154,7 +2154,7 @@ void CharacterController::recenterCameraRoll(float duration)
 ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
 {
 	bool canwalljump = false;
-	float zscan = -50;
+	float zscan = -150;
 	//How high above player center(?) we are scanning
 	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
 	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
@@ -2186,7 +2186,7 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 		}
 	
 
-		while (zscan <= 100)
+		while (zscan <= 200)
 		{
 			
 			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
@@ -2251,7 +2251,9 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 }
 
 bool CharacterController::updateClimb(float duration) {
-
+	
+	mClimbTimer += duration;
+	
 	float climbstrength = 4000 / (0.5 / duration);
 		//mClimbData.originalz / (0.5 / duration);
 	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
@@ -2263,7 +2265,7 @@ bool CharacterController::updateClimb(float duration) {
 	/*std::cout << duration << std::endl;
 	std::cout << mClimbData.z << std::endl;
 	std::cout << climbstrength << std::endl;*/
-	if (frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f)
+	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
 	{
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
@@ -2301,7 +2303,7 @@ bool CharacterController::updateClimb(float duration) {
 
 bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
 {
-	
+	mClimbTimer = 0.0f;
 	std::cout << "Climb started" << std::endl;
 	mClimbData.z = z;
 	mClimbData.originalz = z;

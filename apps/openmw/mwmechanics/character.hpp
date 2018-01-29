@@ -200,6 +200,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 
 	ClimbingState mClimbState;
 	ClimbData mClimbData;
+	float mClimbTimer;
 
     WeaponType mWeaponType;
     std::string mCurrentWeapon;

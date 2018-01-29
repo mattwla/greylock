@@ -54,6 +54,7 @@ namespace MWTasks
 		mDone = false;
 		mTickCount = 0;
 		init();
+		mDeliveredByInactive = false;
 	}
 
 	MWWorld::Ptr Journey::update()
@@ -62,6 +63,7 @@ namespace MWTasks
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
 		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr);
+		
 
 		if (hasArrived(mDestId))
 		{
@@ -72,18 +74,32 @@ namespace MWTasks
 		}
 		if (mWasActiveLastUpdate && !currentlyActive) //npc has left active range since last update
 		{
-			seq.clear(); //wherever npc was walking to, stop walking there.
+			//seq.clear(); //wherever npc was walking to, stop walking there.
 			mWasActiveLastUpdate = false; //flag that npc was no active this update
-			if(mStep > 0 && mTravelNodeItinerary.size() == 2)
-				mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
+			//if(mStep > 0 && mTravelNodeItinerary.size() == 2)
+			//	mStep -= 1; //go back one step, because now we want to teleport to the step we just tried to do
 			//leftActiveCells();
-			return mNpcPtr;
+			//return mNpcPtr;
 		}
 		else if (!currentlyActive) //not active, so just run inactive logic.
 		{
-			seq.clear(); //mwx fix me so darn messy this use of clear()
+			//seq.clear(); //mwx fix me so darn messy this use of clear()
 			inactiveUpdate();
 			return mNpcPtr;
+		}
+		else if (currentlyActive && !mWasActiveLastUpdate) //suddenly we find ourselves in players sight (or at least in their active range)!
+		{
+			if (!seq.isPackageDone()) //we were in middle of something before, lets just complete it for now.
+			{
+				mWasActiveLastUpdate = true;
+				return mNpcPtr;
+			}
+			//else //Package is done, maybe it is because a travel or something finished?
+			//{
+
+
+			//}
+
 		}
 		
 		//all this below and heck probably above likely needs to be refactored mwx fix me
@@ -107,8 +123,16 @@ namespace MWTasks
 				std::string tnodeId;
 				
 				//if (hasArrived(getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker)))
+				if (mDeliveredByInactive) //if we are making a new package and just arrived in active area, probably sent here by an inactive update which iterates mstepn on its own mwx fix me. Or this whole journey package is new
+				{
+					mDeliveredByInactive = false;
+					
+				}
+				else
+				{
 					mStep += 1;
-				
+				}
+					
 				if (mStep == mTravelNodeItinerary.size())
 					tnodeId = mDestId;
 				else
@@ -123,10 +147,11 @@ namespace MWTasks
 				if (tnode.getClass().isDoor())
 					mHeadedToDoor = true;
 				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), mNpcPtr);
+				mWasActiveLastUpdate = true;
 			}
 		}
 
-
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //this is to catch a situation where ptr gets outdated and I'm not sure where.
 		return mNpcPtr;
 	}
 
@@ -145,19 +170,27 @@ namespace MWTasks
 
 	void Journey::inactiveUpdate()
 	{
-		if (mStep == mTravelNodeItinerary.size()) //we have just teleported to the final destination
-		{
-			mDone = true;
-			return;
-		}
+		//if (mStep == mTravelNodeItinerary.size()) //we have just teleported to the final destination
+		//{
+		//	mDone = true;
+		//	return;
+		//}
 		mTickCount += 1; //add tick, so we don't teleport every update. This can be used to determine virtual travel time. 
 		if (mTickCount >= 5)
 		{
+			if (mStep == 0)
+			{
+				mStep = 1;
+			}
+			MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
 			std::string tnodeId;
 			mTickCount = 0;
-			mStep += 1;
+			//mStep += 1;
 			if (mStep == mTravelNodeItinerary.size()) //if we are on last step, teleport to the destination
+			{
 				tnodeId = mDestId;
+				mDone = true;
+			}
 			else //otherwise navigate along bordernodes
 			{
 				//this might be better if I teleport them to the actual t node, as opposed to the transition node. Also would border node be better? Yes.
@@ -171,7 +204,10 @@ namespace MWTasks
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();
+			seq.clear(); //if there was an ai package we were holding on to, gone now, player has reached node
 			mNpcPtr = MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+			mStep += 1;
+			mDeliveredByInactive = true;
 		}
 		
 		return;

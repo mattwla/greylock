@@ -105,7 +105,7 @@ bool MWMechanics::AiPackage::pathTo(const MWWorld::Ptr& actor, const ESM::Pathgr
         const MWWorld::Class& actorClass = actor.getClass();
         MWBase::World* world = MWBase::Environment::get().getWorld();
 
-        // check if actor can move along z-axis
+        // check if actor can move along z-axis mwx npc climing here.
         bool actorCanMoveByZ = (actorClass.canSwim(actor) && MWBase::Environment::get().getWorld()->isSwimming(actor))
             || world->isFlying(actor);
 
@@ -152,7 +152,7 @@ bool MWMechanics::AiPackage::pathTo(const MWWorld::Ptr& actor, const ESM::Pathgr
     if (isDestReached || mPathFinder.checkPathCompleted(pos.pos[0], pos.pos[1])) // if path is finished
     {
         // turn to destination point
-        zTurn(actor, getZAngleToPoint(start, dest));
+        zTurn(actor, getZAngleToPoint(start, dest)); //mwx turning
         smoothTurn(actor, getXAngleToPoint(start, dest), 0);
         return true;
     }
@@ -309,7 +309,7 @@ bool MWMechanics::AiPackage::checkWayIsClearForActor(const ESM::Pathgrid::Point&
     return isClear;
 }
 
-bool MWMechanics::AiPackage::doesPathNeedRecalc(const ESM::Pathgrid::Point& newDest, const MWWorld::CellStore* currentCell)
+bool MWMechanics::AiPackage::doesPathNeedRecalc(const ESM::Pathgrid::Point& newDest, const MWWorld::CellStore* currentCell) //mwx journey failsafing knowledge here
 {
     return mPathFinder.getPath().empty() || (distance(mPathFinder.getPath().back(), newDest) > 10) || mPathFinder.getPathCell() != currentCell;
 }
@@ -329,7 +329,7 @@ bool MWMechanics::AiPackage::isNearInactiveCell(const ESM::Position& actorPos)
         // get actor's distance from origin of center cell
         osg::Vec3f actorOffset(actorPos.asVec3());
         CoordinateConverter(playerCell).toLocal(actorOffset);
-
+		//mwx cell border info here
         // currently assumes 3 x 3 grid for exterior cells, with player at center cell.
         // ToDo: (Maybe) use "exterior cell load distance" setting to get count of actual active cells
         // While AI Process distance is 7168, AI shuts down actors before they reach edges of 3 x 3 grid.

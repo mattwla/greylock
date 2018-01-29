@@ -82,7 +82,7 @@ namespace MWMechanics
             /// Return true and assign targets for all combat packages, or return false if there are no combat packages
             bool getCombatTargets(std::vector<MWWorld::Ptr> &targetActors) const;
 
-            /// Is there any combat package?
+            /// Is there any combat package? mwx combat
             bool isInCombat () const;
 
             /// Does this AI sequence have the given package type?
