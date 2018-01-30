@@ -200,21 +200,32 @@ namespace MWTasks
 
 	bool TasksManager::isInActiveRange(MWWorld::Ptr npc)
 	{
+		bool inProcessingRange;
 		//mwx fix me some bad redundency here against actors.cpp
 		const float aiProcessingDistance = 7168;
 	
 		const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 		MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
 		//MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(npcId, false);
-		
-		bool inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
+		if (npc.getCell()->isExterior())
+		{
+			inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
+		}
+		else
+		{
+			inProcessingRange = player.getCell() == npc.getCell();
 
+
+		}
 		
 		//If player is resting, no one is in active range....
 		if(inProcessingRange)
 			inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
 		
-
+		if (npc.getCellRef().getRefId() == "eldertimothy")
+		{
+			std::cout << "breaking here for study" << std::endl;
+		}
 		return inProcessingRange;
 
 	}

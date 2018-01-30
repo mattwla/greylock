@@ -55,10 +55,18 @@ namespace MWTasks
 		mTickCount = 0;
 		init();
 		mDeliveredByInactive = false;
+		mHeadedToDoor = false;
 	}
 
 	MWWorld::Ptr Journey::update()
 	{
+		
+		if (mStep > mTravelNodeItinerary.size()) 
+			{
+				mDone = true;
+				return mNpcPtr;
+			}
+		
 		//mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
@@ -106,12 +114,12 @@ namespace MWTasks
 
 		if (seq.getTypeId() == -1 || seq.getTypeId() == 0) //nothing in seq means AI is no longer walking, waiting for next dest.
 		{
-			if (mStep == mTravelNodeItinerary.size())
+			/*if (mStep == mTravelNodeItinerary.size())
 			{
 				mDone = true;
 				
 			}
-			else {
+			else {*/
 				if (mHeadedToDoor)
 				{
 					mHeadedToDoor = false;
@@ -133,7 +141,7 @@ namespace MWTasks
 					mStep += 1;
 				}
 					
-				if (mStep == mTravelNodeItinerary.size())
+				if (mStep >= mTravelNodeItinerary.size())
 					tnodeId = mDestId;
 				else
 					tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
@@ -149,7 +157,7 @@ namespace MWTasks
 				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), mNpcPtr);
 				mWasActiveLastUpdate = true;
 			}
-		}
+		
 
 		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //this is to catch a situation where ptr gets outdated and I'm not sure where.
 		return mNpcPtr;
@@ -196,16 +204,28 @@ namespace MWTasks
 				//this might be better if I teleport them to the actual t node, as opposed to the transition node. Also would border node be better? Yes.
 				tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
 			}
+			//if (mHeadedToDoor) //if we are headed to door, actually teleport to opposite side of door.
+			//{
+			//	tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
+			//}
+			
 			std::cout << "teleporting to... " + tnodeId << std::endl;
 			//This double string movement method really should be a method. mwx fix me
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
-			if (marker.getClass().isDoor())
-				mHeadedToDoor = true; //if our destination is door, mark it as such so npc can open it if they end up in active cell
+			//if (marker.getClass().isDoor())
+			mHeadedToDoor = marker.getClass().isDoor(); //if our destination is door, mark it as such so npc can open it if they end up in active cell
+			if (mHeadedToDoor) //if we are headed to door, actually teleport to opposite side of door.
+			{
+				tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
+				marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+
+			}
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWWorld::CellStore* store = marker.getCell();
 			seq.clear(); //if there was an ai package we were holding on to, gone now, player has reached node
 			mNpcPtr = MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
+			mHeadedToDoor = false; 
 			mStep += 1;
 			mDeliveredByInactive = true;
 		}
