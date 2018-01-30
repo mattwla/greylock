@@ -124,9 +124,11 @@ namespace MWTasks
 				{
 					mHeadedToDoor = false;
 					auto tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker);
+				
 					MWWorld::Ptr tnode = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
 					MWBase::Environment::get().getWorld()->activate(tnode, mNpcPtr);
 					std::cout << "attempted to open door" << std::endl;
+					return  MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 				}
 				std::string tnodeId;
 				
@@ -154,6 +156,13 @@ namespace MWTasks
 				ESM::Position tnodePos = tnode.getRefData().getPosition();
 				if (tnode.getClass().isDoor())
 					mHeadedToDoor = true;
+				if (mHeadedToDoor) //look up opposite door, and look where it sends us. Breaks one way doors though.
+				{
+					std::string arrivaldoor = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
+					auto arrivaldoorptr = MWBase::Environment::get().getWorld()->searchPtr(arrivaldoor, false);
+					tnodePos = arrivaldoorptr.getCellRef().getDoorDest();
+
+				}
 				seq.stack(MWMechanics::AiTravel(tnodePos.pos[0], tnodePos.pos[1], tnodePos.pos[2]), mNpcPtr);
 				mWasActiveLastUpdate = true;
 			}
