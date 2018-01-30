@@ -986,7 +986,7 @@ namespace MWWorld
         return mTimeScale->getFloat();
     }
 
-    void World::changeToInteriorCell (const std::string& cellName, const ESM::Position& position, bool adjustPlayerPos, bool changeEvent)
+    void World::changeToInteriorCell (const std::string& cellName, const ESM::Position& position, bool adjustPlayerPos, bool changeEvent) ///mwx info here
     {
         mPhysics->clearQueuedMovement();
 

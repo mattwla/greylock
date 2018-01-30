@@ -214,15 +214,42 @@ namespace MWTasks
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
 			//if (marker.getClass().isDoor())
 			mHeadedToDoor = marker.getClass().isDoor(); //if our destination is door, mark it as such so npc can open it if they end up in active cell
-			if (mHeadedToDoor) //if we are headed to door, actually teleport to opposite side of door.
-			{
-				tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
-				marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
-
-			}
+			//if (mHeadedToDoor) //if we are headed to door, actually teleport to opposite side of door.
+			//{
+			//	tnodeId = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
+			//	
+			//	
+			//	marker = MWBase::Environment::get().getWorld()->searchPtr(tnodeId, false);
+			//
+			//}
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
+			
 			MWWorld::CellStore* store = marker.getCell();
+			if (mHeadedToDoor)
+			{
+				auto opendoor = marker;
+				std::string arrivaldoorid = getBorderNodeId(mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep]]->marker, mTravelNodesManager->mtravelNodeMap[mTravelNodeItinerary[mStep - 1]]->marker);
+				auto arrivaldoor = MWBase::Environment::get().getWorld()->searchPtr(arrivaldoorid, false);
+				if (arrivaldoor.getCell()->isExterior())
+				{
+
+					markerPos = opendoor.getCellRef().getDoorDest();
+					int cellX, cellY;
+					MWBase::Environment::get().getWorld()->positionToIndex(markerPos.pos[0], markerPos.pos[1], cellX, cellY);
+					store = MWBase::Environment::get().getWorld()->getExterior(cellX, cellY);
+					//store = MWBase::Environment::get().getWorld()->getInterior(marker.getCellRef().getDestCell());//but what if not interior?
+				}
+				else 
+				{
+					markerPos = opendoor.getCellRef().getDoorDest();
+					// door leads to an interior, use interior name as tooltip
+					store = MWBase::Environment::get().getWorld()->getInterior(opendoor.getCellRef().getDestCell());
+					//std::string dest = door.mRef.getDestCell();
+				}
+				//store = MWBase::Environment::get().getWorld()->getExterior(markerPos.pos[0], markerPos.pos[1]);
+					
+			}
 			seq.clear(); //if there was an ai package we were holding on to, gone now, player has reached node
 			mNpcPtr = MWBase::Environment::get().getWorld()->moveObject(mNpcPtr, store, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2]);
 			mHeadedToDoor = false; 
