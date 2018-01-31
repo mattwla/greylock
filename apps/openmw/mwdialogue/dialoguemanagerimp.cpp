@@ -381,7 +381,7 @@ namespace MWDialogue
 
     void DialogueManager::keywordSelected (const std::string& keyword, ResponseCallback* callback)
     {
-        if(!mIsInChoice)
+        //if(!mIsInChoice)
         {
             const ESM::Dialogue* dialogue = searchDialogue(keyword);
             if (dialogue && dialogue->mType == ESM::Dialogue::Topic)

@@ -844,6 +844,11 @@ namespace MWGui
 			if (mChoices.size() == 1 && mChoices[0].first == "GO")
 			{
 				MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
+				
+			}
+			else if (mChoices.size() == 2 && mChoices[0].first == "TOPIC")
+			{
+				MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
 			}
 			else
 			{
@@ -924,6 +929,7 @@ namespace MWGui
         MWBase::Environment::get().getDialogueManager()->keywordSelected(topicId, mCallback.get());
 
         updateTopics();
+		updateHistory();
 
     }
 
@@ -971,7 +977,15 @@ namespace MWGui
 
 	void DialogueWindow::go()
 	{
-		onChoiceActivated(mChoices[0].second);
+		
+		if (mChoices.size() == 1)
+		{
+			onChoiceActivated(mChoices[0].second);
+		}
+		else
+		{
+			onTopicActivated(mChoices[1].first);
+		}
 	}
 
 	void DialogueWindow::setPortraitImage(std::string id, std::string emotion)
