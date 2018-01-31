@@ -499,6 +499,11 @@ namespace MWDialogue
         return mChoices;
     }
 
+	void DialogueManager::clearChoices()
+	{
+		mChoices.clear();
+	}
+
     bool DialogueManager::isGoodbye()
     {
         return mGoodbye;

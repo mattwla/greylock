@@ -848,7 +848,12 @@ namespace MWGui
 			}
 			else if (mChoices.size() == 2 && mChoices[0].first == "TOPIC")
 			{
-				MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
+				//MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
+				std::string topic = mChoices[1].first;
+				mChoices.clear();
+				MWBase::Environment::get().getDialogueManager()->clearChoices();
+				onTopicActivated(topic);
+				return;
 			}
 			else
 			{
@@ -929,7 +934,7 @@ namespace MWGui
         MWBase::Environment::get().getDialogueManager()->keywordSelected(topicId, mCallback.get());
 
         updateTopics();
-		updateHistory();
+		//updateHistory();
 
     }
 

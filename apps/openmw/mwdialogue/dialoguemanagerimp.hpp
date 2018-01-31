@@ -80,6 +80,8 @@ namespace MWDialogue
             virtual void addChoice (const std::string& text,int choice);
             const std::vector<std::pair<std::string, int> >& getChoices();
 
+			virtual void clearChoices();
+
             virtual bool isGoodbye();
 
             virtual void goodbye();

@@ -50,6 +50,10 @@ namespace MWBase
 
             virtual bool isInChoice() const = 0;
 
+			virtual void clearChoices() = 0;
+
+
+
             virtual bool startDialogue (const MWWorld::Ptr& actor, ResponseCallback* callback) = 0;
 
 			virtual void startDistantDialogue(const MWWorld::Ptr& actor) = 0;
