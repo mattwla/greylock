@@ -85,9 +85,11 @@ namespace MWAwarenessReactions
 			for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 				//if (Misc::StringUtils::ciEqual(it->getCellRef().getOwner(), npc.getCellRef().getRefId()))
 			{
-				Misc::StringUtils::ciEqual(it->getClass().getTypeName(), typeid (ESM::NPC).name());
-				out.push_back(*it);
-				std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
+				if(it->getClass().getTypeName() == typeid(ESM::NPC).name())
+				{
+					out.push_back(*it);
+					std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
+				}
 			}
 		}
 	}
