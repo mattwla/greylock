@@ -60,7 +60,10 @@ namespace MWBase
 		AwarenessReactionsManager& operator= (const AwarenessReactionsManager&);
 		///< not implemented
 */
-
+	public:
+		virtual void updateActiveAffordances() = 0;
 	};
+
+	
 }
 #endif

@@ -16,6 +16,7 @@
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
+#include "../mwbase/awarenessreactionsmanager.hpp"
 
 #include "../mwrender/renderingmanager.hpp"
 #include "../mwrender/landmanager.hpp"
@@ -336,7 +337,8 @@ namespace MWWorld
 
     void Scene::playerMoved(const osg::Vec3f &pos)
     {
-        if (!mCurrentCell || !mCurrentCell->isExterior())
+		
+		if (!mCurrentCell || !mCurrentCell->isExterior())
             return;
 
         // figure out the center of the current cell grid (*not* necessarily mCurrentCell, which is the cell the player is in)
@@ -356,7 +358,11 @@ namespace MWWorld
 
     void Scene::changeCellGrid (int X, int Y, bool changeEvent)
     {
-        Loading::Listener* loadingListener = MWBase::Environment::get().getWindowManager()->getLoadingScreen();
+       
+		std::cout << "pmoved" << std::endl;
+		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
+
+		Loading::Listener* loadingListener = MWBase::Environment::get().getWindowManager()->getLoadingScreen();
         Loading::ScopedLoad load(loadingListener);
 
         std::string loadingExteriorText = "#{sLoadingMessage3}";

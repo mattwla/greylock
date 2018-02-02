@@ -23,7 +23,7 @@ namespace MWAwarenessReactions
 	public:
 		AwarenessReactionsManager();
 
-		void updateActiveAffordances();
+		virtual void updateActiveAffordances();
 
 		
 
