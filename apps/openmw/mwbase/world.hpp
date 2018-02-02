@@ -8,6 +8,8 @@
 #include <components/esm/cellid.hpp>
 
 #include "../mwworld/ptr.hpp"
+#include "../mwworld/scene.hpp"
+#include "../mwworld/cells.hpp"
 
 #include "../mwrender/rendermode.hpp"
 
@@ -99,6 +101,10 @@ namespace MWBase
             ///< \param bypass Bypass regular game start.
 
             virtual void clear() = 0;
+
+			virtual const MWWorld::Scene::CellStoreCollection& World::getActiveCells() = 0;
+
+			virtual const MWWorld::Cells& getCells() = 0;
 
             virtual int countSavedGameRecords() const = 0;
             virtual int countSavedGameCells() const = 0;

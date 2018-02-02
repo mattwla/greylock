@@ -547,6 +547,11 @@ namespace MWWorld
             void getContainersOwnedBy (const MWWorld::ConstPtr& npc, std::vector<MWWorld::Ptr>& out) override;
             ///< get all containers in active cells owned by this Npc
             void getItemsOwnedBy (const MWWorld::ConstPtr& npc, std::vector<MWWorld::Ptr>& out) override;
+
+			virtual const Scene::CellStoreCollection & getActiveCells();
+
+			virtual const MWWorld::Cells& getCells();
+		
             ///< get all items in active cells owned by this Npc
 
             bool getLOS(const MWWorld::ConstPtr& actor,const MWWorld::ConstPtr& targetActor) override;

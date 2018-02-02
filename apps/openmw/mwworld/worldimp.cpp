@@ -2531,7 +2531,7 @@ namespace MWWorld
         }
     };
 
-    void World::getItemsOwnedBy (const MWWorld::ConstPtr& npc, std::vector<MWWorld::Ptr>& out)
+    void World::getItemsOwnedBy (const MWWorld::ConstPtr& npc, std::vector<MWWorld::Ptr>& out) //mwx
     {
         const Scene::CellStoreCollection& collection = mWorldScene->getActiveCells();
         for (Scene::CellStoreCollection::const_iterator cellIt = collection.begin(); cellIt != collection.end(); ++cellIt)
@@ -2544,6 +2544,18 @@ namespace MWWorld
                     out.push_back(*it);
         }
     }
+
+	const Scene::CellStoreCollection& World::getActiveCells()
+	{
+		return mWorldScene->getActiveCells();
+	}
+
+	const MWWorld::Cells & World::getCells()
+	{
+		return mCells;
+		
+		// TODO: insert return statement here
+	}
 
     bool World::getLOS(const MWWorld::ConstPtr& actor, const MWWorld::ConstPtr& targetActor)
     {
