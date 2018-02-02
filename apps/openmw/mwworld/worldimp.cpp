@@ -22,6 +22,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/scriptmanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
+#include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"

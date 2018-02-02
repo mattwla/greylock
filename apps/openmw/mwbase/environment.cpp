@@ -16,6 +16,7 @@
 #include "aischedulemanager.hpp"
 #include "tasksmanager.hpp"
 #include "travelnodesmanager.hpp"
+#include "awarenessreactionsmanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -72,6 +73,11 @@ void MWBase::Environment::setTravelNodesManager(TravelNodesManager *travelNodesM
 void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleManager)
 {
 	mAIScheduleManager = AIScheduleManager;
+}
+
+void MWBase::Environment::setAwarenessReactionsManager(AwarenessReactionsManager * awarenessReactionsManager)
+{
+	mAwarenessReactionsManager = awarenessReactionsManager;
 }
 
 void MWBase::Environment::setDialogueManager (DialogueManager *dialogueManager)
@@ -164,6 +170,12 @@ MWBase::TasksManager *MWBase::Environment::getTasksManager() const
 	return mTasksManager;
 }
 
+MWBase::AwarenessReactionsManager *MWBase::Environment::getAwarenessReactionsManager() const
+{
+	assert(mAwarenessReactionsManager);
+	return(mAwarenessReactionsManager);
+}
+
 MWBase::TravelNodesManager *MWBase::Environment::getTravelNodesManager() const
 {
 	assert(mTravelNodesManager);
@@ -230,6 +242,10 @@ void MWBase::Environment::cleanup()
 
 	delete mAIScheduleManager;
 	mAIScheduleManager = 0;
+	
+	delete mAwarenessReactionsManager;
+	mAwarenessReactionsManager = 0;
+
 
 	delete mTasksManager;
 	mTasksManager = 0;

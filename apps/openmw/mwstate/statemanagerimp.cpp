@@ -26,6 +26,7 @@
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/inputmanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
+#include "../mwbase/awarenessreactionsmanager.hpp"
 
 #include "../mwworld/player.hpp"
 #include "../mwworld/class.hpp"

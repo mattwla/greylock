@@ -57,6 +57,7 @@
 #include "mwaischedule/aischedulemanagerimp.hpp"
 #include "mwtasks/tasksmanagerimp.hpp"
 #include "mwtravelnodes/travelnodesmanagerimp.hpp"
+#include "mwawarenessreactions/awarenessreactionsmanagerimp.hpp"
 
 #include "mwstate/statemanagerimp.hpp"
 
@@ -551,6 +552,11 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	//Create AI Schedule Manager
 	MWAISchedule::AIScheduleManager* aischedule = new MWAISchedule::AIScheduleManager;
 	mEnvironment.setAIScheduleManager(aischedule);
+
+	//Create AwarenessReactions Manager
+
+	MWAwarenessReactions::AwarenessReactionsManager* awarenessreactions = new MWAwarenessReactions::AwarenessReactionsManager;
+	mEnvironment.setAwarenessReactionsManager(awarenessreactions);
 
 	//Create Tasks Manager
 	MWTasks::TasksManager* tasksmanager = new MWTasks::TasksManager;
