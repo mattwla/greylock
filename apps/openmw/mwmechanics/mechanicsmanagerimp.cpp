@@ -1686,7 +1686,7 @@ namespace MWMechanics
             if (angleRadians > osg::DegreesToRadians(90.f))
                 y = obsTerm * observerStats.getFatigueTerm() * fSneakNoViewMult;
             else
-                y = obsTerm * observerStats.getFatigueTerm() * fSneakViewMult;
+                y = obsTerm * observerStats.getFatigueTerm() * fSneakViewMult; //mwx sight
         }
 
         float target = x - y;

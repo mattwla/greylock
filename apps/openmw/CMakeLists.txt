@@ -95,7 +95,7 @@ add_openmw_dir (mwstate
 
 add_openmw_dir (mwbase
     environment world scriptmanager dialoguemanager journal soundmanager mechanicsmanager
-    inputmanager windowmanager statemanager aischedulemanager tasksmanager travelnodesmanager
+    inputmanager windowmanager statemanager aischedulemanager tasksmanager travelnodesmanager awarenessreactionsmanager
     )
 
 add_openmw_dir (mwaischedule
@@ -108,6 +108,10 @@ tasksmanagerimp task life journey get hunt sleep dance pestle fish sitground
 
 add_openmw_dir (mwtravelnodes
 travelnodesmanagerimp
+)
+
+add_openmw_dir (mwawarenessreactions
+awarenessreactionsmanagerimp
 )
 
 # Main executable

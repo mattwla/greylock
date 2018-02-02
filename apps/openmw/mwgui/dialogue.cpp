@@ -841,19 +841,19 @@ namespace MWGui
 		if (!inChunk) //Only show player dialogue choices when we reach the end of all chunks.
 		{
 			
-			if (mChoices.size() == 1 && mChoices[0].first == "GO")
+			if (mChoices.size() == 1 && mChoices[0].first == "GO") //if there is a choice that says go, just skip to the targeting dialogue on click
 			{
 				MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
 				
 			}
-			else if (mChoices.size() == 2 && mChoices[0].first == "TOPIC")
+			else if (mChoices.size() == 2 && mChoices[0].first == "TOPIC") //if there is a topic link, just go to it, no clicking needed. Used for greetings to dive into topics.
 			{
 				//MWBase::Environment::get().getInputManager()->dialogueGoMode(true);
 				std::string topic = mChoices[1].first;
 				mChoices.clear();
 				MWBase::Environment::get().getDialogueManager()->clearChoices();
 				onTopicActivated(topic);
-				return;
+				return; 
 			}
 			else
 			{

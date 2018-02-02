@@ -1243,7 +1243,7 @@ namespace MWMechanics
                 // This distance could be made configurable later, but the setting must be marked with a big warning:
                 // using higher values will make a quest in Bloodmoon harder or impossible to complete (bug #1876)
                 bool inProcessingRange = (player.getRefData().getPosition().asVec3() - iter->first.getRefData().getPosition().asVec3()).length2()
-                        <= sqrAiProcessingDistance;
+                        <= sqrAiProcessingDistance; 
 
 				inProcessingRange = true; //MWX
 
