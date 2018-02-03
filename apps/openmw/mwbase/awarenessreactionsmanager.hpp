@@ -63,6 +63,8 @@ namespace MWBase
 	public:
 		std::vector<MWWorld::Ptr> mLiveCellAffordances; //all ways to interact with world in live cells
 
+		std::map<MWWorld::Ptr, int> mLiveCellGuardZones; //all guard zones with associated radius
+
 		virtual void updateActiveAffordances() = 0;
 
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;

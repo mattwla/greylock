@@ -60,6 +60,7 @@ namespace MWAwarenessReactions
 	void AwarenessReactionsManager::updateActiveAffordances()
 	{
 		mLiveCellAffordances.clear();
+		mLiveCellGuardZones.clear();
 		mLiveCellAffordances.push_back(MWBase::Environment::get().getWorld()->getPlayerPtr()); //player always active
 		MWWorld::Ptr npc;
 		std::vector<MWWorld::Ptr> out;
@@ -87,10 +88,16 @@ namespace MWAwarenessReactions
 			for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 				//if (Misc::StringUtils::ciEqual(it->getCellRef().getOwner(), npc.getCellRef().getRefId()))
 			{
-				if (it->getClass().getTypeName() == typeid(ESM::NPC).name())
+				std::string type = it->getClass().getTypeName();
+				if (type == typeid(ESM::NPC).name())
 				{
 					mLiveCellAffordances.push_back(*it);
 					//std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
+				}
+				else if (type == typeid(ESM::Activator).name() && it->getCellRef().getRefId().substr(0, 3) == "gz_") //if guarded zone
+				{
+					mLiveCellGuardZones[*it] = MWBase::Environment::get().getWorld()->getGlobalInt(it->getCellRef().getRefId() + "radius");
+					std::cout << "stored guard zone" << std::endl;
 				}
 			}
 		}
