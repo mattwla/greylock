@@ -222,10 +222,10 @@ namespace MWTasks
 		if(inProcessingRange)
 			inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
 		
-		if (npc.getCellRef().getRefId() == "eldertimothy")
+	/*	if (npc.getCellRef().getRefId() == "eldertimothy")
 		{
 			std::cout << "breaking here for study" << std::endl;
-		}
+		}*/
 		return inProcessingRange;
 
 	}

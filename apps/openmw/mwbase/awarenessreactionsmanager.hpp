@@ -65,9 +65,15 @@ namespace MWBase
 
 		std::map<MWWorld::Ptr, int> mLiveCellGuardZones; //all guard zones with associated radius
 
+		std::map<MWWorld::Ptr, std::vector<MWWorld::Ptr>> mNpcAwareOf;
+		
 		virtual void updateActiveAffordances() = 0;
 
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
+
+		virtual void calculateReaction(MWWorld::Ptr npc) = 0;
+
+
 	};
 
 	

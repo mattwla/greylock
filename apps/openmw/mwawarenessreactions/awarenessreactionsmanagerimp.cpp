@@ -118,6 +118,7 @@ namespace MWAwarenessReactions
 			idx += 1;
 		}
 
+		mNpcAwareOf[ptr] = vec;
 		return vec;
 	}
 
@@ -148,8 +149,41 @@ namespace MWAwarenessReactions
 		std::cout << "couldnt get basenode for awareness check" << std::endl;
 		return false;
 
-	
 	}
+
+	void AwarenessReactionsManager::calculateReaction(MWWorld::Ptr npc) //right now, only forced combat if npc sees player near guarded zone
+	{
+		auto awareof = mNpcAwareOf[npc];
+		unsigned int idx = 0;
+		bool trespassing = false;
+		while (idx < awareof.size())
+		{
+			if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
+			{
+				for (auto& kv : mLiveCellGuardZones)
+				{
+					int radius = kv.second;
+					MWWorld::Ptr ptr = kv.first;
+					std::cout << "checking if player is tresspassing..." << std::endl;
+					std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
+					std::cout << radius << std::endl;
+					trespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
+				}
+				
+				if (trespassing)
+				{
+					MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
+					return;
+				}
+				
+			}
+			idx += 1;
+		}
+		
+		//MWBase::Environment::get().getTasksManager()->mNpcMap
+	}
+
+	
 
 
 
