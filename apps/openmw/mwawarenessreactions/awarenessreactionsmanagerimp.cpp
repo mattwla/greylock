@@ -102,7 +102,7 @@ namespace MWAwarenessReactions
 		while (idx < mLiveCellAffordances.size())
 		{
 
-			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[0], ptr))
+			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[idx], ptr))
 			{
 				if (ptr.getCellRef().getRefId() == "slade")
 					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;

@@ -121,7 +121,9 @@ namespace MWTasks
 
 		if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
 		{
-			MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mNpcPtr);
+			if (mNpcId == "slade")
+				std::cout << "slade in active range" << std::endl;
+ 			MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mNpcPtr);
 		}
 
 		return mNpcPtr;
