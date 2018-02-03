@@ -25,7 +25,7 @@ namespace MWAwarenessReactions
 
 		virtual void updateActiveAffordances();
 
-		virtual void calculateAwareness(MWWorld::Ptr ptr);
+		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr);
 
 		bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
 

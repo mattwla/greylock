@@ -65,7 +65,7 @@ namespace MWBase
 
 		virtual void updateActiveAffordances() = 0;
 
-		virtual void calculateAwareness(MWWorld::Ptr ptr) = 0;
+		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
 	};
 
 	

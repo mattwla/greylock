@@ -32,6 +32,8 @@ namespace MWTasks
 
 		MWBase::AIScheduleManager::Schedule * mSchedule;
 
+		std::vector<MWWorld::Ptr> mAwareOf;
+
 		
 
 	};

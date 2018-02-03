@@ -446,7 +446,8 @@ namespace MWWorld
 
     void Scene::changePlayerCell(CellStore *cell, const ESM::Position &pos, bool adjustPlayerPos)
     {
-        mCurrentCell = cell;
+		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
+		mCurrentCell = cell;
 
         mRendering.enableTerrain(cell->isExterior());
 

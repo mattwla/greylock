@@ -1202,6 +1202,7 @@ namespace MWWorld
                         mLocalScripts.add(script, newPtr);
                     }
                     addContainerScripts(newPtr, newCell);
+					MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
                 }
                 else if (!newCellActive && currCellActive)
                 {
@@ -1212,6 +1213,7 @@ namespace MWWorld
 
                     newPtr = currCell->moveTo(ptr, newCell);
                     newPtr.getRefData().setBaseNode(0);
+					MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
                 }
                 else if (!currCellActive && !newCellActive)
                     newPtr = currCell->moveTo(ptr, newCell);

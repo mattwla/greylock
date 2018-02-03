@@ -95,20 +95,23 @@ namespace MWAwarenessReactions
 			}
 		}
 	}
-	void AwarenessReactionsManager::calculateAwareness(MWWorld::Ptr ptr)
+	std::vector<MWWorld::Ptr> AwarenessReactionsManager::calculateAwareness(MWWorld::Ptr ptr)
 	{
-		
+		std::vector<MWWorld::Ptr> vec;
 		unsigned int idx = 0;
 		while (idx < mLiveCellAffordances.size())
 		{
 
-			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[idx], ptr))
+			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[idx], ptr) && mLiveCellAffordances[idx] != ptr)
 			{
 				if (ptr.getCellRef().getRefId() == "slade")
 					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;
+				vec.push_back(mLiveCellAffordances[idx]);
 			}
 			idx += 1;
 		}
+
+		return vec;
 	}
 
 	bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer)
