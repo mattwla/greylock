@@ -18,14 +18,16 @@ namespace MWAwarenessReactions
 	class AwarenessReactionsManager : public MWBase::AwarenessReactionsManager
 	{
 
-		std::vector<MWWorld::Ptr> mLiveCellAffordances; //all ways to interact with world in live cells
+		
 
 	public:
 		AwarenessReactionsManager();
 
 		virtual void updateActiveAffordances();
 
-		
+		virtual void calculateAwareness(MWWorld::Ptr ptr);
+
+		bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
 
 	};
 }

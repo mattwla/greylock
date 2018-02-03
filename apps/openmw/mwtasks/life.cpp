@@ -24,6 +24,7 @@
 #include "../mwbase/dialoguemanager.hpp"
 #include "../mwbase/travelnodesmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
+#include "../mwbase/awarenessreactionsmanager.hpp"
 
 #include "../mwworld/timestamp.hpp"
 
@@ -82,12 +83,11 @@ namespace MWTasks
 
 		//MWX fix me no logic yet really for not having a scheduled task.
 		
-	
 		mTickCounter += 1;
 		if (!mSubTask)
 		{
 			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
-			if (task == MWTasks::Task::TypeID::TypeIDGet)
+			if (task == MWTasks::Task::TypeID::TypeIDGet)//get is some sort of filler for now for some reason, means no task?
 				return mNpcPtr;
 			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
@@ -118,6 +118,12 @@ namespace MWTasks
 				mSubTask = NULL;
 			}
 		}
+
+		if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+		{
+			MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mNpcPtr);
+		}
+
 		return mNpcPtr;
 
 	}

@@ -59,6 +59,8 @@ namespace MWAwarenessReactions
 
 	void AwarenessReactionsManager::updateActiveAffordances()
 	{
+		mLiveCellAffordances.clear();
+		mLiveCellAffordances.push_back(MWBase::Environment::get().getWorld()->getPlayerPtr()); //player always active
 		MWWorld::Ptr npc;
 		std::vector<MWWorld::Ptr> out;
 		std::string lowerCaseName = "affordance";
@@ -85,12 +87,60 @@ namespace MWAwarenessReactions
 			for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 				//if (Misc::StringUtils::ciEqual(it->getCellRef().getOwner(), npc.getCellRef().getRefId()))
 			{
-				if(it->getClass().getTypeName() == typeid(ESM::NPC).name())
+				if (it->getClass().getTypeName() == typeid(ESM::NPC).name())
 				{
-					out.push_back(*it);
-					std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
+					mLiveCellAffordances.push_back(*it);
+					//std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
 				}
 			}
 		}
 	}
+	void AwarenessReactionsManager::calculateAwareness(MWWorld::Ptr ptr)
+	{
+		
+		unsigned int idx = 0;
+		while (idx < mLiveCellAffordances.size())
+		{
+
+			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[0], ptr))
+			{
+				if (ptr.getCellRef().getRefId() == "slade")
+					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;
+			}
+			idx += 1;
+		}
+	}
+
+	bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer)
+	{
+		if (observer.getClass().getCreatureStats(observer).isDead() || !observer.getRefData().isEnabled())
+			return false;
+
+		
+		osg::Vec3f pos1(ptr.getRefData().getPosition().asVec3());
+		osg::Vec3f pos2(observer.getRefData().getPosition().asVec3());
+		
+		// is ptr behind the observer?
+		
+		float y = 0;
+		osg::Vec3f vec = pos1 - pos2;
+		if (observer.getRefData().getBaseNode())
+		{
+			osg::Vec3f observerDir = (observer.getRefData().getBaseNode()->getAttitude() * osg::Vec3f(0, 1, 0));
+
+			float angleRadians = std::acos(observerDir * vec / (observerDir.length() * vec.length()));
+			if (angleRadians > osg::DegreesToRadians(90.f))
+				return false;
+			else
+				return true;
+		}
+
+		std::cout << "couldnt get basenode for awareness check" << std::endl;
+		return false;
+
+	
+	}
+
+
+
 }

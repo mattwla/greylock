@@ -61,7 +61,11 @@ namespace MWBase
 		///< not implemented
 */
 	public:
+		std::vector<MWWorld::Ptr> mLiveCellAffordances; //all ways to interact with world in live cells
+
 		virtual void updateActiveAffordances() = 0;
+
+		virtual void calculateAwareness(MWWorld::Ptr ptr) = 0;
 	};
 
 	
