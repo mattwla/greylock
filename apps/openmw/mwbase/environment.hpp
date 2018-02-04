@@ -13,6 +13,7 @@ namespace MWBase
     class WindowManager;
     class StateManager;
 	class AIScheduleManager;
+	class StatusManager;
 	class AwarenessReactionsManager;
 	class TasksManager;
 	class TravelNodesManager;
@@ -36,6 +37,7 @@ namespace MWBase
 			TravelNodesManager *mTravelNodesManager;
 			AIScheduleManager *mAIScheduleManager;
 			AwarenessReactionsManager *mAwarenessReactionsManager;
+			StatusManager *mStatusManager;
             DialogueManager *mDialogueManager;
             Journal *mJournal;
             InputManager *mInputManager;
@@ -65,11 +67,15 @@ namespace MWBase
 
             void setMechanicsManager (MechanicsManager *mechanicsManager);
 
-			void setTasksManager(TasksManager *tasksManager);
+			
 
 			void setAIScheduleManager(AIScheduleManager *AIScheduleManager);
 
 			void setAwarenessReactionsManager(AwarenessReactionsManager *awarenessReactionsManager);
+
+			void setStatusManager(StatusManager *statusManager);
+
+			void setTasksManager(TasksManager *tasksManager);
 
 			void setTravelNodesManager(TravelNodesManager *TravelNodesManager);
 
@@ -107,6 +113,8 @@ namespace MWBase
 			TasksManager *getTasksManager() const;
 
 			AwarenessReactionsManager *getAwarenessReactionsManager() const;
+
+			StatusManager *getStatusManager() const;
 
             Journal *getJournal() const;
 

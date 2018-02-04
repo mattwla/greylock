@@ -41,6 +41,7 @@
 #include "../mwworld/weather.hpp"
 #include "../mwworld/scene.hpp"
 #include "../mwworld/worldimp.cpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -173,8 +174,11 @@ namespace MWAwarenessReactions
 				
 				if (trespassing)
 				{
-					MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
-					return;
+					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman))
+					{
+						MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
+						return;
+					}
 				}
 				
 			}

@@ -22,13 +22,7 @@ namespace MWTasks
 
 	
 
-		enum ZoneParserExpecting
-		{
-			TaskName,
-			Zone,
-			Skip
-		};
-
+	
 		std::map<std::string, MWTasks::Task*> buildNpcMap();
 
 		std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);

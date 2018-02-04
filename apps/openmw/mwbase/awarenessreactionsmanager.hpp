@@ -51,13 +51,13 @@ namespace Loading
 
 namespace MWBase
 {
-	enum Status
-	{
-		Shaman = 0,
-		Elder = 1,
-		Wounded = 2
+	//enum Status
+	//{
+	//	Shaman = 0,
+	//	Elder = 1,
+	//	Wounded = 2
 
-	};
+	//};
 
 	class AwarenessReactionsManager
 	{
@@ -74,7 +74,7 @@ namespace MWBase
 
 		std::map<MWWorld::Ptr, std::vector<MWWorld::Ptr>> mNpcAwareOf;
 
-		std::map<MWWorld::Ptr, std::vector<MWBase::Status>> mNpcStatusList;
+		//std::map<MWWorld::Ptr, std::vector<MWBase::Status>> mNpcStatusList;
 		
 		
 		virtual void updateActiveAffordances() = 0;

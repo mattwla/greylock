@@ -23,6 +23,7 @@
 #include "../mwbase/dialoguemanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
 #include "../mwbase/environment.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/timestamp.hpp"
 
@@ -52,6 +53,8 @@ namespace MWTasks
 	std::map<std::string, MWTasks::Task*> TasksManager::buildNpcMap()
 	{
 		
+		auto sm = MWBase::Environment::get().getStatusManager();
+		
 		std::map<std::string, MWTasks::Task*> npcmap;
 		
 		std::string list = "schedules/npclist.csv";
@@ -70,6 +73,7 @@ namespace MWTasks
 			
 			npcmap[npc] = newlife;
 			mNpcIdToZones[npc] = buildZoneMap(npc);
+			MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
 			//CREATE AND ASSIGN NEW LIFE TASK HERE MWX
 		}
 
@@ -267,6 +271,8 @@ namespace MWTasks
 		//iterate through csv
 		while (getline(in, line))
 		{
+			if (line == "STATUSSTART")
+				break;
 			if (expecting == Skip)
 			{
 				if (line != "ZONESSTART") //skip all lines until we get to the starting marker

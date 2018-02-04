@@ -2356,13 +2356,13 @@ bool CharacterController::updateWallJump(float duration)
 			turnspeed * 2;
 		}
 	}*/
-	float decreaserate = 3.0f / (1.0f / duration);
-	float tiltrate = 35.0 / (.2f / duration);
-	float tiltrate2 = abs(mWallJumpInitialTilt - (-40) * (1.0f / duration));
+	//float decreaserate = 3.0f / (1.0f / duration);
+	//float tiltrate = 35.0 / (.2f / duration);
+	//float tiltrate2 = abs(mWallJumpInitialTilt - (-40) * (1.0f / duration));
 	//currentvelocity = mWallJumpOriginalVelocity;
 		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
 	float x = currentvelocity.x();
-	float y = currentvelocity.y();
+	//float y = currentvelocity.y();
 	float z = currentvelocity.z();
 	//std::cout << x << y << z << std::endl;
 	//std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;

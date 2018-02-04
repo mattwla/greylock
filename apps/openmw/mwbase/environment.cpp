@@ -17,6 +17,7 @@
 #include "tasksmanager.hpp"
 #include "travelnodesmanager.hpp"
 #include "awarenessreactionsmanager.hpp"
+#include "statusmanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -79,6 +80,12 @@ void MWBase::Environment::setAwarenessReactionsManager(AwarenessReactionsManager
 {
 	mAwarenessReactionsManager = awarenessReactionsManager;
 }
+
+void MWBase::Environment::setStatusManager(StatusManager * statusManager)
+{
+	mStatusManager = statusManager;
+}
+
 
 void MWBase::Environment::setDialogueManager (DialogueManager *dialogueManager)
 {
@@ -176,6 +183,12 @@ MWBase::AwarenessReactionsManager *MWBase::Environment::getAwarenessReactionsMan
 	return(mAwarenessReactionsManager);
 }
 
+MWBase::StatusManager * MWBase::Environment::getStatusManager() const
+{
+	assert(mStatusManager);
+	return(mStatusManager);
+}
+
 MWBase::TravelNodesManager *MWBase::Environment::getTravelNodesManager() const
 {
 	assert(mTravelNodesManager);
@@ -245,6 +258,9 @@ void MWBase::Environment::cleanup()
 	
 	delete mAwarenessReactionsManager;
 	mAwarenessReactionsManager = 0;
+
+	delete mStatusManager;
+	mStatusManager = 0;
 
 
 	delete mTasksManager;

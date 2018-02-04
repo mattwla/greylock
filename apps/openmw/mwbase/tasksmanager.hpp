@@ -63,6 +63,14 @@ namespace MWBase
 	
 	public:
 
+		enum ZoneParserExpecting
+		{
+			TaskName,
+			Zone,
+			Skip
+		};
+
+
 		struct ZoneGlobalPair  //where an npc likes to do a given task, with the conditions the npc likes to do it under.
 		{
 			std::string mZoneId;

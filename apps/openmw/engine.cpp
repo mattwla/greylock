@@ -58,6 +58,7 @@
 #include "mwtasks/tasksmanagerimp.hpp"
 #include "mwtravelnodes/travelnodesmanagerimp.hpp"
 #include "mwawarenessreactions/awarenessreactionsmanagerimp.hpp"
+#include "mwstatus/statusmanagerimp.hpp"
 
 #include "mwstate/statemanagerimp.hpp"
 
@@ -554,9 +555,12 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	mEnvironment.setAIScheduleManager(aischedule);
 
 	//Create AwarenessReactions Manager
-
 	MWAwarenessReactions::AwarenessReactionsManager* awarenessreactions = new MWAwarenessReactions::AwarenessReactionsManager;
 	mEnvironment.setAwarenessReactionsManager(awarenessreactions);
+
+	//Create status manager
+	MWStatus::StatusManager* status = new MWStatus::StatusManager;
+	mEnvironment.setStatusManager(status);
 
 	//Create Tasks Manager
 	MWTasks::TasksManager* tasksmanager = new MWTasks::TasksManager;
@@ -565,6 +569,7 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	//Create travel nodes manager
 	MWTravelNodes::TravelNodesManager* travelnodesmanager = new MWTravelNodes::TravelNodesManager;
 	mEnvironment.setTravelNodesManager(travelnodesmanager);
+
 
     // scripts
     if (mCompileAll)
