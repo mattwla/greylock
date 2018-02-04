@@ -24,7 +24,14 @@ namespace ESM
 namespace MWWorld
 {
 
-    class CustomData;
+	enum Status {
+		Elder = 0,
+		Shaman = 1
+	};
+	
+	
+	
+	class CustomData;
 
     class RefData
     {

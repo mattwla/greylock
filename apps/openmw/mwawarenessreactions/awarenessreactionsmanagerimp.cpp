@@ -40,7 +40,7 @@
 #include "../mwworld/projectilemanager.hpp"
 #include "../mwworld/weather.hpp"
 #include "../mwworld/scene.hpp"
-#include "../mwworld//worldimp.cpp"
+#include "../mwworld/worldimp.cpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -98,6 +98,7 @@ namespace MWAwarenessReactions
 				{
 					mLiveCellGuardZones[*it] = MWBase::Environment::get().getWorld()->getGlobalInt(it->getCellRef().getRefId() + "radius");
 					std::cout << "stored guard zone" << std::endl;
+					//it->getCellRef().
 				}
 			}
 		}
@@ -133,7 +134,7 @@ namespace MWAwarenessReactions
 		
 		// is ptr behind the observer?
 		
-		float y = 0;
+//		float y = 0;
 		osg::Vec3f vec = pos1 - pos2;
 		if (observer.getRefData().getBaseNode())
 		{

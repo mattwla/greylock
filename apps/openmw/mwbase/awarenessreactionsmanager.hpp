@@ -51,6 +51,13 @@ namespace Loading
 
 namespace MWBase
 {
+	enum Status
+	{
+		Shaman = 0,
+		Elder = 1,
+		Wounded = 2
+
+	};
 
 	class AwarenessReactionsManager
 	{
@@ -66,6 +73,9 @@ namespace MWBase
 		std::map<MWWorld::Ptr, int> mLiveCellGuardZones; //all guard zones with associated radius
 
 		std::map<MWWorld::Ptr, std::vector<MWWorld::Ptr>> mNpcAwareOf;
+
+		std::map<MWWorld::Ptr, std::vector<MWBase::Status>> mNpcStatusList;
+		
 		
 		virtual void updateActiveAffordances() = 0;
 
@@ -73,6 +83,8 @@ namespace MWBase
 
 		virtual void calculateReaction(MWWorld::Ptr npc) = 0;
 
+
+		virtual ~AwarenessReactionsManager() {}
 
 	};
 

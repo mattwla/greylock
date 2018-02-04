@@ -17,6 +17,7 @@
 #include "../mwworld/class.hpp"
 #include "../mwworld/player.hpp"
 #include "../mwworld/ptr.hpp"
+#include "../mwworld/refdata.hpp"
 
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
@@ -52,6 +53,7 @@ namespace MWTasks
 		mTickCounter = 0;
 		mSchedule = new MWBase::AIScheduleManager::Schedule(npcId);
 		mDone = false;
+		//MWBase::Environment::get().getAwarenessReactionsManager()->mNpcStatusList[mNpcPtr] = *new std::vector<MWWorld::Status>;
 	}
 
 	Life::~Life()
