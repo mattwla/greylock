@@ -78,6 +78,8 @@ namespace MWBase
 
 		virtual bool hasStatus(MWWorld::Ptr ptr, MWBase::Status status) = 0;
 
+		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr) = 0;
+
 
 	};
 

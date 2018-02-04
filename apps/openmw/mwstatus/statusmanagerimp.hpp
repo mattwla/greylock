@@ -29,6 +29,8 @@ namespace MWStatus
 
 		virtual bool hasStatus(MWWorld::Ptr ptr, MWBase::Status status);
 
+		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr);
+
 	};
 	
 }

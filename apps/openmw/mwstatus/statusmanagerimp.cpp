@@ -112,4 +112,13 @@ namespace MWStatus
 
 	}
 
+	void StatusManager::updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr)
+	{
+		auto vechold = mStatusMap[old];
+		
+		mStatusMap[newptr] = vechold;
+
+		mStatusMap.erase(old);
+	}
+
 }
