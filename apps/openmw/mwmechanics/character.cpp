@@ -2270,10 +2270,27 @@ bool CharacterController::updateClimb(float duration) {
 		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
 		mClimbData.z -= climbstrength;
-		if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
-			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+		if (mRotateStage == 0)
+		{
+			if (MWBase::Environment::get().getWorld()->getCameraRoll() < .3)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+			else
+				mRotateStage = 1;
+		}
+		else
+		{
+			if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.3)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+			else
+				mRotateStage = 0;
+		}
+		
+		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
+		
 		else
 			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+
+		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
 	}
 	else
 	{
@@ -2303,6 +2320,7 @@ bool CharacterController::updateClimb(float duration) {
 
 bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
 {
+	mRotateStage = 0;
 	mClimbTimer = 0.0f;
 	std::cout << "Climb started" << std::endl;
 	mClimbData.z = z;
