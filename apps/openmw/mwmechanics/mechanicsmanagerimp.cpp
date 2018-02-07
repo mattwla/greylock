@@ -426,6 +426,8 @@ namespace MWMechanics
 
         mActors.update(duration, paused);
         mObjects.update(duration, paused);
+		//mLifeManager = MWBase::Environment::get().getLifeManager();
+		//mLifeManager->update(duration, paused);
     }
 
     bool MechanicsManager::isActorDetected(const MWWorld::Ptr& actor, const MWWorld::Ptr& observer)

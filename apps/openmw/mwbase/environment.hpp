@@ -17,6 +17,7 @@ namespace MWBase
 	class AwarenessReactionsManager;
 	class TasksManager;
 	class TravelNodesManager;
+	class LifeManager;
 
     /// \brief Central hub for mw-subsystems
     ///
@@ -42,6 +43,7 @@ namespace MWBase
             Journal *mJournal;
             InputManager *mInputManager;
             StateManager *mStateManager;
+			LifeManager *mLifeManager;
             float mFrameDuration;
             float mFrameRateLimit;
 
@@ -68,6 +70,8 @@ namespace MWBase
             void setMechanicsManager (MechanicsManager *mechanicsManager);
 
 			
+
+			void setLifeManager(LifeManager * lifeManager);
 
 			void setAIScheduleManager(AIScheduleManager *AIScheduleManager);
 
@@ -109,6 +113,8 @@ namespace MWBase
 			TravelNodesManager *getTravelNodesManager() const;
 
             DialogueManager *getDialogueManager() const;
+
+			MWBase::LifeManager * getLifeManager() const;
 
 			TasksManager *getTasksManager() const;
 

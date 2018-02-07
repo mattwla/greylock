@@ -18,6 +18,7 @@
 #include "travelnodesmanager.hpp"
 #include "awarenessreactionsmanager.hpp"
 #include "statusmanager.hpp"
+#include "lifemanager.hpp"
 
 MWBase::Environment *MWBase::Environment::sThis = 0;
 
@@ -71,6 +72,10 @@ void MWBase::Environment::setTravelNodesManager(TravelNodesManager *travelNodesM
 	mTravelNodesManager = travelNodesManager;
 }
 
+void MWBase::Environment::setLifeManager(LifeManager *lifeManager)
+{
+	mLifeManager = lifeManager;
+}
 void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleManager)
 {
 	mAIScheduleManager = AIScheduleManager;
@@ -199,6 +204,12 @@ MWBase::DialogueManager *MWBase::Environment::getDialogueManager() const
 {
     assert (mDialogueManager);
     return mDialogueManager;
+}
+
+MWBase::LifeManager *MWBase::Environment::getLifeManager() const
+{
+	assert(mLifeManager);
+	return mLifeManager;
 }
 
 MWBase::Journal *MWBase::Environment::getJournal() const

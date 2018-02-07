@@ -59,6 +59,7 @@
 #include "mwtravelnodes/travelnodesmanagerimp.hpp"
 #include "mwawarenessreactions/awarenessreactionsmanagerimp.hpp"
 #include "mwstatus/statusmanagerimp.hpp"
+#include "gllifemanager/lifemanagerimp.hpp"
 
 #include "mwstate/statemanagerimp.hpp"
 
@@ -570,6 +571,9 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	MWTravelNodes::TravelNodesManager* travelnodesmanager = new MWTravelNodes::TravelNodesManager;
 	mEnvironment.setTravelNodesManager(travelnodesmanager);
 
+	//Create life manager
+	GLLifeManager::LifeManager* lifemanager = new GLLifeManager::LifeManager;
+	mEnvironment.setLifeManager(lifemanager);
 
     // scripts
     if (mCompileAll)

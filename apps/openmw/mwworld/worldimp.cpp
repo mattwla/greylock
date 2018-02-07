@@ -24,6 +24,7 @@
 #include "../mwbase/aischedulemanager.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
@@ -847,7 +848,8 @@ namespace MWWorld
             mDaysPassed->setInteger (
                 days + mDaysPassed->getInteger());
 		//std::cout << hours << std::endl;
-		MWBase::Environment::get().getTasksManager()->update(hours, incremental); //mwx
+		MWBase::Environment::get().getLifeManager()->update(hours, incremental);
+			//getTasksManager()->update(hours, incremental); //mwx
     }
 
     void World::setHour (double hour)

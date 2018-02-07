@@ -9,6 +9,7 @@
 #include "npcstats.hpp"
 #include "objects.hpp"
 #include "actors.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 
 
@@ -33,13 +34,14 @@ namespace MWMechanics
             float mWatchedTimeToStartDrowning;
 
             bool mWatchedStatsEmpty;
-            bool mUpdatePlayer;
+			bool mUpdatePlayer;
             bool mClassSelected;
             bool mRaceSelected;
             bool mAI;///< is AI active?
 
             Objects mObjects;
             Actors mActors;
+			MWBase::LifeManager* mLifeManager;
 
             typedef std::pair<std::string, bool> Owner; // < Owner id, bool isFaction >
             typedef std::map<Owner, int> OwnerMap; // < Owner, number of stolen items with this id from this owner >
