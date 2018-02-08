@@ -28,7 +28,8 @@ namespace MWTasks
 			TypeIDDance = 5,
 			TypeIDPestle = 6,
 			TypeIDFish = 7,
-			TypeIDSitground = 8
+			TypeIDSitground = 8,
+			TypeIDFight = 9
 		};
 		
 		Task();
@@ -51,7 +52,12 @@ namespace MWTasks
 
 		Task* mLifeTask = nullptr; //keep track of the life task this task is attached too.
 
-		int priority = 4; //default low priority
+		int valence = 4; //default low priority
+		//0 life threatening
+		//1 highly desirable
+		//2 Noteworhty
+		//3 Noticable
+		//4 Ambivalent
 
 	};
 }

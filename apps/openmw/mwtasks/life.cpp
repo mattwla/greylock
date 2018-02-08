@@ -91,7 +91,7 @@ namespace MWTasks
 			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
 			if (task == MWTasks::Task::TypeID::TypeIDGet)//get is some sort of filler for now for some reason, means no task?
 				return mNpcPtr;
-			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
+//			mSubTask = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
 			//if (mSubTask && mSubTask->getTypeId() == TypeIDJourney)
 			//{
 			//	mSubTask->mNpcId = mNpcId;
@@ -103,13 +103,13 @@ namespace MWTasks
 		{
 			//std::cout << "checking schedule" << std::endl;;
 			mTickCounter = 0;
-			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
-			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
-			if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
-			{
-				delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
-				mSubTask = taskholder;
-			}
+			//MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
+//			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
+			//if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
+			//{
+			//	delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
+			//	mSubTask = taskholder;
+			//}
 		}
 		else
 		{
@@ -121,13 +121,13 @@ namespace MWTasks
 			}
 		}
 
-		if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
-		{
-			if (mNpcId == "slade")
-				std::cout << "slade in active range" << std::endl;
- 			mAwareOf = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mNpcPtr);
-			MWBase::Environment::get().getAwarenessReactionsManager()->calculateReaction(mNpcPtr);
-		}
+		//if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
+		//{
+		//	if (mNpcId == "slade")
+		//		std::cout << "slade in active range" << std::endl;
+ 	//		mAwareOf = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mNpcPtr);
+		//	//MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mNpcPtr);
+		//}
 
 		return mNpcPtr;
 

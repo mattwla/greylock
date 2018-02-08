@@ -18,6 +18,8 @@
 #include "../mwtasks/task.hpp"
 #include "../mwbase/statusmanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
+#include "../mwtasks/life.hpp"
+#include "../mwbase/awarenessreactionsmanager.hpp"
 
 
 #include <boost/tokenizer.hpp>
@@ -55,13 +57,37 @@ namespace MWBase
 {
 	struct Life
 	{
+		
+		Life(std::string id)
+		{
+		
+		
+
+			mId = id;
+			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
+			//mPtr = ptr;
+			mHunger = 0;
+			mThirst = 0;
+			mWill = 100;
+			mCurrentTask = 0;
+			mSchedule = new MWBase::AIScheduleManager::Schedule(id);
+			mTaskChain = new MWTasks::Life(id);
+			mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mPtr);
+			mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr);
+			
+		}
+	
+	public:
 		std::string mId;
 		MWWorld::Ptr mPtr;
 		float mHunger;
 		float mThirst;
 		float mWill;
+		MWBase::AIScheduleManager::Schedule* mSchedule;
+		MWTasks::Life* mTaskChain;
+		std::vector<MWWorld::Ptr> mAwareOfList;
 		MWTasks::Task* mCurrentTask;
-		std::vector<MWTasks::Task> mAvailableActions;
+		std::map<MWTasks::Task::TypeID, int> mAvailableActions; //task enum, valence of task. Actions npc can take in the environment.
 		std::vector<MWBase::Status> mStatusList;
 		//MWBase::AIScheduleManager mScheduleManager;
 
@@ -76,8 +102,12 @@ namespace MWBase
 
 		virtual void initialize() = 0;
 
-
 		virtual ~LifeManager() {}
+
+		std::vector<MWBase::Life*> mLifeList;
+		
+		virtual bool inActiveRange(MWWorld::Ptr npc) = 0;
+
 
 	};
 

@@ -23,6 +23,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/dialoguemanager.hpp"
 #include "../mwbase/travelnodesmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwworld/timestamp.hpp"
 
@@ -46,8 +47,8 @@ namespace MWTasks
 		mLifeTask = lifetask;
 		mNpcId = mLifeTask->mNpcId;
 		mNpcPtr = mLifeTask->mNpcPtr;
-		mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr); //when task was created, was npc in active range of player?
-		
+		//mWasActiveLastUpdate = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr); //when task was created, was npc in active range of player?
+		mWasActiveLastUpdate = MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr);
 		//MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		mStep = 0;
 		//mStartTime = MWBase::Environment::get().getWorld()->getTimeStamp();
@@ -70,7 +71,7 @@ namespace MWTasks
 		//mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false); //mwx fix me, do I really need to find pointer every update? Can I cache a permanant one in life?
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence(); //Do I really need to find the seq ref every update? Can I cache a permanant one in life?
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr);
+		bool currentlyActive = MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr);
 		
 
 		if (hasArrived(mDestId))

@@ -50,57 +50,57 @@ typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 
 namespace MWTasks
 {
-	std::map<std::string, MWTasks::Task*> TasksManager::buildNpcMap()
-	{
-		
-		auto sm = MWBase::Environment::get().getStatusManager();
-		
-		std::map<std::string, MWTasks::Task*> npcmap;
-		
-		std::string list = "schedules/npclist.csv";
+	//std::map<std::string, MWTasks::Task*> TasksManager::buildNpcMap()
+	//{
+	//	
+	//	auto sm = MWBase::Environment::get().getStatusManager();
+	//	
+	//	std::map<std::string, MWTasks::Task*> npcmap;
+	//	
+	//	std::string list = "schedules/npclist.csv";
 
-		std::ifstream in(list.c_str());
-		if (!in.is_open())
-			std::cout << "Not open" << std::endl;
-		else
-			std::cout << "Open " << list << std::endl;
+	//	std::ifstream in(list.c_str());
+	//	if (!in.is_open())
+	//		std::cout << "Not open" << std::endl;
+	//	else
+	//		std::cout << "Open " << list << std::endl;
 
-		std::string npc;
+	//	std::string npc;
 
-		while (getline(in, npc))
-		{
-			MWTasks::Task* newlife = new MWTasks::Life(npc);
-			
-			npcmap[npc] = newlife;
-			mNpcIdToZones[npc] = buildZoneMap(npc);
-			MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
-			//CREATE AND ASSIGN NEW LIFE TASK HERE MWX
-		}
+	//	while (getline(in, npc))
+	//	{
+	//		MWTasks::Task* newlife = new MWTasks::Life(npc);
+	//		
+	//		npcmap[npc] = newlife;
+	//		mNpcIdToZones[npc] = buildZoneMap(npc);
+	//		MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
+	//		//CREATE AND ASSIGN NEW LIFE TASK HERE MWX
+	//	}
 
-		
+	//	
 
-		return npcmap;
-	}
-	
+	//	return npcmap;
+	//}
+	//
 
 	TasksManager::TasksManager() :
 		mLastTimeReported(0.0f)
 		, mTimePassed(0.0f)
 		, mTimeAccumulator(0.0f)
 	{
-		mNpcMap = buildNpcMap(); //maps npcs to their life task, also builds npc zone preference map
+		//mNpcMap = buildNpcMap(); //maps npcs to their life task, also builds npc zone preference map
 		buildZoneAvailabilities(); 
 	}
 
-	void TasksManager::forceUpdate()
-	{
-		for (auto& sm_pair : mNpcMap)
-		{
-			sm_pair.second->update();
-			//std::cout << isInActiveRange(sm_pair.first) << std::endl;
-			//Make a seperate vector just for updating?.... not a horrible idea.
-		}
-	}
+	//void TasksManager::forceUpdate()
+	//{
+	//	for (auto& sm_pair : mNpcMap)
+	//	{
+	//		sm_pair.second->update();
+	//		//std::cout << isInActiveRange(sm_pair.first) << std::endl;
+	//		//Make a seperate vector just for updating?.... not a horrible idea.
+	//	}
+	//}
 
 	void TasksManager::update(float hours, bool incremental)
 	{
@@ -151,7 +151,7 @@ namespace MWTasks
 		//thanks JLBorges at cplusplus.com
 	}
 
-	Task * TasksManager::getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task)
+	Task * TasksManager::taskEnumToTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task)
 	{
 		//MWX fix me potential for templates here.
 		//std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
@@ -202,37 +202,7 @@ namespace MWTasks
 	}
 
 
-	bool TasksManager::isInActiveRange(MWWorld::Ptr npc)
-	{
-		bool inProcessingRange;
-		//mwx fix me some bad redundency here against actors.cpp
-		const float aiProcessingDistance = 7168;
 	
-		const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
-		MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
-		//MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(npcId, false);
-		if (npc.getCell()->isExterior())
-		{
-			inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
-		}
-		else
-		{
-			inProcessingRange = player.getCell() == npc.getCell();
-
-
-		}
-		
-		//If player is resting, no one is in active range....
-		if(inProcessingRange)
-			inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
-		
-	/*	if (npc.getCellRef().getRefId() == "eldertimothy")
-		{
-			std::cout << "breaking here for study" << std::endl;
-		}*/
-		return inProcessingRange;
-
-	}
 
 	std::string TasksManager::getZoneId(std::string npcId, std::string task)
 	{
@@ -315,7 +285,7 @@ namespace MWTasks
 
 			}
 		}
-
+		mNpcIdToZones[npcId] = zmap;
 		return zmap;
 
 	}

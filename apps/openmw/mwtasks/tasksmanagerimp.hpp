@@ -23,9 +23,9 @@ namespace MWTasks
 	
 
 	
-		std::map<std::string, MWTasks::Task*> buildNpcMap();
+		//std::map<std::string, MWTasks::Task*> buildNpcMap();
 
-		std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);
+		virtual std::map<std::string, std::vector<ZoneGlobalPair*>> buildZoneMap(std::string npcId);
 
 		virtual int getZoneAvailability(std::string zoneId);
 
@@ -47,11 +47,13 @@ namespace MWTasks
 
 		TasksManager();
 
-		virtual void forceUpdate();
+		//virtual void forceUpdate();
 
 		virtual void update(float hours, bool incremental = false);
 
-		virtual Task * getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task);
+		virtual Task * taskEnumToTask(MWTasks::Task * lifetask, MWTasks::Task::TypeID task);
+
+		//virtual Task * getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task);
 
 		//virtual Task * getScheduledTask(std::string npcId, MWTasks::Task::TypeID task);
 
@@ -59,7 +61,7 @@ namespace MWTasks
 
 		//virtual Task* getScheduledTask(std::string npcId);
 
-		bool isInActiveRange(MWWorld::Ptr);
+		//bool isInActiveRange(MWWorld::Ptr);
 
 		virtual std::string getZoneId(std::string npcId, std::string task);
 

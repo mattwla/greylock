@@ -28,8 +28,10 @@ namespace MWAwarenessReactions
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr);
 
 		bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
+
+		virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc);
 		
-		virtual void calculateReaction(MWWorld::Ptr);
+		//virtual void calculateReaction(MWWorld::Ptr);
 	};
 	
 }

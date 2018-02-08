@@ -2,6 +2,7 @@
 #define GAME_MWMECHANICS_LIFEMANAGER_H
 
 #include "../mwbase/lifemanager.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 #include "../mwworld/ptr.hpp"
 
@@ -24,6 +25,14 @@ namespace GLLifeManager
 		virtual void update(float duration, bool paused);
 
 		virtual void initialize();
+
+		void buildLifeList();
+
+		virtual bool inActiveRange(MWWorld::Ptr npc);
+
+
+
+		//void buildNpcMap();
 
 
 	};

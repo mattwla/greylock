@@ -81,7 +81,7 @@ namespace MWBase
 
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
 
-		virtual void calculateReaction(MWWorld::Ptr npc) = 0;
+		virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc) = 0;
 
 
 		virtual ~AwarenessReactionsManager() {}

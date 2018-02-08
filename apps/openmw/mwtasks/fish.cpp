@@ -25,6 +25,7 @@
 #include "../mwbase/travelnodesmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -94,7 +95,7 @@ namespace MWTasks
 			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 			ESM::Position markerPos = marker.getRefData().getPosition();
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-			if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr)) 
+			if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
 				if (!MWBase::Environment::get().getMechanicsManager()->checkAnimationPlaying(mNpcPtr, "fish"))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "fish", 0, 1);
 		}

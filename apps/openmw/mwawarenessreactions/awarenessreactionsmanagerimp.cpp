@@ -42,6 +42,7 @@
 #include "../mwworld/scene.hpp"
 #include "../mwworld/worldimp.cpp"
 #include "../mwbase/statusmanager.hpp"
+#include "../mwtasks/task.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -153,8 +154,9 @@ namespace MWAwarenessReactions
 
 	}
 
-	void AwarenessReactionsManager::calculateReaction(MWWorld::Ptr npc) //right now, only forced combat if npc sees player near guarded zone
+	std::map<MWTasks::Task::TypeID, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc) //right now, only forced combat if npc sees player near guarded zone
 	{
+		std::map<MWTasks::Task::TypeID, int> reactions;
 		auto awareof = mNpcAwareOf[npc];
 		unsigned int idx = 0;
 		bool trespassing = false;
@@ -176,8 +178,10 @@ namespace MWAwarenessReactions
 				{
 					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman))
 					{
-						MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
-						return;
+						reactions[MWTasks::Task::TypeIDFight] = 4;
+						
+						//MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
+						//return;
 					}
 				}
 				
@@ -185,11 +189,12 @@ namespace MWAwarenessReactions
 			idx += 1;
 		}
 		
+		return reactions;
 		//MWBase::Environment::get().getTasksManager()->mNpcMap
 	}
 
 	
 
-
+	
 
 }

@@ -31,7 +31,8 @@
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/aiactivate.hpp"
 #include "../mwmechanics/pathgrid.hpp"
-#include "journey.hpp"
+#include "../mwbase/lifemanager.hpp"
+#include "../mwtasks/journey.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -111,7 +112,7 @@ namespace MWTasks
 			if (seq.getTypeId() != 5) //if not in combat, do this task.
 			{
 				seq.clear();
-				if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+				if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "rock", 0, 1);
 			}
 			

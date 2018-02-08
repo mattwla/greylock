@@ -479,7 +479,7 @@ namespace MWWorld
         mPhysics->updatePtr(old, player);
 
         MWBase::Environment::get().getWorld()->adjustSky();
-		MWBase::Environment::get().getTasksManager()->forceUpdate(); // mwx
+//		MWBase::Environment::get().getTasksManager()->forceUpdate(); // mwx
         mLastPlayerPos = pos.asVec3();
     }
 

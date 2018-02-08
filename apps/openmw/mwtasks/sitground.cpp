@@ -25,6 +25,7 @@
 #include "../mwbase/travelnodesmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -133,7 +134,7 @@ namespace MWTasks
 			if (seq.getTypeId() != 5) //if not in combat, do this task.
 			{
 				seq.clear();
-				if (MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr))
+				if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
 					MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(mNpcPtr, "sitground", 0, 1);
 			}
 		}

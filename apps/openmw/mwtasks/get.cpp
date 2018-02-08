@@ -25,6 +25,7 @@
 #include "../mwbase/travelnodesmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -84,7 +85,7 @@ namespace MWTasks
 		MWWorld::Ptr itemPtr = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
 		//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 		MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
-		bool currentlyActive = MWBase::Environment::get().getTasksManager()->isInActiveRange(mNpcPtr);
+		bool currentlyActive = MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr);
 		if (currentlyActive)
 		{
 			seq.stack(MWMechanics::AiActivate(mDestId), mNpcPtr);
