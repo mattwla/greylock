@@ -16,6 +16,8 @@
 
 #include "../mwworld/ptr.hpp"
 #include "../mwtasks/task.hpp"
+#include "../mwbase/statusmanager.hpp"
+#include "../mwbase/aischedulemanager.hpp"
 
 
 #include <boost/tokenizer.hpp>
@@ -51,7 +53,19 @@ namespace Loading
 
 namespace MWBase
 {
-	
+	struct Life
+	{
+		std::string mId;
+		MWWorld::Ptr mPtr;
+		float mHunger;
+		float mThirst;
+		float mWill;
+		MWTasks::Task* mCurrentTask;
+		std::vector<MWTasks::Task> mAvailableActions;
+		std::vector<MWBase::Status> mStatusList;
+		//MWBase::AIScheduleManager mScheduleManager;
+
+	};
 
 	class LifeManager
 	{
@@ -59,6 +73,8 @@ namespace MWBase
 	public:
 
 		virtual void update(float duration, bool paused) = 0;
+
+		virtual void initialize() = 0;
 
 
 		virtual ~LifeManager() {}

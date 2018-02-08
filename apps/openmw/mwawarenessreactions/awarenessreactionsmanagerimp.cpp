@@ -113,8 +113,8 @@ namespace MWAwarenessReactions
 
 			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[idx], ptr) && mLiveCellAffordances[idx] != ptr)
 			{
-				if (ptr.getCellRef().getRefId() == "slade")
-					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;
+				/*if (ptr.getCellRef().getRefId() == "slade")
+					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;*/
 				vec.push_back(mLiveCellAffordances[idx]);
 			}
 			idx += 1;
@@ -166,7 +166,7 @@ namespace MWAwarenessReactions
 				{
 					int radius = kv.second;
 					MWWorld::Ptr ptr = kv.first;
-					std::cout << "checking if player is tresspassing..." << std::endl;
+					//std::cout << "checking if player is tresspassing..." << std::endl;
 					std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
 					std::cout << radius << std::endl;
 					trespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;

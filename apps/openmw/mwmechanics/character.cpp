@@ -2296,7 +2296,7 @@ bool CharacterController::updateClimb(float duration) {
 	{
 		if (mClimbData.forward > 0.0f)
 		{
-			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
 			mClimbData.direction.y() = forwardstrength * 10;
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
 			mClimbData.forward -= forwardstrength;

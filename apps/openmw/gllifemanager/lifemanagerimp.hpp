@@ -23,6 +23,9 @@ namespace GLLifeManager
 
 		virtual void update(float duration, bool paused);
 
+		virtual void initialize();
+
+
 	};
 }
 

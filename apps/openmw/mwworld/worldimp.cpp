@@ -290,6 +290,8 @@ namespace MWWorld
         MWBase::Environment::get().getWindowManager()->updatePlayer();
 		mRendering->resetCamera();
 
+		MWBase::Environment::get().getLifeManager()->initialize();
+
 		//getPlayerPtr().getClass().getAutoMove();
     }
 
