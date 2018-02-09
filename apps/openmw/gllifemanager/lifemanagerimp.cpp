@@ -81,7 +81,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 
 			}
-			if (inActiveRange(mLifeList[idx]->mPtr))
+			/*if (inActiveRange(mLifeList[idx]->mPtr))
 
 				mLifeList[idx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[idx]->mPtr);
 
@@ -90,11 +90,28 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 			{
 				MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[idx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
 			}
-
+*/
 			mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
 			idx += 1;
 		}
 		ticks -= 1;
+	}
+
+
+	int reactionsidx = 0;
+	while (reactionsidx < mLifeList.size())
+	{
+		if (inActiveRange(mLifeList[reactionsidx]->mPtr))
+
+			mLifeList[reactionsidx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[reactionsidx]->mPtr);
+
+		mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr);
+		if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
+		{
+			MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[reactionsidx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
+		}
+		
+		reactionsidx += 1;
 	}
 
 
