@@ -29,7 +29,8 @@ namespace MWTasks
 			TypeIDPestle = 6,
 			TypeIDFish = 7,
 			TypeIDSitground = 8,
-			TypeIDFight = 9
+			TypeIDFight = 9,
+			TypeIDGuard = 10
 		};
 		
 		Task();

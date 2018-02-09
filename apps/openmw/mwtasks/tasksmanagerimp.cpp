@@ -41,6 +41,7 @@
 #include "../mwtasks/pestle.hpp"
 #include "../mwtasks/fish.hpp"
 #include "../mwtasks/sitground.hpp"
+#include "../mwtasks/guard.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -195,6 +196,12 @@ namespace MWTasks
 			MWTasks::Sitground * rtask = new MWTasks::Sitground(lifetask);
 			return rtask;
 		}
+		if (task == MWTasks::Task::TypeIDGuard)
+		{
+			MWTasks::Guard * rtask = new MWTasks::Guard(lifetask);
+			return rtask;
+		}
+		
 
 
 		

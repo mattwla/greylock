@@ -65,7 +65,7 @@ namespace MWBase
 		
 			struct TaskPriorityPair //a task, a priority, and the global checks.
 			{
-				//mwx fis me could make in better place as now all task priority pairs hold this redundant map.
+				//mwx fis me could make in better place as now all task priority pairs hold this redundant map. mwx fix me
 				std::map<std::string, MWTasks::Task::TypeID> taskStringToEnum =
 				{
 					{ "life", MWTasks::Task::TypeIDLife },
@@ -76,7 +76,8 @@ namespace MWBase
 					{ "dance", MWTasks::Task::TypeIDDance },
 					{ "pestle", MWTasks::Task::TypeIDPestle },
 					{ "fish", MWTasks::Task::TypeIDFish },
-					{ "sitground", MWTasks::Task::TypeIDSitground }
+					{ "sitground", MWTasks::Task::TypeIDSitground },
+					{ "guard", MWTasks::Task::TypeIDGuard }
 
 
 				};
