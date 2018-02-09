@@ -27,8 +27,10 @@
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
+#include "../mwmechanics/aiface.hpp"
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/pathgrid.hpp"
+#include "../mwmechanics/steering.hpp"
 
 
 #include "../mwworld/player.hpp"
@@ -121,7 +123,7 @@ namespace MWAwarenessReactions
 			idx += 1;
 		}
 
-		mNpcAwareOf[ptr] = vec;
+		mNpcAwareOf[ptr] = vec; //mwx fix me massive memory leak here, updating ptr means massive bloat.
 		return vec;
 	}
 
@@ -159,7 +161,10 @@ namespace MWAwarenessReactions
 		std::map<MWTasks::Task::TypeID, int> reactions;
 		auto awareof = mNpcAwareOf[npc];
 		unsigned int idx = 0;
-		bool trespassing = false;
+		bool seetrespassing = false;
+		bool isShaman = MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman);
+		if (isShaman)
+			std::cout << "i am shaman" << std::endl;
 		while (idx < awareof.size())
 		{
 			if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
@@ -171,17 +176,31 @@ namespace MWAwarenessReactions
 					//std::cout << "checking if player is tresspassing..." << std::endl;
 					std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
 					std::cout << radius << std::endl;
-					trespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
+					seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
 				}
 				
-				if (trespassing)
+				if (seetrespassing)
 				{
-					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman))
+					if (isShaman)
 					{
+						std::cout << "sham see trespass!!" << std::endl;
 						reactions[MWTasks::Task::TypeIDFight] = 4;
 						
 						/*MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
 						return reactions;*/
+					}
+				}
+				else
+				{
+					if (isShaman)
+					{
+						std::cout << "shaman want to turn!" << std::endl;
+						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+						////turnTo(npc, awareof[idx]);
+						//auto pos = awareof[idx].getCellRef().getPosition().pos;
+						//if(seq.getTypeId() != MWMechanics::AiPackage::TypeIdFace)
+						//	seq.stack(MWMechanics::AiFace(pos[0], pos[1]), npc);
+						turnTo(npc, awareof[idx]);
 					}
 				}
 				
@@ -193,6 +212,39 @@ namespace MWAwarenessReactions
 		//MWBase::Environment::get().getTasksManager()->mNpcMap
 	}
 
+	bool AwarenessReactionsManager::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
+	
+		osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
+		osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
+
+		osg::Vec3f dir = targetPos - actorPos;
+
+		float faceAngleRadians = std::atan2(dir.x(), dir.y());
+		//bool& rotate = storage.mTurnActorToTarget;
+		if (true)
+		{
+			if (MWMechanics::zTurn(actor, faceAngleRadians))
+				bool rotate = false;
+			else
+				return false;
+		}
+		
+		
+		/*bool done = false;
+		auto targetPosition = target.getCellRef().getPosition().asVec3();
+		auto actorPosition = actor.getCellRef().getPosition().asVec3();
+
+		osg::Vec3f dir = targetPosition - actorPosition;
+
+		float faceAngleRadians = std::atan2(dir.x(), dir.y());
+		float targetAngleRadians = faceAngleRadians;
+		float turnActorGivingGreetingToFacePlayer = true;
+
+		if (MWMechanics::zTurn(actor, targetAngleRadians, osg::DegreesToRadians(5.f)))
+			done = false;
+
+		return false;*/
+	}
 	
 
 	

@@ -76,21 +76,22 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 				auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
 				mLifeList[idx]->mTaskChain->mSubTask = newtask;
 				mLifeList[idx]->mCurrentTask = newtask;
-				if (inActiveRange(mLifeList[idx]->mPtr))
-
-					mLifeList[idx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[idx]->mPtr);
-
-				mLifeList[idx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[idx]->mPtr);
-				if (mLifeList[idx]->mAvailableActions.size() > 0)
-				{
-					MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[idx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
-				}
+				
 
 
 
 			}
+			if (inActiveRange(mLifeList[idx]->mPtr))
 
-			mLifeList[idx]->mTaskChain->update();
+				mLifeList[idx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[idx]->mPtr);
+
+			mLifeList[idx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[idx]->mPtr);
+			if (mLifeList[idx]->mAvailableActions.size() > 0)
+			{
+				MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[idx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
+			}
+
+			mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
 			idx += 1;
 		}
 		ticks -= 1;

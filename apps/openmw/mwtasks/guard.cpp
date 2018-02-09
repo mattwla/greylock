@@ -106,6 +106,7 @@ namespace MWTasks
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
+			
 
 			//instead, find a d
 			mStep += 1;
@@ -122,13 +123,13 @@ namespace MWTasks
 		}
 		else if (mStep == 2)
 		{
-			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
-			//ESM::Position markerPos = marker.getRefData().getPosition();
-			////markerPos.rot[2];
+			MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr(mDestId, false);
+			ESM::Position markerPos = marker.getRefData().getPosition();
+			markerPos.rot[2];
 			////MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
-			//MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-
-			auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
+			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
+			mStep += 1;
+			//auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
 
 
 			//if (seq.getTypeId() != 5) //if not in combat, do this task.
