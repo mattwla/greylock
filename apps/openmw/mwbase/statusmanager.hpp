@@ -53,7 +53,8 @@ namespace MWBase
 {
 	enum Status {
 		Shaman = 0,
-		Elder = 1
+		Elder = 1,
+		Guarding = 2
 
 	};
 
@@ -78,7 +79,11 @@ namespace MWBase
 
 		virtual bool hasStatus(MWWorld::Ptr ptr, MWBase::Status status) = 0;
 
+		virtual void giveStatus(MWWorld::Ptr, MWBase::Status status) = 0;
+
 		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr) = 0;
+
+		virtual void removeStatus(MWWorld::Ptr ptr, MWBase::Status status) = 0;
 
 
 	};

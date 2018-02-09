@@ -192,9 +192,9 @@ namespace MWAwarenessReactions
 				}
 				else
 				{
-					if (isShaman)
+					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
 					{
-						std::cout << "shaman want to turn!" << std::endl;
+						std::cout << "guard want to turn!" << std::endl;
 						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
 						////turnTo(npc, awareof[idx]);
 						//auto pos = awareof[idx].getCellRef().getPosition().pos;

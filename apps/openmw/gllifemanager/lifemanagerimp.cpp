@@ -73,6 +73,9 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 			if (!mLifeList[idx]->mCurrentTask || mLifeList[idx]->mCurrentTask->getTypeId() != task)//|| task == MWTasks::Task::TypeIDGet) // get means no task.
 			{
+				if (mLifeList[idx]->mCurrentTask)
+					delete mLifeList[idx]->mCurrentTask;
+				
 				auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
 				mLifeList[idx]->mTaskChain->mSubTask = newtask;
 				mLifeList[idx]->mCurrentTask = newtask;

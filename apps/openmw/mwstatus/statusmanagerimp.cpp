@@ -121,4 +121,34 @@ namespace MWStatus
 		mStatusMap.erase(old);
 	}
 
+	void StatusManager::giveStatus(MWWorld::Ptr ptr, MWBase::Status status)
+	{
+		auto vec = mStatusMap[ptr];
+		unsigned int idx = 0;
+		while (idx < vec.size())
+		{
+			if (vec[idx] == status)
+				return;
+			idx += 1;
+		}
+		mStatusMap[ptr].push_back(status);
+		//return false;
+	}
+
+	void StatusManager::removeStatus(MWWorld::Ptr ptr, MWBase::Status status)
+	{
+		auto vec = mStatusMap[ptr];
+		unsigned int idx = 0;
+		while (idx < vec.size())
+		{
+			if (vec[idx] == status)
+			{
+				mStatusMap[ptr].erase(mStatusMap[ptr].begin()+idx);
+				return;
+			}
+			idx += 1;
+		}
+		//mStatusMap[ptr].push_back(status);
+	}
+
 }

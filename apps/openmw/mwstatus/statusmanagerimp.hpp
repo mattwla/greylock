@@ -31,6 +31,10 @@ namespace MWStatus
 
 		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr);
 
+		virtual void giveStatus(MWWorld::Ptr ptr, MWBase::Status status);
+
+		virtual void removeStatus(MWWorld::Ptr ptr, MWBase::Status status);
+
 	};
 	
 }

@@ -26,6 +26,7 @@
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -88,6 +89,7 @@ namespace MWTasks
 
 
 		MWBase::Environment::get().getTasksManager()->freeZoneSlot(mZoneId, mZoneSlotIdx);
+		MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::Guarding);
 	}
 
 	MWWorld::Ptr Guard::update()
@@ -128,6 +130,7 @@ namespace MWTasks
 			markerPos.rot[2];
 			////MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			MWBase::Environment::get().getWorld()->rotateObject(mNpcPtr, 0, 0, markerPos.rot[2]); //face direction of zoneslot
+			MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Guarding);
 			mStep += 1;
 			//auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
 
