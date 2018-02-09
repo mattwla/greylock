@@ -74,6 +74,7 @@ namespace MWBase
 			mTaskChain = new MWTasks::Life(id);
 			mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mPtr);
 			mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr);
+			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
 			
 		}
 	
@@ -105,8 +106,16 @@ namespace MWBase
 		virtual ~LifeManager() {}
 
 		std::vector<MWBase::Life*> mLifeList;
+
+		//virtual void updateAwareness() = 0;
 		
 		virtual bool inActiveRange(MWWorld::Ptr npc) = 0;
+
+		float mLastTimeReported;
+
+		float mTimePassed;
+
+		float mTimeAccumulator;
 
 
 	};

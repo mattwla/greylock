@@ -180,8 +180,8 @@ namespace MWAwarenessReactions
 					{
 						reactions[MWTasks::Task::TypeIDFight] = 4;
 						
-						//MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
-						//return;
+						/*MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
+						return reactions;*/
 					}
 				}
 				

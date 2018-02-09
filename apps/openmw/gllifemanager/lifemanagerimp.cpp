@@ -1,6 +1,7 @@
 #include "lifemanagerimp.hpp"
 #include "../mwbase/tasksmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
@@ -17,21 +18,89 @@ GLLifeManager::LifeManager::LifeManager()
 void GLLifeManager::LifeManager::update(float duration, bool paused)
 {
 
-	int unsigned idx = 0;
-	while (idx < mLifeList.size())
-	{
-		auto task = mLifeList[idx]->mSchedule->getScheduledTask();
-	
-		if (!mLifeList[idx]->mCurrentTask || mLifeList[idx]->mCurrentTask->getTypeId() != task )//|| task == MWTasks::Task::TypeIDGet) // get means no task.
-		{
-			auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
-			mLifeList[idx]->mTaskChain->mSubTask = newtask;
-			mLifeList[idx]->mCurrentTask = newtask;
-		}
+	float hours = duration;
 
-		mLifeList[idx]->mTaskChain->update();
-		idx += 1;
+	//timer for schedule checking
+	
+	//timer for task update
+	
+	//timer for reaction update
+
+	//timer for awareness update
+
+	//knowledge of who is active and who is inactive
+
+
+
+	int ticks = 0;
+	//std::cout << "updating task manager" << std::endl;
+	float min = 1.0 / 60.0; //define a minute
+
+	if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. 
+	{
+		mLastTimeReported = hours;
+		return;
 	}
+
+	mTimePassed = hours - mLastTimeReported;
+	if (mTimePassed < 0)
+	{
+		mTimePassed += 24.0f;
+		std::cout << "midnight time boost, mtimepassed now = " + std::to_string(mTimePassed) << std::endl;
+	}
+	mLastTimeReported = hours;
+	mTimeAccumulator += mTimePassed;
+	//std::cout << mTimeAccumulator<< std::endl;
+	if (mTimeAccumulator > min)
+	{
+		ticks = mTimeAccumulator / min; //How many minutes have passed?
+		mTimeAccumulator -= ticks * min;
+		//std::cout << "minutes passed: " << ticks << std::endl;
+	}
+
+
+
+	//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
+
+	while (ticks > 0)
+	{
+		//std::cout << "ticking..." << std::endl;
+
+		int unsigned idx = 0;
+		while (idx < mLifeList.size())
+		{
+			auto task = mLifeList[idx]->mSchedule->getScheduledTask();
+
+			if (!mLifeList[idx]->mCurrentTask || mLifeList[idx]->mCurrentTask->getTypeId() != task)//|| task == MWTasks::Task::TypeIDGet) // get means no task.
+			{
+				auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
+				mLifeList[idx]->mTaskChain->mSubTask = newtask;
+				mLifeList[idx]->mCurrentTask = newtask;
+				if (inActiveRange(mLifeList[idx]->mPtr))
+
+					mLifeList[idx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[idx]->mPtr);
+
+				mLifeList[idx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[idx]->mPtr);
+				if (mLifeList[idx]->mAvailableActions.size() > 0)
+				{
+					MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[idx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
+				}
+
+
+
+			}
+
+			mLifeList[idx]->mTaskChain->update();
+			idx += 1;
+		}
+		ticks -= 1;
+	}
+
+
+
+
+
+
 	
 
 	//MWBase::Environment::get().getTasksManager()->update(duration, paused);
@@ -41,6 +110,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 void GLLifeManager::LifeManager::initialize()
 {
+	
 	mLifeList.clear();
 	mLifeList.shrink_to_fit();
 	buildLifeList();
