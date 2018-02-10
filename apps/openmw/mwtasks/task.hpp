@@ -31,6 +31,7 @@ namespace MWTasks
 			TypeIDSitground = 8,
 			TypeIDFight = 9,
 			TypeIDGuard = 10,
+			TypeIDConfrontTrespasser = 11
 	
 		};
 		

@@ -47,6 +47,7 @@
 #include "../mwbase/statusmanager.hpp"
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/fight.hpp"
+#include "../mwtasks/confronttrespasser.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -156,7 +157,8 @@ namespace MWAwarenessReactions
 				{
 					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
 					{
-						reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
+						//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
+						reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
 					}
 				}
 				else

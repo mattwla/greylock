@@ -59,7 +59,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
 	//GET EVERYONE A SCHEDULED TASK, OR MOVE ALONG THEIR CURRENT TASK
 
-	while (ticks > 0)
+	//while (ticks > 0)
 	{
 
 		int unsigned idx = 0;

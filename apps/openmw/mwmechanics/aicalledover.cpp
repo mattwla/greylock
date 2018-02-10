@@ -184,7 +184,7 @@ namespace MWMechanics
 			if (dist > 450)
 				actor.getClass().getCreatureStats(actor).setMovementFlag(MWMechanics::CreatureStats::Flag_Run, true); //Make NPC run
 			else if (dist < 325) //Have a bit of a dead zone, otherwise npc will constantly flip between running and not when right on the edge of the running threshold
-				actor.getClass().getCreatureStats(actor).setMovementFlag(MWMechanics::CreatureStats::Flag_Run, false); //make NPC walk
+				actor.getClass().getCreatureStats(actor).setMovementFlag(MWMechanics::CreatureStats::Flag_Run, true); //make NPC walk
 		}
 
 		return false;
@@ -202,7 +202,7 @@ namespace MWMechanics
 
 	int AiCalledOver::getTypeId() const
 	{
-		return TypeIdFollow; //MWX
+		return TypeIdCalledOver; //MWX
 	}
 
 	bool AiCalledOver::isCommanded() const
