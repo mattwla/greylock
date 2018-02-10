@@ -29,7 +29,9 @@ namespace MWAwarenessReactions
 
 		bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
 
-		virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc);
+		virtual std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life);
+
+		//virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc);
 
 		bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
 		

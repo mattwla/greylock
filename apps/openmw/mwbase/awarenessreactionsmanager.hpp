@@ -49,8 +49,12 @@ namespace Loading
 	class Listener;
 }
 
+
+
 namespace MWBase
 {
+	struct Life;
+	
 	//enum Status
 	//{
 	//	Shaman = 0,
@@ -81,7 +85,7 @@ namespace MWBase
 
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
 
-		virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc) = 0;
+		virtual std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) = 0;
 
 
 		virtual ~AwarenessReactionsManager() {}

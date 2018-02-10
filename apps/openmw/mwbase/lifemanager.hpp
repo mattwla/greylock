@@ -73,7 +73,8 @@ namespace MWBase
 			mSchedule = new MWBase::AIScheduleManager::Schedule(id);
 			mTaskChain = new MWTasks::Life(id);
 			mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mPtr);
-			mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr);
+			mAvailableActions;
+				//MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr, );
 			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
 			
 		}
@@ -88,9 +89,10 @@ namespace MWBase
 		MWTasks::Life* mTaskChain;
 		std::vector<MWWorld::Ptr> mAwareOfList;
 		MWTasks::Task* mCurrentTask;
-		std::map<MWTasks::Task::TypeID, int> mAvailableActions; //task enum, valence of task. Actions npc can take in the environment.
+		std::map<MWTasks::Task*, int> mAvailableActions; //task enum, valence of task. Actions npc can take in the environment.
 		std::vector<MWBase::Status> mStatusList;
 		//MWBase::AIScheduleManager mScheduleManager;
+		MWTasks::Task* mSubTask;
 
 	};
 

@@ -24,6 +24,7 @@
 #include "../mwbase/dialoguemanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/aiwave.hpp"
@@ -45,6 +46,7 @@
 #include "../mwworld/worldimp.cpp"
 #include "../mwbase/statusmanager.hpp"
 #include "../mwtasks/task.hpp"
+#include "../mwtasks/fight.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -156,9 +158,9 @@ namespace MWAwarenessReactions
 
 	}
 
-	std::map<MWTasks::Task::TypeID, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc) //right now, only forced combat if npc sees player near guarded zone
+	std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //right now, only forced combat if npc sees player near guarded zone
 	{
-		std::map<MWTasks::Task::TypeID, int> reactions;
+		std::map<MWTasks::Task*, int> reactions;
 		auto awareof = mNpcAwareOf[npc];
 		unsigned int idx = 0;
 		bool seetrespassing = false;
@@ -184,7 +186,9 @@ namespace MWAwarenessReactions
 					if (isShaman)
 					{
 						std::cout << "sham see trespass!!" << std::endl;
-						reactions[MWTasks::Task::TypeIDFight] = 4;
+						//reactions[MWTasks::Task::TypeIDFight] = 4;
+						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+						reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
 						
 						/*MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
 						return reactions;*/
@@ -209,7 +213,7 @@ namespace MWAwarenessReactions
 		}
 		
 		return reactions;
-		//MWBase::Environment::get().getTasksManager()->mNpcMap
+
 	}
 
 	bool AwarenessReactionsManager::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
@@ -220,7 +224,7 @@ namespace MWAwarenessReactions
 		osg::Vec3f dir = targetPos - actorPos;
 
 		float faceAngleRadians = std::atan2(dir.x(), dir.y());
-		//bool& rotate = storage.mTurnActorToTarget;
+
 		if (true)
 		{
 			if (MWMechanics::zTurn(actor, faceAngleRadians))
@@ -229,21 +233,6 @@ namespace MWAwarenessReactions
 				return false;
 		}
 		
-		
-		/*bool done = false;
-		auto targetPosition = target.getCellRef().getPosition().asVec3();
-		auto actorPosition = actor.getCellRef().getPosition().asVec3();
-
-		osg::Vec3f dir = targetPosition - actorPosition;
-
-		float faceAngleRadians = std::atan2(dir.x(), dir.y());
-		float targetAngleRadians = faceAngleRadians;
-		float turnActorGivingGreetingToFacePlayer = true;
-
-		if (MWMechanics::zTurn(actor, targetAngleRadians, osg::DegreesToRadians(5.f)))
-			done = false;
-
-		return false;*/
 	}
 	
 

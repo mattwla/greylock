@@ -103,7 +103,7 @@ add_openmw_dir (mwaischedule
     )
 
 add_openmw_dir (mwtasks
-tasksmanagerimp task life journey get hunt sleep dance pestle fish sitground guard
+tasksmanagerimp task life journey get hunt sleep dance pestle fish sitground guard fight
 )
 
 add_openmw_dir (mwtravelnodes

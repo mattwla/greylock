@@ -61,6 +61,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 
 	//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
+	//GET EVERYONE A SCHEDULED TASK, OR MOVE ALONG THEIR CURRENT TASK
 
 	while (ticks > 0)
 	{
@@ -84,47 +85,36 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 
 			}
-			/*if (inActiveRange(mLifeList[idx]->mPtr))
-
-				mLifeList[idx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[idx]->mPtr);
-
-			mLifeList[idx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[idx]->mPtr);
-			if (mLifeList[idx]->mAvailableActions.size() > 0)
-			{
-				MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[idx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
-			}
-*/
-			mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
+			if (mLifeList[idx]->mSubTask)
+				mLifeList[idx]->mSubTask->update();
+			else
+				mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
 			idx += 1;
 		}
 		ticks -= 1;
 	}
 
 
-	int reactionsidx = 0;
+
+	//SORT OUT REACTIONS HERE
+	unsigned int reactionsidx = 0;
 	while (reactionsidx < mLifeList.size())
 	{
 		if (inActiveRange(mLifeList[reactionsidx]->mPtr))
 
 			mLifeList[reactionsidx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[reactionsidx]->mPtr);
 
-		mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr);
+		mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr, *mLifeList[reactionsidx]);
 		if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
 		{
-			MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[reactionsidx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
+			mLifeList[reactionsidx]->mSubTask = mLifeList[reactionsidx]->mAvailableActions.begin()->first;
+			//MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[reactionsidx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
+			//Just do first possible task found now.
+			//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   (mLifeList[reactionsidx]->mAvailableActions[0]
 		}
 		
 		reactionsidx += 1;
 	}
-
-
-
-
-
-
-	
-
-	//MWBase::Environment::get().getTasksManager()->update(duration, paused);
 
 
 }
