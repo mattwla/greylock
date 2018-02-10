@@ -51,120 +51,23 @@ typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 
 namespace MWTasks
 {
-	//std::map<std::string, MWTasks::Task*> TasksManager::buildNpcMap()
-	//{
-	//	
-	//	auto sm = MWBase::Environment::get().getStatusManager();
-	//	
-	//	std::map<std::string, MWTasks::Task*> npcmap;
-	//	
-	//	std::string list = "schedules/npclist.csv";
-
-	//	std::ifstream in(list.c_str());
-	//	if (!in.is_open())
-	//		std::cout << "Not open" << std::endl;
-	//	else
-	//		std::cout << "Open " << list << std::endl;
-
-	//	std::string npc;
-
-	//	while (getline(in, npc))
-	//	{
-	//		MWTasks::Task* newlife = new MWTasks::Life(npc);
-	//		
-	//		npcmap[npc] = newlife;
-	//		mNpcIdToZones[npc] = buildZoneMap(npc);
-	//		MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
-	//		//CREATE AND ASSIGN NEW LIFE TASK HERE MWX
-	//	}
-
-	//	
-
-	//	return npcmap;
-	//}
-	//
-
 	TasksManager::TasksManager() :
 		mLastTimeReported(0.0f)
 		, mTimePassed(0.0f)
 		, mTimeAccumulator(0.0f)
 	{
-		//mNpcMap = buildNpcMap(); //maps npcs to their life task, also builds npc zone preference map
 		buildZoneAvailabilities(); 
-	}
-
-	//void TasksManager::forceUpdate()
-	//{
-	//	for (auto& sm_pair : mNpcMap)
-	//	{
-	//		sm_pair.second->update();
-	//		//std::cout << isInActiveRange(sm_pair.first) << std::endl;
-	//		//Make a seperate vector just for updating?.... not a horrible idea.
-	//	}
-	//}
-
-	void TasksManager::update(float hours, bool incremental)
-	{
-		int ticks = 0;
-		//std::cout << "updating task manager" << std::endl;
-		float min = 1.0 / 60.0; //define a minute
-		
-		if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. 
-		{
-			mLastTimeReported = hours;
-			return;
-		}
-		
-		mTimePassed = hours - mLastTimeReported;
-		if (mTimePassed < 0)
-		{
-			mTimePassed += 24.0f;
-			std::cout << "midnight time boost, mtimepassed now = " + std::to_string(mTimePassed) << std::endl;
-		}
-		mLastTimeReported = hours;
-		mTimeAccumulator += mTimePassed;
-		//std::cout << mTimeAccumulator<< std::endl;
-		if (mTimeAccumulator > min)
-		{
-			ticks = mTimeAccumulator / min; //How many minutes have passed?
-			mTimeAccumulator -= ticks * min;
-			//std::cout << "minutes passed: " << ticks << std::endl;
-		}
-		
-		
-
-		//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
-		
-		while (ticks > 0)
-		{
-			//std::cout << "ticking..." << std::endl;
-			for (auto& sm_pair : mNpcMap)
-			{
-				sm_pair.second->update();
-				if (sm_pair.second->mDone)
-					delete sm_pair.second;
-				//std::cout << isInActiveRange(sm_pair.first) << std::endl;
-				//Make a seperate vector just for updating?.... not a horrible idea.
-			}
-			ticks -= 1;
-		}
-
-		//thanks JLBorges at cplusplus.com
 	}
 
 	Task * TasksManager::taskEnumToTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task)
 	{
 		//MWX fix me potential for templates here.
-		//std::string stask = MWBase::Environment::get().getAIScheduleManager()->fetchCurrentScheduledTask(npcId);
 
 		if (task == MWTasks::Task::TypeIDJourney)
 		{
 			std::string destID = "tn_sl";
-			//MWWorld::Ptr marker = MWBase::Environment::get().getWorld()->searchPtr("tnode4", false);
 			MWTasks::Journey * rtask = new MWTasks::Journey(destID, lifetask); //Make a journey task, fill it in with destination, let task being delivered to do rest. MWX for now
 			return rtask;
-			
-			//JOURNEY
 		}
 		if (task == MWTasks::Task::TypeIDHunt)
 		{
@@ -201,10 +104,6 @@ namespace MWTasks
 			MWTasks::Guard * rtask = new MWTasks::Guard(lifetask);
 			return rtask;
 		}
-		
-
-
-		
 		return nullptr;
 	}
 
@@ -213,12 +112,9 @@ namespace MWTasks
 
 	std::string TasksManager::getZoneId(std::string npcId, std::string task)
 	{
-		//mNpcMap[npcId]->
 		auto npcmap = mNpcIdToZones[npcId];
 		auto taskmap = npcmap[task];
 		return taskmap[0]->mZoneId;
-		//mwx fix me doesn't go globals yet
-		//return std::string();
 	}
 
 	void TasksManager::endLife(std::string npcId)
@@ -226,12 +122,9 @@ namespace MWTasks
 		std::cout << npcId + " has died"  << std::endl;
 		mNpcMap.erase(npcId);
 	}
-	
 
 	std::map<std::string, std::vector<TasksManager::ZoneGlobalPair*>> TasksManager::buildZoneMap(std::string npcId)
 	{
-
-		
 		//open the npcs schedule file
 		std::ifstream in = getCSV(npcId);
 		//set up the parsers default state, first we need to skip all the schedule info preceding zone info
@@ -286,15 +179,10 @@ namespace MWTasks
 					idx += 1;
 				}
 				zmap[currentTask].push_back(zgp); //We have made a struct which contains a zone and the globals needed to use that zone, push it to the map that links tasks with the possible zones.
-
-
-												
-
 			}
 		}
 		mNpcIdToZones[npcId] = zmap;
 		return zmap;
-
 	}
 
 	int TasksManager::getZoneAvailability(std::string zoneId)
@@ -312,7 +200,6 @@ namespace MWTasks
 			}
 			idx += 1;
 		}
-
 		//return "full";
 		return -1;
 	}
@@ -362,10 +249,8 @@ namespace MWTasks
 			}
 			std::cout << "zone" + za->mZoneId + "has " << std::endl;
 			std::cout << za->mZoneSlots << std::endl;
-			
 			mZoneAvailabilities[za->mZoneId] = za;
 		}
-		
 	}
 
 
@@ -381,19 +266,4 @@ namespace MWTasks
 
 		return in;
 	}
-
-	
-
-
-	//std::map<std::string, std::vector<TasksManager::ZoneGlobalPair*>> TasksManager::buildZoneMap(std::string npcId)
-	//{
-	//	return std::map<std::string, std::vector<ZoneGlobalPair*>>();
-	//}
-
 }
-
-
-//to do
-//add zone info for all npcs
-//Add nadia fire pit dance node
-//Add method of looking up and assigning node

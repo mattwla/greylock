@@ -72,19 +72,6 @@ namespace MWAwarenessReactions
 		std::vector<MWWorld::Ptr> out;
 		std::string lowerCaseName = "affordance";
 		auto mActiveCells = MWBase::Environment::get().getWorld()->getActiveCells();
-		//auto mCells = MWBase::Environment::get().getWorld()->getCells();
-		//for (MWWorld::Scene::CellStoreCollection::const_iterator iter(mActiveCells.begin());
-		//	iter != mActiveCells.end(); ++iter)
-		//{
-		//	// TODO: caching still doesn't work efficiently here (only works for the one CellStore that the reference is in)
-		//	MWWorld::CellStore* cellstore = *iter;
-		//	MWWorld::Ptr ptr = mCells.getPtr(lowerCaseName, *cellstore, false);
-
-		//	if (!ptr.isEmpty())
-		//		std::cout << "hi" << std::endl;
-		//	//return ptr;
-		//}
-
 		const MWWorld::Scene::CellStoreCollection& collection = mActiveCells;
 		for (MWWorld::Scene::CellStoreCollection::const_iterator cellIt = collection.begin(); cellIt != collection.end(); ++cellIt)
 		{
@@ -92,23 +79,21 @@ namespace MWAwarenessReactions
 			(*cellIt)->forEach(visitor);
 
 			for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
-				//if (Misc::StringUtils::ciEqual(it->getCellRef().getOwner(), npc.getCellRef().getRefId()))
 			{
 				std::string type = it->getClass().getTypeName();
 				if (type == typeid(ESM::NPC).name())
 				{
 					mLiveCellAffordances.push_back(*it);
-					//std::cout << "found npc" << it->getCellRef().getRefId() << std::endl;
 				}
 				else if (type == typeid(ESM::Activator).name() && it->getCellRef().getRefId().substr(0, 3) == "gz_") //if guarded zone
 				{
 					mLiveCellGuardZones[*it] = MWBase::Environment::get().getWorld()->getGlobalInt(it->getCellRef().getRefId() + "radius");
 					std::cout << "stored guard zone" << std::endl;
-					//it->getCellRef().
 				}
 			}
 		}
 	}
+
 	std::vector<MWWorld::Ptr> AwarenessReactionsManager::calculateAwareness(MWWorld::Ptr ptr)
 	{
 		std::vector<MWWorld::Ptr> vec;
@@ -118,8 +103,6 @@ namespace MWAwarenessReactions
 
 			if(MWBase::Environment::get().getWorld()->getLOS(ptr, mLiveCellAffordances[idx]) && awarenessCheck(mLiveCellAffordances[idx], ptr) && mLiveCellAffordances[idx] != ptr)
 			{
-				/*if (ptr.getCellRef().getRefId() == "slade")
-					std::cout << "npc aware of" + mLiveCellAffordances[idx].getCellRef().getRefId() << std::endl;*/
 				vec.push_back(mLiveCellAffordances[idx]);
 			}
 			idx += 1;
@@ -133,14 +116,9 @@ namespace MWAwarenessReactions
 	{
 		if (observer.getClass().getCreatureStats(observer).isDead() || !observer.getRefData().isEnabled())
 			return false;
-
-		
 		osg::Vec3f pos1(ptr.getRefData().getPosition().asVec3());
 		osg::Vec3f pos2(observer.getRefData().getPosition().asVec3());
-		
 		// is ptr behind the observer?
-		
-//		float y = 0;
 		osg::Vec3f vec = pos1 - pos2;
 		if (observer.getRefData().getBaseNode())
 		{
@@ -155,18 +133,15 @@ namespace MWAwarenessReactions
 
 		std::cout << "couldnt get basenode for awareness check" << std::endl;
 		return false;
-
 	}
 
-	std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //right now, only forced combat if npc sees player near guarded zone
+	std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //run every frame, figures out all the things npcs can do with what they can see.
 	{
 		std::map<MWTasks::Task*, int> reactions;
 		auto awareof = mNpcAwareOf[npc];
 		unsigned int idx = 0;
 		bool seetrespassing = false;
 		bool isShaman = MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman);
-		if (isShaman)
-			//std::cout << "i am shaman" << std::endl;
 		while (idx < awareof.size())
 		{
 			if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
@@ -175,37 +150,19 @@ namespace MWAwarenessReactions
 				{
 					int radius = kv.second;
 					MWWorld::Ptr ptr = kv.first;
-					//std::cout << "checking if player is tresspassing..." << std::endl;
-					//std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
-					//std::cout << radius << std::endl;
 					seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
 				}
-				
 				if (seetrespassing)
 				{
 					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
 					{
-						//std::cout << "sham see trespass!!" << std::endl;
-						//reactions[MWTasks::Task::TypeIDFight] = 4;
-						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
 						reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
-						
-						/*MWBase::Environment::get().getMechanicsManager()->startCombat(npc, awareof[idx]);
-						return reactions;*/
 					}
 				}
 				else
 				{
 					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
 					{
-						//mwx fix me this appears to run when no guards in cell
-						
-						//std::cout << "guard want to turn!" << std::endl;
-						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
-						////turnTo(npc, awareof[idx]);
-						//auto pos = awareof[idx].getCellRef().getPosition().pos;
-						//if(seq.getTypeId() != MWMechanics::AiPackage::TypeIdFace)
-						//	seq.stack(MWMechanics::AiFace(pos[0], pos[1]), npc);
 						turnTo(npc, awareof[idx]);
 					}
 				}
@@ -215,7 +172,6 @@ namespace MWAwarenessReactions
 		}
 		
 		return reactions;
-
 	}
 
 	bool AwarenessReactionsManager::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
@@ -236,8 +192,4 @@ namespace MWAwarenessReactions
 		}
 		
 	}
-	
-
-	
-
 }

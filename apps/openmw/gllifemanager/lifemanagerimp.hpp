@@ -29,12 +29,6 @@ namespace GLLifeManager
 		void buildLifeList();
 
 		virtual bool inActiveRange(MWWorld::Ptr npc);
-
-
-
-		//void buildNpcMap();
-
-
 	};
 }
 

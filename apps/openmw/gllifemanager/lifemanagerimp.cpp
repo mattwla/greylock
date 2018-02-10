@@ -30,10 +30,8 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 	//knowledge of who is active and who is inactive
 
-
-
 	int ticks = 0;
-	//std::cout << "updating task manager" << std::endl;
+	
 	float min = 1.0 / 60.0; //define a minute
 
 	if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. 
@@ -50,22 +48,19 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	}
 	mLastTimeReported = hours;
 	mTimeAccumulator += mTimePassed;
-	//std::cout << mTimeAccumulator<< std::endl;
+
 	if (mTimeAccumulator > min)
 	{
 		ticks = mTimeAccumulator / min; //How many minutes have passed?
 		mTimeAccumulator -= ticks * min;
-		//std::cout << "minutes passed: " << ticks << std::endl;
+		
 	}
-
-
 
 	//process hours into 'ticks', for each tick poke our tasks. Tasks never have to worry about getting more than one tick in an update, ticks always delivered one at a time. Always = to 1 minute of activity.
 	//GET EVERYONE A SCHEDULED TASK, OR MOVE ALONG THEIR CURRENT TASK
 
 	while (ticks > 0)
 	{
-		//std::cout << "ticking..." << std::endl;
 
 		int unsigned idx = 0;
 		while (idx < mLifeList.size())
@@ -80,10 +75,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 				auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
 				mLifeList[idx]->mTaskChain->mSubTask = newtask;
 				mLifeList[idx]->mCurrentTask = newtask;
-				
-
-
-
+			
 			}
 			if (mLifeList[idx]->mSubTask)
 				mLifeList[idx]->mPtr = mLifeList[idx]->mSubTask->update();
@@ -108,20 +100,15 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 		if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
 		{
 			mLifeList[reactionsidx]->mSubTask = mLifeList[reactionsidx]->mAvailableActions.begin()->first;
-			//MWBase::Environment::get().getMechanicsManager()->startCombat(mLifeList[reactionsidx]->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
 			//Just do first possible task found now.
 			//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   (mLifeList[reactionsidx]->mAvailableActions[0]
 		}
-		
 		reactionsidx += 1;
 	}
-
-
 }
 
 void GLLifeManager::LifeManager::initialize()
 {
-	
 	mLifeList.clear();
 	mLifeList.shrink_to_fit();
 	buildLifeList();
@@ -129,11 +116,7 @@ void GLLifeManager::LifeManager::initialize()
 
 void GLLifeManager::LifeManager::buildLifeList()
 {
-
-	//auto sm = MWBase::Environment::get().getStatusManager();
-
-	//std::map<MWB npcmap;
-
+	
 	std::string list = "schedules/npclist.csv";
 
 	std::ifstream in(list.c_str());
@@ -149,10 +132,9 @@ void GLLifeManager::LifeManager::buildLifeList()
 		MWBase::Life* newlife = new MWBase::Life(lifeid);
 
 		mLifeList.push_back(newlife);
-		//mNpcIdToZones[npc] = 
 		MWBase::Environment::get().getTasksManager()->buildZoneMap(lifeid);
 		//MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
-																		   //CREATE AND ASSIGN NEW LIFE TASK HERE MWX
+																	
 	}
 
 	//Give schedule manager
@@ -194,11 +176,6 @@ bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 	//If player is resting, no one is in active range....
 	if (inProcessingRange)
 		inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
-
-	/*	if (npc.getCellRef().getRefId() == "eldertimothy")
-	{
-	std::cout << "breaking here for study" << std::endl;
-	}*/
 	return inProcessingRange;
 
 }

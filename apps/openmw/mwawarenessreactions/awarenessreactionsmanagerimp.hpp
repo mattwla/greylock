@@ -18,8 +18,6 @@ namespace MWAwarenessReactions
 	class AwarenessReactionsManager : public MWBase::AwarenessReactionsManager
 	{
 
-		
-
 	public:
 		AwarenessReactionsManager();
 
@@ -31,11 +29,8 @@ namespace MWAwarenessReactions
 
 		virtual std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life);
 
-		//virtual std::map<MWTasks::Task::TypeID, int> calculateReactions(MWWorld::Ptr npc);
-
 		bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
-		
-		//virtual void calculateReaction(MWWorld::Ptr);
+
 	};
 	
 }

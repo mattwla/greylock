@@ -59,8 +59,6 @@ namespace MWBase
 	///< not implemented
 
 	
-
-	
 	public:
 
 		enum ZoneParserExpecting
@@ -97,31 +95,17 @@ namespace MWBase
 		
 		std::map<std::string, ZoneAvailability*> mZoneAvailabilities;
 
-		//virtual void forceUpdate() = 0;
-
 		virtual int getZoneAvailability(std::string zoneId) = 0;
 
 		virtual void freeZoneSlot(std::string zoneId, int idx) = 0;
-
-		virtual void update(float hours, bool incremental = false) = 0;
-
-		//virtual MWTasks::Task* getScheduledTask(std::string npcId) = 0;
-
-		//virtual MWTasks::Task * getScheduledTask(std::string npcId, MWTasks::Task::TypeID task) = 0;
-
-		//virtual MWTasks::Task * getScheduledTask(MWTasks::Task* lifetask, MWTasks::Task::TypeID task) = 0;
-
-		//virtual bool isInActiveRange(MWWorld::Ptr) = 0;
-
+		
 		virtual std::string getZoneId(std::string npcId, std::string task) = 0;
 
 		virtual void endLife(std::string npcId) = 0;
 
 		virtual MWTasks::Task * taskEnumToTask(MWTasks::Task * lifetask, MWTasks::Task::TypeID task) = 0;
 	
-	
 	};
-
 
 }
 
