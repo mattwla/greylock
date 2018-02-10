@@ -86,7 +86,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 			}
 			if (mLifeList[idx]->mSubTask)
-				mLifeList[idx]->mSubTask->update();
+				mLifeList[idx]->mPtr = mLifeList[idx]->mSubTask->update();
 			else
 				mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
 			idx += 1;

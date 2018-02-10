@@ -55,6 +55,7 @@ namespace MWTasks
 		mStep = 0;
 		mDone = false;
 		mTarget = target;
+		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
 	}
 
 	Fight::~Fight()
@@ -75,7 +76,34 @@ namespace MWTasks
 
 		if (mStep == 0)
 		{
-			MWBase::Environment::get().getMechanicsManager()->startCombat(mNpcPtr, mTarget);
+			if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
+			{
+				if (mSubTask)
+				{
+					mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+					delete mSubTask;
+					mSubTask = 0;
+				}
+				MWBase::Environment::get().getMechanicsManager()->startCombat(mNpcPtr, mTarget);
+			}
+			else if (!mSubTask)
+			{
+				std::cout << "making a journey to pursue" << std::endl;
+				mSubTask = new MWTasks::Journey(mTarget.getCellRef().getRefId(), mLifeTask);
+			}
+			else
+			{
+				mNpcPtr = mSubTask->update();
+				if (mSubTask->mDone)
+				{
+					std::cout << "fight journey done" << std::endl;
+					delete mSubTask;
+					mSubTask = 0;
+				}
+			}
+			
+		
+			
 			
 			/*mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "guard");
 			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
@@ -84,22 +112,22 @@ namespace MWTasks
 			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
 			mStep += 1;*/
 		}
-		else if (mStep == 1)
-		{
-			mNpcPtr = mSubTask->update();
-			if (mSubTask->mDone)
+		/*	else if (mStep == 1)
 			{
-				delete mSubTask;
-				mSubTask = NULL;
-				mStep += 1;
+				mNpcPtr = mSubTask->update();
+				if (mSubTask->mDone)
+				{
+					delete mSubTask;
+					mSubTask = NULL;
+					mStep += 1;
+				}
 			}
-		}
-		else if (mStep == 2)
-		{
-		
-		}
+			else if (mStep == 2)
+			{
 
+			}
 
+	*/	mLifeTask->mNpcPtr = mNpcPtr;
 		return mNpcPtr;
 	}
 

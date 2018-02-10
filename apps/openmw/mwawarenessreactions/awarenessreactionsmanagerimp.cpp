@@ -166,7 +166,7 @@ namespace MWAwarenessReactions
 		bool seetrespassing = false;
 		bool isShaman = MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman);
 		if (isShaman)
-			std::cout << "i am shaman" << std::endl;
+			//std::cout << "i am shaman" << std::endl;
 		while (idx < awareof.size())
 		{
 			if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
@@ -176,16 +176,16 @@ namespace MWAwarenessReactions
 					int radius = kv.second;
 					MWWorld::Ptr ptr = kv.first;
 					//std::cout << "checking if player is tresspassing..." << std::endl;
-					std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
-					std::cout << radius << std::endl;
+					//std::cout << (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() << std::endl;
+					//std::cout << radius << std::endl;
 					seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
 				}
 				
 				if (seetrespassing)
 				{
-					if (isShaman)
+					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
 					{
-						std::cout << "sham see trespass!!" << std::endl;
+						//std::cout << "sham see trespass!!" << std::endl;
 						//reactions[MWTasks::Task::TypeIDFight] = 4;
 						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
 						reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
@@ -198,7 +198,9 @@ namespace MWAwarenessReactions
 				{
 					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
 					{
-						std::cout << "guard want to turn!" << std::endl;
+						//mwx fix me this appears to run when no guards in cell
+						
+						//std::cout << "guard want to turn!" << std::endl;
 						//auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
 						////turnTo(npc, awareof[idx]);
 						//auto pos = awareof[idx].getCellRef().getPosition().pos;

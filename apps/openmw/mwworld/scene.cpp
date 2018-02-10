@@ -446,7 +446,7 @@ namespace MWWorld
 
     void Scene::changePlayerCell(CellStore *cell, const ESM::Position &pos, bool adjustPlayerPos)
     {
-		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
+		
 		mCurrentCell = cell;
 
         mRendering.enableTerrain(cell->isExterior());
@@ -481,6 +481,7 @@ namespace MWWorld
         MWBase::Environment::get().getWorld()->adjustSky();
 //		MWBase::Environment::get().getTasksManager()->forceUpdate(); // mwx
         mLastPlayerPos = pos.asVec3();
+		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
     }
 
     Scene::Scene (MWRender::RenderingManager& rendering, MWPhysics::PhysicsSystem *physics)

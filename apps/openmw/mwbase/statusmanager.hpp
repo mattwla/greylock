@@ -54,7 +54,8 @@ namespace MWBase
 	enum Status {
 		Shaman = 0,
 		Elder = 1,
-		Guarding = 2
+		Guarding = 2,
+		Fighting = 3
 
 	};
 
