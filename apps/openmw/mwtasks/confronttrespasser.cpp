@@ -86,22 +86,25 @@ namespace MWTasks
 					delete mSubTask;
 					mSubTask = 0;
 				}
-				//We are near player, time to chat
-				
 				MWMechanics::AiSequence& seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
-				if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver)
+				//We are near player, time to chat
+				if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat) //mwx fix me this is hacky combat should be integrated with status and reactions system.
 				{
-					seq.stack(MWMechanics::AiCalledOver(mTarget.getCellRef().getRefId()), mNpcPtr);
-					std::cout << "Stacked calledover seq" << std::endl;
-				}
+					
+					if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver)
+					{
+						seq.stack(MWMechanics::AiCalledOver(mTarget.getCellRef().getRefId()), mNpcPtr);
+						std::cout << "Stacked calledover seq" << std::endl;
+					}
 
-				if ((mNpcPtr.getRefData().getPosition().asVec3() - mTarget.getRefData().getPosition().asVec3()).length2()
-					< 500 * 500
-					&& MWBase::Environment::get().getWorld()->getLOS(mNpcPtr, mTarget))
-				{
-					std::cout << "STOP!" << std::endl;
-					MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
+					if ((mNpcPtr.getRefData().getPosition().asVec3() - mTarget.getRefData().getPosition().asVec3()).length2()
+						< 500 * 500
+						&& MWBase::Environment::get().getWorld()->getLOS(mNpcPtr, mTarget))
+					{
+						std::cout << "STOP!" << std::endl;
+						MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
 
+					}
 				}
 
 			}
