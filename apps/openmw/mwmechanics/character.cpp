@@ -1861,9 +1861,10 @@ void CharacterController::update(float duration)
             {
                 const float fatigueTerm = cls.getCreatureStats(mPtr).getFatigueTerm();
 
-                // inflict fall damages
-                if (!godmode)
-                {
+                // inflict fall damages mwx
+                //if (!godmode)
+                if (false)
+				{
                     DynamicStat<float> health = cls.getCreatureStats(mPtr).getHealth();
                     float realHealthLost = static_cast<float>(healthLost * (1.0f - 0.25f * fatigueTerm));
                     health.setCurrent(health.getCurrent() - realHealthLost);
