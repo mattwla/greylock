@@ -41,6 +41,8 @@ namespace MWTasks
 
 		std::string mDestId;
 
+		bool mTalkedTo;
+
 	};
 
 }

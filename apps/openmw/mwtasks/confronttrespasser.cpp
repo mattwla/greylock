@@ -46,6 +46,7 @@ namespace MWTasks
 	{
 		mStep = 0;
 		mDone = false;
+		mTalkedTo = false;
 	}
 
 	ConfrontTrespasser::ConfrontTrespasser(MWTasks::Task* lifetask, MWWorld::Ptr target)
@@ -58,6 +59,7 @@ namespace MWTasks
 		mTarget = target;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
 		std::cout << "made confronttrespasser task" << std::endl;
+		mTalkedTo = false;
 	}
 
 	ConfrontTrespasser::~ConfrontTrespasser()
@@ -102,7 +104,13 @@ namespace MWTasks
 						&& MWBase::Environment::get().getWorld()->getLOS(mNpcPtr, mTarget))
 					{
 						std::cout << "STOP!" << std::endl;
-						MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
+						if (!mTalkedTo)
+						{
+							mTalkedTo = true;
+							std::cout << "activating plater" << std::endl;
+							MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
+							//MWBase::Environment::get().getWindowManager()->gui
+						}
 
 					}
 				}

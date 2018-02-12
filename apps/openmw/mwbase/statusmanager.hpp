@@ -55,7 +55,8 @@ namespace MWBase
 		Shaman = 0,
 		Elder = 1,
 		Guarding = 2,
-		Fighting = 3
+		Fighting = 3,
+		InConversation = 4
 
 	};
 

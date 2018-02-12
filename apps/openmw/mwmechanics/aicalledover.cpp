@@ -33,6 +33,7 @@ namespace MWMechanics
 			mMoving(false),
 			mTargetAngleRadians(0.f),
 			mTurnActorToTarget(false)
+	
 		{}
 	};
 
@@ -136,7 +137,7 @@ namespace MWMechanics
 				< 200 * 200
 				&& MWBase::Environment::get().getWorld()->getLOS(actor, target))
 			{
-				MWBase::Environment::get().getWorld()->activate(target, actor);
+				//MWBase::Environment::get().getWorld()->activate(target, actor);
 				return true;
 			}
 			
