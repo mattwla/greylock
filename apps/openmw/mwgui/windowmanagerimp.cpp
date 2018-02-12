@@ -1057,6 +1057,13 @@ namespace MWGui
 
         updateActivatedQuickKey ();
 
+		if (mInHitPause)
+		{
+			mHitPauseTimer -= frameDuration;
+			if (mHitPauseTimer <= 0.0f)
+				mInHitPause = false;
+		}
+
         cleanupGarbage();
     }
 
@@ -2009,8 +2016,20 @@ namespace MWGui
         mBlindnessFader->notifyAlphaChanged(percent / 100.f);
     }
 
+	void WindowManager::activateHitPause(float length)
+	{
+		mHitPauseTimer =  length;
+		mInHitPause = true;
+	}
+
+	bool WindowManager::getInHitPause()
+	{
+		return mInHitPause;
+	}
+
     void WindowManager::activateHitOverlay(bool interrupt)
     {
+		//MWBase::Environment::get().getWindowManager()->activateHitPause(); //mwx hit
         if (!mHitFaderEnabled)
             return;
 
@@ -2019,7 +2038,7 @@ namespace MWGui
 		//mwx hitfader
         mHitFader->clearQueue();
 		
-		if (true)
+		if (false)
 		{
 			float hitLength = .02f;
 			unsigned int idx = 0;

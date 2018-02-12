@@ -641,6 +641,8 @@ namespace MWClass
                 MWBase::Environment::get().getWindowManager()->messageBox("#{sTargetCriticalStrike}");
                 MWBase::Environment::get().getSoundManager()->playSound3D(victim, "critical damage", 1.0f, 1.0f);
             }
+
+			MWBase::Environment::get().getWindowManager()->activateHitPause(.1f); //mwx hit
         }
 
         if (othercls.getCreatureStats(victim).getKnockedDown())
@@ -819,8 +821,11 @@ namespace MWClass
             if (damage > 0.0f)
             {
                 sndMgr->playSound3D(ptr, "Health Damage", 1.0f, 1.0f);
-                if (ptr == MWMechanics::getPlayer())
-                    MWBase::Environment::get().getWindowManager()->activateHitOverlay();
+				if (ptr == MWMechanics::getPlayer())
+				{
+					MWBase::Environment::get().getWindowManager()->activateHitOverlay();
+					MWBase::Environment::get().getWindowManager()->activateHitPause(.12f);
+				}
                 if (!attacker.isEmpty())
                     MWBase::Environment::get().getWorld()->spawnBloodEffect(ptr, hitPosition);
             }

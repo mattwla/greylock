@@ -114,7 +114,8 @@ bool OMW::Engine::frame(float frametime)
         mEnvironment.getStateManager()->update (frametime);
 
         bool guiActive = mEnvironment.getWindowManager()->isGuiMode();
-
+		guiActive = false; //mwx gui mode
+		guiActive = mEnvironment.getWindowManager()->getInHitPause();
         osg::Timer_t beforeScriptTick = osg::Timer::instance()->tick();
         if (mEnvironment.getStateManager()->getState()==
             MWBase::StateManager::State_Running)
@@ -739,7 +740,10 @@ void OMW::Engine::go()
             mViewer->renderingTraversals();
 
             bool guiActive = mEnvironment.getWindowManager()->isGuiMode();
-            if (!guiActive)
+			guiActive = mEnvironment.getWindowManager()->getInHitPause();
+				
+				//false; //MWX
+			if (!guiActive)
                 simulationTime += dt;
         }
 

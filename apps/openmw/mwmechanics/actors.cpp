@@ -920,6 +920,7 @@ namespace MWMechanics
 
                 if(ptr == world->getPlayerPtr())
                     MWBase::Environment::get().getWindowManager()->activateHitOverlay(false);
+				//MWBase::Environment::get().getWindowManager()->activateHitPause();
             }
         }
         else

@@ -354,6 +354,9 @@ namespace MWBase
             virtual bool textureExists(const std::string& path) = 0;
 			virtual bool portraitExists(const std::string& path) = 0;
 
+			virtual void activateHitPause(float length) = 0;
+			virtual bool getInHitPause() = 0;
+
             virtual void removeCell(MWWorld::CellStore* cell) = 0;
             virtual void writeFog(MWWorld::CellStore* cell) = 0;
 

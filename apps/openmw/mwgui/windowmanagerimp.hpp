@@ -366,6 +366,12 @@ namespace MWGui
     /// Darken the screen to a specified percentage
     virtual void setBlindness(const int percent);
 
+	void activateHitPause(float length);
+
+	//virtual void activateHitPause();
+
+	virtual bool getInHitPause();
+
     virtual void activateHitOverlay(bool interrupt);
 	virtual void activateSneakOverlay(bool interrupt, bool sneak);
     virtual void setWerewolfOverlay(bool set);
@@ -394,6 +400,7 @@ namespace MWGui
 
     virtual bool injectKeyPress(MyGUI::KeyCode key, unsigned int text);
 
+
 	
 
   private:
@@ -407,6 +414,9 @@ namespace MWGui
     std::unique_ptr<Gui::FontLoader> mFontLoader;
 
     bool mConsoleOnlyScripts;
+
+	bool mInHitPause;
+	float mHitPauseTimer;
 
     std::map<MyGUI::Window*, std::string> mTrackedWindows;
     void trackWindow(Layout* layout, const std::string& name);
