@@ -596,8 +596,9 @@ namespace MWClass
 
         float hitchance = MWMechanics::getHitChance(ptr, victim, ptr.getClass().getSkill(ptr, weapskill));
 
-        if (Misc::Rng::roll0to99() >= hitchance)
-        {
+        //if (Misc::Rng::roll0to99() >= hitchance)
+        if(false) //mwx hit chance
+		{
             othercls.onHit(victim, 0.0f, false, weapon, ptr, osg::Vec3f(), false);
             MWMechanics::reduceWeaponCondition(0.f, false, weapon, ptr);
             return;

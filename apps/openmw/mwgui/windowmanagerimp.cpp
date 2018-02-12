@@ -474,7 +474,8 @@ namespace MWGui
         mWindows.push_back(mBlindnessFader);
 
         // fall back to player_hit_01.dds if bm_player_hit_01.dds is not available
-        std::string hitFaderTexture = "textures\\bm_player_hit_01.dds";
+        //std::string hitFaderTexture = "textures\\bm_player_hit_01.dds";
+		std::string hitFaderTexture = "textures\\player_hit_01.dds";
         const std::string hitFaderLayout = "openmw_screen_fader_hit.layout";
         MyGUI::FloatCoord hitFaderCoord (0,0,1,1);
         if(!mResourceSystem->getVFS()->exists(hitFaderTexture))
@@ -2015,10 +2016,38 @@ namespace MWGui
 
         if (!interrupt && !mHitFader->isEmpty())
             return;
-
+		//mwx hitfader
         mHitFader->clearQueue();
-        mHitFader->fadeTo(100, 0.0f);
-        mHitFader->fadeTo(0, 0.5f);
+		
+		if (true)
+		{
+			float hitLength = .02f;
+			unsigned int idx = 0;
+			unsigned int flashes = 3;
+			while (idx < flashes)
+			{
+				if (idx == 0)
+				{
+					MWBase::Environment::get().getWindowManager()->fadeScreenTo(static_cast<int>(100), hitLength, true, hitLength * (idx + 1));
+				}
+				else
+				{
+					MWBase::Environment::get().getWindowManager()->fadeScreenTo(static_cast<int>(100), hitLength, false, hitLength * (idx + 1));
+				}
+
+				MWBase::Environment::get().getWindowManager()->fadeScreenTo(static_cast<int>(0), hitLength, false, hitLength * (idx + 2));
+				idx += 2;
+			}
+			return;
+		}
+		
+	
+		mHitFader->fadeTo(100, 0.0f);
+
+		mHitFader->fadeTo(0, 0.5f);
+	
+
+
     }
 
 	void WindowManager::activateSneakOverlay(bool interrupt, bool sneak)

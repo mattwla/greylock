@@ -2435,7 +2435,7 @@ namespace MWWorld
         }
     }
 
-    void World::hurtCollidingActors(const ConstPtr &object, float healthPerSecond)
+    void World::hurtCollidingActors(const ConstPtr &object, float healthPerSecond) //MWX WHOAAAAAAAAAAA collision box damage yo.
     {
         if (MWBase::Environment::get().getWindowManager()->isGuiMode())
             return;
