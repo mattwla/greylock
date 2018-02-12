@@ -2493,8 +2493,13 @@ bool CharacterController::updateWallJump(float duration)
 	else if (mWallJumpIdx == 4)//we are not in motion, turn around and leap!
 	{
 				//MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
-				mInWallJump = false;
-				mWallJumpIdx = 5;
+				//mInWallJump = false;
+				//mWallJumpIdx = 5;
+				if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
+				{
+					mInWallJump = false;
+					mWallJumpIdx = 5;
+				}
 				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
 		
 	}

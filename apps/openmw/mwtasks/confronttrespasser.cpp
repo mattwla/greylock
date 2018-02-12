@@ -93,7 +93,7 @@ namespace MWTasks
 				if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat) //mwx fix me this is hacky combat should be integrated with status and reactions system.
 				{
 					
-					if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver)
+					if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver && seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat)
 					{
 						seq.stack(MWMechanics::AiCalledOver(mTarget.getCellRef().getRefId()), mNpcPtr);
 						std::cout << "Stacked calledover seq" << std::endl;
@@ -111,6 +111,10 @@ namespace MWTasks
 							MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
 							//MWBase::Environment::get().getWindowManager()->gui
 						}
+					/*	else
+						{
+							MWBase::Environment::get().getMechanicsManager()->startCombat(mNpcPtr, mTarget);
+						}*/
 
 					}
 				}
