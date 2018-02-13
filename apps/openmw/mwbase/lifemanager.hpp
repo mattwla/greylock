@@ -76,6 +76,7 @@ namespace MWBase
 			mAvailableActions;
 				//MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr, );
 			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
+			mSubTask = 0;
 			
 		}
 	

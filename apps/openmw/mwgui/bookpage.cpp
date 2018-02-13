@@ -281,6 +281,7 @@ struct TypesetBookImpl::Typesetter : BookTypesetter
         style.mActiveColour = fontColour;
         style.mNormalColour = fontColour;
         style.mInteractiveId = 0;
+	
 
         return &style;
     }

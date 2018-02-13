@@ -1862,12 +1862,14 @@ void CharacterController::update(float duration)
                 const float fatigueTerm = cls.getCreatureStats(mPtr).getFatigueTerm();
 
                 // inflict fall damages mwx
-                //if (!godmode)
-                if (false)
+                if (!godmode)
+                //if (false)
 				{
                     DynamicStat<float> health = cls.getCreatureStats(mPtr).getHealth();
-                    float realHealthLost = static_cast<float>(healthLost * (1.0f - 0.25f * fatigueTerm));
-                    health.setCurrent(health.getCurrent() - realHealthLost);
+                    float realHealthLost = static_cast<float>(healthLost * (1.0f - 0.25f * fatigueTerm)/20);
+                    
+					health.setCurrent(health.getCurrent() - realHealthLost);
+					
                     cls.getCreatureStats(mPtr).setHealth(health);
                     cls.onHit(mPtr, realHealthLost, true, MWWorld::Ptr(), MWWorld::Ptr(), osg::Vec3f(), true);
                 }

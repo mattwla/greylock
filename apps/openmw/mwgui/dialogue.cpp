@@ -948,7 +948,10 @@ namespace MWGui
 				mTopicsBox->setVisible(true);
 				mTopicsList->setVisible(true);
 			}
-		
+			if (id == 98)
+			{
+				onGoodbyeActivated();
+			}
 
         MWBase::Environment::get().getDialogueManager()->questionAnswered(id, mCallback.get());
 
