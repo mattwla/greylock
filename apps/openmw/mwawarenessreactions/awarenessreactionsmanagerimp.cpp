@@ -89,7 +89,8 @@ namespace MWAwarenessReactions
 				else if (type == typeid(ESM::Activator).name() && it->getCellRef().getRefId().substr(0, 3) == "gz_") //if guarded zone
 				{
 					mLiveCellGuardZones[*it] = MWBase::Environment::get().getWorld()->getGlobalInt(it->getCellRef().getRefId() + "radius");
-					std::cout << "stored guard zone" << std::endl;
+					std::cout << "stored guard zone" + it->getCellRef().getRefId() << std::endl;
+					std::cout << MWBase::Environment::get().getWorld()->getGlobalInt(it->getCellRef().getRefId() + "radius") << std::endl;
 				}
 			}
 		}
@@ -151,21 +152,23 @@ namespace MWAwarenessReactions
 				{
 					int radius = kv.second;
 					MWWorld::Ptr ptr = kv.first;
-					seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius) ;
-				}
-				if (seetrespassing)
-				{
-					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
+					seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius);
+
+					if (seetrespassing)
 					{
-						//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
-						reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
+						if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
+						{
+
+							//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
+							reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
+						}
 					}
-				}
-				else
-				{
-					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
+					else
 					{
-						turnTo(npc, awareof[idx]);
+						if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
+						{
+							turnTo(npc, awareof[idx]);
+						}
 					}
 				}
 				
