@@ -365,7 +365,7 @@ namespace MWPhysics
                    newPosition.z() < swimlevel)
                 {
                     const osg::Vec3f down(0,0,-1);
-                    velocity = slide(velocity, down);
+                    velocity = slide(velocity, down); 
                     // NOTE: remainingTime is unchanged before the loop continues
                     continue; // velocity updated, calculate nextpos again
                 }
@@ -485,11 +485,17 @@ namespace MWPhysics
                 }
             }
 
-            if((isOnGround && !isOnSlope) || newPosition.z() < swimlevel || isFlying)
+            if((isOnGround && !isOnSlope) || newPosition.z() < swimlevel || isFlying) //mwx huge swimming and flying and wow. 
                 physicActor->setInertialForce(osg::Vec3f(0.f, 0.f, 0.f));
             else
             {
-                inertia.z() += time * -627.2f; //gravity?
+           
+				
+				inertia.z() += time * -627.2f; //gravity?
+				if (isOnSlope) //mwx
+				{
+					//slowFall = .5;
+				}
                 if (inertia.z() < 0)
                     inertia.z() *= slowFall;
                 if (slowFall < 1.f) {

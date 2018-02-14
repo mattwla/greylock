@@ -61,7 +61,12 @@ namespace MWTasks
 
 	MWWorld::Ptr Journey::update()
 	{
-		
+		if (mTravelNodeItinerary.size() == 0)
+		{
+			std::cout << "I can't get there" << std::endl;
+			return mNpcPtr;
+		}
+
 		if (mStep > mTravelNodeItinerary.size()) 
 			{
 				mDone = true;

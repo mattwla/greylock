@@ -215,7 +215,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
     float mSecondsOfRunning;
 	
 	bool landed;
-
+	float mWallJumpCooldown;
 	float mWallJumpRotation;
 	float mWallJumpCameraTilt;
 	bool mInWallJump;

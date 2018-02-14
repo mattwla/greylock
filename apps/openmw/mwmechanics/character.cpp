@@ -352,53 +352,99 @@ void CharacterController::refreshHitRecoilAnims()
 
 void CharacterController::refreshJumpAnims(const WeaponInfo* weap, JumpingState jump, bool force)
 {
-    if(force || jump != mJumpState)
-    {
-        mIdleState = CharState_None;
-        bool startAtLoop = (jump == mJumpState);
-        mJumpState = jump;
+	if (force || jump != mJumpState)
 
-        std::string jumpAnimName;
-        MWRender::Animation::BlendMask jumpmask = MWRender::Animation::BlendMask_All;
-        if(mJumpState != JumpState_None)
-        {
-            jumpAnimName = "jump";
-            if(weap != sWeaponTypeListEnd)
-            {
-                jumpAnimName += weap->shortgroup;
-                if(!mAnimation->hasAnimation(jumpAnimName))
-                {
-                    jumpmask = MWRender::Animation::BlendMask_LowerBody;
-                    jumpAnimName = "jump";
-                }
-            }
-        }
+	{
 
-        if (!mCurrentJump.empty())
-        {
-            mAnimation->disable(mCurrentJump);
-            mCurrentJump.clear();
-        }
+		mIdleState = CharState_None;
 
-        if(mJumpState == JumpState_InAir)
-        {
-            if (mAnimation->hasAnimation(jumpAnimName))
-            {
-                mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, false,
-                             1.0f, (startAtLoop?"loop start":"start"), "stop", 0.0f, ~0ul);
-                mCurrentJump = jumpAnimName;
-            }
-        }
-        else if (mJumpState == JumpState_Landing)
-        {
-             if (mAnimation->hasAnimation(jumpAnimName))
-             {
-                mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, true,
-                             1.0f, "loop stop", "stop", 0.0f, 0);
-                mCurrentJump = jumpAnimName;
-            }
-        }
-    }
+		bool startAtLoop = (jump == mJumpState);
+
+		mJumpState = jump;
+
+
+
+		std::string jumpAnimName;
+
+		MWRender::Animation::BlendMask jumpmask = MWRender::Animation::BlendMask_All;
+
+		if (mJumpState != JumpState_None)
+
+		{
+
+			jumpAnimName = "jump";
+
+			if (weap != sWeaponTypeListEnd)
+
+			{
+
+				jumpAnimName += weap->shortgroup;
+
+				if (!mAnimation->hasAnimation(jumpAnimName))
+
+				{
+
+					jumpmask = MWRender::Animation::BlendMask_LowerBody;
+
+					jumpAnimName = "jump";
+
+				}
+
+			}
+
+		}
+
+
+
+		if (!mCurrentJump.empty())
+
+		{
+
+			mAnimation->disable(mCurrentJump);
+
+			mCurrentJump.clear();
+
+		}
+
+
+
+		if (mJumpState == JumpState_InAir)
+
+		{
+
+			if (mAnimation->hasAnimation(jumpAnimName))
+
+			{
+
+				mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, false,
+
+					1.0f, (startAtLoop ? "loop start" : "start"), "stop", 0.0f, ~0ul);
+
+				mCurrentJump = jumpAnimName;
+
+			}
+
+		}
+
+		else if (mJumpState == JumpState_Landing)
+
+		{
+
+			if (mAnimation->hasAnimation(jumpAnimName))
+
+			{
+
+				mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, true,
+
+					1.0f, "loop stop", "stop", 0.0f, 0);
+
+				mCurrentJump = jumpAnimName;
+
+			}
+
+		}
+
+	}
 }
 
 void CharacterController::refreshMovementAnims(const WeaponInfo* weap, CharacterState movement, bool force)
@@ -775,8 +821,10 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mAttackingOrSpell(false)
     , mTimeUntilWake(0.f)
 	, mBaseFov(Settings::Manager::getFloat("field of view", "Camera"))
+	
 {
-    if(!mAnimation)
+	mWallJumpIdx = 0;
+	if(!mAnimation)
         return;
 
     mAnimation->setTextKeyListener(this);
@@ -1813,7 +1861,7 @@ void CharacterController::update(float duration)
 			}
 
         }
-        else if(vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
+        else if(vec.z() > 0.0f && mJumpState != JumpState_InAir) //vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
         {
             // Started a jump.
             float z = cls.getJump(mPtr);
@@ -2079,7 +2127,7 @@ void CharacterController::update(float duration)
 		//}
 		//else
 		//{
-			mWallJumpIdx += 1;
+		mWallJumpIdx += 1;
 			mWallJumpPause = 0;
 		/*}
 		*/
@@ -2094,6 +2142,7 @@ void CharacterController::update(float duration)
 		else if (mInWallJump)
 		{
 			updateWallJump(duration);
+			checkLedge();
 		}
 		else if (mPtr == getPlayer())
 		{
@@ -2126,6 +2175,14 @@ void CharacterController::update(float duration)
 	mSkipAnim = false;
 
     mAnimation->enableHeadAnimation(cls.isActor() && !cls.getCreatureStats(mPtr).isDead());
+	if (mWallJumpCooldown > 0.0f)
+	{
+		mWallJumpCooldown -= duration;
+	}
+	if (mWallJumpCooldown < 0.0f)
+	{
+		mWallJumpCooldown = 0.0f;
+	}
 }
 
 float CharacterController::frontCollisionDistance(float raylength, float zoffset)
@@ -2174,7 +2231,7 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 	if (dist < 100.0f)
 	{
 		const MWWorld::Class &cls = mPtr.getClass();
-		if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr))
+		if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !mInWallJump && mWallJumpCooldown == 0.0f)
 		{
 			if (mWallJumpOriginalVelocity.y() > 0 || dist < 40.0f) //can wall jump from further range if moving forward. if static need to be closer to wall.
 			{
@@ -2322,6 +2379,7 @@ bool CharacterController::updateClimb(float duration) {
 
 bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
 {
+	mInWallJump = false;
 	mRotateStage = 0;
 	mClimbTimer = 0.0f;
 	std::cout << "Climb started" << std::endl;
@@ -2500,6 +2558,7 @@ bool CharacterController::updateWallJump(float duration)
 				if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
 				{
 					mInWallJump = false;
+					mWallJumpCooldown = 0.25f;
 					mWallJumpIdx = 5;
 				}
 				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
