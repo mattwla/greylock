@@ -21,3 +21,8 @@ MWWorld::Ptr MWTasks::Task::update()
 {
 	return MWWorld::Ptr();
 }
+
+void MWTasks::Task::resume()
+{
+
+}

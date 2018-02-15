@@ -69,6 +69,7 @@ namespace MWTasks
 		mNpcPtr = mLifeTask->mNpcPtr;
 		mStep = 0;
 		mDone = false;
+		mZoneId = "null";
 	}
 
 	Guard::~Guard()
@@ -98,8 +99,11 @@ namespace MWTasks
 		{
 			//find a place to Sitground
 			//get Sitground zone
-			mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "guard");
-			mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
+			if (mZoneId == "null")
+			{
+				mZoneId = MWBase::Environment::get().getTasksManager()->getZoneId(mNpcId, "guard");
+				mZoneSlotIdx = MWBase::Environment::get().getTasksManager()->getZoneAvailability(mZoneId);
+			}
 			//request a spot in the Sitground zone
 
 			//make a journey to that quest
@@ -152,6 +156,12 @@ namespace MWTasks
 		return TypeIDGuard;
 	}
 
+	void Guard::resume()
+	{
+		auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
+		seq.clear();
+		mStep = 0;
+	}
 
 
 }

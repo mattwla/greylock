@@ -43,6 +43,8 @@ namespace MWTasks
 
 		bool mTalkedTo;
 
+		bool mChasing;
+
 	};
 
 }

@@ -204,10 +204,14 @@ namespace MWAwarenessReactions
 		int itx = 0;
 		while (itx < list.size())
 		{
-			if (list[itx]->mPtr == npcPtr)
+			if (list[itx]->mPtr == npcPtr) //mwx fix me refactor
 			{
 				std::string gzstring = list[itx]->mCurrentGuardZone.getCellRef().getRefId();
 				//std::cout << "going to" + MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true) << std::endl;
+				delete list[itx]->mSubTask;
+				list[itx]->mSubTask = 0;
+				list[itx]->mCurrentTask->resume();
+				MWBase::Environment::get().getStatusManager()->removeStatus(npcPtr, MWBase::Fighting);
 				return MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true);
 				
 

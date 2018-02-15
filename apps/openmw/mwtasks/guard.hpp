@@ -29,6 +29,8 @@ namespace MWTasks
 
 		virtual int getTypeId() const;
 
+		virtual void resume();
+
 		unsigned int mStep;
 
 		MWWorld::Ptr mDestination;

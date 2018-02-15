@@ -60,6 +60,7 @@ namespace MWTasks
 		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
 		std::cout << "made confronttrespasser task" << std::endl;
 		mTalkedTo = false;
+		mChasing = false;
 	}
 
 	ConfrontTrespasser::~ConfrontTrespasser()
@@ -93,10 +94,11 @@ namespace MWTasks
 				if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat) //mwx fix me this is hacky combat should be integrated with status and reactions system.
 				{
 					
-					if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver && seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat)
+					if (seq.getTypeId() != MWMechanics::AiPackage::TypeIdCalledOver && seq.getTypeId() != MWMechanics::AiPackage::TypeIdCombat && !mChasing)
 					{
 						seq.stack(MWMechanics::AiCalledOver(mTarget.getCellRef().getRefId()), mNpcPtr);
 						std::cout << "Stacked calledover seq" << std::endl;
+						mChasing = true;
 					}
 
 					if ((mNpcPtr.getRefData().getPosition().asVec3() - mTarget.getRefData().getPosition().asVec3()).length2()

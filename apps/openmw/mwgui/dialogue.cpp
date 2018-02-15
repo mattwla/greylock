@@ -959,9 +959,11 @@ namespace MWGui
 				MWWorld::Ptr dest = MWBase::Environment::get().getAwarenessReactionsManager()->getGuardZoneOut(mPtr);
 				auto pos = dest.getCellRef().getPosition().pos;
 				onGoodbyeActivated();
+				
 				MWBase::Environment::get().getWorld()->moveObject(MWMechanics::getPlayer(), pos[0], pos[1], pos[2]);
 				auto seq = mPtr.getClass().getCreatureStats(mPtr).getAiSequence();
 				seq.clear(); //mwx fix me, not the place for all fo this stuff.
+				//MWBase::Environment::get().getWorld()->advanceTime(.2, true); //mwx fix me
 			}
 
         MWBase::Environment::get().getDialogueManager()->questionAnswered(id, mCallback.get());

@@ -51,6 +51,8 @@ namespace MWTasks
 
 		virtual MWWorld::Ptr update() = 0; //update returns the latest ptr, as an update can do something like change cells and we need to keep track of what ptr is still useful.
 
+		virtual void resume();
+
 		Task* mSubTask = nullptr;
 
 		Task* mLifeTask = nullptr; //keep track of the life task this task is attached too.
