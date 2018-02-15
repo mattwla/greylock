@@ -108,7 +108,7 @@ namespace MWTasks
 
 			//make a journey to that quest
 			mDestId = mZoneId + "_" + std::to_string(mZoneSlotIdx);
-			std::cout << mNpcId + "wants to sitground" << std::endl;
+			std::cout << mNpcId + "wants to guard" << std::endl;
 			//MWWorld::Ptr npcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
 			//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npcPtr, "rock", 0, 1);
 			mSubTask = new MWTasks::Journey(mDestId, mLifeTask);
@@ -158,6 +158,8 @@ namespace MWTasks
 
 	void Guard::resume()
 	{
+		mNpcPtr = MWBase::Environment::get().getWorld()->searchPtr(mNpcId, false);
+		mLifeTask->mNpcPtr = mNpcPtr;
 		auto seq = mNpcPtr.getClass().getCreatureStats(mNpcPtr).getAiSequence();
 		seq.clear();
 		mStep = 0;

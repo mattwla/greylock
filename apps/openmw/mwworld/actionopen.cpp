@@ -17,7 +17,10 @@ namespace MWWorld
 
     void ActionOpen::executeImp (const MWWorld::Ptr& actor)
     {
-        if (!MWBase::Environment::get().getWindowManager()->isAllowed(MWGui::GW_Inventory))
+		return;
+		//MWX no containers
+		
+		if (!MWBase::Environment::get().getWindowManager()->isAllowed(MWGui::GW_Inventory))
             return;
 
         MWMechanics::diseaseContact(actor, getTarget());

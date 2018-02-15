@@ -78,7 +78,15 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 			
 			}
 			if (mLifeList[idx]->mSubTask)
+			{
 				mLifeList[idx]->mPtr = mLifeList[idx]->mSubTask->update();
+				if (mLifeList[idx]->mSubTask->mDone)
+				{
+					delete mLifeList[idx]->mSubTask;
+					mLifeList[idx]->mSubTask = 0;
+					mLifeList[idx]->mCurrentTask->resume();
+				}
+			}
 			else
 				mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
 			idx += 1;
@@ -93,15 +101,17 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	while (reactionsidx < mLifeList.size())
 	{
 		if (inActiveRange(mLifeList[reactionsidx]->mPtr))
+		{
 
 			mLifeList[reactionsidx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[reactionsidx]->mPtr);
 
-		mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr, *mLifeList[reactionsidx]);
-		if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
-		{
-			mLifeList[reactionsidx]->mSubTask = mLifeList[reactionsidx]->mAvailableActions.begin()->first;
-			//Just do first possible task found now.
-			//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   (mLifeList[reactionsidx]->mAvailableActions[0]
+			mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr, *mLifeList[reactionsidx]);
+			if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
+			{
+				mLifeList[reactionsidx]->mSubTask = mLifeList[reactionsidx]->mAvailableActions.begin()->first;
+				//Just do first possible task found now.
+				//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   (mLifeList[reactionsidx]->mAvailableActions[0]
+			}
 		}
 		reactionsidx += 1;
 	}

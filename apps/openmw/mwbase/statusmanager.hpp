@@ -56,7 +56,8 @@ namespace MWBase
 		Elder = 1,
 		Guarding = 2,
 		Fighting = 3,
-		InConversation = 4
+		InConversation = 4,
+		ConfrontingTrespasser = 5
 
 	};
 

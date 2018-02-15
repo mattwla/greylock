@@ -29,6 +29,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/soundmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/containerstore.hpp"
@@ -130,7 +131,9 @@ namespace MWDialogue
 
         mActorKnownTopics.clear();
 
-        //greeting
+     
+
+
         const MWWorld::Store<ESM::Dialogue> &dialogs =
             MWBase::Environment::get().getWorld()->getStore().get<ESM::Dialogue>();
 
@@ -149,6 +152,12 @@ namespace MWDialogue
                     {
                         // TODO play sound
                     }
+					//greeting MWX
+					if (MWBase::Environment::get().getStatusManager()->hasStatus(actor, MWBase::ConfrontingTrespasser))
+					{
+						return true;/*mChoices.clear();
+									onTopicActivated("confront trespasser");*/
+					}
 
                     MWScript::InterpreterContext interpreterContext(&mActor.getRefData().getLocals(),mActor);
                     callback->addResponse("", Interpreter::fixDefinesDialog(info->mResponse, interpreterContext));

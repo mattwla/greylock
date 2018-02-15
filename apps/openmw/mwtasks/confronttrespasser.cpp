@@ -58,6 +58,7 @@ namespace MWTasks
 		mDone = false;
 		mTarget = target;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
+		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
 		std::cout << "made confronttrespasser task" << std::endl;
 		mTalkedTo = false;
 		mChasing = false;
@@ -70,6 +71,9 @@ namespace MWTasks
 		{
 			delete mSubTask;
 		}
+		
+		MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
+		MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::Fighting);
 
 	}
 
@@ -110,7 +114,8 @@ namespace MWTasks
 						{
 							mTalkedTo = true;
 							std::cout << "activating plater" << std::endl;
-							MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
+							//MWBase::Environment::get().getWorld()->activate(mTarget, mNpcPtr);
+							MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_Dialogue, mNpcPtr);
 							//MWBase::Environment::get().getWindowManager()->gui
 						}
 					/*	else
@@ -124,8 +129,24 @@ namespace MWTasks
 			}
 			else if (!mSubTask)
 			{
-				std::cout << "making a journey to pursue trespasser" << std::endl;
-				mSubTask = new MWTasks::Journey(mTarget.getCellRef().getRefId(), mLifeTask);
+				//mwx fix me horrid place for this code.
+				//person went out of range
+				unsigned int itx = 0;
+				//while (itx < MWBase::Environment::get().getLifeManager()->mLifeList.size())
+					mDone = true;
+					/*{
+					if (MWBase::Environment::get().getLifeManager()->mLifeList[itx]->mPtr == mNpcPtr)
+					{
+						delete MWBase::Environment::get().getLifeManager()->mLifeList[itx]->mSubTask;
+						MWBase::Environment::get().getLifeManager()->mLifeList[itx]->mSubTask = 0;
+						MWBase::Environment::get().getLifeManager()->mLifeList[itx]->mCurrentTask->resume();
+
+					}
+					itx += 1;
+				}
+				*/
+				/*std::cout << "making a journey to pursue trespasser" << std::endl;
+				mSubTask = new MWTasks::Journey(mTarget.getCellRef().getRefId(), mLifeTask);*/
 			}
 			else
 			{

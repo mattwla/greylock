@@ -19,6 +19,7 @@
 #include "../mwbase/inputmanager.hpp"
 #include <components/resource/resourcesystem.hpp>
 #include "../mwbase/awarenessreactionsmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/containerstore.hpp"
@@ -621,6 +622,7 @@ namespace MWGui
                 MWBase::Environment::get().getWindowManager()->pushGuiMode(MWGui::GM_Companion, actor);
             return;
         }
+	
 
         MWBase::Environment::get().getWindowManager()->setKeyFocusWidget(mGoodbyeButton);
 
@@ -640,6 +642,11 @@ namespace MWGui
         updateDisposition();
         restock();
 		/*addResponse(response.first, response.second, false);*/
+		if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::ConfrontingTrespasser))
+		{
+			mChoices.clear();
+			onTopicActivated("confront trespasser");
+		}
 
     }
 
