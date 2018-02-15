@@ -2314,7 +2314,7 @@ bool CharacterController::updateClimb(float duration) {
 	
 	mClimbTimer += duration;
 	
-	float climbstrength = 4000 / (0.5 / duration);
+	float climbstrength = 6000 / (0.5 / duration);
 		//mClimbData.originalz / (0.5 / duration);
 	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
 		//climbstrength = mClimbData.z;

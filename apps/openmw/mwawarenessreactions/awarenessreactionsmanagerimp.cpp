@@ -160,6 +160,7 @@ namespace MWAwarenessReactions
 						{
 
 							//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
+							life.mCurrentGuardZone = kv.first;
 							reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
 						}
 					}
@@ -196,5 +197,22 @@ namespace MWAwarenessReactions
 				return false;
 		}
 		
+	}
+
+	MWWorld::Ptr AwarenessReactionsManager::getGuardZoneOut(MWWorld::Ptr npcPtr) {
+		auto list = MWBase::Environment::get().getLifeManager()->mLifeList;
+		int itx = 0;
+		while (itx < list.size())
+		{
+			if (list[itx]->mPtr == npcPtr)
+			{
+				std::string gzstring = list[itx]->mCurrentGuardZone.getCellRef().getRefId();
+				//std::cout << "going to" + MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true) << std::endl;
+				return MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true);
+				
+
+			}
+			itx += 1;
+		}
 	}
 }

@@ -80,6 +80,7 @@ namespace MWBase
 
 		//std::map<MWWorld::Ptr, std::vector<MWBase::Status>> mNpcStatusList;
 		
+		virtual MWWorld::Ptr getGuardZoneOut(MWWorld::Ptr npcPtr) = 0;
 		
 		virtual void updateActiveAffordances() = 0;
 

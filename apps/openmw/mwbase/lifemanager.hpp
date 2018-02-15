@@ -78,6 +78,7 @@ namespace MWBase
 			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
 			mSubTask = 0;
 			
+			
 		}
 	
 	public:
@@ -94,6 +95,7 @@ namespace MWBase
 		std::vector<MWBase::Status> mStatusList;
 		//MWBase::AIScheduleManager mScheduleManager;
 		MWTasks::Task* mSubTask;
+		MWWorld::Ptr mCurrentGuardZone;
 
 	};
 

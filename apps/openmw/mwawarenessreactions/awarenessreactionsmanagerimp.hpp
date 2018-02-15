@@ -31,6 +31,8 @@ namespace MWAwarenessReactions
 
 		bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
 
+		virtual MWWorld::Ptr getGuardZoneOut(MWWorld::Ptr npcPtr);
+
 	};
 	
 }
