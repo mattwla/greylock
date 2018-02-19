@@ -97,7 +97,7 @@ void Launcher::SettingsPage::on_wizardButton_clicked()
 {
     mMain->writeSettings();
 
-    if (!mWizardInvoker->startProcess(QLatin1String("openmw-wizard"), false))
+    if (!mWizardInvoker->startProcess(QLatin1String("greylock-wizard"), false))
         return;
 }
 

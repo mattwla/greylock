@@ -353,97 +353,48 @@ void CharacterController::refreshHitRecoilAnims()
 void CharacterController::refreshJumpAnims(const WeaponInfo* weap, JumpingState jump, bool force)
 {
 	if (force || jump != mJumpState)
-
 	{
-
 		mIdleState = CharState_None;
-
 		bool startAtLoop = (jump == mJumpState);
-
 		mJumpState = jump;
-
-
-
 		std::string jumpAnimName;
-
 		MWRender::Animation::BlendMask jumpmask = MWRender::Animation::BlendMask_All;
-
 		if (mJumpState != JumpState_None)
-
 		{
-
 			jumpAnimName = "jump";
-
 			if (weap != sWeaponTypeListEnd)
-
 			{
-
 				jumpAnimName += weap->shortgroup;
-
 				if (!mAnimation->hasAnimation(jumpAnimName))
-
 				{
-
 					jumpmask = MWRender::Animation::BlendMask_LowerBody;
-
 					jumpAnimName = "jump";
-
 				}
-
 			}
-
 		}
-
-
-
 		if (!mCurrentJump.empty())
-
 		{
-
 			mAnimation->disable(mCurrentJump);
-
 			mCurrentJump.clear();
-
 		}
-
-
-
 		if (mJumpState == JumpState_InAir)
-
 		{
-
 			if (mAnimation->hasAnimation(jumpAnimName))
-
 			{
-
 				mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, false,
-
 					1.0f, (startAtLoop ? "loop start" : "start"), "stop", 0.0f, ~0ul);
-
 				mCurrentJump = jumpAnimName;
-
 			}
-
 		}
-
 		else if (mJumpState == JumpState_Landing)
-
 		{
-
 			if (mAnimation->hasAnimation(jumpAnimName))
-
 			{
-
 				mAnimation->play(jumpAnimName, Priority_Jump, jumpmask, true,
-
 					1.0f, "loop stop", "stop", 0.0f, 0);
-
 				mCurrentJump = jumpAnimName;
-
 			}
-
 		}
-
 	}
 }
 
@@ -2136,7 +2087,6 @@ void CharacterController::update(float duration)
 	{
 		if (mClimbState == ClimbState_Climbing)
 		{
-
 			updateClimb(duration);
 		}
 		else if (mInWallJump)
@@ -2208,7 +2158,6 @@ void CharacterController::recenterCameraRoll(float duration)
 		MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
 	if (abs(roll) < .01f)
 		MWBase::Environment::get().getWorld()->rollCamera(0, false);
-
 }
 
 ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
@@ -2399,7 +2348,6 @@ bool CharacterController::startClimb(float z, float forward, osg::Vec3f directio
 
 bool CharacterController::wallJump()
 {
-	
 	if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !mInWallJump)
 	{
 		std::cout << "wall jump" << std::endl;

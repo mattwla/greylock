@@ -380,7 +380,7 @@ bool Launcher::MainDialog::setupGameData()
 
         if (msgBox.clickedButton() == wizardButton)
         {
-            if (!mWizardInvoker->startProcess(QLatin1String("openmw-wizard"), false)) {
+			if (!mWizardInvoker->startProcess(QLatin1String("greylock-wizard"), false)) {
                 return false;
             } else {
                 return true;
