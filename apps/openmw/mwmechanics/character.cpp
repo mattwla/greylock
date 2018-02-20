@@ -760,8 +760,7 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mUpperBodyState(UpperCharState_Nothing)
     , mJumpState(JumpState_None)
 	, landed(false)
-	, mClimbState(ClimbState_None)
-	, mClimbData()
+	, mCurrentAction(0)
 	, mInWallJump(false)
 	, mWeaponType(WeapType_None)
     , mAttackStrength(0.f)
@@ -1802,14 +1801,7 @@ void CharacterController::update(float duration)
             vec.z()  = 0.0f;
 			//MWX if there is object in front of player;
 
-			if (mClimbState == ClimbState_None)
-			{
-				
-				//checkforledge
-				//ClimbData ledgedata = checkLedge();
-			
-
-			}
+		
 
         }
         else if(vec.z() > 0.0f && mJumpState != JumpState_InAir) //vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
@@ -2085,14 +2077,15 @@ void CharacterController::update(float duration)
 	}
 	if (mPtr == getPlayer())
 	{
-		if (mClimbState == ClimbState_Climbing)
+		checkActions();
+		if (mCurrentAction != 0)
 		{
-			updateClimb(duration);
+			mCurrentAction->update(duration);
+			return;
 		}
 		else if (mInWallJump)
 		{
 			updateWallJump(duration);
-			checkLedge();
 		}
 		else if (mPtr == getPlayer())
 		{
@@ -2102,7 +2095,6 @@ void CharacterController::update(float duration)
 			}
 			
 			//mWallJumpOriginalVelocity.y();
-			checkLedge();
 			if(MWBase::Environment::get().getWorld()->getCameraRoll() != 0)
 				recenterCameraRoll(duration);
 			//float pitch = abs(osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()));
@@ -2161,7 +2153,7 @@ void CharacterController::recenterCameraRoll(float duration)
 		MWBase::Environment::get().getWorld()->rollCamera(0, false);
 }
 
-ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jumpable or climbable
+bool CharacterController::checkActions() //new checkledge, checks if wall jumpable or climbable
 {
 	bool canwalljump = false;
 	float zscan = -150;
@@ -2190,7 +2182,7 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 				if (cls.getMovementSettings(mPtr).mAttemptJump)
 				{
 					wallJump();
-					return ClimbData();
+					return true;
 				}
 			}
 		}
@@ -2228,7 +2220,8 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 					
 					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
 					{
-						startClimb(zscan*150.0, 500.0f, lat);
+						//startClimb(zscan*150.0, 500.0f, lat);
+						mCurrentAction = new Climb();
 						break;
 					}
 				}
@@ -2257,95 +2250,95 @@ ClimbData CharacterController::checkLedge() //new checkledge, checks if wall jum
 		std::cout << forward.y() << std::endl;
 		std::cout << forward.z() << std::endl;*/
 	}
-	return ClimbData();
+	return false;
 }
 
-bool CharacterController::updateClimb(float duration) {
-	
-	mClimbTimer += duration;
-	
-	float climbstrength = 6000 / (0.5 / duration);
-		//mClimbData.originalz / (0.5 / duration);
-	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
-		//climbstrength = mClimbData.z;
-	float rotatestrength = .3 / (.75 / duration);
-	float forwardstrength = mClimbData.originalforward / (.25 / duration);
-	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
-		forwardstrength = mClimbData.forward;
-	/*std::cout << duration << std::endl;
-	std::cout << mClimbData.z << std::endl;
-	std::cout << climbstrength << std::endl;*/
-	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
-	{
-		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
-		mClimbData.z -= climbstrength;
-		
-		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
-		
-		else
-			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+//bool CharacterController::updateClimb(float duration) {
+//	
+//	mClimbTimer += duration;
+//	
+//	float climbstrength = 6000 / (0.5 / duration);
+//		//mClimbData.originalz / (0.5 / duration);
+//	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
+//		//climbstrength = mClimbData.z;
+//	float rotatestrength = .3 / (.75 / duration);
+//	float forwardstrength = mClimbData.originalforward / (.25 / duration);
+//	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
+//		forwardstrength = mClimbData.forward;
+//	/*std::cout << duration << std::endl;
+//	std::cout << mClimbData.z << std::endl;
+//	std::cout << climbstrength << std::endl;*/
+//	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
+//	{
+//		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
+//		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
+//		mClimbData.z -= climbstrength;
+//		
+//		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
+//		
+//		else
+//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+//
+//		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
+//	}
+//	else
+//	{
+//		if (mClimbData.forward > 0.0f)
+//		{
+//			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+//			mClimbData.direction.y() = forwardstrength * 10;
+//			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
+//			mClimbData.forward -= forwardstrength;
+//			//std::cout << "forward" << std::endl;
+//		}
+//		else {
+//
+//
+//			mClimbState = ClimbState_None;
+//			std::cout << "climb done" << std::endl;
+//			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
+//		}
+//	}
+//	
+//
+//	if (mRotateStage == 0)
+//	{
+//		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
+//			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+//		else
+//			mRotateStage = 1;
+//	}
+//	else
+//	{
+//		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
+//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+//		else
+//			mRotateStage = 0;
+//	}
+//
+//	//put something in movement queue
+//	return true;
+//}
 
-		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
-	}
-	else
-	{
-		if (mClimbData.forward > 0.0f)
-		{
-			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-			mClimbData.direction.y() = forwardstrength * 10;
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
-			mClimbData.forward -= forwardstrength;
-			//std::cout << "forward" << std::endl;
-		}
-		else {
-
-
-			mClimbState = ClimbState_None;
-			std::cout << "climb done" << std::endl;
-			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-		}
-	}
-	
-
-	if (mRotateStage == 0)
-	{
-		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
-			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
-		else
-			mRotateStage = 1;
-	}
-	else
-	{
-		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
-			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-		else
-			mRotateStage = 0;
-	}
-
-	//put something in movement queue
-	return true;
-}
-
-bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
-{
-	mInWallJump = false;
-	mRotateStage = 0;
-	mClimbTimer = 0.0f;
-	std::cout << "Climb started" << std::endl;
-	mClimbData.z = z;
-	mClimbData.originalz = z;
-	mClimbData.forward = forward;
-	mClimbData.originalforward = forward;
-	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
-	mClimbData.direction.y() = 100.0f;//direction.y() * 100;
-	mClimbData.direction.z() = 0.0f;
-	mClimbState = ClimbState_Climbing;
-	
-	std::cout << "can climb" << std::endl;
-	
-	return true;
-}
+//bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
+//{
+//	mInWallJump = false;
+//	mRotateStage = 0;
+//	mClimbTimer = 0.0f;
+//	std::cout << "Climb started" << std::endl;
+//	mClimbData.z = z;
+//	mClimbData.originalz = z;
+//	mClimbData.forward = forward;
+//	mClimbData.originalforward = forward;
+//	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
+//	mClimbData.direction.y() = 100.0f;//direction.y() * 100;
+//	mClimbData.direction.z() = 0.0f;
+//	mClimbState = ClimbState_Climbing;
+//	
+//	std::cout << "can climb" << std::endl;
+//	
+//	return true;
+//}
 
 bool CharacterController::wallJump()
 {
@@ -2815,7 +2808,8 @@ bool CharacterController::isAttackingOrSpell() const
 
 bool CharacterController::isClimbing() const
 {
-	if (mClimbState == ClimbState_Climbing)
+
+	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
 		return true;
 	else
 		return false;
@@ -2998,6 +2992,8 @@ ActionState MWMechanics::Climb::getType()
 
 bool MWMechanics::Climb::update(float duration)
 {
+	
+	
 	return false;
 }
 

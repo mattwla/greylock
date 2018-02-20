@@ -175,9 +175,9 @@ public:
 	}
 	
 
-	bool update(float duration);
+	virtual bool update(float duration);
 
-	ActionState getType();
+	virtual ActionState getType();
 };
 
 class Climb : public MWMechanics::CharacterAction
@@ -193,9 +193,9 @@ public:
 
 	}
 
-	bool update(float duration);
+	virtual bool update(float duration);
 
-	ActionState getType();
+	virtual ActionState getType();
 
 };
 
@@ -237,8 +237,8 @@ class CharacterController : public MWRender::Animation::TextKeyListener
     JumpingState mJumpState;
     std::string mCurrentJump;
 
-	ClimbingState mClimbState;
-	ClimbData mClimbData;
+	CharacterAction* mCurrentAction;
+
 	float mClimbTimer;
 	bool mRotateStage;
 
@@ -323,11 +323,11 @@ public:
 
 	void recenterCameraRoll(float duration);
 
-	ClimbData checkLedge();
+	bool checkActions();
 
-	bool updateClimb(float duration);
+	/*bool updateClimb(float duration);
 
-	bool startClimb(float z, float forward, osg::Vec3f direction);
+	bool startClimb(float z, float forward, osg::Vec3f direction);*/
 
 	bool wallJump();
 
