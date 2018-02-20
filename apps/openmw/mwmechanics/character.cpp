@@ -2159,7 +2159,7 @@ void CharacterController::recenterCameraRoll(float duration)
 		MWBase::Environment::get().getWorld()->rollCamera(0, false);
 }
 
-bool CharacterController::checkForObstruction(float z, float distance)
+bool CharacterController::checkForObstruction(float z, float distance, bool above)
 {
 	bool canwalljump = false;
 	float zscan = z;
@@ -2169,6 +2169,10 @@ bool CharacterController::checkForObstruction(float z, float distance)
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
 	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
+	if (above)
+	{
+		forward = playerOrient * osg::Vec3f(0, 0, 1);
+	}
 	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 	float dist = 0.0f;
@@ -2206,6 +2210,13 @@ bool CharacterController::checkCanClimb()
 
 	while (zscan <= 200)
 	{
+		//check up now
+		bool clearAbove = checkForObstruction(0, 200.0f, true);
+		if (!clearAbove)
+		{
+			std::cout << "something blocking above" << std::endl;
+			return false;
+		}
 		bool foundspace = !checkForObstruction(zscan, 100.0f);
 		if (foundspace) //there is room for us above object
 		{
@@ -2225,8 +2236,10 @@ bool CharacterController::checkCanClimb()
 			//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 			//}
 		}
+	
 		zscan += 10.0f;
 	}
+	std::cout << "no space found for climb" << std::endl;
 	return false;
 }
 
@@ -2252,7 +2265,8 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 		{
 			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
 			{
-				mCurrentAction = new Climb(mPtr);
+				//float climbheight = getClimbHeight();
+				mCurrentAction = new Climb(mPtr, 0);
 				return true;
 			}
 		}
@@ -3026,14 +3040,21 @@ bool MWMechanics::Climb::update(float duration)
 		return false;
 	}
 	bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f);
-	if (!pathClear)
+	if (mTargetZ == 0)
 	{
-		osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
-		return true;
+		if (!pathClear)
+		{
+			osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
+			return true;
+		}
+		else
+		{
+			mTargetZ = 1;
+		}
 	}
-	else
-	{
+	else {
+
 		if (MWBase::Environment::get().getWorld()->checkSlopeBelow(mPtr))
 		{
 			osg::Vec3f direction;
@@ -3046,6 +3067,8 @@ bool MWMechanics::Climb::update(float duration)
 			mDone = true;
 			std::cout << "climb done" << std::endl;
 		}
+	}
+	return false;
 	}
 	//bool pathClear = mCharacterController->checkForObstruction(100.0f, 100.0f);
 	
@@ -3117,8 +3140,9 @@ bool MWMechanics::Climb::update(float duration)
 	//	return true;
 	
 	
-	return false;
-}
+	
 
 }
+
+
 

@@ -198,10 +198,11 @@ public:
 	
 	}
 
-	Climb(MWWorld::Ptr ptr)
+	Climb(MWWorld::Ptr ptr, float targetZ)
 	{
 		mPtr = ptr;
 		mDone = false;
+		mTargetZ = targetZ;
 	}
 
 	virtual bool update(float duration);
@@ -334,7 +335,9 @@ public:
 
 	void recenterCameraRoll(float duration);
 
-	bool checkForObstruction(float z, float distance);
+	bool checkForObstruction(float z, float distance, bool above = false);
+
+	//bool checkForObstruction(float z, float distance);
 
 	bool checkCanWallJump();
 
