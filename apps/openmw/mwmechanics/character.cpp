@@ -3013,6 +3013,11 @@ bool MWMechanics::Climb::update(float duration)
 {
 	std::cout << "updating climb..." << std::endl;
 	mTimer += duration;
+	if (mTimer > 4.0f)
+	{
+		mDone = true;
+		return false;
+	}
 	float climbStrength = 6000 / (0.5 / duration);
 	if (climbStrength > 6000 / (0.5 / .5)) //make sure we don't do huge jump due to frame lag
 		climbStrength = 6000 / (0.5 / .5);
