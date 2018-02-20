@@ -2193,6 +2193,9 @@ bool CharacterController::checkCanWallJump()
 
 bool CharacterController::checkCanClimb()
 {
+	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
+		return false;
+
 	float zscan = 100.0f;
 
 	while (zscan <= 200)
@@ -2243,7 +2246,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 		{
 			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
 			{
-				mCurrentAction = new Climb();
+				mCurrentAction = new Climb(mPtr);
 				return true;
 			}
 		}
@@ -2975,6 +2978,13 @@ void CharacterController::updateHeadTracking(float duration)
 
 bool MWMechanics::CharacterAction::update(float duration)
 {
+	mTimer += duration;
+	bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f);
+	if (!pathClear)
+	{
+
+	}
+	
 	return false;
 }
 
@@ -2995,6 +3005,7 @@ ActionState MWMechanics::Climb::getType()
 
 bool MWMechanics::Climb::update(float duration)
 {
+	std::cout << "updating climb..." << std::endl;
 	mTimer += duration;
 	float climbStrength = 6000 / (0.5 / duration);
 	if (climbStrength > 6000 / (0.5 / .5)) //make sure we don't do huge jump due to frame lag
@@ -3002,6 +3013,13 @@ bool MWMechanics::Climb::update(float duration)
 	if (mTimer > 3.0f)
 	{
 		return false;
+	}
+	bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f);
+	if (!pathClear)
+	{
+		osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
+		return true;
 	}
 	//bool pathClear = mCharacterController->checkForObstruction(100.0f, 100.0f);
 	

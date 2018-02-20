@@ -198,7 +198,7 @@ public:
 
 	Climb(MWWorld::Ptr ptr)
 	{
-
+		mPtr = ptr;
 	}
 
 	virtual bool update(float duration);
