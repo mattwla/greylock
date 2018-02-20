@@ -1463,7 +1463,8 @@ namespace MWMechanics
             }
         }
 
-        updateCombatMusic();
+        //updateCombatMusic();
+		//mwx music
     }
 
     void Actors::killDeadActors()

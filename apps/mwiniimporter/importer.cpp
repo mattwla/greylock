@@ -865,8 +865,8 @@ void MwIniImporter::importGameFiles(multistrmap &cfg, const multistrmap &ini, co
     //}
 	cfg["content"].push_back("blank.esm");
 	cfg["content"].push_back("11.esp");
-	cfg["content"].push_back("GreyLockDemo.ESP");
-	cfg["content"].push_back("Grass.esp");
+	cfg["content"].push_back("GreylockDemoQuickstart.esp");
+	//cfg["content"].push_back("Grass.esp");
 }
 
 void MwIniImporter::writeToFile(std::ostream &out, const multistrmap &cfg) {

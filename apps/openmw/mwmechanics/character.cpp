@@ -2105,15 +2105,16 @@ void CharacterController::update(float duration)
 			checkLedge();
 			if(MWBase::Environment::get().getWorld()->getCameraRoll() != 0)
 				recenterCameraRoll(duration);
-			float pitch = abs(osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()));
-			if (pitch > 70.0f)
-			{
-				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov + (pitch - 70), false);
-			}
-			else
-			{
-				MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false); //mwx fix me this means we are recalculating fov every darn frame no matter what.;
-			}
+			//float pitch = abs(osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()));
+			//if (pitch > 70.0f)
+			//{
+			//	MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov + (pitch - 70), false);
+			//}
+			//else
+			//{
+			//	MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false); //mwx fix me this means we are recalculating fov every darn frame no matter what.;
+			//}
+			//mwx fov
 
 		
 		}
