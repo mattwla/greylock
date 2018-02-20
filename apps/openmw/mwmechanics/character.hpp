@@ -174,6 +174,9 @@ public:
 
 	}
 	
+	float mTimer;
+
+	MWWorld::Ptr mPtr;
 
 	virtual bool update(float duration);
 
@@ -189,6 +192,11 @@ class Climb : public MWMechanics::CharacterAction
 
 public:
 	Climb()
+	{
+	
+	}
+
+	Climb(MWWorld::Ptr ptr)
 	{
 
 	}
@@ -322,6 +330,12 @@ public:
 	float frontCollisionDistance(float raylength, float zoffset);
 
 	void recenterCameraRoll(float duration);
+
+	bool checkForObstruction(float z, float distance);
+
+	bool checkCanWallJump();
+
+	bool checkCanClimb();
 
 	bool checkActions();
 

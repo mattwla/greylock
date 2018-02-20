@@ -2153,105 +2153,108 @@ void CharacterController::recenterCameraRoll(float duration)
 		MWBase::Environment::get().getWorld()->rollCamera(0, false);
 }
 
-bool CharacterController::checkActions() //new checkledge, checks if wall jumpable or climbable
+bool CharacterController::checkForObstruction(float z, float distance)
 {
 	bool canwalljump = false;
-	float zscan = -150;
-	//How high above player center(?) we are scanning
-	//osg::Vec3f playerPosition = getPlayer().getRefData().getPosition().asVec3();
-	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
-	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
-	osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
-	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+	float zscan = z;
+	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
+	auto playerposvec3 = playerpos.asVec3();
+	auto liftedplayerposvec3 = playerposvec3;
+	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
+	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 	float dist = 0.0f;
 	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
-		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(listenerPos, lat, 100.0f, false); //check if there is an obstruciton in front of player.
-	else
-		dist = 100.0f;
-	if (dist < 100.0f)
 	{
-		const MWWorld::Class &cls = mPtr.getClass();
-		if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !mInWallJump && mWallJumpCooldown == 0.0f)
-		{
-			if (mWallJumpOriginalVelocity.y() > 0 || dist < 40.0f) //can wall jump from further range if moving forward. if static need to be closer to wall.
-			{
-				MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
-				canwalljump = true;
-				if (cls.getMovementSettings(mPtr).mAttemptJump)
-				{
-					wallJump();
-					return true;
-				}
-			}
-		}
-	
-
-		while (zscan <= 200)
-		{
-			
-			auto ledgepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan);
-			auto ledgecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(ledgepos, lat, 100.0f, false);
-			//std::cout << ledgecheck << std::endl;
-			if (ledgecheck == 100.0f) //there is room for us above object
-			{
-				
-			
-				
-				auto slopepos = osg::Vec3f(listenerPos.x(), listenerPos.y(), listenerPos.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
-				auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
-				auto slopediff = abs(slopecheck - ledgecheck);
-				/*std::cout << slopediff << std::endl;*/
-				if (slopediff < 50.0f)
-				{
-				}//std::cout << "too steep" << slopediff << std::endl;
-				else
-				{
-					//std::cout << "here" << std::endl;
-					//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
-					
-					if (!canwalljump)
-						MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
-					else
-						MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
-					
-					
-					
-					if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding jump? If so climb.
-					{
-						//startClimb(zscan*150.0, 500.0f, lat);
-						mCurrentAction = new Climb();
-						break;
-					}
-				}
-				//MWBase::Environment::get().getWorld()->toggleCollisionMode();
-				/*ESM::Position ledgeesmpos;
-				ledgeesmpos.pos[0] = ledgepos.x();
-				ledgeesmpos.pos[1] = ledgepos.y();
-				ledgeesmpos.pos[2] = ledgepos.z() + 1000;*/
-				//mPtr.getRefData().setPosition(ledgeesmpos);
-				//mPtr.getClass().getMovementSettings(mPtr).mPosition[2] = 1.0f;
-				//MWBase::Environment::get().getWorld()->moveObject(mPtr, ledgepos.x(), ledgepos.y(), ledgepos.z() + 200.0f);
-				}
-			zscan += 10.0f;
-		}
-		/*std::cout << "Object in way of jump" << std::endl;
-		std::cout << listenerPos.x() << std::endl;
-		std::cout << listenerPos.y() << std::endl;
-		std::cout << listenerPos.z() << std::endl;*/
+		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, lat, distance, false); //check if there is an obstruciton in front of player.
+		if (dist < distance)
+			return true;
+		else
+			return false;
 	}
 	else
+		return false;
+}
+
+bool CharacterController::checkCanWallJump()
+{
+
+
+	if (mCurrentAction || MWBase::Environment::get().getWorld()->isOnGround(mPtr) || mWallJumpCooldown != 0.0f)
+		return false;
+
+	else
+		return true;
+
+	//mwx maybe add functionality to check movement of player first, like if moving give more leeway.
+}
+
+bool CharacterController::checkCanClimb()
+{
+	float zscan = 100.0f;
+
+	while (zscan <= 200)
 	{
-		//MWBase::Environment::get().getWindowManager()->
-		/*std::cout << "nothing in way" << std::endl;*/
-	/*	std::cout << "direction is" << std::endl;
-		std::cout << forward.x() << std::endl;
-		std::cout << forward.y() << std::endl;
-		std::cout << forward.z() << std::endl;*/
+		bool foundspace = !checkForObstruction(zscan, 100.0f);
+		if (foundspace) //there is room for us above object
+		{
+			return true;
+
+			////Note, use physics slope check here? Can only climb if spot found is not slope?
+			////auto slopepos = osg::Vec3f(playerposvec3.x(), playerposvec3.y(), playerposvec3.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
+			////auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
+			////auto slopediff = abs(slopecheck - ledgecheck);
+			///*std::cout << slopediff << std::endl;*/
+			//if (slopediff < 50.0f)
+			//{
+			//}//std::cout << "too steep" << slopediff << std::endl;
+			//else
+			//{
+			//	//std::cout << "here" << std::endl;
+			//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
+			//}
+		}
+		zscan += 10.0f;
 	}
 	return false;
 }
+
+bool CharacterController::checkActions() //checks if wall jumpable or climbable, also reads input and triggers actions.
+{
+
+	if (checkForObstruction(100.0f, 100.0f))
+	{
+		bool canWallJump = checkCanWallJump();
+		const MWWorld::Class &cls = mPtr.getClass();
+		if (canWallJump)
+		{
+			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
+			if (cls.getMovementSettings(mPtr).mAttemptJump)
+			{
+				wallJump();
+				return true;
+			}
+
+		}
+		bool canClimb = checkCanClimb();
+		if (canClimb)
+		{
+			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
+			{
+				mCurrentAction = new Climb();
+				return true;
+			}
+		}
+		if (canClimb && canWallJump)
+			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
+		else if (canClimb)
+			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
+	}
+
+}
+
 
 //bool CharacterController::updateClimb(float duration) {
 //	
@@ -2992,6 +2995,82 @@ ActionState MWMechanics::Climb::getType()
 
 bool MWMechanics::Climb::update(float duration)
 {
+	mTimer += duration;
+	float climbStrength = 6000 / (0.5 / duration);
+	if (climbStrength > 6000 / (0.5 / .5)) //make sure we don't do huge jump due to frame lag
+		climbStrength = 6000 / (0.5 / .5);
+	if (mTimer > 3.0f)
+	{
+		return false;
+	}
+	//bool pathClear = mCharacterController->checkForObstruction(100.0f, 100.0f);
+	
+	
+	//MWMechanics::CharacterController::checkForObstruction(100.0f, 100.0f);
+	//	
+	//	mClimbTimer += duration;
+	//	
+	//	float climbstrength = 6000 / (0.5 / duration);
+	//		//mClimbData.originalz / (0.5 / duration);
+	//	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
+	//		//climbstrength = mClimbData.z;
+	//	float rotatestrength = .3 / (.75 / duration);
+	//	float forwardstrength = mClimbData.originalforward / (.25 / duration);
+	//	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
+	//		forwardstrength = mClimbData.forward;
+	//	/*std::cout << duration << std::endl;
+	//	std::cout << mClimbData.z << std::endl;
+	//	std::cout << climbstrength << std::endl;*/
+	//	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
+	//	{
+	//		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
+	//		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
+	//		mClimbData.z -= climbstrength;
+	//		
+	//		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
+	//		
+	//		else
+	//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+	//
+	//		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
+	//	}
+	//	else
+	//	{
+	//		if (mClimbData.forward > 0.0f)
+	//		{
+	//			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+	//			mClimbData.direction.y() = forwardstrength * 10;
+	//			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
+	//			mClimbData.forward -= forwardstrength;
+	//			//std::cout << "forward" << std::endl;
+	//		}
+	//		else {
+	//
+	//
+	//			mClimbState = ClimbState_None;
+	//			std::cout << "climb done" << std::endl;
+	//			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
+	//		}
+	//	}
+	//	
+	//
+	//	if (mRotateStage == 0)
+	//	{
+	//		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
+	//			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+	//		else
+	//			mRotateStage = 1;
+	//	}
+	//	else
+	//	{
+	//		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
+	//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+	//		else
+	//			mRotateStage = 0;
+	//	}
+	//
+	//	//put something in movement queue
+	//	return true;
 	
 	
 	return false;

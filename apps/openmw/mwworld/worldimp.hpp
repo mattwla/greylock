@@ -310,6 +310,8 @@ namespace MWWorld
             int getMonth() const override;
             int getYear() const override;
 
+			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance);
+
             std::string getMonthName (int month = -1) const override;
             ///< Return name of month (-1: current month)
 
