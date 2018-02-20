@@ -1356,7 +1356,7 @@ namespace MWWorld
 	{
 		osg::Vec3f pos(ptr.getRefData().getPosition().asVec3());
 		//osg::Vec3f traced = mPhysics->traceDown(ptr, pos, 500);
-		bool isslope = mPhysics->isSlopeBelow(ptr, pos, 500);
+		bool isslope = mPhysics->isSlopeBelow(ptr, pos, 50);
 		if (isslope)
 		{
 			std::cout << "slope below" << std::endl;

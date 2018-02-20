@@ -1165,8 +1165,14 @@ namespace MWPhysics
 			//MovementSolver::traceDown(ptr, position, found->second, mCollisionWorld, maxHeight);
 			ActorTracer tracer;
 			tracer.findGround(found->second, position + offset, position + offset - osg::Vec3f(0, 0, maxHeight), mCollisionWorld);
-			return isWalkableSlope(tracer.mPlaneNormal);
+			if (tracer.mEndPos == position + offset - osg::Vec3f(0, 0, maxHeight)) //tracer didn't touch a thing.
+			{
+				std::cout << "tracer didn't touch anything" << std::endl;
+				return true;
+			}
+			return !isWalkableSlope(tracer.mPlaneNormal);
 		}
+		
 	}
 
     void PhysicsSystem::addHeightField (const float* heights, int x, int y, float triSize, float sqrtVerts, float minH, float maxH, const osg::Object* holdObject)
