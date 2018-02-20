@@ -6,6 +6,7 @@
 
 #include <components/esm/esmreader.hpp>
 #include <components/esm/defs.hpp>
+#include "..\mwmechanics\character.hpp"
 
 bool MWState::operator< (const Slot& left, const Slot& right)
 {
@@ -186,3 +187,4 @@ const boost::filesystem::path& MWState::Character::getPath() const
 {
     return mPath;
 }
+

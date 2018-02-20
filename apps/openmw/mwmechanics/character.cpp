@@ -2974,4 +2974,32 @@ void CharacterController::updateHeadTracking(float duration)
     mAnimation->setHeadYaw(zAngleRadians);
 }
 
+
+
+bool MWMechanics::CharacterAction::update(float duration)
+{
+	return false;
 }
+
+ActionState MWMechanics::CharacterAction::getType()
+{
+	std::cout << "Can't get type of CharacterAction base class" << std::endl;
+	return ActionState();
+}
+
+
+
+
+ActionState MWMechanics::Climb::getType()
+{
+	return ActionState_Climbing;
+
+}
+
+bool MWMechanics::Climb::update(float duration)
+{
+	return false;
+}
+
+}
+

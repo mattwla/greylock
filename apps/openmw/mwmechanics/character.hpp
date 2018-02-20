@@ -147,17 +147,56 @@ enum JumpingState {
     JumpState_Landing
 };
 
-enum ClimbingState {
-	ClimbState_None,
-	ClimbState_Climbing
+//enum ClimbingState {
+//	ClimbState_None,
+//	ClimbState_Climbing
+//};
+//
+//struct ClimbData {
+//	float z = 0.f;
+//	float originalz = 0.f;
+//	float forward = 0.f;
+//	float originalforward = 0.f;
+//	osg::Vec3f direction;
+//};
+
+enum ActionState {
+	ActionState_Climbing
 };
 
-struct ClimbData {
-	float z = 0.f;
-	float originalz = 0.f;
-	float forward = 0.f;
-	float originalforward = 0.f;
-	osg::Vec3f direction;
+class CharacterAction 
+{
+	
+
+public:
+	CharacterAction()
+	{
+
+	}
+	
+
+	bool update(float duration);
+
+	ActionState getType();
+};
+
+class Climb : public MWMechanics::CharacterAction
+{
+
+	float mTargetZ;
+	float mTargetForward;
+	osg::Vec3f mForwardDirection;
+
+public:
+	Climb()
+	{
+
+	}
+
+	bool update(float duration);
+
+	ActionState getType();
+
 };
 
 struct WeaponInfo;
