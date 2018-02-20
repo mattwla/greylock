@@ -124,6 +124,8 @@ namespace MWWorld
 
             void rotateObjectImp (const Ptr& ptr, const osg::Vec3f& rot, bool adjust);
 
+			virtual bool checkSlopeBelow(const Ptr & ptr);
+
             Ptr moveObjectImp (const Ptr& ptr, float x, float y, float z, bool movePhysics=true);
             ///< @return an updated Ptr in case the Ptr's cell changes
 

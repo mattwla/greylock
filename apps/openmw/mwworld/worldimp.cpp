@@ -1352,6 +1352,24 @@ namespace MWWorld
             mWorldScene->updateObjectRotation(ptr, true);
     }
 
+	bool World::checkSlopeBelow(const Ptr &ptr)
+	{
+		osg::Vec3f pos(ptr.getRefData().getPosition().asVec3());
+		//osg::Vec3f traced = mPhysics->traceDown(ptr, pos, 500);
+		bool isslope = mPhysics->isSlopeBelow(ptr, pos, 500);
+		if (isslope)
+		{
+			std::cout << "slope below" << std::endl;
+			return true;
+		}
+		else
+		{
+			std::cout << "no slope below" << std::endl;
+			return false;
+		}
+	
+	}
+
     void World::adjustPosition(const Ptr &ptr, bool force)
     {
         osg::Vec3f pos (ptr.getRefData().getPosition().asVec3());

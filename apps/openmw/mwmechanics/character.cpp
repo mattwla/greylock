@@ -2081,6 +2081,12 @@ void CharacterController::update(float duration)
 		if (mCurrentAction != 0)
 		{
 			mCurrentAction->update(duration);
+			if (mCurrentAction->mDone)
+			{
+				delete mCurrentAction;
+				mCurrentAction = 0;
+			}
+			
 			return;
 		}
 		else if (mInWallJump)
@@ -3020,6 +3026,21 @@ bool MWMechanics::Climb::update(float duration)
 		osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
 		return true;
+	}
+	else
+	{
+		if (MWBase::Environment::get().getWorld()->checkSlopeBelow(mPtr))
+		{
+			osg::Vec3f direction;
+			float forwardstrength = 500.0f / (.25 / duration);
+			direction.y() = forwardstrength * 10;
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
+		}
+		else
+		{
+			mDone = true;
+			std::cout << "climb done" << std::endl;
+		}
 	}
 	//bool pathClear = mCharacterController->checkForObstruction(100.0f, 100.0f);
 	

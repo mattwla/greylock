@@ -513,6 +513,8 @@ namespace MWBase
 
 			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance) = 0;
 
+			virtual bool checkSlopeBelow(const MWWorld::Ptr & ptr) = 0;
+
             // Are we in an exterior or pseudo-exterior cell and it's night?
             virtual bool isDark() const = 0;
 

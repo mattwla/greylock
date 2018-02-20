@@ -181,6 +181,8 @@ public:
 	virtual bool update(float duration);
 
 	virtual ActionState getType();
+
+	bool mDone;
 };
 
 class Climb : public MWMechanics::CharacterAction
@@ -199,6 +201,7 @@ public:
 	Climb(MWWorld::Ptr ptr)
 	{
 		mPtr = ptr;
+		mDone = false;
 	}
 
 	virtual bool update(float duration);

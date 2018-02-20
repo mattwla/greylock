@@ -1151,6 +1151,24 @@ namespace MWPhysics
             return MovementSolver::traceDown(ptr, position, found->second, mCollisionWorld, maxHeight);
     }
 
+	bool PhysicsSystem::isSlopeBelow(const MWWorld::Ptr &ptr, const osg::Vec3f& position, float maxHeight)
+	{
+		ActorMap::iterator found = mActors.find(ptr);
+		if (found == mActors.end())
+		{
+			std::cout << "can't find actor in scene" << std::endl;
+			return false;
+		}
+		else
+		{
+			osg::Vec3f offset = found->second->getCollisionObjectPosition() - ptr.getRefData().getPosition().asVec3();
+			//MovementSolver::traceDown(ptr, position, found->second, mCollisionWorld, maxHeight);
+			ActorTracer tracer;
+			tracer.findGround(found->second, position + offset, position + offset - osg::Vec3f(0, 0, maxHeight), mCollisionWorld);
+			return isWalkableSlope(tracer.mPlaneNormal);
+		}
+	}
+
     void PhysicsSystem::addHeightField (const float* heights, int x, int y, float triSize, float sqrtVerts, float minH, float maxH, const osg::Object* holdObject)
     {
         HeightField *heightfield = new HeightField(heights, x, y, triSize, sqrtVerts, minH, maxH, holdObject);
