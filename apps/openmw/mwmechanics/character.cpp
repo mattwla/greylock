@@ -2529,27 +2529,27 @@ bool CharacterController::updateWallJump(float duration)
 	}
 	else if (mWallJumpIdx == 2)
 	{
-		if (mWallJumpRotation < 30)
-		{
-			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/2);
-			mWallJumpRotation += turnspeed/2;
-		}
+		//if (mWallJumpRotation < 30)
+		//{
+		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/2);
+		//	mWallJumpRotation += turnspeed/2;
+		//}
 
-		else if (mWallJumpRotation < 120)
-		{
-			//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
-			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
-			mWallJumpRotation += turnspeed;
+		//else if (mWallJumpRotation < 120)
+		//{
+		//	//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
+		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
+		//	mWallJumpRotation += turnspeed;
 
-		}
-		else if (mWallJumpRotation < 180)
-		{
-			//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
-			mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/4);
-			mWallJumpRotation += turnspeed/4;
+		//}
+		//else if (mWallJumpRotation < 180)
+		//{
+		//	//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
+		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/4);
+		//	mWallJumpRotation += turnspeed/4;
 
-		}
-		else
+		//}
+		//else
 			mWallJumpIdx = 3;
 		//if (mWallJumpCameraTilt < 70)
 	/*	if (osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) < 20.0f)

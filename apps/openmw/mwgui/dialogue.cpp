@@ -810,7 +810,7 @@ namespace MWGui
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
-					if (mHistoryContents.back()->mType == message && MWBase::Environment::get().getDialogueManager()->getChoices().size() == 0) //do we have a message we need to show? MWX make sure it is not a choice
+					if (mHistoryContents.back()->mType == message) //do we have a message we need to show? MWX make sure it is not a choice
 						mHistoryContents.back()->write(typesetter, &mKeywordSearch, mTopicLinks);
 					mTopicsList->setVisible(true);
 					inChunk = false;
@@ -1048,6 +1048,7 @@ namespace MWGui
 
     void DialogueWindow::addMessageBox(const std::string& text)
     {
+		//mwx got something.
         mHistoryContents.push_back(new Message(text));
         updateHistory();
     }
