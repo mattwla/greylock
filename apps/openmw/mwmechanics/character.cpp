@@ -2161,6 +2161,9 @@ void CharacterController::recenterCameraRoll(float duration)
 
 bool CharacterController::checkForObstruction(float z, float distance, bool above)
 {
+	//std::cout << getPlayer().getRefData().getPosition().rot[2] << std::endl;
+	//std::cout << MWBase::Environment::get().getWorld()->getCameraYaw() << std::endl;
+	//std::cout << getPlayer().getClass().getMovementSettings(mPtr).mRotation[2] << std::endl;
 	bool canwalljump = false;
 	float zscan = z;
 	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
@@ -2316,6 +2319,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
 			{
 				//float climbheight = getClimbHeight();
+				mInWallJump = false;
 				mCurrentAction = new Climb(mPtr, cd.z);
 				return true;
 			}
@@ -3075,6 +3079,23 @@ ActionState MWMechanics::Climb::getType()
 
 bool MWMechanics::Climb::update(float duration)
 {
+	float rotatestrength = .3 / (.75 / duration);
+	if (mRotateStage == 0)
+	{
+		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
+			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+		else
+			mRotateStage = 1;
+	}
+	else
+	{
+		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
+			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+		else
+			mRotateStage = 0;
+	}
+
+	
 	std::cout << "updating climb..." << std::endl;
 	mTimer += duration;
 	if (mTimer > 4.0f)
@@ -3083,39 +3104,38 @@ bool MWMechanics::Climb::update(float duration)
 		return false;
 	}
 	float climbStrength = 6000 / (0.5 / duration);
+	float forwardstrength = 500.0f / (.25 / duration);
+
 	if (climbStrength > 6000 / (0.5 / .5)) //make sure we don't do huge jump due to frame lag
 		climbStrength = 6000 / (0.5 / .5);
 	if (mTimer > 3.0f)
 	{
 		return false;
 	}
-	bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f);
-	if (mPtr.getRefData().getPosition().pos[2] < mTargetZ)
+	if (mPtr.getRefData().getPosition().pos[2] < mTargetZ - 10.0f)
 	{
-		//if (!pathClear)
-		if(true)
-		{
 			osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
 			return true;
-		}
-		else
-		{
-			mTargetZ = 1;
-		}
 	}
 	else {
 
 		if (MWBase::Environment::get().getWorld()->checkSlopeBelow(mPtr))
 		{
 			osg::Vec3f direction;
-			float forwardstrength = 500.0f / (.25 / duration);
+			
 			direction.y() = forwardstrength * 10;
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
 		}
 		else
 		{
 			mDone = true;
+			//std::cout << mPtr.getClass().getMovementSettings(mPtr).mRotation[2] << std::endl;
+			//std::cout << MWBase::Environment::get().getWorld()->getCameraYaw() << std::endl;
+			//mPtr.getClass().getMovementSettings(mPtr).mRotation[2] = -MWBase::Environment::get().getWorld()->getCameraYaw();
+
+			MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], -MWBase::Environment::get().getWorld()->getCameraYaw());
+
 			std::cout << "climb done" << std::endl;
 		}
 	}

@@ -896,7 +896,7 @@ namespace MWInput
 			//mRot[1] = 0.0f;
 			//mRot[2] = -x;
 		
-			if (mAlwaysRunActive)
+			if (mAlwaysRunActive || MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()))
 			{
 				MWBase::Environment::get().getWorld()->rotateCamera(rot[0], rot[1], rot[2]); //MWX
 			}
@@ -1224,8 +1224,8 @@ namespace MWInput
 		{
 			mAlwaysRunActive = !mAlwaysRunActive;
 			mPlayer->setAutoMove(mAlwaysRunActive);
-			if (mAlwaysRunActive)
-				mPlayer->setDrawState(MWMechanics::DrawState_Weapon);
+			/*if (mAlwaysRunActive)
+				mPlayer->setDrawState(MWMechanics::DrawState_Weapon);*/
 		}
 
         Settings::Manager::setBool("always run", "Input", mAlwaysRunActive);

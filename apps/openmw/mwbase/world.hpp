@@ -234,6 +234,8 @@ namespace MWBase
 
 			virtual float getFirstPersonCameraPitch() = 0;
 
+			virtual float getCameraYaw() = 0;
+
 			virtual float getCameraRoll() = 0;
 			
 			virtual int getSecundaPhase() const = 0;

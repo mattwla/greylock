@@ -621,6 +621,11 @@ namespace MWRender
 		return mCamera->getRoll();
 	}
 
+	float RenderingManager::getCameraYaw()
+	{
+		return mCamera->getYaw();
+	}
+
     void RenderingManager::removeObject(const MWWorld::Ptr &ptr)
     {
         mObjects->removeObject(ptr);

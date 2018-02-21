@@ -2307,10 +2307,18 @@ namespace MWWorld
 		mRendering->rollCamera(angle, adjust);
 	}
 
+	float World::getCameraYaw()
+	{
+		return mRendering->getCameraYaw();
+	}
+
+	
+
 	float World::getCameraRoll()
 	{
 		return mRendering->getCameraRoll();
 	}
+
 
     void World::setupPlayer()
     {

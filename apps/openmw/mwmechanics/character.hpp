@@ -202,6 +202,7 @@ class Climb : public MWMechanics::CharacterAction
 	float mTargetZ;
 	float mTargetForward;
 	osg::Vec3f mForwardDirection;
+	bool mRotateStage;
 
 public:
 	Climb()
@@ -216,6 +217,7 @@ public:
 		//mTargetZ = 
 		auto currentpos = ptr.getRefData().getPosition();
 		mTargetZ = currentpos.pos[2] + targetZ;
+		mRotateStage = 0;
 
 			//targetZ;
 	}
