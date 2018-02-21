@@ -2167,7 +2167,8 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	auto playerposvec3 = playerpos.asVec3();
 	auto liftedplayerposvec3 = playerposvec3;
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
-	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	//osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
 	//std::cout << playerpos.rot[1] << std::endl;
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	if (above)
@@ -2253,18 +2254,12 @@ ClimbData CharacterController::checkCanClimb()
 	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
 		return cd;
 
-
-	
-	
-	
 	float zscan = 100.0f;
 	float heightLimit = 300.0f;
 	float reach = 100.0f;
 
 	while (reach <= 300.0f)
 	{
-
-
 		while (zscan <= heightLimit)
 		{
 			//check up now
@@ -2286,22 +2281,6 @@ ClimbData CharacterController::checkCanClimb()
 					cd.reach = reach;
 					return cd;
 				}
-
-
-
-				////Note, use physics slope check here? Can only climb if spot found is not slope?
-				////auto slopepos = osg::Vec3f(playerposvec3.x(), playerposvec3.y(), playerposvec3.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
-				////auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
-				////auto slopediff = abs(slopecheck - ledgecheck);
-				///*std::cout << slopediff << std::endl;*/
-				//if (slopediff < 50.0f)
-				//{
-				//}//std::cout << "too steep" << slopediff << std::endl;
-				//else
-				//{
-				//	//std::cout << "here" << std::endl;
-				//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
-				//}
 			}
 
 			zscan += 10.0f;
