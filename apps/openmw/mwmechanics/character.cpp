@@ -2172,8 +2172,8 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	if (above)
 	{
-		playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
-		forward =  playerOrient * osg::Vec3f(0, 1, 0);
+		playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		forward =  playerOrient * osg::Vec3f(0, 0, 1);
 
 	}
 	osg::Vec3f lat(forward.x(), forward.y(), forward.z());
@@ -2215,7 +2215,7 @@ bool CharacterController::checkCanClimb()
 	while (zscan <= heightLimit)
 	{
 		//check up now
-		bool clearAbove = checkForObstruction(zscan, heightLimit, true);
+		bool clearAbove = !checkForObstruction(zscan, heightLimit, true);
 		if (!clearAbove)
 		{
 			std::cout << "something blocking above" << std::endl;
