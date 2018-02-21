@@ -2220,9 +2220,9 @@ MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, f
 	//float dist = 0.0f;
 	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
 	{
-		std::cout << "sending ray" << std::endl;
+		//std::cout << "sending ray" << std::endl;
 		auto result = MWBase::Environment::get().getWorld()->getResultsOfNearestRayHit(liftedplayerposvec3, forward, distance, false); //check if there is an obstruciton in front of player.
-		std::cout << result.mHit << std::endl;
+		//std::cout << result.mHit << std::endl;
 		return result;																											   /*if (dist < distance)
 			return true;
 		else
@@ -2245,61 +2245,72 @@ bool CharacterController::checkCanWallJump()
 	//mwx maybe add functionality to check movement of player first, like if moving give more leeway.
 }
 
-bool CharacterController::checkCanClimb()
+ClimbData CharacterController::checkCanClimb()
 {
-	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
-		return false;
+	ClimbData cd;
+	cd.mFound = false;
 
+	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
+		return cd;
+
+
+	
+	
+	
 	float zscan = 100.0f;
 	float heightLimit = 300.0f;
+	float reach = 100.0f;
 
-	while (zscan <= heightLimit)
+	while (reach <= 300.0f)
 	{
-		//check up now
-		bool clearAbove = !checkForObstruction(0, zscan, true);
-		if (!clearAbove)
-		{
-			std::cout << "something blocking above" << std::endl;
-			return false;
-		}
-		bool foundspace = !checkForObstruction(zscan, 100.0f);
-		if (foundspace) //there is room for us above object
-		{
-			auto result = getRayResult(zscan, 100.0f, getPlayer().getRefData().getPosition().asVec3());
-			auto resultdown = getRayResult(0, 100.0f, result.mHitPos, MWMechanics::CharacterController::down);
-			std::cout << resultdown.mHitPos.x() << std::endl;
-			std::cout << resultdown.mHitPos.y() << std::endl;
-			std::cout << resultdown.mHitPos.z() << std::endl;
-			if (MWBase::Environment::get().getWorld()->isWalkableAtVec(resultdown.mHitNormal))
-				std::cout << "walkable" << std::endl;
-			else
-				std::cout << "not walkable" << std::endl;
-			
-			return true;
 
-			////Note, use physics slope check here? Can only climb if spot found is not slope?
-			////auto slopepos = osg::Vec3f(playerposvec3.x(), playerposvec3.y(), playerposvec3.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
-			////auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
-			////auto slopediff = abs(slopecheck - ledgecheck);
-			///*std::cout << slopediff << std::endl;*/
-			//if (slopediff < 50.0f)
-			//{
-			//}//std::cout << "too steep" << slopediff << std::endl;
-			//else
-			//{
-			//	//std::cout << "here" << std::endl;
-			//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
-			//}
-		}
-		else
+
+		while (zscan <= heightLimit)
 		{
-			
+			//check up now
+			bool clearAbove = !checkForObstruction(0, zscan, true);
+			if (!clearAbove)
+			{
+				std::cout << "something blocking above" << std::endl;
+				return cd;
+			}
+			bool foundspace = !checkForObstruction(zscan, reach);
+			if (foundspace) //there is room for us above object
+			{
+				auto FoundSpotRayResult = getRayResult(zscan, reach, getPlayer().getRefData().getPosition().asVec3());
+				auto FoundSpotRayDown = getRayResult(0, 100.0f, FoundSpotRayResult.mHitPos, MWMechanics::CharacterController::down);
+				if (MWBase::Environment::get().getWorld()->isWalkableAtVec(FoundSpotRayDown.mHitNormal))
+				{
+					cd.mFound = true;
+					cd.z = zscan;
+					cd.reach = reach;
+					return cd;
+				}
+
+
+
+				////Note, use physics slope check here? Can only climb if spot found is not slope?
+				////auto slopepos = osg::Vec3f(playerposvec3.x(), playerposvec3.y(), playerposvec3.z() + zscan + 2.0f); //scan above zscan find, check if obtruction or steep ledge
+				////auto slopecheck = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(slopepos, lat, 400.0f, false);
+				////auto slopediff = abs(slopecheck - ledgecheck);
+				///*std::cout << slopediff << std::endl;*/
+				//if (slopediff < 50.0f)
+				//{
+				//}//std::cout << "too steep" << slopediff << std::endl;
+				//else
+				//{
+				//	//std::cout << "here" << std::endl;
+				//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
+				//}
+			}
+
+			zscan += 10.0f;
 		}
-	
-		zscan += 10.0f;
+		zscan = 100.0f;
+		reach += 100.0f;
 	}
 	std::cout << "no space found for climb" << std::endl;
-	return false;
+	return cd;
 }
 
 bool CharacterController::checkActions() //checks if wall jumpable or climbable, also reads input and triggers actions.
@@ -2319,13 +2330,14 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			}
 
 		}
-		bool canClimb = checkCanClimb();
+		ClimbData cd = checkCanClimb();
+		bool canClimb = cd.mFound;
 		if (canClimb)
 		{
 			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
 			{
 				//float climbheight = getClimbHeight();
-				mCurrentAction = new Climb(mPtr, 0);
+				mCurrentAction = new Climb(mPtr, cd.z);
 				return true;
 			}
 		}
@@ -3099,9 +3111,10 @@ bool MWMechanics::Climb::update(float duration)
 		return false;
 	}
 	bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f);
-	if (mTargetZ == 0)
+	if (mPtr.getRefData().getPosition().pos[2] < mTargetZ)
 	{
-		if (!pathClear)
+		//if (!pathClear)
+		if(true)
 		{
 			osg::Vec3f climbmoved(0.f, 0.f, climbStrength);
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);

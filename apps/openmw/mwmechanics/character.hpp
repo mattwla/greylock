@@ -169,6 +169,12 @@ enum ActionState {
 	ActionState_Climbing
 };
 
+struct ClimbData {
+	float z;
+	float reach;
+	bool mFound;
+};
+
 class CharacterAction 
 {
 	
@@ -207,7 +213,11 @@ public:
 	{
 		mPtr = ptr;
 		mDone = false;
-		mTargetZ = targetZ;
+		//mTargetZ = 
+		auto currentpos = ptr.getRefData().getPosition();
+		mTargetZ = currentpos.pos[2] + targetZ;
+
+			//targetZ;
 	}
 
 	virtual bool update(float duration);
@@ -357,7 +367,7 @@ public:
 
 	bool checkCanWallJump();
 
-	bool checkCanClimb();
+	ClimbData checkCanClimb();
 
 	bool checkActions();
 
