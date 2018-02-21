@@ -218,6 +218,7 @@ public:
 		auto currentpos = ptr.getRefData().getPosition();
 		mTargetZ = currentpos.pos[2] + targetZ;
 		mRotateStage = 0;
+		mTimer = 0.0f;
 
 			//targetZ;
 	}

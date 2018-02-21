@@ -740,7 +740,7 @@ void OMW::Engine::go()
             mViewer->renderingTraversals();
 
             bool guiActive = mEnvironment.getWindowManager()->isGuiMode();
-			guiActive = mEnvironment.getWindowManager()->getInHitPause();
+			//guiActive = mEnvironment.getWindowManager()->getInHitPause();
 				
 				//false; //MWX
 			if (!guiActive)
