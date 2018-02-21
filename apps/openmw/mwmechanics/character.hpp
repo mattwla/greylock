@@ -10,6 +10,11 @@
 
 #include "../mwrender/animation.hpp"
 
+#include "../mwphysics/physicssystem.hpp"
+#include "../mwphysics/actor.hpp"
+#include "../mwphysics/collisiontype.hpp"
+
+
 namespace MWWorld
 {
     class InventoryStore;
@@ -336,6 +341,8 @@ public:
 	void recenterCameraRoll(float duration);
 
 	bool checkForObstruction(float z, float distance, bool above = false);
+
+	MWPhysics::PhysicsSystem::RayResult getRayResult(float z, float distance);
 
 	//bool checkForObstruction(float z, float distance);
 

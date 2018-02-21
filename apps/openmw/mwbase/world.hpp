@@ -12,6 +12,7 @@
 #include "../mwworld/cells.hpp"
 
 #include "../mwrender/rendermode.hpp"
+#include "../mwphysics/physicssystem.hpp"
 
 namespace osg
 {
@@ -515,7 +516,11 @@ namespace MWBase
 
 			virtual bool checkSlopeBelow(const MWWorld::Ptr & ptr) = 0;
 
-            // Are we in an exterior or pseudo-exterior cell and it's night?
+			//virtual osg::Vec3f getVecOfNeartestRayHit(const osg::Vec3f & from, const osg::Vec3f & dir, float maxDist, bool includeWater) = 0;
+
+			virtual MWPhysics::PhysicsSystem::RayResult getResultsOfNearestRayHit(const osg::Vec3f & from, const osg::Vec3f & dir, float maxDist, bool includeWater) = 0;
+			
+			// Are we in an exterior or pseudo-exterior cell and it's night?
             virtual bool isDark() const = 0;
 
             virtual bool findInteriorPositionInWorldSpace(const MWWorld::CellStore* cell, osg::Vec3f& result) = 0;

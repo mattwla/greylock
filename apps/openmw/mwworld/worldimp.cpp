@@ -2639,6 +2639,28 @@ namespace MWWorld
             return (result.mHitPos - from).length();
     }
 
+	MWPhysics::PhysicsSystem::RayResult World::getResultsOfNearestRayHit(const osg::Vec3f& from, const osg::Vec3f& dir, float maxDist, bool includeWater)
+	{
+		osg::Vec3f to(dir);
+		to.normalize();
+		to = from + (to * maxDist);
+
+		int collisionTypes = MWPhysics::CollisionType_World | MWPhysics::CollisionType_HeightMap | MWPhysics::CollisionType_Door;
+		if (includeWater) {
+			collisionTypes |= MWPhysics::CollisionType_Water;
+		}
+		MWPhysics::PhysicsSystem::RayResult result = mPhysics->castRay(from, to, MWWorld::Ptr(), std::vector<MWWorld::Ptr>(), collisionTypes);
+
+		if (!result.mHit)
+		{
+			result.mHitPos = to; //replace the pos with the rays goal
+			return result;
+
+		}
+		else
+			return result;
+	}
+
     void World::enableActorCollision(const MWWorld::Ptr& actor, bool enable)
     {
         MWPhysics::Actor *physicActor = mPhysics->getActor(actor);

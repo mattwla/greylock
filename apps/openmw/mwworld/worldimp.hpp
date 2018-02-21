@@ -563,6 +563,10 @@ namespace MWWorld
 
             float getDistToNearestRayHit(const osg::Vec3f& from, const osg::Vec3f& dir, float maxDist, bool includeWater = false) override;
 
+			virtual MWPhysics::PhysicsSystem::RayResult getResultsOfNearestRayHit(const osg::Vec3f & from, const osg::Vec3f & dir, float maxDist, bool includeWater);
+
+			//virtual osg::Vec3f getVecOfNeartestRayHit(const osg::Vec3f & from, const osg::Vec3f & dir, float maxDist, bool includeWater);
+
             void enableActorCollision(const MWWorld::Ptr& actor, bool enable) override;
 
             int canRest() override;

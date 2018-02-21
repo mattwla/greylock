@@ -45,7 +45,7 @@
 #include "security.hpp"
 #include "actorutil.hpp"
 #include "spellcasting.hpp"
-
+#include "../mwphysics/physicssystem.hpp"
 namespace
 {
 
@@ -2168,7 +2168,7 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	auto liftedplayerposvec3 = playerposvec3;
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
 	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
-	std::cout << playerpos.rot[1] << std::endl;
+	//std::cout << playerpos.rot[1] << std::endl;
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	if (above)
 	{
@@ -2189,6 +2189,41 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	}
 	else
 		return false;
+}
+
+MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, float distance)
+{
+
+	bool canwalljump = false;
+	float zscan = z;
+	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
+	auto playerposvec3 = playerpos.asVec3();
+	auto liftedplayerposvec3 = playerposvec3;
+	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
+	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	//std::cout << playerpos.rot[1] << std::endl;
+	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
+	//if (above)
+	//{
+	//	playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	//	forward = playerOrient * osg::Vec3f(0, 0, 1);
+
+	//}
+	osg::Vec3f lat(forward.x(), forward.y(), forward.z());
+	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
+	//float dist = 0.0f;
+	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
+	{
+		std::cout << "sending ray" << std::endl;
+		auto result = MWBase::Environment::get().getWorld()->getResultsOfNearestRayHit(liftedplayerposvec3, forward, distance, false); //check if there is an obstruciton in front of player.
+		std::cout << result.mHit << std::endl;
+		return result;																											   /*if (dist < distance)
+			return true;
+		else
+			return false;*/
+	}
+	return MWPhysics::PhysicsSystem::RayResult();
+		/*return false;*/
 }
 
 bool CharacterController::checkCanWallJump()
@@ -2215,7 +2250,7 @@ bool CharacterController::checkCanClimb()
 	while (zscan <= heightLimit)
 	{
 		//check up now
-		bool clearAbove = !checkForObstruction(zscan, heightLimit, true);
+		bool clearAbove = !checkForObstruction(0, zscan, true);
 		if (!clearAbove)
 		{
 			std::cout << "something blocking above" << std::endl;
@@ -2224,6 +2259,10 @@ bool CharacterController::checkCanClimb()
 		bool foundspace = !checkForObstruction(zscan, 100.0f);
 		if (foundspace) //there is room for us above object
 		{
+			auto result = getRayResult(zscan, 100.0f);
+			std::cout << result.mHitPos.x() << std::endl;
+			std::cout << result.mHitPos.y() << std::endl;
+			std::cout << result.mHitPos.z() << std::endl;
 			return true;
 
 			////Note, use physics slope check here? Can only climb if spot found is not slope?
@@ -2239,6 +2278,10 @@ bool CharacterController::checkCanClimb()
 			//	//std::cout << "here" << std::endl;
 			//	//MWBase::Environment::get().getWindowManager()->staticMessageBox("Jump to climb");
 			//}
+		}
+		else
+		{
+			
 		}
 	
 		zscan += 10.0f;
