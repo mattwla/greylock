@@ -2202,7 +2202,7 @@ MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, f
 	auto liftedplayerposvec3 = position;
 	//auto liftedplayerposvec3 = playerposvec3;
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
-	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
 	//std::cout << playerpos.rot[1] << std::endl;
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	if (dir == RayDirection::up)
