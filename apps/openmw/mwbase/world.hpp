@@ -103,6 +103,8 @@ namespace MWBase
 
             virtual void clear() = 0;
 
+			virtual bool isWalkableAtVec(osg::Vec3f vec) = 0;
+
 			virtual const MWWorld::Scene::CellStoreCollection& World::getActiveCells() = 0;
 
 			virtual const MWWorld::Cells& getCells() = 0;

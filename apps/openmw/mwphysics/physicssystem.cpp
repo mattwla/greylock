@@ -1172,7 +1172,15 @@ namespace MWPhysics
 			}
 			return !isWalkableSlope(tracer.mPlaneNormal);
 		}
+
+
+	
+
 		
+	}
+
+	bool PhysicsSystem::isWalkableAtVec(osg::Vec3f normalvec) {
+		return isWalkableSlope(normalvec);
 	}
 
     void PhysicsSystem::addHeightField (const float* heights, int x, int y, float triSize, float sqrtVerts, float minH, float maxH, const osg::Object* holdObject)

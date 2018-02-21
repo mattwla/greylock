@@ -2191,24 +2191,30 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 		return false;
 }
 
-MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, float distance)
+MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, float distance, osg::Vec3f position, RayDirection dir)
 {
 
 	bool canwalljump = false;
 	float zscan = z;
 	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
 	auto playerposvec3 = playerpos.asVec3();
-	auto liftedplayerposvec3 = playerposvec3;
+	auto liftedplayerposvec3 = position;
+	//auto liftedplayerposvec3 = playerposvec3;
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
 	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
 	//std::cout << playerpos.rot[1] << std::endl;
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
-	//if (above)
-	//{
-	//	playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
-	//	forward = playerOrient * osg::Vec3f(0, 0, 1);
+	if (dir == RayDirection::up)
+	{
+		playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		forward = playerOrient * osg::Vec3f(0, 0, 1);
 
-	//}
+	}
+	else if (dir == RayDirection::down)
+	{
+		playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		forward = playerOrient * osg::Vec3f(0, 0, -1);
+	}
 	osg::Vec3f lat(forward.x(), forward.y(), forward.z());
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 	//float dist = 0.0f;
@@ -2259,10 +2265,16 @@ bool CharacterController::checkCanClimb()
 		bool foundspace = !checkForObstruction(zscan, 100.0f);
 		if (foundspace) //there is room for us above object
 		{
-			auto result = getRayResult(zscan, 100.0f);
-			std::cout << result.mHitPos.x() << std::endl;
-			std::cout << result.mHitPos.y() << std::endl;
-			std::cout << result.mHitPos.z() << std::endl;
+			auto result = getRayResult(zscan, 100.0f, getPlayer().getRefData().getPosition().asVec3());
+			auto resultdown = getRayResult(0, 100.0f, result.mHitPos, MWMechanics::CharacterController::down);
+			std::cout << resultdown.mHitPos.x() << std::endl;
+			std::cout << resultdown.mHitPos.y() << std::endl;
+			std::cout << resultdown.mHitPos.z() << std::endl;
+			if (MWBase::Environment::get().getWorld()->isWalkableAtVec(resultdown.mHitNormal))
+				std::cout << "walkable" << std::endl;
+			else
+				std::cout << "not walkable" << std::endl;
+			
 			return true;
 
 			////Note, use physics slope check here? Can only climb if spot found is not slope?

@@ -1367,8 +1367,12 @@ namespace MWWorld
 			std::cout << "no slope below" << std::endl;
 			return false;
 		}
-	
 	}
+	bool World::isWalkableAtVec(osg::Vec3f vec)
+	{
+		return mPhysics->isWalkableAtVec(vec);
+	}
+
 
     void World::adjustPosition(const Ptr &ptr, bool force)
     {

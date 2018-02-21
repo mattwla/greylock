@@ -95,6 +95,8 @@ namespace MWPhysics
 
 			bool isSlopeBelow(const MWWorld::Ptr & ptr, const osg::Vec3f & position, float maxHeight);
 
+			bool isWalkableAtVec(osg::Vec3f normalvec);
+
             std::pair<MWWorld::Ptr, osg::Vec3f> getHitContact(const MWWorld::ConstPtr& actor,
                                                                const osg::Vec3f &origin,
                                                                const osg::Quat &orientation,

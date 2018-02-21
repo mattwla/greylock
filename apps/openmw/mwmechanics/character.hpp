@@ -229,6 +229,13 @@ class CharacterController : public MWRender::Animation::TextKeyListener
         size_t mLoopCount;
         bool mPersist;
     };
+
+	enum RayDirection
+	{
+		forward = 0,
+		up = 1,
+		down = 2
+	};
     typedef std::deque<AnimationQueueEntry> AnimationQueue;
     AnimationQueue mAnimQueue;
 
@@ -342,7 +349,9 @@ public:
 
 	bool checkForObstruction(float z, float distance, bool above = false);
 
-	MWPhysics::PhysicsSystem::RayResult getRayResult(float z, float distance);
+	//MWPhysics::PhysicsSystem::RayResult getRayResult(float z, float distance, RayDirection dir, osg::Vec3f position);
+
+	MWPhysics::PhysicsSystem::RayResult getRayResult(float z, float distance, osg::Vec3f position, RayDirection = RayDirection::forward);
 
 	//bool checkForObstruction(float z, float distance);
 

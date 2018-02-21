@@ -126,6 +126,8 @@ namespace MWWorld
 
 			virtual bool checkSlopeBelow(const Ptr & ptr);
 
+			virtual bool isWalkableAtVec(osg::Vec3f vec);
+
             Ptr moveObjectImp (const Ptr& ptr, float x, float y, float z, bool movePhysics=true);
             ///< @return an updated Ptr in case the Ptr's cell changes
 
