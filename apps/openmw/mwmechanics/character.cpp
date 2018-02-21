@@ -2168,17 +2168,20 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	auto liftedplayerposvec3 = playerposvec3;
 	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
 	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	std::cout << playerpos.rot[1] << std::endl;
 	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
 	if (above)
 	{
-		forward = playerOrient * osg::Vec3f(0, 0, 1);
+		playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		forward =  playerOrient * osg::Vec3f(0, 1, 0);
+
 	}
-	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+	osg::Vec3f lat(forward.x(), forward.y(), forward.z());
 	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 	float dist = 0.0f;
 	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
 	{
-		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, lat, distance, false); //check if there is an obstruciton in front of player.
+		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, forward, distance, false); //check if there is an obstruciton in front of player.
 		if (dist < distance)
 			return true;
 		else
@@ -2207,11 +2210,12 @@ bool CharacterController::checkCanClimb()
 		return false;
 
 	float zscan = 100.0f;
+	float heightLimit = 300.0f;
 
-	while (zscan <= 200)
+	while (zscan <= heightLimit)
 	{
 		//check up now
-		bool clearAbove = checkForObstruction(0, 200.0f, true);
+		bool clearAbove = checkForObstruction(zscan, heightLimit, true);
 		if (!clearAbove)
 		{
 			std::cout << "something blocking above" << std::endl;
