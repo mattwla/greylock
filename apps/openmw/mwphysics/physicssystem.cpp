@@ -22,6 +22,7 @@
 #include <components/resource/resourcesystem.hpp>
 #include <components/resource/bulletshapemanager.hpp>
 
+
 #include <components/esm/loadgmst.hpp>
 #include <components/sceneutil/positionattitudetransform.hpp>
 #include <components/sceneutil/unrefqueue.hpp>
@@ -30,10 +31,12 @@
 
 #include "../mwbase/world.hpp"
 #include "../mwbase/environment.hpp"
+#include  "../mwbase/statusmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
 #include "../mwmechanics/actorutil.hpp"
+
 
 #include "../mwworld/esmstore.hpp"
 #include "../mwworld/cellstore.hpp"
@@ -322,11 +325,17 @@ namespace MWPhysics
 			//mwx flying altered so jump will make flying entity go up on Z axis.
             {
                 velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
-
-                //if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
-				if(velocity.z() > 0.f)
+				//if(velocity.z() > 0.f)
+                if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
                     inertia = velocity;
-                else if(!physicActor->getOnGround() || physicActor->getOnSlope())
+				else if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallJump))
+				{
+					inertia = velocity;
+					isFlying = false;
+					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallHold);
+					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallJump);
+				}
+				else if(!physicActor->getOnGround() || physicActor->getOnSlope())
                     velocity = velocity + physicActor->getInertialForce();
             }
 

@@ -166,7 +166,8 @@ enum JumpingState {
 //};
 
 enum ActionState {
-	ActionState_Climbing
+	ActionState_Climbing = 0,
+	ActionState_WallHolding = 1
 };
 
 struct ClimbData {
@@ -185,6 +186,8 @@ public:
 
 	}
 	
+	virtual ~CharacterAction();
+
 	float mTimer;
 
 	MWWorld::Ptr mPtr;
@@ -227,6 +230,28 @@ public:
 
 	virtual ActionState getType();
 
+};
+
+class WallHold : public MWMechanics::CharacterAction
+{
+
+public:
+
+	
+
+	WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity);
+
+	virtual ~WallHold();
+
+
+	virtual bool update(float duraction);
+
+	virtual ActionState getType();
+
+	int mWallHoldIdx;
+
+	osg::Vec3f mOriginalVelocity;
+	
 };
 
 struct WeaponInfo;
@@ -378,9 +403,9 @@ public:
 
 	bool startClimb(float z, float forward, osg::Vec3f direction);*/
 
-	bool wallJump();
+	/*bool wallJump();
 
-	bool updateWallJump(float duration);
+	bool updateWallJump(float duration);*/
 
     void persistAnimationState();
     void unpersistAnimationState();
@@ -415,7 +440,7 @@ public:
     bool isAttackingOrSpell() const;
 	bool isClimbing() const;
 
-	bool isWallJumping() const;
+	/*bool isWallJumping() const;*/
 	
     void setAttackingOrSpell(bool attackingOrSpell);
     void setAIAttackType(const std::string& attackType);

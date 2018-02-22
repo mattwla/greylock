@@ -57,7 +57,9 @@ namespace MWBase
 		Guarding = 2,
 		Fighting = 3,
 		InConversation = 4,
-		ConfrontingTrespasser = 5
+		ConfrontingTrespasser = 5,
+		InWallHold = 6,
+		InWallJump = 7
 
 	};
 

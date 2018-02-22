@@ -24,6 +24,7 @@
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/statemanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwmechanics/aibreathe.hpp"
 
@@ -845,13 +846,16 @@ namespace MWMechanics
 
 	bool Actors::isWallJumping(const MWWorld::Ptr& ptr)
 	{
+		return MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold);
+
+
 		PtrActorMap::iterator it = mActors.find(ptr);
 		if (it == mActors.end())
 			return false;
 		CharacterController* ctrl = it->second->getCharacterController();
 
-
-		return ctrl->isWallJumping();
+		return false; //mwx fix me
+		//return ctrl->isWallJumping();
 	}
 
     bool Actors::isSneaking(const MWWorld::Ptr& ptr)

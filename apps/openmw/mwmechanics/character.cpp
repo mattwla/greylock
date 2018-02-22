@@ -33,6 +33,7 @@
 #include "../mwbase/world.hpp"
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/inventorystore.hpp"
@@ -2051,30 +2052,30 @@ void CharacterController::update(float duration)
     if(mMovementAnimationControlled && mPtr.getClass().isActor())
         world->queueMovement(mPtr, moved);
 
-	if (mWallJumpIdx == 5 || mWallJumpIdx == 6 || mWallJumpIdx == 7 || mWallJumpIdx == 8) //some redundency here seems to fix wall jump occassionally doing everything except jumping
-	{
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+	//if (mWallJumpIdx == 5 || mWallJumpIdx == 6 || mWallJumpIdx == 7 || mWallJumpIdx == 8) //some redundency here seems to fix wall jump occassionally doing everything except jumping
+	//{
+	//	MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
 
-		
-		////MWX OH GOD SPAGHETTI CODE FIX
-		//if (mWallJumpIdx == 8)
-		//{
-		//	if (mWallJumpPause < .1f)
-		//	{
-		//		float rotatestrength = .3 / (.1 / duration);
-		//		MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-		//		mWallJumpPause += duration;
-		//	}
-		//	else
-		//		mWallJumpIdx += 1;
-		//}
-		//else
-		//{
-		mWallJumpIdx += 1;
-			mWallJumpPause = 0;
-		/*}
-		*/
-	}
+	//	
+	//	////MWX OH GOD SPAGHETTI CODE FIX
+	//	//if (mWallJumpIdx == 8)
+	//	//{
+	//	//	if (mWallJumpPause < .1f)
+	//	//	{
+	//	//		float rotatestrength = .3 / (.1 / duration);
+	//	//		MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+	//	//		mWallJumpPause += duration;
+	//	//	}
+	//	//	else
+	//	//		mWallJumpIdx += 1;
+	//	//}
+	//	//else
+	//	//{
+	//	mWallJumpIdx += 1;
+	//		mWallJumpPause = 0;
+	//	/*}
+	//	*/
+	//}
 	if (mPtr == getPlayer())
 	{
 		checkActions();
@@ -2089,18 +2090,12 @@ void CharacterController::update(float duration)
 			
 			return;
 		}
-		else if (mInWallJump)
-		{
-			updateWallJump(duration);
-		}
 		else if (mPtr == getPlayer())
 		{
 			if (!(movement.x() == 0 && movement.y() == 0 && movement.z() == 0)) //get our last movement before it cuts to 0
 			{
 				mWallJumpOriginalVelocity = movement;
 			}
-			
-			//mWallJumpOriginalVelocity.y();
 			if(MWBase::Environment::get().getWorld()->getCameraRoll() != 0)
 				recenterCameraRoll(duration);
 			//float pitch = abs(osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()));
@@ -2113,8 +2108,6 @@ void CharacterController::update(float duration)
 			//	MWBase::Environment::get().getWorld()->setFieldOfView(mBaseFov, false); //mwx fix me this means we are recalculating fov every darn frame no matter what.;
 			//}
 			//mwx fov
-
-		
 		}
 	
 		
@@ -2307,7 +2300,8 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
 			if (cls.getMovementSettings(mPtr).mAttemptJump)
 			{
-				wallJump();
+				mInWallJump = true;
+				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity);
 				return true;
 			}
 
@@ -2320,6 +2314,10 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			{
 				//float climbheight = getClimbHeight();
 				mInWallJump = false;
+				if (mCurrentAction)
+				{
+					delete mCurrentAction;
+				}
 				mCurrentAction = new Climb(mPtr, cd.z);
 				return true;
 			}
@@ -2330,268 +2328,6 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
 	}
 
-}
-
-
-//bool CharacterController::updateClimb(float duration) {
-//	
-//	mClimbTimer += duration;
-//	
-//	float climbstrength = 6000 / (0.5 / duration);
-//		//mClimbData.originalz / (0.5 / duration);
-//	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
-//		//climbstrength = mClimbData.z;
-//	float rotatestrength = .3 / (.75 / duration);
-//	float forwardstrength = mClimbData.originalforward / (.25 / duration);
-//	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
-//		forwardstrength = mClimbData.forward;
-//	/*std::cout << duration << std::endl;
-//	std::cout << mClimbData.z << std::endl;
-//	std::cout << climbstrength << std::endl;*/
-//	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
-//	{
-//		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
-//		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
-//		mClimbData.z -= climbstrength;
-//		
-//		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
-//		
-//		else
-//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-//
-//		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
-//	}
-//	else
-//	{
-//		if (mClimbData.forward > 0.0f)
-//		{
-//			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-//			mClimbData.direction.y() = forwardstrength * 10;
-//			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
-//			mClimbData.forward -= forwardstrength;
-//			//std::cout << "forward" << std::endl;
-//		}
-//		else {
-//
-//
-//			mClimbState = ClimbState_None;
-//			std::cout << "climb done" << std::endl;
-//			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-//		}
-//	}
-//	
-//
-//	if (mRotateStage == 0)
-//	{
-//		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
-//			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
-//		else
-//			mRotateStage = 1;
-//	}
-//	else
-//	{
-//		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
-//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-//		else
-//			mRotateStage = 0;
-//	}
-//
-//	//put something in movement queue
-//	return true;
-//}
-
-//bool CharacterController::startClimb(float z, float forward, osg::Vec3f direction)
-//{
-//	mInWallJump = false;
-//	mRotateStage = 0;
-//	mClimbTimer = 0.0f;
-//	std::cout << "Climb started" << std::endl;
-//	mClimbData.z = z;
-//	mClimbData.originalz = z;
-//	mClimbData.forward = forward;
-//	mClimbData.originalforward = forward;
-//	mClimbData.direction.x() = 0.0f;//direction.x() * 100;
-//	mClimbData.direction.y() = 100.0f;//direction.y() * 100;
-//	mClimbData.direction.z() = 0.0f;
-//	mClimbState = ClimbState_Climbing;
-//	
-//	std::cout << "can climb" << std::endl;
-//	
-//	return true;
-//}
-
-bool CharacterController::wallJump()
-{
-	if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !mInWallJump)
-	{
-		std::cout << "wall jump" << std::endl;
-		mInWallJump = true;
-		mWallJumpRotation = 0.0f;
-		mWallJumpCameraTilt = 0.0f;
-		std::cout << mWallJumpOriginalVelocity.y() << std::endl;
-		currentvelocity = mWallJumpOriginalVelocity;
-		mWallJumpPause = 0.0f;
-		mWallJumpIdx = 0;
-		mWallJumpInitialTilt = osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch());
-		
-		//mWallJumpOriginalVelocity = mPtr.getClass().getMovementSettings(mPtr).asVec3();
-	}
-	return true;
-}
-
-bool CharacterController::updateWallJump(float duration)
-{
-	//0 approach wall and look down
-	//1 pause
-	//2 turn around and look up
-	//3 pause
-	//4 disable walljump flag, start flag to make character controller update jump
-	
-	float turnspeed = (180.0f) / (0.15 / duration);
-	/*if (mWallJumpRotation + turnspeed > 180.0f)
-	{
-		turnspeed = 180.0f - mWallJumpRotation;
-		if (mWallJumpRotation > 120.0f)
-		{
-			turnspeed * 2;
-		}
-	}*/
-	//float decreaserate = 3.0f / (1.0f / duration);
-	//float tiltrate = 35.0 / (.2f / duration);
-	//float tiltrate2 = abs(mWallJumpInitialTilt - (-40) * (1.0f / duration));
-	//currentvelocity = mWallJumpOriginalVelocity;
-		//mPtr.getClass().getMovementSettings(mPtr).asVec3();
-	float x = currentvelocity.x();
-	//float y = currentvelocity.y();
-	float z = currentvelocity.z();
-	//std::cout << x << y << z << std::endl;
-	//std::cout << frontCollisionDistance(100.0f, 0.0f) << std::endl;
-	if (mWallJumpIdx == 0)
-	{
-		mWallJumpIdx += 1;
-		//std::cout << osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) << std::endl;
-		///*if (osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) > -40.0f)
-		//{
-		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[0] += osg::DegreesToRadians(tiltrate);
-		//	mWallJumpCameraTilt += tiltrate2;
-		//}*/
-		//
-		//if (y != 0.0f && frontCollisionDistance(100.0f, 0.0f) > 40.0f && mWallJumpRotation == 0.0f) //if we are still in motion, slow down.
-		//{
-
-		//	if (x > 0.0f)
-		//		x -= mWallJumpOriginalVelocity.x() / decreaserate;
-		//	if (x < 0.0f)
-		//		x += mWallJumpOriginalVelocity.x() / decreaserate;
-		//	if (y > 0.0f)
-		//		y -= decreaserate;
-		//	if (y < 0.0f)
-		//		y += decreaserate;
-		//	if (z > 0.0f)
-		//		z -= mWallJumpOriginalVelocity.z() / decreaserate;
-		//	if (z < 0.0f)
-		//		z += mWallJumpOriginalVelocity.z() / decreaserate;
-		//	if (abs(x) < 15.0)
-		//		x = 0.0f;
-		//	if (abs(y) < 15.0)
-		//		y = 0.0f;
-		//	if (abs(z) < 15.0)
-		//		z = 0.0f;
-		//	MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, y, z));
-		//	currentvelocity.x() = x;
-		//	currentvelocity.y() = y;
-		//	currentvelocity.z() = z;
-		//	//mWallJumpPause += decreaserate;
-
-		//}
-		//else {
-		//	mWallJumpIdx = 1;
-		//	//decreaserate = 0;
-		//}
-		//
-	}
-	else if (mWallJumpIdx == 1)
-	{
-		if (mWallJumpPause < 0.06f)
-		{
-			
-			mWallJumpPause += duration;
-			//mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate);
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, -3/duration, z));
-			float rotatestrength = .3 / (.06 / duration);
-			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
-		}
-		else
-		{
-			mWallJumpIdx = 2;
-			mWallJumpPause = 0.0f;
-		}
-	}
-	else if (mWallJumpIdx == 2)
-	{
-		//if (mWallJumpRotation < 30)
-		//{
-		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/2);
-		//	mWallJumpRotation += turnspeed/2;
-		//}
-
-		//else if (mWallJumpRotation < 120)
-		//{
-		//	//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
-		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed);
-		//	mWallJumpRotation += turnspeed;
-
-		//}
-		//else if (mWallJumpRotation < 180)
-		//{
-		//	//MWBase::Environment::get().getWorld()->rotateCamera(0.f, osg::DegreesToRadians(turnspeed), true);
-		//	mPtr.getClass().getMovementSettings(mPtr).mRotation[2] += osg::DegreesToRadians(turnspeed/4);
-		//	mWallJumpRotation += turnspeed/4;
-
-		//}
-		//else
-			mWallJumpIdx = 3;
-		//if (mWallJumpCameraTilt < 70)
-	/*	if (osg::RadiansToDegrees(MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch()) < 20.0f)
-		{
-			mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate);
-			mWallJumpCameraTilt += tiltrate;
-		}*/
-		
-
-	}
-	else if (mWallJumpIdx == 3)
-	{
-		if (mWallJumpPause < 0.04f)
-		{
-			mWallJumpPause += duration; //MWX ugh make this better plzzz
-			//float rotatestrength = .3 / (.1 / duration);
-			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-		}
-		else
-			mWallJumpIdx = 4;
-	}
-	
-	else if (mWallJumpIdx == 4)//we are not in motion, turn around and leap!
-	{
-				//MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
-				//mInWallJump = false;
-				//mWallJumpIdx = 5;
-				if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
-				{
-					mInWallJump = false;
-					mWallJumpCooldown = 0.25f;
-					mWallJumpIdx = 5;
-				}
-				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-		
-	}
-	
-	if (mWallJumpIdx != 0 && mWallJumpIdx != 1)
-	{
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0, 0, 0)); //always make sure some queue movement is applied to ensure jump isnt interupted
-	}
-	return true;
 }
 
 void CharacterController::persistAnimationState()
@@ -2895,11 +2631,11 @@ bool CharacterController::isClimbing() const
 		return false;
 }
 
-bool CharacterController::isWallJumping() const
-{
-	return mInWallJump;
-	
-}
+//bool CharacterController::isWallJumping() const
+//{
+//	return mInWallJump;
+//	
+//}
 
 bool CharacterController::isSneaking() const
 {
@@ -3050,6 +2786,10 @@ void CharacterController::updateHeadTracking(float duration)
 
 
 
+CharacterAction::~CharacterAction()
+{
+}
+
 bool MWMechanics::CharacterAction::update(float duration)
 {
 	mTimer += duration;
@@ -3141,79 +2881,99 @@ bool MWMechanics::Climb::update(float duration)
 	}
 	return false;
 	}
-	//bool pathClear = mCharacterController->checkForObstruction(100.0f, 100.0f);
+
+
+WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity)
+{
+
 	
-	
-	//MWMechanics::CharacterController::checkForObstruction(100.0f, 100.0f);
-	//	
-	//	mClimbTimer += duration;
-	//	
-	//	float climbstrength = 6000 / (0.5 / duration);
-	//		//mClimbData.originalz / (0.5 / duration);
-	//	//if (climbstrength > mClimbData.z) //make sure we don't do huge jump due to frame lag
-	//		//climbstrength = mClimbData.z;
-	//	float rotatestrength = .3 / (.75 / duration);
-	//	float forwardstrength = mClimbData.originalforward / (.25 / duration);
-	//	if (forwardstrength > mClimbData.forward) //make sure we don't do huge jump due to frame lag
-	//		forwardstrength = mClimbData.forward;
-	//	/*std::cout << duration << std::endl;
-	//	std::cout << mClimbData.z << std::endl;
-	//	std::cout << climbstrength << std::endl;*/
-	//	if ((frontCollisionDistance(100.0f, -100.0f) != 100.0f || frontCollisionDistance(100.0f, 0.0f) != 100.0f) && mClimbTimer < 3.0)
-	//	{
-	//		osg::Vec3f climbmoved(0.f, 0.f, climbstrength);//mwx or frame related?
-	//		MWBase::Environment::get().getWorld()->queueMovement(mPtr, climbmoved);
-	//		mClimbData.z -= climbstrength;
-	//		
-	//		/*if (mClimbData.originalz - mClimbData.z > mClimbData.originalz / 3)
-	//		
-	//		else
-	//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-	//
-	//		MWBase::Environment::get().getWorld()->getCameraRoll() >= .3*/
-	//	}
-	//	else
-	//	{
-	//		if (mClimbData.forward > 0.0f)
-	//		{
-	//			//MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-	//			mClimbData.direction.y() = forwardstrength * 10;
-	//			MWBase::Environment::get().getWorld()->queueMovement(mPtr, mClimbData.direction);
-	//			mClimbData.forward -= forwardstrength;
-	//			//std::cout << "forward" << std::endl;
-	//		}
-	//		else {
-	//
-	//
-	//			mClimbState = ClimbState_None;
-	//			std::cout << "climb done" << std::endl;
-	//			//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-	//		}
-	//	}
-	//	
-	//
-	//	if (mRotateStage == 0)
-	//	{
-	//		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
-	//			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
-	//		else
-	//			mRotateStage = 1;
-	//	}
-	//	else
-	//	{
-	//		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
-	//			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-	//		else
-	//			mRotateStage = 0;
-	//	}
-	//
-	//	//put something in movement queue
-	//	return true;
-	
-	
+		mPtr = ptr;
+		mTimer = 0.0f;
+		mWallHoldIdx = 0;
+		mOriginalVelocity = originalvelocity;
+		mDone = false;
+		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
 	
 
 }
 
+WallHold::~WallHold()
+{
+	std::cout << "deleting wallhold" << std::endl;
+	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InWallHold);
+}
 
+bool MWMechanics::WallHold::update(float duration)
+{
+	if (!MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold)) //something knocked us out of our wall hold, cancel.
+	{
+		mDone = true;
+		return false;
+	}
+
+	mTimer += duration;
+
+	if (mWallHoldIdx == 0)
+	{
+		if (mTimer < 0.16f) //this is a problem mwx
+		{
+			
+			float x = mOriginalVelocity.x();
+			float z = mOriginalVelocity.z();
+			//mTimer += duration;
+			//mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate);
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, -3 / duration, z));
+			float rotatestrength = .2 / (.16 / duration);
+			if(MWBase::Environment::get().getWorld()->getCameraRoll() < .2)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+		}
+		else
+		{
+			mWallHoldIdx = 1;
+			mTimer = 0.0f;
+		}
+	}
+	else if (mWallHoldIdx == 1)//we are not in motion, turn around and leap!
+	{
+		
+		if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
+		{
+			
+			
+		  //make so it deletes itself when cooldown done, delelte self does status stuff
+			mWallHoldIdx = 2;
+			
+		}
+
+	}
+	else if (mWallHoldIdx == 2)
+	{
+		std::cout << "jumping" << std::endl;
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InWallJump);
+		//mInWallJump = false; //Make this status flip
+		//just hold until physicsmanager makes the jump happen and removes the wallhold statusflag;
+		/*mTimer += duration;
+		if (mTimer > 1.0f)
+		{
+			mDone = true;
+		}*/
+	}
+
+	if (mWallHoldIdx == 0 || mWallHoldIdx == 1)
+	{
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0, 0, 0)); //always make sure some queue movement is applied to ensure jump isnt interupted
+	}
+	return true;
+}
+
+ActionState MWMechanics::WallHold::getType()
+{
+	return ActionState_WallHolding;
+
+}
+
+
+
+}
 

@@ -810,7 +810,7 @@ namespace MWGui
 				}
 				else {
 					MWBase::Environment::get().getInputManager()->dialogueChunkMode(false);
-					if (mHistoryContents.back()->mType == message) //do we have a message we need to show? MWX make sure it is not a choice
+					if (mHistoryContents.back()->mType == message) //do we have a message we need to show? MWX make sure it is not a choice MWX removed choice checking
 						mHistoryContents.back()->write(typesetter, &mKeywordSearch, mTopicLinks);
 					mTopicsList->setVisible(true);
 					inChunk = false;
