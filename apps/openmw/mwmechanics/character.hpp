@@ -251,6 +251,8 @@ public:
 	int mWallHoldIdx;
 
 	osg::Vec3f mOriginalVelocity;
+
+	osg::Vec3f mStoredJump;
 	
 };
 

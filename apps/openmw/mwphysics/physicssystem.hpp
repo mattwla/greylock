@@ -129,6 +129,8 @@ namespace MWPhysics
 
             bool isOnGround (const MWWorld::Ptr& actor);
 
+			bool isOnSlope(const MWWorld::Ptr & actor);
+
             bool canMoveToWaterSurface (const MWWorld::ConstPtr &actor, const float waterlevel);
 
             /// Get physical half extents (scaled) of the given actor.

@@ -2233,7 +2233,7 @@ bool CharacterController::checkCanWallJump()
 {
 
 
-	if (mCurrentAction || MWBase::Environment::get().getWorld()->isOnGround(mPtr) || mWallJumpCooldown != 0.0f)
+	if (mCurrentAction || (MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !MWBase::Environment::get().getWorld()->isOnSlope(mPtr))|| mWallJumpCooldown != 0.0f)
 		return false;
 
 	else
@@ -2948,18 +2948,28 @@ bool MWMechanics::WallHold::update(float duration)
 	}
 	else if (mWallHoldIdx == 2)
 	{
-		std::cout << "jumping" << std::endl;
+
 		bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
+		bool aboveClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f, true);
 		if (pathClear) //jump up if something in way, like looking at cliff
 		{
+			std::cout << "jumping" << std::endl;
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
-			
+			mStoredJump = osg::Vec3f(0.0f, 200.0f, 300.0f);
+
+		}
+		else if (aboveClear)
+		{
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 0.0f, 500.0f));
+			std::cout << "walljump up" << std::endl;
+			mStoredJump = osg::Vec3f(0.0f, 0.0f, 500.0f);
 		}
 		else
 		{
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 50.0f, 500.0f));
-			std::cout << "walljump up" << std::endl;
+			mWallHoldIdx = 1; //No where to jump!
+			return true;
 		}
+
 		
 		mWallHoldIdx = 3;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InWallJump);
@@ -2973,7 +2983,8 @@ bool MWMechanics::WallHold::update(float duration)
 	}
 	else if (mWallHoldIdx == 3)
 	{
-		//wait until deleted
+		//wait until deleted, keep queing motion though
+		MWBase::Environment::get().getWorld()->queueMovement(mPtr, mStoredJump);
 	}
 
 	if (mWallHoldIdx == 0 || mWallHoldIdx == 1)

@@ -314,7 +314,9 @@ namespace MWWorld
             int getMonth() const override;
             int getYear() const override;
 
-			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance);
+			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance, bool above = false);
+
+			//virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance);
 
             std::string getMonthName (int month = -1) const override;
             ///< Return name of month (-1: current month)
@@ -496,6 +498,8 @@ namespace MWWorld
             bool isWading(const MWWorld::ConstPtr &object) const override;
             bool isWaterWalkingCastableOnTarget(const MWWorld::ConstPtr &target) const override;
             bool isOnGround(const MWWorld::Ptr &ptr) const override;
+
+			bool isOnSlope(const MWWorld::Ptr & ptr) const override;
 
             osg::Matrixf getActorHeadTransform(const MWWorld::ConstPtr& actor) const override;
 

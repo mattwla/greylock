@@ -52,6 +52,7 @@
 
 #include "player.hpp"
 #include "manualref.hpp"
+#include "refdata.hpp"
 #include "ptr.hpp"
 #include "cellstore.hpp"
 #include "containerstore.hpp"
@@ -941,24 +942,33 @@ namespace MWWorld
         return mYear->getInteger();
     }
 
-	bool World::checkForObstruction(MWWorld::Ptr ptr, float z, float distance)
+	bool World::checkForObstruction(MWWorld::Ptr ptr, float z, float distance, bool above)
 	{
+		//std::cout << getPlayer().getRefData().getPosition().rot[2] << std::endl;
+		//std::cout << MWBase::Environment::get().getWorld()->getCameraYaw() << std::endl;
+		//std::cout << getPlayer().getClass().getMovementSettings(mPtr).mRotation[2] << std::endl;
 		bool canwalljump = false;
 		float zscan = z;
 		const ESM::Position& playerpos = ptr.getRefData().getPosition();
-			
-			//getPlayer().getRefData().getPosition();
 		auto playerposvec3 = playerpos.asVec3();
 		auto liftedplayerposvec3 = playerposvec3;
 		liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
-		osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+										  //osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+		//std::cout << playerpos.rot[1] << std::endl;
 		osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
-		osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+		if (above)
+		{
+			playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(0, osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+			forward = playerOrient * osg::Vec3f(0, 0, 1);
+
+		}
+		osg::Vec3f lat(forward.x(), forward.y(), forward.z());
 		//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
 		float dist = 0.0f;
 		if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
 		{
-			dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, lat, distance, false); //check if there is an obstruciton in front of player.
+			dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, forward, distance, false); //check if there is an obstruciton in front of player.
 			if (dist < distance)
 				return true;
 			else
@@ -967,6 +977,33 @@ namespace MWWorld
 		else
 			return false;
 	}
+
+	//bool World::checkForObstruction(MWWorld::Ptr ptr, float z, float distance)
+	//{
+	//	bool canwalljump = false;
+	//	float zscan = z;
+	//	const ESM::Position& playerpos = ptr.getRefData().getPosition();
+	//		
+	//		//getPlayer().getRefData().getPosition();
+	//	auto playerposvec3 = playerpos.asVec3();
+	//	auto liftedplayerposvec3 = playerposvec3;
+	//	liftedplayerposvec3.z() += zscan; //used so small bumps in land won't be ready as obstructions.
+	//	osg::Quat playerOrient = osg::Quat(playerpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(playerpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(playerpos.rot[2], osg::Vec3f(0, 0, -1));
+	//	osg::Vec3f forward = playerOrient * osg::Vec3f(0, 1, 0);
+	//	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
+	//	//all above gets the direction player is facing on a 2d plane, looking down from the sky at player head. Might be superflowous
+	//	float dist = 0.0f;
+	//	if (!(lat.x() == 0 && lat.y() == 0 && lat.z() == 0)) //if lat is a 0 vector bullet will crash in debug, this avoids that.
+	//	{
+	//		dist = MWBase::Environment::get().getWorld()->getDistToNearestRayHit(liftedplayerposvec3, lat, distance, false); //check if there is an obstruciton in front of player.
+	//		if (dist < distance)
+	//			return true;
+	//		else
+	//			return false;
+	//	}
+	//	else
+	//		return false;
+	//}
 
     std::string World::getMonthName (int month) const
     {
@@ -2241,6 +2278,11 @@ namespace MWWorld
     {
         return mPhysics->isOnGround(ptr);
     }
+
+	bool World::isOnSlope(const MWWorld::Ptr &ptr) const
+	{
+		return mPhysics->isOnSlope(ptr);
+	}
 
     void World::togglePOV()
     {

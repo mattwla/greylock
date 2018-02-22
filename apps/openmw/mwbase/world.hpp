@@ -123,7 +123,9 @@ namespace MWBase
 
             virtual MWWorld::CellStore *getCell (const ESM::CellId& id) = 0;
 
-            virtual void useDeathCamera() = 0;
+			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance, bool above = false) = 0;
+			
+			virtual void useDeathCamera() = 0;
 
             virtual void setWaterHeight(const float height) = 0;
 
@@ -516,8 +518,10 @@ namespace MWBase
 
             virtual void breakInvisibility (const MWWorld::Ptr& actor) = 0;
 
-			virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance) = 0;
+		//	virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance) = 0;
 
+			virtual bool isOnSlope(const MWWorld::Ptr & ptr) const = 0;
+			
 			virtual bool checkSlopeBelow(const MWWorld::Ptr & ptr) = 0;
 
 			//virtual osg::Vec3f getVecOfNeartestRayHit(const osg::Vec3f & from, const osg::Vec3f & dir, float maxDist, bool includeWater) = 0;
