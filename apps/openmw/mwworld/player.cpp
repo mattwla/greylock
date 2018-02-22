@@ -158,9 +158,9 @@ namespace MWWorld
 	{
 		//switch to prevent wall jumping if player is on ground, also to prevent a held jump key from auto wall jumping.
 		MWWorld::Ptr ptr = getPlayer();
-		if(MWBase::Environment::get().getWorld()->isOnGround(ptr))
+		/*if(MWBase::Environment::get().getWorld()->isOnGround(ptr))
 			return false;
-		else
+		else*/
 			ptr.getClass().getMovementSettings(ptr).mAttemptJump = enable;
 
 		return false;

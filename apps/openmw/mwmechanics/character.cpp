@@ -2262,7 +2262,7 @@ ClimbData CharacterController::checkCanClimb()
 			bool clearAbove = !checkForObstruction(0, zscan, true);
 			if (!clearAbove)
 			{
-				std::cout << "something blocking above" << std::endl;
+				//std::cout << "something blocking above" << std::endl;
 				return cd;
 			}
 			bool foundspace = !checkForObstruction(zscan, reach);
@@ -2284,7 +2284,7 @@ ClimbData CharacterController::checkCanClimb()
 		zscan = 100.0f;
 		reach += 100.0f;
 	}
-	std::cout << "no space found for climb" << std::endl;
+	//std::cout << "no space found for climb" << std::endl;
 	return cd;
 }
 
@@ -2836,7 +2836,7 @@ bool MWMechanics::Climb::update(float duration)
 	}
 
 	
-	std::cout << "updating climb..." << std::endl;
+	//std::cout << "updating climb..." << std::endl;
 	mTimer += duration;
 	if (mTimer > 4.0f)
 	{
@@ -2876,7 +2876,7 @@ bool MWMechanics::Climb::update(float duration)
 
 			MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], -MWBase::Environment::get().getWorld()->getCameraYaw());
 
-			std::cout << "climb done" << std::endl;
+			//std::cout << "climb done" << std::endl;
 		}
 	}
 	return false;
@@ -2886,7 +2886,7 @@ bool MWMechanics::Climb::update(float duration)
 WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity)
 {
 
-	
+	std::cout << "building wallhold" << std::endl;
 		mPtr = ptr;
 		mTimer = 0.0f;
 		mWallHoldIdx = 0;
@@ -2935,7 +2935,7 @@ bool MWMechanics::WallHold::update(float duration)
 	}
 	else if (mWallHoldIdx == 1)//we are not in motion, turn around and leap!
 	{
-		
+		//std::cout << "listening for jump" << std::endl;
 		if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
 		{
 			
@@ -2949,7 +2949,19 @@ bool MWMechanics::WallHold::update(float duration)
 	else if (mWallHoldIdx == 2)
 	{
 		std::cout << "jumping" << std::endl;
-		MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+		bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
+		if (pathClear) //jump up if something in way, like looking at cliff
+		{
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+			
+		}
+		else
+		{
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 50.0f, 500.0f));
+			std::cout << "walljump up" << std::endl;
+		}
+		
+		mWallHoldIdx = 3;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InWallJump);
 		//mInWallJump = false; //Make this status flip
 		//just hold until physicsmanager makes the jump happen and removes the wallhold statusflag;
@@ -2958,6 +2970,10 @@ bool MWMechanics::WallHold::update(float duration)
 		{
 			mDone = true;
 		}*/
+	}
+	else if (mWallHoldIdx == 3)
+	{
+		//wait until deleted
 	}
 
 	if (mWallHoldIdx == 0 || mWallHoldIdx == 1)

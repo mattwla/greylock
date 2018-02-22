@@ -250,7 +250,7 @@ namespace MWInput
 				
 				//std::cout << "jump detected:" << std::endl;
 					//std::cout << mAttemptJump << std::endl;
-					mPlayer->setAttemptJump(currentValue);
+					mPlayer->setAttemptJump(mAttemptJump);
 				
 			}
         }
@@ -413,7 +413,12 @@ namespace MWInput
 
     void InputManager::update(float dt, bool disableControls, bool disableEvents)
     {
-        mControlsDisabled = disableControls;
+		mAttemptJump = false;
+		if (mPlayer)
+		{
+			mPlayer->setAttemptJump(false);
+		}
+		mControlsDisabled = disableControls;
 
         mInputManager->setMouseVisible(MWBase::Environment::get().getWindowManager()->getCursorVisible());
 
@@ -590,6 +595,7 @@ namespace MWInput
                 {
 					std::cout << "Setting up down..." << std::endl;
 					mPlayer->setUpDown (1);
+					
 					
                     triedToMove = true;
                     mOverencumberedMessageDelay = 0.f;
