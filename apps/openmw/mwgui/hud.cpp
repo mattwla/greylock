@@ -526,7 +526,7 @@ namespace MWGui
     {
         mHealth->setVisible(visible);
         mMagicka->setVisible(false);
-        mStamina->setVisible(false);
+        mStamina->setVisible(visible);
         updatePositions();
 		//mwx hide magicka and stamina, implement luck system?
     }

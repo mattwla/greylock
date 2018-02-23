@@ -441,18 +441,18 @@ namespace MWGui
 
     bool DialogueWindow::exit()
     {
-        if ((MWBase::Environment::get().getDialogueManager()->isInChoice()) || MWBase::Environment::get().getInputManager()->getInChunkMode())
+     /*   if ((MWBase::Environment::get().getDialogueManager()->isInChoice()) || MWBase::Environment::get().getInputManager()->getInChunkMode())
         {
             return false;
 			
         }
         else
-        {
+        {*/
             resetReference();
             MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
             mTopicsList->scrollToTop();
             return true;
-        }
+      /*  }*/
     }
 
 	MWWorld::Ptr DialogueWindow::getDialogueHost() const
@@ -984,6 +984,7 @@ namespace MWGui
     {
         MWBase::Environment::get().getDialogueManager()->goodbyeSelected();
         MWBase::Environment::get().getWindowManager()->removeGuiMode(MWGui::GM_Dialogue);
+		//MWBase::Environment::get().getWindowManager()->exitCurrentGuiMode();
         resetReference();
     }
 
@@ -1109,7 +1110,10 @@ namespace MWGui
 
     bool DialogueWindow::isCompanion()
     {
-        return isCompanion(mPtr);
+		if (mPtr)
+			return isCompanion(mPtr);
+		else
+			return false;
     }
 
     bool DialogueWindow::isCompanion(const MWWorld::Ptr& actor)

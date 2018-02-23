@@ -434,9 +434,9 @@ namespace MWPhysics
                     osg::Vec3f newVelocity = slide(velocity, tracer.mPlaneNormal);
 
                     // Do not allow sliding upward if there is gravity.
-                    // Stepping will have taken care of that.
-                    if(!(newPosition.z() < swimlevel || isFlying))
-                        newVelocity.z() = std::min(newVelocity.z(), 0.0f);
+                    // Stepping will have taken care of that. mwx sliding up fix
+                  /*  if(!(newPosition.z() < swimlevel || isFlying))
+                        newVelocity.z() = std::min(newVelocity.z(), 0.0f);*/
 
                     if ((newVelocity-velocity).length2() < 0.01)
                         break;

@@ -2960,9 +2960,9 @@ bool MWMechanics::WallHold::update(float duration)
 		}
 		else if (aboveClear)
 		{
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 0.0f, 500.0f));
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 0.0f, 300.0f));
 			std::cout << "walljump up" << std::endl;
-			mStoredJump = osg::Vec3f(0.0f, 0.0f, 500.0f);
+			mStoredJump = osg::Vec3f(0.0f, 0.0f, 300.0f);
 		}
 		else
 		{
@@ -2985,6 +2985,7 @@ bool MWMechanics::WallHold::update(float duration)
 	{
 		//wait until deleted, keep queing motion though
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, mStoredJump);
+		//mPtr.getClass().getCreatureStats(mPtr).setFatigue(50.0f);
 	}
 
 	if (mWallHoldIdx == 0 || mWallHoldIdx == 1)
