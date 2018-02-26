@@ -441,6 +441,7 @@ namespace MWGui
 
     bool DialogueWindow::exit()
     {
+		//mwx goodbye hack fix
      /*   if ((MWBase::Environment::get().getDialogueManager()->isInChoice()) || MWBase::Environment::get().getInputManager()->getInChunkMode())
         {
             return false;

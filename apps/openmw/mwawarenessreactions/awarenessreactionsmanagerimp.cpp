@@ -160,7 +160,7 @@ namespace MWAwarenessReactions
 						{
 
 							//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
-							life.mCurrentGuardZone = kv.first;
+							life.mCurrentGuardZone = kv.first; //set which guard zone we are concerned about to figure out where to escort player if they surrender
 							reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
 						}
 					}
