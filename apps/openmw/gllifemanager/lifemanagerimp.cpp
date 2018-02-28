@@ -17,37 +17,25 @@ GLLifeManager::LifeManager::LifeManager()
 
 void GLLifeManager::LifeManager::update(float duration, bool paused)
 {
-
+	bool firstupdate = false;
 	float hours = duration;
-
-	//timer for schedule checking
-	
-	//timer for task update
-	
-	//timer for reaction update
-
-	//timer for awareness update
-
-	//knowledge of who is active and who is inactive
-
 	int ticks = 0;
-	
-	float min = 1.0 / 60.0; //define a minute
-
-	if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. 
+	const float min = 1.0 / 60.0; //define a minute
+	if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. mwx make this part of new game or load game process.
 	{
 		mLastTimeReported = hours;
 		return;
 	}
-
 	mTimePassed = hours - mLastTimeReported;
 	if (mTimePassed < 0)
 	{
 		mTimePassed += 24.0f;
-		std::cout << "midnight time boost, mtimepassed now = " + std::to_string(mTimePassed) << std::endl;
+		firstupdate = true;
+		//midnight timeboost
 	}
-	mLastTimeReported = hours;
-	mTimeAccumulator += mTimePassed;
+	
+	mLastTimeReported = hours;//remember the time for next update
+	mTimeAccumulator += mTimePassed;//keep track of how much time has passed since we did last update
 
 	if (mTimeAccumulator > min)
 	{
@@ -60,38 +48,48 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	//GET EVERYONE A SCHEDULED TASK, OR MOVE ALONG THEIR CURRENT TASK
 
 	//while (ticks > 0)
+	bool updateSchedule = ticks > 5; //check for ->updated schedules<- every 5 minutes,.
+
 	{
-
 		int unsigned idx = 0;
-		while (idx < mLifeList.size())
+		while (idx < mLifeList.size()) //iterate through all living things in world.
 		{
-			auto task = mLifeList[idx]->mSchedule->getScheduledTask();
+			MWBase::Life* thislifeptr = mLifeList[idx];
+		
+			if (updateSchedule || firstupdate)
+			{
+				MWTasks::Task::TypeID scheduledtasktype = thislifeptr->mSchedule->getScheduledTask(); //figure out what this life thing is scheduled to do now through the AIScheduler (Big broad life tasks? work sleep play eat) Work can be commanded.
 
-			if (!mLifeList[idx]->mCurrentTask || mLifeList[idx]->mCurrentTask->getTypeId() != task)//|| task == MWTasks::Task::TypeIDGet) // get means no task.
-			{
-				if (mLifeList[idx]->mCurrentTask)
-					delete mLifeList[idx]->mCurrentTask;
-				
-				auto newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(mLifeList[idx]->mTaskChain, task);
-				mLifeList[idx]->mTaskChain->mSubTask = newtask;
-				mLifeList[idx]->mCurrentTask = newtask;
-			
-			}
-			if (mLifeList[idx]->mSubTask)
-			{
-				mLifeList[idx]->mPtr = mLifeList[idx]->mSubTask->update();
-				if (mLifeList[idx]->mSubTask->mDone)
+				if (!thislifeptr->mCurrentTask || thislifeptr->mCurrentTask->getTypeId() != scheduledtasktype)// if the life does not have a task, or its scheduled task has changed.
 				{
-					delete mLifeList[idx]->mSubTask;
-					mLifeList[idx]->mSubTask = 0;
-					mLifeList[idx]->mCurrentTask->resume();
+					if (thislifeptr->mCurrentTask) //got a new task, still got an old task. Delete the whole task
+						delete thislifeptr->mCurrentTask;
+
+					MWTasks::Task* newtask = MWBase::Environment::get().getTasksManager()->taskEnumToTask(thislifeptr->mTaskChain, scheduledtasktype); //potential problem here, life manager right now only knows type of task, it knows nothing else like where the task should be.
+					thislifeptr->mTaskChain->mSubTask = newtask; //task added to npcs current task chain (at head I presume?) mwx fix me memory leak here, what of old mSubTask?
+					thislifeptr->mCurrentTask = newtask; //task also added to useful current task pointer, so life can access this task directly.
+
+				}
+			}
+
+
+			if (thislifeptr->mSubTask) //is this npc futzing about with a task unrelated to the scheduled task? Assume it should be happening and update it.
+			{
+				thislifeptr->mPtr = thislifeptr->mSubTask->update(); //must set new ptr because tasks can cause outdated ptr (if npc changes cell...)
+				if (thislifeptr->mSubTask->mDone) //is subtask over? Back to big broad life task (work, sleep, play, eat).
+				{
+					delete  thislifeptr->mSubTask;
+					thislifeptr->mSubTask = 0;
+					thislifeptr->mCurrentTask->resume(); //right now just pokes the currenttask part of taskchain.
 				}
 			}
 			else
-				mLifeList[idx]->mPtr = mLifeList[idx]->mTaskChain->update();
-			idx += 1;
+				thislifeptr->mPtr = thislifeptr->mTaskChain->update(); //no subtask? Update current life goal task
+			
+			idx += 1; //onto the next life
 		}
-		ticks -= 1;
+		if (updateSchedule)
+			ticks -= 5;
 	}
 
 

@@ -195,7 +195,7 @@ namespace MWWorld
 
             virtual ~World();
 
-            void startNewGame (bool bypass) override;
+            void startNewGame (bool bypass) override; //mwx new
             ///< \param bypass Bypass regular game start.
 
             void clear() override;

@@ -57,12 +57,8 @@ namespace MWBase
 {
 	struct Life
 	{
-		
 		Life(std::string id)
 		{
-		
-		
-
 			mId = id;
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			//mPtr = ptr;
@@ -77,8 +73,6 @@ namespace MWBase
 				//MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr, );
 			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
 			mSubTask = 0;
-			
-			
 		}
 	
 	public:
