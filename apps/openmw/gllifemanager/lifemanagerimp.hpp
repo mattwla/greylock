@@ -16,6 +16,8 @@ namespace MWWorld
 
 namespace GLLifeManager
 {
+
+
 	class LifeManager : public MWBase::LifeManager
 	{
 

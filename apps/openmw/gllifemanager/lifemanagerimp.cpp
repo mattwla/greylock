@@ -24,13 +24,14 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	if (mLastTimeReported == 0.0f) //our first update of current session, just log the time. mwx make this part of new game or load game process.
 	{
 		mLastTimeReported = hours;
-		return;
+		firstupdate = true;
+		//return;
 	}
 	mTimePassed = hours - mLastTimeReported;
 	if (mTimePassed < 0)
 	{
 		mTimePassed += 24.0f;
-		firstupdate = true;
+		
 		//midnight timeboost
 	}
 	
@@ -39,7 +40,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 
 	if (mTimeAccumulator > min)
 	{
-		ticks = mTimeAccumulator / min; //How many minutes have passed?
+		ticks += mTimeAccumulator / min; //How many minutes have passed?
 		mTimeAccumulator -= ticks * min;
 		
 	}
@@ -93,26 +94,27 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 	}
 
 
-
 	//SORT OUT REACTIONS HERE
 	unsigned int reactionsidx = 0;
 	while (reactionsidx < mLifeList.size())
 	{
-		if (inActiveRange(mLifeList[reactionsidx]->mPtr))
+		MWBase::Life* currentlife = mLifeList[reactionsidx];
+		if (inActiveRange(currentlife->mPtr)) //only update their reactions if they are in an active cell, no reactions for inactive ai now.
 		{
 
-			mLifeList[reactionsidx]->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mLifeList[reactionsidx]->mPtr);
+			currentlife->mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(currentlife->mPtr);
 
-			mLifeList[reactionsidx]->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mLifeList[reactionsidx]->mPtr, *mLifeList[reactionsidx]);
-			if (mLifeList[reactionsidx]->mAvailableActions.size() > 0)
+			currentlife->mAvailableActions = MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(currentlife->mPtr, *currentlife); //needs life object to get guard zone.... ridiculous mws fix me
+			if (currentlife->mAvailableActions.size() > 0) //Are there possible ways to react to the environment?
 			{
-				mLifeList[reactionsidx]->mSubTask = mLifeList[reactionsidx]->mAvailableActions.begin()->first;
-				//Just do first possible task found now.
-				//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   (mLifeList[reactionsidx]->mAvailableActions[0]
+				currentlife->mSubTask = currentlife->mAvailableActions.begin()->first;
+				//Just do first possible task found now.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (mLifeList[reactionsidx]->mAvailableActions[0]
 			}
 		}
 		reactionsidx += 1;
 	}
+
+	//Two loops here? Couldn't I just do one? Keep it like this for now but consider refactoring. Mwx fix me
 }
 
 void GLLifeManager::LifeManager::initialize()
@@ -122,7 +124,7 @@ void GLLifeManager::LifeManager::initialize()
 	buildLifeList();
 }
 
-void GLLifeManager::LifeManager::buildLifeList()
+void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... interesting. 
 {
 	
 	std::string list = "schedules/npclist.csv";
@@ -138,11 +140,9 @@ void GLLifeManager::LifeManager::buildLifeList()
 	while (getline(in, lifeid))
 	{
 		MWBase::Life* newlife = new MWBase::Life(lifeid);
-
 		mLifeList.push_back(newlife);
 		MWBase::Environment::get().getTasksManager()->buildZoneMap(lifeid);
-		//MWBase::Environment::get().getStatusManager()->initNpcStatus(npc); //mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way
-																	
+		//mwx fix me should make all this logic a discrete newgame thingy, right now is very tied up in a weird way															
 	}
 
 	//Give schedule manager
@@ -166,10 +166,8 @@ bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 	bool inProcessingRange;
 	//mwx fix me some bad redundency here against actors.cpp
 	const float aiProcessingDistance = 7168;
-
 	const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
 	MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
-	//MWWorld::Ptr npc = MWBase::Environment::get().getWorld()->searchPtr(npcId, false);
 	if (npc.getCell()->isExterior())
 	{
 		inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
@@ -177,13 +175,11 @@ bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 	else
 	{
 		inProcessingRange = player.getCell() == npc.getCell();
-
-
 	}
-
 	//If player is resting, no one is in active range....
 	if (inProcessingRange)
 		inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
+	
 	return inProcessingRange;
 
 }

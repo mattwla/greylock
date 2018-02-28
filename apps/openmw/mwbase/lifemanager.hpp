@@ -57,11 +57,33 @@ namespace MWBase
 {
 	struct Life
 	{
+
+		//Life class
+		//Its purpose: to manage all the systems that make greylocks life so interesting
+		//like hunger, thirst, and will
+		//Scheduled broad goals (sleep, work, play, eat)
+		//A taskchain related to scheduled broad goal
+
+		//determines which reaction takes precedence, determines if reaction can over ride currenttask.
+		
+		
+		
+		//Things Life class does not that it maybe should not do
+		//
+		//
+		//
+		//
+		//
+
+
+
+
+
+
 		Life(std::string id)
 		{
 			mId = id;
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
-			//mPtr = ptr;
 			mHunger = 0;
 			mThirst = 0;
 			mWill = 100;
@@ -70,7 +92,6 @@ namespace MWBase
 			mTaskChain = new MWTasks::Life(id);
 			mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mPtr);
 			mAvailableActions;
-				//MWBase::Environment::get().getAwarenessReactionsManager()->calculateReactions(mPtr, );
 			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
 			mSubTask = 0;
 		}
@@ -87,7 +108,6 @@ namespace MWBase
 		MWTasks::Task* mCurrentTask;
 		std::map<MWTasks::Task*, int> mAvailableActions; //task enum, valence of task. Actions npc can take in the environment.
 		std::vector<MWBase::Status> mStatusList;
-		//MWBase::AIScheduleManager mScheduleManager;
 		MWTasks::Task* mSubTask;
 		MWWorld::Ptr mCurrentGuardZone;
 
@@ -106,8 +126,6 @@ namespace MWBase
 
 		std::vector<MWBase::Life*> mLifeList;
 
-		//virtual void updateAwareness() = 0;
-		
 		virtual bool inActiveRange(MWWorld::Ptr npc) = 0;
 
 		float mLastTimeReported;
@@ -115,7 +133,6 @@ namespace MWBase
 		float mTimePassed;
 
 		float mTimeAccumulator;
-
 
 	};
 
