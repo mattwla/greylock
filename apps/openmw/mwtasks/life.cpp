@@ -88,6 +88,7 @@ namespace MWTasks
 		mTickCounter += 1;
 		if (!mSubTask)
 		{
+			return mNpcPtr;
 			MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
 			if (task == MWTasks::Task::TypeID::TypeIDGet)//get is some sort of filler for now for some reason, means no task?
 				return mNpcPtr;
@@ -99,28 +100,28 @@ namespace MWTasks
 			//}
 
 		}
-		else if (mTickCounter > 5) 	//check for scheduled task every 5 minutes or if there is no mSubTask
-		{
-			//std::cout << "checking schedule" << std::endl;;
-			mTickCounter = 0;
-			//MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
-//			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
-			//if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
-			//{
-			//	delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
-			//	mSubTask = taskholder;
-			//}
-		}
-		else
-		{
+//		else if (mTickCounter > 5) 	//check for scheduled task every 5 minutes or if there is no mSubTask
+//		{
+//			//std::cout << "checking schedule" << std::endl;;
+//			mTickCounter = 0;
+//			//MWTasks::Task::TypeID task = mSchedule->getScheduledTask();
+////			auto taskholder = MWBase::Environment::get().getTasksManager()->getScheduledTask(this, task);
+//			//if (taskholder && mSubTask->getTypeId() != taskholder->getTypeId())
+//			//{
+//			//	delete mSubTask; //also delete sub task of sub task of subtask of etc... mwx fix me
+//			//	mSubTask = taskholder;
+//			//}
+//		}
+//		else
+//		{
 			mNpcPtr = mSubTask->update();
 			if (mSubTask->mDone)
 			{
 				delete mSubTask;
 				mSubTask = NULL;
 			}
-		}
-
+	/*	}
+*/
 		//if (MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr))
 		//{
 		//	if (mNpcId == "slade")

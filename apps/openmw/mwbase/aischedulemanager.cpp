@@ -15,7 +15,6 @@ typedef MWBase::AIScheduleManager::TimeBlock TimeBlock;
 
 namespace MWBase
 {
-	//MWTasks::Task::TypeID bob = MWTasks::Task::TypeIDDance;
 	AIScheduleManager::Schedule::Schedule(std::string npcId)
 	{
 		//logic to build schedule
@@ -24,16 +23,13 @@ namespace MWBase
 		std::cout << "SCHEDULE FOR =" + npcId << std::endl;
 		//set up the parsers default state
 		ScheduleParserExpecting expecting = Time;
-
 		//get tokenizer ready for seperating values by commas
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 		std::vector<std::vector<std::string>> vecvec;
-
 		std::string line;
 		float time;
 		//get a timeblock pointer ready, timeblock contains all the tasks an npc is scheduled to do at a given time
 		TimeBlock * timeblock = NULL;
-
 		//iterate through csv
 		while (getline(in, line))
 		{
@@ -68,11 +64,8 @@ namespace MWBase
 				timeblock->mPossibleTasks.push_back(new TaskPriorityPair(line));
 				std::cout << "adding task..." + line << std::endl;
 				//TaskPriorityPair * task = new TaskPriorityPair(line);
-
-
 			}
 		}
-
 	}
 
 	std::ifstream AIScheduleManager::Schedule::getCSV(std::string npcId)
@@ -117,7 +110,6 @@ namespace MWBase
 	}
 
 	bool AIScheduleManager::TimeBlock::checkScheduleGlobals(std::vector<std::string> globals) {
-	
 		for (unsigned int i = 0; i < globals.size(); i++)
 		{
 			std::string global = globals[i];
@@ -132,14 +124,11 @@ namespace MWBase
 				start = end + delim.length();
 				end = global.find(delim, start);
 			}
-
 			split.push_back(global.substr(start, end));
-
 			if (MWBase::Environment::get().getWorld()->getGlobalInt(split[0]) != std::stoi(split[1])) //not a match, return false
 			{
 				return false;
 			}
-
 		}
 		return true; //all passed, return true
 	}

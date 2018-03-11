@@ -213,8 +213,6 @@ namespace MWAwarenessReactions
 				list[itx]->mCurrentTask->resume();
 				MWBase::Environment::get().getStatusManager()->removeStatus(npcPtr, MWBase::Fighting);
 				return MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true);
-				
-
 			}
 			itx += 1;
 		}

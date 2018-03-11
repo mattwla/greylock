@@ -952,6 +952,7 @@ void CharacterController::handleTextKey(const std::string &groupname, const std:
         std::multimap<float, std::string>::const_iterator hitKey = key;
 
         // Not all animations have a hit key defined. If there is none, the hit happens with the start key.
+		//mwx hit keyframe
         bool hasHitKey = false;
         while (hitKey != map.end())
         {

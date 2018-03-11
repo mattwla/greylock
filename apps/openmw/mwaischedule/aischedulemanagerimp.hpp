@@ -23,11 +23,7 @@ namespace MWAISchedule
 
 			virtual bool checkScheduleGlobal(std::string global);
 
-			virtual MWWorld::Ptr getHome(MWWorld::Ptr npc);
-
 			virtual std::string getBed(std::string npcId);
-
-			virtual bool goHome(MWWorld::Ptr npc);
 
     };
 }

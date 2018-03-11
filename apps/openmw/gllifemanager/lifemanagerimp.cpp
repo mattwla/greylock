@@ -163,7 +163,7 @@ void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... intere
 
 bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 {
-	bool inProcessingRange;
+	bool inProcessingRange = false;
 	//mwx fix me some bad redundency here against actors.cpp
 	const float aiProcessingDistance = 7168;
 	const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
