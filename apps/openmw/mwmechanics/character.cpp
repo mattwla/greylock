@@ -2311,7 +2311,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 		bool canClimb = cd.mFound;
 		if (canClimb)
 		{
-			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
+			if (cls.getMovementSettings(mPtr).mAttemptClimb || cls.getMovementSettings(mPtr).mAttemptJump) //are we holding use? If so climb.
 			{
 				//float climbheight = getClimbHeight();
 				mInWallJump = false;
