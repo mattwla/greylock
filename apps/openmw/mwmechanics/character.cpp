@@ -2302,6 +2302,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			if (cls.getMovementSettings(mPtr).mAttemptJump)
 			{
 				mInWallJump = true;
+				mWallJumpCooldown = .25f;
 				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity);
 				return true;
 			}
@@ -2821,6 +2822,13 @@ ActionState MWMechanics::Climb::getType()
 bool MWMechanics::Climb::update(float duration)
 {
 	float rotatestrength = .3 / (.75 / duration);
+
+	
+	if (duration < (1.f / 60.f)) // physics update has a fixed minimum, make sure that is our minimum movement.
+		duration = 1.f / 60.f;
+
+
+
 	if (mRotateStage == 0)
 	{
 		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
@@ -2844,7 +2852,7 @@ bool MWMechanics::Climb::update(float duration)
 		mDone = true;
 		return false;
 	}
-	float climbStrength = 6000 / (0.5 / duration);
+	float climbStrength = 6000 / (0.4 / duration); //
 	float forwardstrength = 500.0f / (.25 / duration);
 
 	if (climbStrength > 6000 / (0.5 / .5)) //make sure we don't do huge jump due to frame lag
