@@ -849,12 +849,12 @@ namespace MWMechanics
 		return MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold);
 
 
-		PtrActorMap::iterator it = mActors.find(ptr);
-		if (it == mActors.end())
-			return false;
-		CharacterController* ctrl = it->second->getCharacterController();
+		//PtrActorMap::iterator it = mActors.find(ptr);
+		//if (it == mActors.end())
+		//	return false;
+		//CharacterController* ctrl = it->second->getCharacterController();
 
-		return false; //mwx fix me
+		//return false; //mwx fix me
 		//return ctrl->isWallJumping();
 	}
 

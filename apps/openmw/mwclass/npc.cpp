@@ -982,10 +982,7 @@ namespace MWClass
 			moveSpeed = swimSpeed;
 		}
 		else if (running && !sneaking)
-			if (isPlayer)
-				moveSpeed = runSpeed;//runSpeed; MWX
-			else
-				moveSpeed = runSpeed;
+			moveSpeed = runSpeed;
 		else if (isPlayer)
 			moveSpeed = 500; //MWX
 		else

@@ -2180,8 +2180,8 @@ namespace MWWorld
 		if (MWBase::Environment::get().getMechanicsManager()->isActorClimbing(ptr))
 			return true;
 
-		if (MWBase::Environment::get().getMechanicsManager()->isActorWallJumping(ptr))
-			return true;
+		//if (MWBase::Environment::get().getMechanicsManager()->isActorWallJumping(ptr))
+		//	return true;
 
 			
 		

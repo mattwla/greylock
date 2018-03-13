@@ -326,16 +326,17 @@ namespace MWPhysics
             {
                 velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
 				//if(velocity.z() > 0.f)
-                if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
-                    inertia = velocity;
-				else if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallJump))
+                
+				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallJump))
 				{
 					inertia = velocity;
 					isFlying = false;
 					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallHold);
 					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallJump);
 				}
-				else if(!physicActor->getOnGround() || physicActor->getOnSlope())
+				else if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
+					inertia = velocity;
+				else if((!physicActor->getOnGround() || physicActor->getOnSlope()) && !MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold))
                     velocity = velocity + physicActor->getInertialForce();
             }
 

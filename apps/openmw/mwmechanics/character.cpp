@@ -2091,7 +2091,7 @@ void CharacterController::update(float duration)
 			
 			return;
 		}
-		else if (mPtr == getPlayer())
+		else
 		{
 			if (!(movement.x() == 0 && movement.y() == 0 && movement.z() == 0)) //get our last movement before it cuts to 0
 			{
@@ -2990,7 +2990,7 @@ bool MWMechanics::WallHold::update(float duration)
 			mDone = true;
 		}*/
 	}
-	else if (mWallHoldIdx == 3)
+	if (mWallHoldIdx == 3)
 	{
 		//wait until deleted, keep queing motion though
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, mStoredJump);
