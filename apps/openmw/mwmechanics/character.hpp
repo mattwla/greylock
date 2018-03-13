@@ -213,18 +213,9 @@ public:
 	
 	}
 
-	Climb(MWWorld::Ptr ptr, float targetZ)
-	{
-		mPtr = ptr;
-		mDone = false;
-		//mTargetZ = 
-		auto currentpos = ptr.getRefData().getPosition();
-		mTargetZ = currentpos.pos[2] + targetZ;
-		mRotateStage = 0;
-		mTimer = 0.0f;
+	Climb(MWWorld::Ptr ptr, float targetZ);
 
-			//targetZ;
-	}
+	virtual ~Climb();
 
 	virtual bool update(float duration);
 
@@ -242,6 +233,7 @@ public:
 	WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity);
 
 	virtual ~WallHold();
+
 
 
 	virtual bool update(float duraction);

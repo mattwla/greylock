@@ -336,8 +336,14 @@ namespace MWPhysics
 				}
 				else if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
 					inertia = velocity;
-				else if((!physicActor->getOnGround() || physicActor->getOnSlope()) && !MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold))
-                    velocity = velocity + physicActor->getInertialForce();
+				else if ((!physicActor->getOnGround() || physicActor->getOnSlope()) && !MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold))
+				{
+					if(!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InClimb) && !physicActor->getOnSlope())
+						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 5);
+					
+					
+					velocity = velocity + physicActor->getInertialForce();
+				}
             }
 
             // dead actors underwater will float to the surface, if the CharacterController tells us to do so

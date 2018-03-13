@@ -2895,6 +2895,24 @@ bool MWMechanics::Climb::update(float duration)
 	return false;
 	}
 
+Climb::Climb(MWWorld::Ptr ptr, float targetZ)
+{
+	mPtr = ptr;
+	mDone = false;
+	//mTargetZ = 
+	auto currentpos = ptr.getRefData().getPosition();
+	mTargetZ = currentpos.pos[2] + targetZ;
+	mRotateStage = 0;
+	mTimer = 0.0f;
+	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InClimb);
+	//targetZ;
+}
+
+
+Climb::~Climb()
+{
+	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InClimb);
+}
 
 WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity)
 {
