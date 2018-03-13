@@ -247,7 +247,15 @@ namespace MWInput
 			else if (action == A_Jump)
 			{
 				mAttemptJump = (currentValue == 1.0 && previousValue == 0.0);
-				
+				if (currentValue == 0.0 && previousValue == 1.0)
+				{
+					std::cout << "jump released" << std::endl;
+					mPlayer->setJumpReleased(true);
+				}
+				else
+				{
+					mPlayer->setJumpReleased(false);
+				}
 				//std::cout << "jump detected:" << std::endl;
 					//std::cout << mAttemptJump << std::endl;
 					mPlayer->setAttemptJump(mAttemptJump);
@@ -601,6 +609,8 @@ namespace MWInput
                     mOverencumberedMessageDelay = 0.f;
                 }
 
+			
+
                 if (mAlwaysRunActive || isRunning)
                     mPlayer->setRunState(!actionIsActive(A_Run));
                 else
@@ -746,7 +756,9 @@ namespace MWInput
             mPlayer->setUpDown(0);
         } else if (sw == "playerjumping" && !value) {
             /// \fixme maybe crouching at this time
-            mPlayer->setUpDown(0);
+			{ mPlayer->setUpDown(0);
+			std::cout << "jump released" << std::endl;
+			}
         } else if (sw == "vanitymode") {
             MWBase::Environment::get().getWorld()->allowVanityMode(false); //mwx false used to be value
         } else if (sw == "playerlooking") {

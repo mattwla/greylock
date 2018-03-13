@@ -92,6 +92,8 @@ namespace MWWorld
 
 		bool setAttemptJump(bool enable);
 
+		void setJumpReleased(bool enable);
+
         void setLeftRight (int value);
 
         void setForwardBackward (int value);

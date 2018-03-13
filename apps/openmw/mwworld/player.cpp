@@ -166,6 +166,12 @@ namespace MWWorld
 		return false;
 	}
 
+	void Player::setJumpReleased(bool enable)
+	{
+		std::cout << enable << std::endl;
+		MWWorld::Ptr ptr = getPlayer();
+		ptr.getClass().getMovementSettings(ptr).mJumpReleased = enable;
+	}
 
     void Player::setLeftRight (int value)
     {

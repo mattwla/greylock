@@ -2304,19 +2304,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 	{
 		bool canWallJump = checkCanWallJump();
 		const MWWorld::Class &cls = mPtr.getClass();
-		if (canWallJump)
-		{
-			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
-			if (cls.getMovementSettings(mPtr).mAttemptJump)
-			{
-				mInWallJump = true;
-				mWallJumpCooldown = .25f;
-				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity, mWallGrabCamSwitch);
-				mWallGrabCamSwitch = !mWallGrabCamSwitch;
-				return true;
-			}
-
-		}
+		
 		ClimbData cd = checkCanClimb();
 		bool canClimb = cd.mFound;
 		if (canClimb)
@@ -2333,6 +2321,25 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 				return true;
 			}
 		}
+		
+		
+		
+		
+		
+		if (canWallJump)
+		{
+			MWBase::Environment::get().getWindowManager()->BodyContext("Space) Walljump");
+			if (cls.getMovementSettings(mPtr).mAttemptJump)
+			{
+				mInWallJump = true;
+				mWallJumpCooldown = .25f;
+				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity, mWallGrabCamSwitch);
+				mWallGrabCamSwitch = !mWallGrabCamSwitch;
+				return true;
+			}
+
+		}
+		
 		if (canClimb && canWallJump)
 			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
 		else if (canClimb)
@@ -2975,7 +2982,7 @@ bool MWMechanics::WallHold::update(float duration)
 	else if (mWallHoldIdx == 1)//we are not in motion, turn around and leap!
 	{
 		//std::cout << "listening for jump" << std::endl;
-		if (mPtr.getClass().getMovementSettings(mPtr).mAttemptJump)
+		if (mPtr.getClass().getMovementSettings(mPtr).mJumpReleased)
 		{
 			
 			
