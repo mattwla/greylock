@@ -334,13 +334,14 @@ namespace MWPhysics
 					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallHold);
 					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallJump);
 				}
-				else if (velocity.z() > 0.f && physicActor->getOnGround() && !physicActor->getOnSlope())
+				else if (velocity.z() > 0.f && physicActor->getOnGround())
 					inertia = velocity;
 				else if ((!physicActor->getOnGround() || physicActor->getOnSlope()) && !MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold))
 				{
 					if(!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InClimb) && !physicActor->getOnSlope())
 						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 5);
-					
+					else if (physicActor->getOnSlope())
+						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 2);
 					
 					velocity = velocity + physicActor->getInertialForce();
 				}
@@ -510,7 +511,7 @@ namespace MWPhysics
 				inertia.z() += time * -627.2f; //gravity?
 				if (isOnSlope) //mwx
 				{
-					//slowFall = .5;
+					slowFall = .99;
 				}
                 if (inertia.z() < 0)
                     inertia.z() *= slowFall;

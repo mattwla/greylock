@@ -1793,11 +1793,13 @@ void CharacterController::update(float duration)
 
             forcestateupdate = (mJumpState != JumpState_InAir);
             jumpstate = JumpState_InAir;
+			
 
             static const float fJumpMoveBase = gmst.find("fJumpMoveBase")->getFloat();
             static const float fJumpMoveMult = gmst.find("fJumpMoveMult")->getFloat();
             float factor = fJumpMoveBase + fJumpMoveMult * mPtr.getClass().getSkill(mPtr, ESM::Skill::Acrobatics)/100.f;
             factor = std::min(1.f, factor);
+			factor = 1.f; //mwx jumpspeed
             vec.x() *= factor;
             vec.y() *= factor;
             vec.z()  = 0.0f;
