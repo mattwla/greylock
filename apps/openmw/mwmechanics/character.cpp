@@ -2001,6 +2001,7 @@ void CharacterController::update(float duration)
 		}
 		else {*/
 			movement = vec;
+			cls.getMovementSettings(mPtr).mWallGrabClimb = cls.getMovementSettings(mPtr).mPosition[1];
 			cls.getMovementSettings(mPtr).mPosition[0] = cls.getMovementSettings(mPtr).mPosition[1] = 0;
 	/*	}*/
         // Can't reset jump state (mPosition[2]) here; we don't know for sure whether the PhysicSystem will actually handle it in this frame
@@ -2989,6 +2990,19 @@ bool MWMechanics::WallHold::update(float duration)
 		  //make so it deletes itself when cooldown done, delelte self does status stuff
 			mWallHoldIdx = 2;
 			
+		}
+		else if (mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb)
+		{
+			std::cout << "attempting raise" << std::endl;
+			
+			
+			bool obstructed = MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
+			if (obstructed)
+			{
+				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 50.0f, 100.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb));
+
+				return true;
+			}
 		}
 
 	}
