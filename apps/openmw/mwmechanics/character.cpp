@@ -2143,6 +2143,10 @@ float CharacterController::frontCollisionDistance(float raylength, float zoffset
 
 void CharacterController::recenterCameraRoll(float duration)
 {
+	if (duration > 1.f / 60) //fix for low fps leading to over-over-correcting
+	{
+		duration = 1.f / 60;
+	}
 	float rotatestrength = .3 / (.3 / duration);
 	float roll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	if ( roll > 0)
