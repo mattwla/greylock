@@ -230,7 +230,9 @@ public:
 
 	
 
-	WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity);
+	//WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity);
+
+	WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch);
 
 	virtual ~WallHold();
 
@@ -245,6 +247,9 @@ public:
 	osg::Vec3f mOriginalVelocity;
 
 	osg::Vec3f mStoredJump;
+	
+	bool mCamSwitch;
+
 	
 };
 
@@ -297,6 +302,8 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 
 	float mClimbTimer;
 	bool mRotateStage;
+
+	bool mWallGrabCamSwitch;
 
     WeaponType mWeaponType;
     std::string mCurrentWeapon;

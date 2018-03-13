@@ -772,6 +772,8 @@ CharacterController::CharacterController(const MWWorld::Ptr &ptr, MWRender::Anim
     , mAttackingOrSpell(false)
     , mTimeUntilWake(0.f)
 	, mBaseFov(Settings::Manager::getFloat("field of view", "Camera"))
+	, mWallJumpCooldown(0.0f)
+	, mWallGrabCamSwitch(false)
 	
 {
 	mWallJumpIdx = 0;
@@ -2309,7 +2311,8 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 			{
 				mInWallJump = true;
 				mWallJumpCooldown = .25f;
-				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity);
+				mCurrentAction = new WallHold(mPtr, mWallJumpOriginalVelocity, mWallGrabCamSwitch);
+				mWallGrabCamSwitch = !mWallGrabCamSwitch;
 				return true;
 			}
 
@@ -2916,7 +2919,7 @@ Climb::~Climb()
 	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InClimb);
 }
 
-WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity)
+WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch)
 {
 
 	std::cout << "building wallhold" << std::endl;
@@ -2926,6 +2929,7 @@ WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity)
 		mOriginalVelocity = originalvelocity;
 		mDone = false;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
+		mCamSwitch = camswitch;
 	
 
 }
@@ -2957,6 +2961,8 @@ bool MWMechanics::WallHold::update(float duration)
 			//mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate);
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, -3 / duration, z));
 			float rotatestrength = .2 / (.16 / duration);
+			if (mCamSwitch)
+				rotatestrength = -rotatestrength;
 			if(MWBase::Environment::get().getWorld()->getCameraRoll() < .2)
 				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
 		}
