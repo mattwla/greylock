@@ -2354,7 +2354,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 		canClimb = cd2.mFound;
 		if (canClimb)
 		{
-			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
+			if (cls.getMovementSettings(mPtr).mAttemptClimb || (mCurrentAction && cls.getMovementSettings(mPtr).mWallGrabClimb)) //are we holding use? If so climb. Are we in wallclimb and near ledge?
 			{
 				//float climbheight = getClimbHeight();
 				mInWallJump = false;
@@ -3027,8 +3027,8 @@ bool MWMechanics::WallHold::update(float duration)
 			bool obstructed = MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
 			if (obstructed)
 			{
-				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 50.0f, 100.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb));
-				float rotatestrength = .3 / (.75 / duration);
+				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 100.0f, 150.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb));
+				float rotatestrength = .3 / (.75 / duration); //mwx fix me just copy pasted ledgeclimb logic
 
 
 
