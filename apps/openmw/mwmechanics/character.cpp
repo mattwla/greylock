@@ -2260,7 +2260,7 @@ ClimbData CharacterController::checkCanClimb()
 	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
 		return cd;
 
-	float zscan = 100.0f;
+	float zscan = 0.0f;
 	float heightLimit = 300.0f;
 	float reach = 100.0f;
 
@@ -2301,16 +2301,20 @@ ClimbData CharacterController::checkCanClimb()
 bool CharacterController::checkActions() //checks if wall jumpable or climbable, also reads input and triggers actions.
 {
 
+	bool canClimb = false;
+	bool canWallJump = false;
+	const MWWorld::Class &cls = mPtr.getClass();
+
 	if (checkForObstruction(100.0f, 100.0f))
 	{
-		bool canWallJump = checkCanWallJump();
-		const MWWorld::Class &cls = mPtr.getClass();
+		canWallJump = checkCanWallJump();
+
 		
 		ClimbData cd = checkCanClimb();
-		bool canClimb = cd.mFound;
+		canClimb = cd.mFound;
 		if (canClimb)
 		{
-			if (cls.getMovementSettings(mPtr).mAttemptClimb || cls.getMovementSettings(mPtr).mAttemptJump) //are we holding use? If so climb.
+			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
 			{
 				//float climbheight = getClimbHeight();
 				mInWallJump = false;
@@ -2341,11 +2345,34 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 
 		}
 		
-		if (canClimb && canWallJump)
-			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
-		else if (canClimb)
-			MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
+		
 	}
+
+	if (!canClimb && checkForObstruction(0.f, 100.0f)) //another check for ledges near ground, if we didn't find one higher up.
+	{
+		ClimbData cd2 = checkCanClimb();
+		canClimb = cd2.mFound;
+		if (canClimb)
+		{
+			if (cls.getMovementSettings(mPtr).mAttemptClimb) //are we holding use? If so climb.
+			{
+				//float climbheight = getClimbHeight();
+				mInWallJump = false;
+				if (mCurrentAction)
+				{
+					delete mCurrentAction;
+				}
+				mCurrentAction = new Climb(mPtr, cd2.z);
+				return true;
+			}
+		}
+
+	}
+
+	if (canClimb && canWallJump)
+		MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
+	else if (canClimb)
+		MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
 
 }
 
