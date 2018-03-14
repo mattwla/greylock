@@ -2965,6 +2965,7 @@ WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch
 		mDone = false;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
 		mCamSwitch = camswitch;
+		mRotateStage = false;
 	
 
 }
@@ -3027,6 +3028,24 @@ bool MWMechanics::WallHold::update(float duration)
 			if (obstructed)
 			{
 				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 50.0f, 100.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb));
+				float rotatestrength = .3 / (.75 / duration);
+
+
+
+				if (mRotateStage == 0)
+				{
+					if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
+						MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+					else
+						mRotateStage = 1;
+				}
+				else
+				{
+					if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.25)
+						MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+					else
+						mRotateStage = 0;
+				}
 
 				return true;
 			}

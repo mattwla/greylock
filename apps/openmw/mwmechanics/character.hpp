@@ -250,6 +250,8 @@ public:
 	
 	bool mCamSwitch;
 
+	bool mRotateStage;
+
 	
 };
 
