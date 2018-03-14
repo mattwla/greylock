@@ -905,8 +905,11 @@ void CharacterController::handleTextKey(const std::string &groupname, const std:
             {
                 // Don't make foot sounds local for the player, it makes sense to keep them
                 // positioned on the ground.
-                sndMgr->playSound3D(mPtr, sound, volume, pitch, MWSound::Type::Foot,
-                                    MWSound::PlayMode::NoPlayerLocal);
+				if (!MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold))
+				{
+					sndMgr->playSound3D(mPtr, sound, volume, pitch, MWSound::Type::Foot,
+						MWSound::PlayMode::NoPlayerLocal);
+				}
             }
             else
             {
@@ -1854,6 +1857,11 @@ void CharacterController::update(float duration)
             float height = cls.getCreatureStats(mPtr).land();
             float healthLost = getFallDamage(mPtr, height);
 
+			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold))
+			{
+				healthLost = 0;
+			}
+
             if (healthLost > 0.0f)
             {
                 const float fatigueTerm = cls.getCreatureStats(mPtr).getFatigueTerm();
@@ -2348,7 +2356,17 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 		
 	}
 
-	if (!canClimb && checkForObstruction(0.f, 100.0f)) //another check for ledges near ground, if we didn't find one higher up.
+	float secondpassheight = 50.f;
+	float secondpassdepth = 50.f;
+	if (mCurrentAction) //for our second low ledge check, we want different values if we are wallgrabbing compared to just running around
+	{
+		secondpassheight = 0.f;
+		secondpassdepth = 100.0;
+	}
+	
+
+
+	if (!canClimb && checkForObstruction(secondpassheight, secondpassdepth)) //another check for ledges near ground, if we didn't find one higher up.
 	{
 		ClimbData cd2 = checkCanClimb();
 		canClimb = cd2.mFound;

@@ -1512,7 +1512,7 @@ namespace MWPhysics
             MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);
             if ((wasOnGround && physicActor->getOnGround()) || flying || world->isSwimming(iter->first) || slowFall < 1)
                 stats.land();
-            else if (heightDiff < 0)
+            else if (heightDiff < 0 )
                 stats.addToFallHeight(-heightDiff);
 
             mMovementResults.push_back(std::make_pair(iter->first, interpolated));

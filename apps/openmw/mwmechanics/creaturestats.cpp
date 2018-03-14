@@ -383,7 +383,7 @@ namespace MWMechanics
 
     void CreatureStats::addToFallHeight(float height)
     {
-        mFallHeight += height;
+		mFallHeight += height;
     }
 
     float CreatureStats::land()
