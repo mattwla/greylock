@@ -1,3 +1,32 @@
+Greylock
+========
+
+A free and open source immersive sim
+
+Build on a modified OpenMW engine
+
+Presently requires an installed copy of Morrowind for art assets, long term goal is for a completely standalone product
+
+Preview builds available at: https://mattwla.itch.io/greylock?secret=sIzB390fVpLJoMu870pYUXc
+
+Presently Windows builds only, Linux build planned for late April 2018.
+
+Current features:
+
+New dialogue system
+Climbing system
+Example quest
+
+
+
+
+
+
+
+Below is the readme.md for the original OpenMW engine, of which Greylock is based on.
+
+
+
 OpenMW
 ======
 
