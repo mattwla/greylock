@@ -13,7 +13,8 @@ namespace MWMechanics
 		bool mAttemptClimb = false; //mwx
 		bool mAttemptJump = false;
 		bool mJumpReleased = false;
-		int mWallGrabClimb = false;
+		int mWallGrabClimb = 0;
+		int mWallGrabSlide = 0;
         Movement()
         {
             mPosition[0] = mPosition[1] = mPosition[2] = 0.0f;

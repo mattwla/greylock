@@ -2009,7 +2009,8 @@ void CharacterController::update(float duration)
 		}
 		else {*/
 			movement = vec;
-			cls.getMovementSettings(mPtr).mWallGrabClimb = cls.getMovementSettings(mPtr).mPosition[1];
+			cls.getMovementSettings(mPtr).mWallGrabClimb = cls.getMovementSettings(mPtr).mPosition[1]; 
+			cls.getMovementSettings(mPtr).mWallGrabSlide = cls.getMovementSettings(mPtr).mPosition[0];
 			cls.getMovementSettings(mPtr).mPosition[0] = cls.getMovementSettings(mPtr).mPosition[1] = 0;
 	/*	}*/
         // Can't reset jump state (mPosition[2]) here; we don't know for sure whether the PhysicSystem will actually handle it in this frame
@@ -2976,14 +2977,14 @@ WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch
 {
 
 	std::cout << "building wallhold" << std::endl;
-		mPtr = ptr;
-		mTimer = 0.0f;
-		mWallHoldIdx = 0;
-		mOriginalVelocity = originalvelocity;
-		mDone = false;
-		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
-		mCamSwitch = camswitch;
-		mRotateStage = false;
+	mPtr = ptr;
+	mTimer = 0.0f;
+	mWallHoldIdx = 0;
+	mOriginalVelocity = originalvelocity;
+	mDone = false;
+	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
+	mCamSwitch = camswitch;
+	mRotateStage = false;
 	
 
 }
@@ -3001,18 +3002,14 @@ bool MWMechanics::WallHold::update(float duration)
 		mDone = true;
 		return false;
 	}
-
 	mTimer += duration;
-
 	if (mWallHoldIdx == 0)
 	{
-		if (mTimer < 0.16f) //this is a problem mwx
+		if (mTimer < 0.16f) //Initial camera rotate to give sense of motion
 		{
 			
 			float x = mOriginalVelocity.x();
 			float z = mOriginalVelocity.z();
-			//mTimer += duration;
-			//mPtr.getClass().getMovementSettings(mPtr).mRotation[0] -= osg::DegreesToRadians(tiltrate);
 			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(x, -3 / duration, z));
 			float rotatestrength = .2 / (.16 / duration);
 			if (mCamSwitch)
@@ -3026,30 +3023,21 @@ bool MWMechanics::WallHold::update(float duration)
 			mTimer = 0.0f;
 		}
 	}
-	else if (mWallHoldIdx == 1)//we are not in motion, turn around and leap!
+	else if (mWallHoldIdx == 1)//Loop here while holding, player can let go to leap or use movement to shuffle around.
 	{
-		//std::cout << "listening for jump" << std::endl;
+		bool obstructed = MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
 		if (mPtr.getClass().getMovementSettings(mPtr).mJumpReleased)
 		{
-			
-			
-		  //make so it deletes itself when cooldown done, delelte self does status stuff
-			mWallHoldIdx = 2;
-			
+			mWallHoldIdx = 2;	
 		}
 		else if (mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb)
 		{
 			std::cout << "attempting raise" << std::endl;
 			
-			
-			bool obstructed = MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
 			if (obstructed)
 			{
 				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 100.0f, 150.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb));
 				float rotatestrength = .3 / (.75 / duration); //mwx fix me just copy pasted ledgeclimb logic
-
-
-
 				if (mRotateStage == 0)
 				{
 					if (MWBase::Environment::get().getWorld()->getCameraRoll() < .25)
@@ -3064,52 +3052,51 @@ bool MWMechanics::WallHold::update(float duration)
 					else
 						mRotateStage = 0;
 				}
-
-				return true;
+				return true; //must return, as later down the chain another queueMovement will override the one we just did
 			}
+		}
+		else if (mPtr.getClass().getMovementSettings(mPtr).mWallGrabSlide && obstructed) 
+		{
+			std::cout << "attempting slide" << std::endl;
+			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(150.0f * mPtr.getClass().getMovementSettings(mPtr).mWallGrabSlide, 100.0f, 0 ));
+			return true; //must return, as later down the chain another queueMovement will override the one we just did
 		}
 
 	}
 	else if (mWallHoldIdx == 2)
 	{
-
-		bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
-		bool aboveClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f, true);
-		if (pathClear) //jump up if something in way, like looking at cliff
+		if (mPtr.getClass().getMovementSettings(mPtr).mWallGrabClimb != -1) //if shuffling down while releasing jump, just drop
 		{
-			std::cout << "jumping" << std::endl;
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
-			mStoredJump = osg::Vec3f(0.0f, 200.0f, 300.0f);
 
-		}
-		else if (aboveClear)
-		{
-			MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 0.0f, 300.0f));
-			std::cout << "walljump up" << std::endl;
-			mStoredJump = osg::Vec3f(0.0f, 0.0f, 300.0f);
-		}
-		else
-		{
-			mWallHoldIdx = 1; //No where to jump!
-			return true;
+
+			bool pathClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
+			bool aboveClear = !MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 0.0f, 100.0f, true);
+			if (pathClear) //We can leap forward, so do.
+			{
+				std::cout << "jumping" << std::endl;
+				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 200.0f, 300.0f));
+				mStoredJump = osg::Vec3f(0.0f, 200.0f, 300.0f);
+			}
+			else if (aboveClear) //No room forward, so leap up
+			{
+				MWBase::Environment::get().getWorld()->queueMovement(mPtr, osg::Vec3f(0.0f, 0.0f, 300.0f));
+				std::cout << "walljump up" << std::endl;
+				mStoredJump = osg::Vec3f(0.0f, 0.0f, 300.0f);
+			}
+			else
+			{
+				mWallHoldIdx = 1; //No where to jump!
+				return true;
+			}
 		}
 
-		
 		mWallHoldIdx = 3;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InWallJump);
-		//mInWallJump = false; //Make this status flip
-		//just hold until physicsmanager makes the jump happen and removes the wallhold statusflag;
-		/*mTimer += duration;
-		if (mTimer > 1.0f)
-		{
-			mDone = true;
-		}*/
 	}
 	if (mWallHoldIdx == 3)
 	{
-		//wait until deleted, keep queing motion though
+		//Hold here until physicssystem processes our jump request. CharacterController will delete us. mwx fix me is this true?
 		MWBase::Environment::get().getWorld()->queueMovement(mPtr, mStoredJump);
-		//mPtr.getClass().getCreatureStats(mPtr).setFatigue(50.0f);
 	}
 
 	if (mWallHoldIdx == 0 || mWallHoldIdx == 1)
