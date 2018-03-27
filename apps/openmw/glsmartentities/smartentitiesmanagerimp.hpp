@@ -21,10 +21,15 @@ namespace GLSmartEntitiesManager
 	class SmartEntitiesManager : public MWBase::SmartEntitiesManager
 	{
 
+		typedef std::map<std::string, MWBase::SmartEntityTemplate*> templateList;
+
+
+		templateList mTemplateList;
+
 	public:
 		SmartEntitiesManager();
 
-	
+		virtual MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id);
 	};
 }
 

@@ -203,7 +203,7 @@ namespace MWClass
             newPtr = MWWorld::Ptr(cell.insert(ref), &cell);
             newPtr.getRefData().setCount(count);
         }
-        newPtr.getCellRef().unsetRefNum();
+       // newPtr.getCellRef().unsetRefNum();
 
         return newPtr;
     }

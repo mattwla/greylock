@@ -306,7 +306,7 @@ MWWorld::ContainerStoreIterator MWWorld::ContainerStore::add (const Ptr& itemPtr
 
     // must reset the RefNum on the copied item, so that the RefNum on the original item stays unique
     // maybe we should do this in the copy constructor instead?
-    item.getCellRef().unsetRefNum(); // destroy link to content file
+    //item.getCellRef().unsetRefNum(); // destroy link to content file
 
     std::string script = item.getClass().getScript(item);
     if(script != "")

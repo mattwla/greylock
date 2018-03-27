@@ -1132,6 +1132,10 @@ namespace MWWorld
                 && */ mDistanceToFacedObject > getMaxActivationDistance() && !MWBase::Environment::get().getWindowManager()->isGuiMode())
                 return 0;
         }
+		if (facedObject)
+		{
+			std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
+		}
         return facedObject;
     }
 
@@ -2101,7 +2105,7 @@ namespace MWWorld
 
         // Reset some position values that could be uninitialized if this item came from a container
         dropped.getCellRef().setPosition(pos);
-        dropped.getCellRef().unsetRefNum();
+       // dropped.getCellRef().unsetRefNum();
 
         if (mWorldScene->isCellActive(*cell)) {
             if (dropped.getRefData().isEnabled()) {

@@ -54,9 +54,29 @@ namespace Loading
 namespace MWBase
 {
 
+	
+	
+	
+	class SmartEntityTemplate
+	{
+		std::string mIngameID;
+
+	};
+
+	class SmartEntityInstance
+	{
+		int mPingCount;
+
+	};
+
+
 	class SmartEntitiesManager
 	{
 		
+		
+		virtual SmartEntityInstance * getSmartEntityInstance(std::string id) = 0;
+
+
 
 	};
 
