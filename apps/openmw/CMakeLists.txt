@@ -122,6 +122,10 @@ add_openmw_dir (gllifemanager
 lifemanagerimp
 )
 
+add_openmw_dir (glsmartentitiesmanager
+smartentitiesmanagerimp
+)
+
 # Main executable
 
 if (NOT ANDROID)

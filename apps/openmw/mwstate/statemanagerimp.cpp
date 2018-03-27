@@ -27,6 +27,7 @@
 #include "../mwbase/inputmanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/player.hpp"

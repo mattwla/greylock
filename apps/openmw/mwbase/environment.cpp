@@ -17,6 +17,7 @@
 #include "tasksmanager.hpp"
 #include "travelnodesmanager.hpp"
 #include "awarenessreactionsmanager.hpp"
+#include "smartentitiesmanager.hpp"
 #include "statusmanager.hpp"
 #include "lifemanager.hpp"
 
@@ -84,6 +85,11 @@ void MWBase::Environment::setAIScheduleManager(AIScheduleManager *AIScheduleMana
 void MWBase::Environment::setAwarenessReactionsManager(AwarenessReactionsManager * awarenessReactionsManager)
 {
 	mAwarenessReactionsManager = awarenessReactionsManager;
+}
+
+void MWBase::Environment::setSmartEntitiesManager(SmartEntitiesManager * smartEntitiesManager)
+{
+	mSmartEntitiesManager = smartEntitiesManager;
 }
 
 void MWBase::Environment::setStatusManager(StatusManager * statusManager)
@@ -188,6 +194,12 @@ MWBase::AwarenessReactionsManager *MWBase::Environment::getAwarenessReactionsMan
 	return(mAwarenessReactionsManager);
 }
 
+MWBase::SmartEntitiesManager *MWBase::Environment::getSmartEntitiesManager() const
+{
+	assert(mSmartEntitiesManager);
+	return(mSmartEntitiesManager);
+}
+
 MWBase::StatusManager * MWBase::Environment::getStatusManager() const
 {
 	assert(mStatusManager);
@@ -273,6 +285,8 @@ void MWBase::Environment::cleanup()
 	delete mStatusManager;
 	mStatusManager = 0;
 
+	delete mSmartEntitiesManager;
+	mSmartEntitiesManager = 0;
 
 	delete mTasksManager;
 	mTasksManager = 0;

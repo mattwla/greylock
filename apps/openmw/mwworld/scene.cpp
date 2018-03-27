@@ -307,7 +307,7 @@ namespace MWWorld
 
             mRendering.addCell(cell);
             bool waterEnabled = cell->getCell()->hasWater() || cell->isExterior();
-            float waterLevel = cell->getWaterLevel();
+            float waterLevel = cell->getWaterLevel(); //mwx water level
             mRendering.setWaterEnabled(waterEnabled);
             if (waterEnabled)
             {
@@ -360,7 +360,7 @@ namespace MWWorld
     {
        
 		std::cout << "pmoved" << std::endl;
-		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
+		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances(); //mwx
 
 		Loading::Listener* loadingListener = MWBase::Environment::get().getWindowManager()->getLoadingScreen();
         Loading::ScopedLoad load(loadingListener);

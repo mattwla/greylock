@@ -15,6 +15,7 @@ namespace MWBase
 	class AIScheduleManager;
 	class StatusManager;
 	class AwarenessReactionsManager;
+	class SmartEntitiesManager;
 	class TasksManager;
 	class TravelNodesManager;
 	class LifeManager;
@@ -38,6 +39,7 @@ namespace MWBase
 			TravelNodesManager *mTravelNodesManager;
 			AIScheduleManager *mAIScheduleManager;
 			AwarenessReactionsManager *mAwarenessReactionsManager;
+			SmartEntitiesManager *mSmartEntitiesManager;
 			StatusManager *mStatusManager;
             DialogueManager *mDialogueManager;
             Journal *mJournal;
@@ -76,6 +78,8 @@ namespace MWBase
 			void setAIScheduleManager(AIScheduleManager *AIScheduleManager);
 
 			void setAwarenessReactionsManager(AwarenessReactionsManager *awarenessReactionsManager);
+
+			void setSmartEntitiesManager(SmartEntitiesManager *smartEntitiesManager);
 
 			void setStatusManager(StatusManager *statusManager);
 
@@ -119,6 +123,8 @@ namespace MWBase
 			TasksManager *getTasksManager() const;
 
 			AwarenessReactionsManager *getAwarenessReactionsManager() const;
+
+			SmartEntitiesManager *getSmartEntitiesManager() const;
 
 			StatusManager *getStatusManager() const;
 
