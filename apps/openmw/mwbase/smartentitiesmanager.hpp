@@ -74,7 +74,7 @@ namespace MWBase
 	{
 		
 		
-		virtual SmartEntityInstance * getSmartEntityInstance(std::string id) = 0;
+		SmartEntityInstance * getSmartEntityInstance(std::string id);
 
 
 

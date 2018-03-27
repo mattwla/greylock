@@ -58,7 +58,7 @@
 #include "mwtasks/tasksmanagerimp.hpp"
 #include "mwtravelnodes/travelnodesmanagerimp.hpp"
 #include "mwawarenessreactions/awarenessreactionsmanagerimp.hpp"
-#include "glsmartentities/smartentitiesmanagerimp.hpp"
+#include "mwbase/smartentitiesmanager.hpp"
 #include "mwstatus/statusmanagerimp.hpp"
 #include "gllifemanager/lifemanagerimp.hpp"
 
@@ -562,7 +562,7 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	mEnvironment.setAwarenessReactionsManager(awarenessreactions);
 
 	//Create SmartEntitiesManager
-	GLSmartEntitiesManager::SmartEntitiesManager* smartentities = new GLSmartEntitiesManager::SmartEntitiesManager;
+	MWBase::SmartEntitiesManager* smartentities = new MWBase::SmartEntitiesManager;
 	mEnvironment.setSmartEntitiesManager(smartentities);
 
 	//Create status manager
