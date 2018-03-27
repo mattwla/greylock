@@ -385,7 +385,8 @@ void AiSequence::fill(const ESM::AIPackageList &list)
             ESM::AITarget data = it->mTarget;
             package = new MWMechanics::AiFollow(data.mId.toString(), data.mDuration, data.mX, data.mY, data.mZ);
         }
-        mPackages.push_back(package);
+        if (it->mType != ESM::AI_Wander)
+			mPackages.push_back(package);
     }
 }
 

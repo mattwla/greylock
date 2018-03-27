@@ -1553,6 +1553,8 @@ namespace MWMechanics
 
     bool MechanicsManager::actorAttacked(const MWWorld::Ptr &target, const MWWorld::Ptr &attacker)
     {
+		return true; //mwx lobotomy
+
         if (target == getPlayer() || !attacker.getClass().isActor())
             return false;
 

@@ -1313,7 +1313,7 @@ namespace MWMechanics
                                 {
                                     if (it->first == iter->first)
                                         continue;
-                                    updateHeadTracking(iter->first, it->first, headTrackTarget, sqrHeadTrackDistance);
+                                    //updateHeadTracking(iter->first, it->first, headTrackTarget, sqrHeadTrackDistance);
                                 }
                             }
 
