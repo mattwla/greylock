@@ -90,7 +90,9 @@ namespace MWBase
 	{
 
 		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
+		typedef std::map<int, SmartEntityInstance*> SmartInstanceMap;
 		SmartTemplateMap mSmartTemplateMap;
+		SmartInstanceMap mSmartInstanceMap;
 		
 		void gatherSmartEntityTemplates();
 
@@ -100,7 +102,16 @@ namespace MWBase
 		
 		SmartEntitiesManager::SmartEntitiesManager();
 
-		SmartEntityInstance * getSmartEntityInstance(std::string id);
+		SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
+
+		bool hasSmartInstance(const MWWorld::Ptr &ptr)
+		{
+			int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
+			if (!mSmartInstanceMap.count(refnum))
+				return false;
+			else
+				return true;
+		}
 
 
 	};

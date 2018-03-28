@@ -10,13 +10,18 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 
 }
 
-MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id)
+MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
 {
+	std::string id = ptr.getCellRef().getRefId();
+	int refnum = ptr.getCellRef().getRefNum().mIndex;
 
 	if (!mSmartTemplateMap.count(id))
 		return nullptr;
 
 	SmartEntityInstance * foundInstance = mSmartTemplateMap[id]->getInstance();
+
+	mSmartInstanceMap[refnum] = foundInstance;
+
 	
 	if (foundInstance)
 		return foundInstance;
