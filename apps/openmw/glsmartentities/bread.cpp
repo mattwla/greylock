@@ -13,9 +13,24 @@ MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(const MWWorl
 	return instance;
 }
 
+MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, int refnum, int pings)
+{
+	
+	
+	SmartEntityBreadInstance * instance = new SmartEntityBreadInstance(refid, refnum, pings);
+
+	return instance;
+}
+
 SmartEntityBreadInstance::SmartEntityBreadInstance(const MWWorld::Ptr &ptr)
 {
 	std::cout << "made SmartBread" << std::endl;
 	mPingCount = 0;
 	mRefId = ptr.getCellRef().getRefId();
+}
+
+SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, int refnum, int pings)
+{
+	mPingCount = pings;
+	mRefId = refid;
 }

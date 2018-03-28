@@ -83,6 +83,8 @@ namespace MWBase
 
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
 
+		virtual SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings) = 0;
+
 	};
 
 
@@ -99,6 +101,8 @@ namespace MWBase
 		
 		void gatherSmartEntityTemplates();
 
+		void loadSmartEntityInstance(std::string type, int refnum, int pings);
+
 	
 
 	public:
@@ -107,9 +111,9 @@ namespace MWBase
 
 		void clear();
 
-		void newGame();
+		//void newGame();
 
-		void loadGame(std::string savename);
+		void loadGame(boost::filesystem::path path);
 
 		void saveGame(boost::filesystem::path path);
 

@@ -2,6 +2,10 @@
 #include "../glsmartentities/bread.hpp"
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/tokenizer.hpp>
+#include <iterator>
+#include <algorithm>
+#include <map>
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
@@ -9,6 +13,56 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 
 
+}
+
+void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int refnum, int pings)
+{
+
+
+	SmartEntityInstance * foundInstance = mSmartTemplateMap[type]->loadInstance(type, refnum, pings);
+
+	mSmartInstanceMap[refnum] = foundInstance;
+
+	std::cout << "loaded an instance" << std::endl;
+}
+
+void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
+{
+		std::ifstream in(path.string() + "EMS");
+
+		if (!in.is_open())
+			std::cout << "NOT OPEN" << std::endl;
+		else
+			std::cout << "OPEN" << std::endl;
+	
+		
+		std::string line;
+	
+		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		
+	
+		while (getline(in, line))
+		{
+			Tokenizer tok(line);
+			int idx = 0;
+			std::vector<std::string> cache;
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
+			{
+				if (*it == "v1")
+					continue;
+
+				idx += 1;
+				cache.push_back(*it);
+				if (idx == 3)
+				{
+					loadSmartEntityInstance(cache[1], std::stoi(cache[0]), std::stoi(cache[2]));
+					idx = 0;
+					cache.clear();
+				}
+				
+
+			}
+		}
 }
 
 void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
@@ -38,11 +92,13 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 
 	boost::filesystem::ofstream filestream(path, std::ios::binary);
 
+	filestream << "v1" << std::endl;
+
 
 	std::vector<std::string>::iterator itS = serializedinstances.begin();
 	while (itS != serializedinstances.end())
 	{
-		filestream << *itS + "\n";
+		filestream << *itS << std::endl;
 		//filestream << std::endl << std::endl;
 		//
 		itS++;
@@ -56,6 +112,10 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
 {
+
+	//check if it already has one
+	if (hasSmartInstance(ptr))
+		return mSmartInstanceMap[ptr.getCellRef().getRefNum().mIndex];
 	
 	std::string id = ptr.getCellRef().getRefId();
 	int refnum = ptr.getCellRef().getRefNum().mIndex;

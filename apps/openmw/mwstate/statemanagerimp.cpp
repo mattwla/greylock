@@ -507,7 +507,7 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
         MWBase::Environment::get().getWorld()->renderPlayer();
         MWBase::Environment::get().getWindowManager()->updatePlayer();
         MWBase::Environment::get().getMechanicsManager()->playerLoaded();
-		
+		MWBase::Environment::get().getSmartEntitiesManager()->loadGame(filepath);
 
         if (firstPersonCam != MWBase::Environment::get().getWorld()->isFirstPerson())
             MWBase::Environment::get().getWorld()->togglePOV();
@@ -544,6 +544,8 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
         // Since we passed "changeEvent=false" to changeCell, we shouldn't have triggered the cell change flag.
         // But make sure the flag is cleared anyway in case it was set from an earlier game.
         MWBase::Environment::get().getWorld()->markCellAsUnchanged();
+
+		
     }
     catch (const std::exception& e)
     {
