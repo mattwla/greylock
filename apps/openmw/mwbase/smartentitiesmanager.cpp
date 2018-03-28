@@ -4,13 +4,25 @@
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
-	std::vector<std::string> templateList; //a list of templates.
+	SmartEntityTemplate * it = new SmartEntityBreadTemplate();
+	mSmartTemplateMap[it->getStringID()] = it;
+
 
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id)
 {
-	return nullptr;
+
+	if (!mSmartTemplateMap.count(id))
+		return nullptr;
+
+	SmartEntityInstance * foundInstance = mSmartTemplateMap[id]->getInstance();
+	
+	if (foundInstance)
+		return foundInstance;
+	else
+		return nullptr;
+	
 }
 
 MWBase::SmartEntitiesManager::SmartEntitiesManager()
@@ -18,4 +30,11 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager()
 	std::cout << "=====>Built SEManager<======" << std::endl;
 
 	std::cout << "Initializing templates" << std::endl;
+
+	gatherSmartEntityTemplates();
+}
+
+std::string MWBase::SmartEntityTemplate::getStringID()
+{
+	return mIngameID;
 }

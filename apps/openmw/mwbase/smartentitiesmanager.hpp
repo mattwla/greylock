@@ -54,35 +54,48 @@ namespace Loading
 namespace MWBase
 {
 
-	
-	
-	
-	class SmartEntityTemplate
-	{
-		std::string mIngameID;
-
-	};
-
 	class SmartEntityInstance
 	{
 		int mPingCount;
 
 	};
 
+	
+	
+	
+	class SmartEntityTemplate
+	{
+		
+	protected: 
+		std::string mIngameID;
 
+	public:
+		std::string getStringID();
+
+		virtual SmartEntityInstance * getInstance() = 0;
+
+	};
+
+
+
+	
+	
 	class SmartEntitiesManager
 	{
 
+		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
+		SmartTemplateMap mSmartTemplateMap;
+		
 		void gatherSmartEntityTemplates();
 
-			
-		SmartEntityInstance * getSmartEntityInstance(std::string id);
+	
 
 	public:
 		
-		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
-
 		SmartEntitiesManager::SmartEntitiesManager();
+
+		SmartEntityInstance * getSmartEntityInstance(std::string id);
+
 
 	};
 

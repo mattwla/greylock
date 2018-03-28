@@ -84,6 +84,8 @@ namespace
         if (ptr.getClass().isActor())
             rendering.addWaterRippleEmitter(ptr);
 
+		if (MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr.getCellRef().getRefId()))
+			std::cout << "======>found smart object<=============" << std::endl;
 		//std::cout << "added..." + ptr.getCellRef().getRefId() << std::endl;
     }
 

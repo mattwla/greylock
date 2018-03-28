@@ -41,8 +41,8 @@ namespace MWBase
 			{
 				char *end;
 				time = std::strtof(line.c_str(), &end); //mwx fix me error reporting would be nice here
-				std::cout << "found float" << std::endl;
-				std::cout << time << std::endl;
+				//std::cout << "found float" << std::endl;
+				//std::cout << time << std::endl;
 				expecting = Task;
 				mTimeBlocks[time];
 				continue;
