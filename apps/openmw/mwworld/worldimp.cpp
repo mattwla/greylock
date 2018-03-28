@@ -1134,7 +1134,9 @@ namespace MWWorld
         }
 		if (facedObject)
 		{
-			std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
+			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
+			if (facedObject.getBase()->mSmartEntityInstance)
+				std::cout << "IS SMAHT KEHD" << std::endl;
 		}
         return facedObject;
     }
