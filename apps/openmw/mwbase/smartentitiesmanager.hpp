@@ -60,10 +60,12 @@ namespace MWBase
 		
 	protected:
 		int mPingCount;
+		std::string mRefId;
 
 	public :
 		void ping();
 		int getPings();
+		std::string getRefId();
 
 	};
 
@@ -79,7 +81,7 @@ namespace MWBase
 	public:
 		std::string getStringID();
 
-		virtual SmartEntityInstance * getInstance() = 0;
+		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
 
 	};
 
