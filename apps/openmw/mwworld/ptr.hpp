@@ -13,6 +13,7 @@ namespace MWWorld
     class ContainerStore;
     class CellStore;
     struct LiveCellRefBase;
+	class SmartEntityInstance;
 
     /// \brief Pointer to a LiveCellRef
 
@@ -23,6 +24,7 @@ namespace MWWorld
             MWWorld::LiveCellRefBase *mRef;
             CellStore *mCell;
             ContainerStore *mContainerStore;
+			SmartEntityInstance *mSmartEntityLink;
 
         public:
             Ptr(MWWorld::LiveCellRefBase *liveCellRef=0, CellStore *cell=0)

@@ -5,6 +5,7 @@
 #include "containerstore.hpp"
 #include "class.hpp"
 #include "livecellref.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 const std::string& MWWorld::Ptr::getTypeName() const
 {
