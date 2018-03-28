@@ -7,6 +7,11 @@
 
 #include "refdata.hpp"
 
+namespace MWBase
+{
+	class SmartEntityInstance;
+}
+
 namespace ESM
 {
     struct ObjectState;
@@ -22,6 +27,8 @@ namespace MWWorld
     struct LiveCellRefBase
     {
         const Class *mClass;
+
+		MWBase::SmartEntityInstance *mSmartEntityInstance;
 
         /** Information about this instance, such as 3D location and rotation
          * and individual type-dependent data.

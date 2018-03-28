@@ -17,6 +17,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "../mwrender/renderingmanager.hpp"
 #include "../mwrender/landmanager.hpp"
@@ -82,6 +83,8 @@ namespace
 
         if (ptr.getClass().isActor())
             rendering.addWaterRippleEmitter(ptr);
+
+		//std::cout << "added..." + ptr.getCellRef().getRefId() << std::endl;
     }
 
     void updateObjectRotation (const MWWorld::Ptr& ptr, MWPhysics::PhysicsSystem& physics,
@@ -143,6 +146,7 @@ namespace
         for (std::vector<MWWorld::Ptr>::iterator it = mToInsert.begin(); it != mToInsert.end(); ++it)
         {
             MWWorld::Ptr ptr = *it;
+			//std::cout << "inserting... " + ptr.getCellRef().getRefId() << std::endl; //mwx
             if (mRescale)
             {
                 if (ptr.getCellRef().getScale()<0.5)

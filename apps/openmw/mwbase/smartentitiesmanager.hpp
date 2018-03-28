@@ -72,11 +72,17 @@ namespace MWBase
 
 	class SmartEntitiesManager
 	{
-		
-		
+
+		void gatherSmartEntityTemplates();
+
+			
 		SmartEntityInstance * getSmartEntityInstance(std::string id);
 
+	public:
+		
+		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
 
+		SmartEntitiesManager::SmartEntitiesManager();
 
 	};
 

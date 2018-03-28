@@ -8,6 +8,8 @@
 
 #include "livecellref.hpp"
 
+
+
 namespace MWWorld
 {
     class ContainerStore;
