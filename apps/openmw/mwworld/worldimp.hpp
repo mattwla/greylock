@@ -679,6 +679,8 @@ namespace MWWorld
 
             void activate (const MWWorld::Ptr& object, const MWWorld::Ptr& actor) override;
 
+			void debugSE(const MWWorld::Ptr& object) override;
+
             /// @see MWWorld::WeatherManager::isInStorm
             bool isInStorm() const override;
 

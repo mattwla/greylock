@@ -38,3 +38,13 @@ std::string MWBase::SmartEntityTemplate::getStringID()
 {
 	return mIngameID;
 }
+
+void MWBase::SmartEntityInstance::ping()
+{
+	mPingCount += 1;
+}
+
+int MWBase::SmartEntityInstance::getPings()
+{
+	return mPingCount;
+}

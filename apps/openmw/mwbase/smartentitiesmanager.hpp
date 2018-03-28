@@ -56,7 +56,13 @@ namespace MWBase
 
 	class SmartEntityInstance
 	{
+		
+	protected:
 		int mPingCount;
+
+	public :
+		void ping();
+		int getPings();
 
 	};
 

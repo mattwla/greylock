@@ -258,7 +258,7 @@ namespace MWWorld
 	{
 		MWWorld::Ptr toDebug = MWBase::Environment::get().getWorld()->getFacedObject();
 		std::cout << "debug key pressed" << std::endl;
-		//MWBase::Environment::get().getWorld()->activate(toActivate, player);
+		MWBase::Environment::get().getWorld()->debugSE(toDebug);
 	}
 
     bool Player::wasTeleported() const

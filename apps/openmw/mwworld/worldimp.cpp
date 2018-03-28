@@ -25,6 +25,7 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/tasksmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
@@ -64,6 +65,7 @@
 
 #include "contentloader.hpp"
 #include "esmloader.hpp"
+
 
 namespace
 {
@@ -1132,12 +1134,7 @@ namespace MWWorld
                 && */ mDistanceToFacedObject > getMaxActivationDistance() && !MWBase::Environment::get().getWindowManager()->isGuiMode())
                 return 0;
         }
-		if (facedObject)
-		{
-			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
-			if (facedObject.getBase()->mSmartEntityInstance)
-				std::cout << "IS SMAHT KEHD" << std::endl;
-		}
+	
         return facedObject;
     }
 
@@ -3595,6 +3592,23 @@ namespace MWWorld
             action->execute (actor);
         }
     }
+
+	void World::debugSE(const Ptr &object)
+	{
+		
+			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
+		MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
+		if (instance)
+		{
+			std::cout << "IS SMAHT KEHD" << std::endl;
+			std::cout << "ping count was" << std::endl;
+			std::cout << instance->getPings() << std::endl;
+			object.getBase()->mSmartEntityInstance->ping();
+		}
+
+
+			
+	}
 
     struct ResetActorsVisitor
     {

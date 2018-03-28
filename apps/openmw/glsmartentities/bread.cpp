@@ -16,4 +16,5 @@ MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance()
 SmartEntityBreadInstance::SmartEntityBreadInstance()
 {
 	std::cout << "made SmartBread" << std::endl;
+	mPingCount = 0;
 }

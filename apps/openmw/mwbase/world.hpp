@@ -573,6 +573,8 @@ namespace MWBase
 
             virtual void activate (const MWWorld::Ptr& object, const MWWorld::Ptr& actor) = 0;
 
+			virtual void debugSE(const MWWorld::Ptr& object) = 0;
+
             /// @see MWWorld::WeatherManager::isInStorm
             virtual bool isInStorm() const = 0;
 
