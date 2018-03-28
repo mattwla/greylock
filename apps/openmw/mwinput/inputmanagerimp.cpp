@@ -285,6 +285,9 @@ namespace MWInput
                 resetIdleTime();
                 activate();
                 break;
+			case A_DebugSE:
+				debugSE();
+				break;
             case A_MoveLeft:
             case A_MoveRight:
             case A_MoveForward:
@@ -1228,6 +1231,13 @@ namespace MWInput
             mPlayer->activate();
     }
 
+	void InputManager::debugSE()
+	{
+		if (mControlSwitch["playercontrols"])
+			mPlayer->debugSE();
+		//
+	}
+
     void InputManager::toggleAutoMove()
     {
         if (MWBase::Environment::get().getWindowManager()->isGuiMode()) return;
@@ -1325,6 +1335,8 @@ namespace MWInput
         defaultKeyBindings[A_AlwaysRun] = SDL_SCANCODE_CAPSLOCK;
         defaultKeyBindings[A_QuickSave] = SDL_SCANCODE_F5;
         defaultKeyBindings[A_QuickLoad] = SDL_SCANCODE_F9;
+
+		defaultKeyBindings[A_DebugSE] = SDL_SCANCODE_L;
 
         std::map<int, int> defaultMouseButtonBindings;
         defaultMouseButtonBindings[A_Inventory] = SDL_BUTTON_RIGHT;
@@ -1627,6 +1639,7 @@ namespace MWInput
         ret.push_back(A_QuickKey8);
         ret.push_back(A_QuickKey9);
         ret.push_back(A_QuickKey10);
+		ret.push_back(A_DebugSE);
 
         return ret;
     }

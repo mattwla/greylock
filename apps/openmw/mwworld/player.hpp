@@ -85,6 +85,8 @@ namespace MWWorld
         /// Activate the object under the crosshair, if any
         void activate();
 
+		void debugSE();
+
         bool getAutoMove() const;
         void setAutoMove (bool enable);
 

@@ -251,6 +251,7 @@ namespace MWInput
         void screenshot();
         void toggleJournal();
         void activate();
+		void debugSE();
         void toggleWalking();
         void toggleSneaking();
         void toggleAutoMove();
@@ -336,6 +337,8 @@ namespace MWInput
             A_LookLeftRight,
             A_MoveForwardBackward,
             A_MoveLeftRight,
+
+			A_DebugSE,
 
             A_Last            // Marker for the last item
         };
