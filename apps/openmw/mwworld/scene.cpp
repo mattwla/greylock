@@ -84,8 +84,10 @@ namespace
         if (ptr.getClass().isActor())
             rendering.addWaterRippleEmitter(ptr);
 
+		//MWX FIX ME is this the best place for injecting SE info? Probably not.
+
 		bool hasSmartInstance;
-		hasSmartInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr);
+		hasSmartInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr); //mark as active? mwx fix me
 		if (!hasSmartInstance)
 		{
 			MWBase::SmartEntityInstance * instance = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);

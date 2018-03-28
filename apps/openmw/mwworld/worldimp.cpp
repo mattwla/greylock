@@ -3596,10 +3596,14 @@ namespace MWWorld
 	void World::debugSE(const Ptr &object)
 	{
 		
-			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;
-		MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
-		if (instance)
+			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;s
+		bool hasInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(object);
+		
+		
+		if (hasInstance)
 		{
+			MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
+			//MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
 			std::cout << "IS SMAHT KEHD" << std::endl;
 			std::cout << "ping count was" << std::endl;
 			std::cout << instance->getPings() << std::endl;

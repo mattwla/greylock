@@ -53,6 +53,7 @@ void MWState::StateManager::cleanup (bool force)
         MWBase::Environment::get().getWindowManager()->clear();
         MWBase::Environment::get().getInputManager()->clear();
         MWBase::Environment::get().getMechanicsManager()->clear();
+		MWBase::Environment::get().getSmartEntitiesManager()->clear();
 
         mState = State_NoGame;
         mCharacterManager.setCurrentCharacter(NULL);

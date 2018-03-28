@@ -102,6 +102,14 @@ namespace MWBase
 		
 		SmartEntitiesManager::SmartEntitiesManager();
 
+		void clear();
+
+		void newGame();
+
+		void loadGame(std::string savename);
+
+		void saveGame();
+
 		SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
 		bool hasSmartInstance(const MWWorld::Ptr &ptr)

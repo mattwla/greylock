@@ -39,6 +39,20 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager()
 	gatherSmartEntityTemplates();
 }
 
+void MWBase::SmartEntitiesManager::clear()
+{
+
+	std::map<int,MWBase::SmartEntityInstance*>::iterator it = mSmartInstanceMap.begin();
+
+	while (it != mSmartInstanceMap.end())
+	{
+		delete it->second;
+		it++;
+	}
+
+	mSmartInstanceMap.clear();
+}
+
 std::string MWBase::SmartEntityTemplate::getStringID()
 {
 	return mIngameID;
