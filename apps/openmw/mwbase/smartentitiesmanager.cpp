@@ -13,11 +13,24 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 
 void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 {
+	std::string savestring;
 	std::string path_s = path.string();
 	path_s += "EMS";
 	path = path_s;
+
+	std::map<int, MWBase::SmartEntityInstance*>::iterator it = mSmartInstanceMap.begin();
+
+	while (it != mSmartInstanceMap.end())
+	{
+		savestring += std::to_string(it->second->getPings());
+
+		it++;
+	}
+
+
+
 	boost::filesystem::ofstream filestream(path, std::ios::binary);
-	filestream << "This work?";
+	filestream << savestring;
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
