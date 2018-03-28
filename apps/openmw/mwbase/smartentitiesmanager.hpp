@@ -21,6 +21,7 @@
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
+#include <boost/filesystem/path.hpp>
 
 
 
@@ -108,7 +109,7 @@ namespace MWBase
 
 		void loadGame(std::string savename);
 
-		void saveGame();
+		void saveGame(boost::filesystem::path path);
 
 		SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 

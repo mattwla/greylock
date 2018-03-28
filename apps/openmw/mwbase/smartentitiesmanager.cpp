@@ -1,6 +1,7 @@
 #include "smartentitiesmanager.hpp"
 #include "../glsmartentities/bread.hpp"
 #include <iostream>
+#include <boost/filesystem/fstream.hpp>
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
@@ -8,6 +9,15 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 
 
+}
+
+void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
+{
+	std::string path_s = path.string();
+	path_s += "EMS";
+	path = path_s;
+	boost::filesystem::ofstream filestream(path, std::ios::binary);
+	filestream << "This work?";
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)

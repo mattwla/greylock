@@ -280,6 +280,7 @@ void MWState::StateManager::saveGame (const std::string& description, const Slot
         MWBase::Environment::get().getWindowManager()->write(writer, listener);
         MWBase::Environment::get().getMechanicsManager()->write(writer, listener);
         MWBase::Environment::get().getInputManager()->write(writer, listener);
+		
 
         // Ensure we have written the number of records that was estimated
         if (writer.getRecordCount() != recordCount+1) // 1 extra for TES3 record
@@ -299,6 +300,9 @@ void MWState::StateManager::saveGame (const std::string& description, const Slot
 
         Settings::Manager::setString ("character", "Saves",
             slot->mPath.parent_path().filename().string());
+
+		std::cout << slot->mPath << std::endl;
+		MWBase::Environment::get().getSmartEntitiesManager()->saveGame(slot->mPath);
     }
     catch (const std::exception& e)
     {
@@ -369,6 +373,7 @@ void MWState::StateManager::loadGame(const std::string& filepath)
 
 void MWState::StateManager::loadGame (const Character *character, const std::string& filepath)
 {
+	std::cout << filepath << std::endl;
     try
     {
         cleanup();
