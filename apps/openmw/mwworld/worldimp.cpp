@@ -3596,6 +3596,12 @@ namespace MWWorld
 	void World::debugSE(const Ptr &object)
 	{
 		
+		if (object.getClass().isNpc())
+		{
+			std::cout << "is an NPC" << std::endl;
+			return;
+		}
+
 			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;s
 		bool hasInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(object);
 		
