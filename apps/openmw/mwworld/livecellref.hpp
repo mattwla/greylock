@@ -10,6 +10,7 @@
 namespace MWBase
 {
 	class SmartEntityInstance;
+	class Life;
 }
 
 namespace ESM
@@ -29,6 +30,7 @@ namespace MWWorld
         const Class *mClass;
 
 		MWBase::SmartEntityInstance *mSmartEntityInstance;
+		MWBase::Life *mLife;
 
         /** Information about this instance, such as 3D location and rotation
          * and individual type-dependent data.

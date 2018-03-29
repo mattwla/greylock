@@ -40,6 +40,7 @@
 #include "../mwrender/objects.hpp"
 #include "../mwrender/renderinginterface.hpp"
 #include "../mwrender/npcanimation.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwgui/tooltips.hpp"
 

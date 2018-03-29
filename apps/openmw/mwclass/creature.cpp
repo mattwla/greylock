@@ -38,6 +38,7 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/combat.hpp"
 #include "../mwmechanics/actorutil.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 namespace
 {

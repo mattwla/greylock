@@ -3599,6 +3599,7 @@ namespace MWWorld
 		if (object.getClass().isNpc())
 		{
 			std::cout << "is an NPC" << std::endl;
+			object.getClass().getLife(object);
 			return;
 		}
 

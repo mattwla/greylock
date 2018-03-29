@@ -40,6 +40,11 @@ namespace ESM
     struct Position;
 }
 
+namespace MWBase
+{
+	class Life;
+}
+
 namespace MWWorld
 {
     class ContainerStore;
@@ -296,6 +301,8 @@ namespace MWWorld
             
             /// Get a blood texture suitable for \a ptr (see Blood Texture 0-2 in Morrowind.ini)
             virtual int getBloodTexture (const MWWorld::ConstPtr& ptr) const;
+
+			virtual MWBase::Life* getLife(const MWWorld::Ptr& ptr) const;
 
             virtual Ptr copyToCell(const ConstPtr &ptr, CellStore &cell, int count) const;
 

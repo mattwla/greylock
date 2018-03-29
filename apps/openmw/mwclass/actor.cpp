@@ -10,11 +10,13 @@
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/movement.hpp"
 #include "../mwmechanics/magiceffects.hpp"
+#include "../mwbase/lifemanager.hpp"
+
 
 #include "../mwphysics/physicssystem.hpp"
 
 #include "../mwworld/inventorystore.hpp"
-
+#include <iostream>
 namespace MWClass
 {
     Actor::Actor() {}
@@ -102,6 +104,11 @@ namespace MWClass
 
         return true;
     }
+	MWBase::Life * Actor::getLife(const MWWorld::Ptr& ptr) const
+	{
+		
+		return ptr.getBase()->mLife;
+	}
 	bool Actor::isClimbing() const
 	{
 		//return true;

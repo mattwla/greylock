@@ -44,6 +44,8 @@ namespace MWClass
 
         virtual bool canBeActivated(const MWWorld::Ptr& ptr) const;
 
+		virtual MWBase::Life* getLife(const MWWorld::Ptr& ptr) const;
+
 		virtual bool isClimbing() const;
 
 
