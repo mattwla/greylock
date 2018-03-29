@@ -72,6 +72,7 @@ namespace MWBase
 			mId = id;
 			mRefNum = ptr.getCellRef().getRefNum().mIndex;
 			mOwnerCell = ptr.getCell();
+			ptr.getBase()->mLife = this;
 		}
 
 		void getDebugInfo();
@@ -83,6 +84,9 @@ namespace MWBase
 		
 	public:
 
+		
+		void newGame();
+		
 		virtual void update(float duration, bool paused) = 0;
 
 		virtual void initialize() = 0;

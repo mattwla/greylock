@@ -6,6 +6,11 @@
 #include <iterator>
 #include <algorithm>
 #include <map>
+#include "../mwbase/environment.hpp"
+#include "../mwbase/world.hpp"
+#include "../mwworld/cells.hpp"
+#include "../mwworld/cellstore.hpp"
+
 
 #include <limits.h>
 #include <iostream>
@@ -15,6 +20,27 @@ GLLifeManager::LifeManager::LifeManager()
 {
 }
 
+void MWBase::LifeManager::newGame()
+{
+
+	/*auto mActiveCells = MWBase::Environment::get().getWorld()->getCells();
+	const MWWorld::Scene::CellStoreCollection& collection = mActiveCells;
+	for (MWWorld::Scene::CellStoreCollection::const_iterator cellIt = collection.begin(); cellIt != collection.end(); ++cellIt)
+	{
+		MWWorld::ListObjectsVisitor visitor;
+		(*cellIt)->forEach(visitor);
+
+		for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
+		{
+			std::string type = it->getClass().getTypeName();
+			if (type == typeid(ESM::NPC).name())
+			{
+				MWBase::Life* newlife = new MWBase::Life(it->getCellRef().getRefId);
+				mLifeList.push_back(newlife);
+			}
+		}
+	}*/
+}
 void GLLifeManager::LifeManager::update(float duration, bool paused)
 {
 	
