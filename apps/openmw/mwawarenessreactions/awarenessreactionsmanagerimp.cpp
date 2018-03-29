@@ -114,107 +114,108 @@ namespace MWAwarenessReactions
 	//	return vec;
 	//}
 
-	//bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer)
-	//{
-	//	if (observer.getClass().getCreatureStats(observer).isDead() || !observer.getRefData().isEnabled())
-	//		return false;
-	//	osg::Vec3f pos1(ptr.getRefData().getPosition().asVec3());
-	//	osg::Vec3f pos2(observer.getRefData().getPosition().asVec3());
-	//	// is ptr behind the observer?
-	//	osg::Vec3f vec = pos1 - pos2;
-	//	if (observer.getRefData().getBaseNode())
-	//	{
-	//		osg::Vec3f observerDir = (observer.getRefData().getBaseNode()->getAttitude() * osg::Vec3f(0, 1, 0));
+	bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer)
+	{
+		if (observer.getClass().getCreatureStats(observer).isDead() || !observer.getRefData().isEnabled())
+			return false;
+		osg::Vec3f pos1(ptr.getRefData().getPosition().asVec3());
+		osg::Vec3f pos2(observer.getRefData().getPosition().asVec3());
+		// is ptr behind the observer?
+		osg::Vec3f vec = pos1 - pos2;
+		if (observer.getRefData().getBaseNode())
+		{
+			osg::Vec3f observerDir = (observer.getRefData().getBaseNode()->getAttitude() * osg::Vec3f(0, 1, 0));
 
-	//		float angleRadians = std::acos(observerDir * vec / (observerDir.length() * vec.length()));
-	//		if (angleRadians > osg::DegreesToRadians(90.f))
-	//			return false;
-	//		else
-	//			return true;
-	//	}
+			float angleRadians = std::acos(observerDir * vec / (observerDir.length() * vec.length()));
+			if (angleRadians > osg::DegreesToRadians(90.f))
+				return false;
+			else
+				return true;
+		}
 
-	//	std::cout << "couldnt get basenode for awareness check" << std::endl;
-	//	return false;
-	//}
+		//	std::cout << "couldnt get basenode for awareness check" << std::endl;
+		//	return false;
+		//}
 
-	//std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //run every frame, figures out all the things npcs can do with what they can see.
-	//{
-	//	std::map<MWTasks::Task*, int> reactions;
-	//	auto awareof = mNpcAwareOf[npc];
-	//	unsigned int idx = 0;
-	//	bool seetrespassing = false;
-	//	bool isShaman = MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman);
-	//	while (idx < awareof.size())
-	//	{
-	//		if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
-	//		{
-	//			for (auto& kv : mLiveCellGuardZones)
-	//			{
-	//				int radius = kv.second;
-	//				MWWorld::Ptr ptr = kv.first;
-	//				seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius);
+		//std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //run every frame, figures out all the things npcs can do with what they can see.
+		//{
+		//	std::map<MWTasks::Task*, int> reactions;
+		//	auto awareof = mNpcAwareOf[npc];
+		//	unsigned int idx = 0;
+		//	bool seetrespassing = false;
+		//	bool isShaman = MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Shaman);
+		//	while (idx < awareof.size())
+		//	{
+		//		if (awareof[idx] == MWBase::Environment::get().getWorld()->getPlayerPtr())
+		//		{
+		//			for (auto& kv : mLiveCellGuardZones)
+		//			{
+		//				int radius = kv.second;
+		//				MWWorld::Ptr ptr = kv.first;
+		//				seetrespassing = (awareof[idx].getRefData().getPosition().asVec3() - ptr.getRefData().getPosition().asVec3()).length2() <= (radius * radius);
 
-	//				if (seetrespassing)
-	//				{
-	//					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
-	//					{
+		//				if (seetrespassing)
+		//				{
+		//					if (isShaman && !MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Fighting))
+		//					{
 
-	//						//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
-	//						life.mCurrentGuardZone = kv.first; //set which guard zone we are concerned about to figure out where to escort player if they surrender
-	//						reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
-	//					}
-	//				}
-	//				else
-	//				{
-	//					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
-	//					{
-	//						turnTo(npc, awareof[idx]);
-	//					}
-	//				}
-	//			}
-	//			
-	//		}
-	//		idx += 1;
-	//	}
-	//	
-	//	return reactions;
-	//}
+		//						//reactions[new MWTasks::Fight(life.mTaskChain, awareof[idx])] = 4; //make a fight task, offer it to lifemanager
+		//						life.mCurrentGuardZone = kv.first; //set which guard zone we are concerned about to figure out where to escort player if they surrender
+		//						reactions[new MWTasks::ConfrontTrespasser(life.mTaskChain, awareof[idx])] = 4;
+		//					}
+		//				}
+		//				else
+		//				{
+		//					if (MWBase::Environment::get().getStatusManager()->hasStatus(npc, MWBase::Guarding))
+		//					{
+		//						turnTo(npc, awareof[idx]);
+		//					}
+		//				}
+		//			}
+		//			
+		//		}
+		//		idx += 1;
+		//	}
+		//	
+		//	return reactions;
+		//}
 
-	//bool AwarenessReactionsManager::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
-	//
-	//	osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
-	//	osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
+		//bool AwarenessReactionsManager::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
+		//
+		//	osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
+		//	osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
 
-	//	osg::Vec3f dir = targetPos - actorPos;
+		//	osg::Vec3f dir = targetPos - actorPos;
 
-	//	float faceAngleRadians = std::atan2(dir.x(), dir.y());
+		//	float faceAngleRadians = std::atan2(dir.x(), dir.y());
 
-	//	if (true)
-	//	{
-	//		if (MWMechanics::zTurn(actor, faceAngleRadians))
-	//			bool rotate = false;
-	//		else
-	//			return false;
-	//	}
-	//	
-	//}
+		//	if (true)
+		//	{
+		//		if (MWMechanics::zTurn(actor, faceAngleRadians))
+		//			bool rotate = false;
+		//		else
+		//			return false;
+		//	}
+		//	
+		//}
 
-	//MWWorld::Ptr AwarenessReactionsManager::getGuardZoneOut(MWWorld::Ptr npcPtr) {
-	//	auto list = MWBase::Environment::get().getLifeManager()->mLifeList;
-	//	int itx = 0;
-	//	while (itx < list.size())
-	//	{
-	//		if (list[itx]->mPtr == npcPtr) //mwx fix me refactor
-	//		{
-	//			std::string gzstring = list[itx]->mCurrentGuardZone.getCellRef().getRefId();
-	//			//std::cout << "going to" + MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true) << std::endl;
-	//			delete list[itx]->mSubTask;
-	//			list[itx]->mSubTask = 0;
-	//			list[itx]->mCurrentTask->resume();
-	//			MWBase::Environment::get().getStatusManager()->removeStatus(npcPtr, MWBase::Fighting);
-	//			return MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true);
-	//		}
-	//		itx += 1;
-	//	}
-	//}
+		//MWWorld::Ptr AwarenessReactionsManager::getGuardZoneOut(MWWorld::Ptr npcPtr) {
+		//	auto list = MWBase::Environment::get().getLifeManager()->mLifeList;
+		//	int itx = 0;
+		//	while (itx < list.size())
+		//	{
+		//		if (list[itx]->mPtr == npcPtr) //mwx fix me refactor
+		//		{
+		//			std::string gzstring = list[itx]->mCurrentGuardZone.getCellRef().getRefId();
+		//			//std::cout << "going to" + MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true) << std::endl;
+		//			delete list[itx]->mSubTask;
+		//			list[itx]->mSubTask = 0;
+		//			list[itx]->mCurrentTask->resume();
+		//			MWBase::Environment::get().getStatusManager()->removeStatus(npcPtr, MWBase::Fighting);
+		//			return MWBase::Environment::get().getWorld()->searchPtr(gzstring + "_out", true);
+		//		}
+		//		itx += 1;
+		//	}
+		//}
+	}
 }

@@ -215,6 +215,13 @@ bool MWBase::SmartEntitiesManager::hasSmartInstance(const MWWorld::Ptr & ptr)
 	
 }
 
+MWBase::SmartInstanceMap & MWBase::SmartEntitiesManager::getLiveSmartInstances()
+{
+	return mSmartInstancesInScene;
+	
+	// TODO: insert return statement here
+}
+
 void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
 {
 	std::map<int, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
@@ -268,4 +275,9 @@ int MWBase::SmartEntityInstance::getPings()
 std::string MWBase::SmartEntityInstance::getRefId()
 {
 	return mRefId;
+}
+
+MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
+{
+	return mPtr;
 }

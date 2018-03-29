@@ -54,6 +54,7 @@ namespace Loading
 
 namespace MWBase
 {
+	typedef std::map<int, SmartEntityInstance*> SmartInstanceMap;
 
 	class SmartEntityInstance
 	{
@@ -61,11 +62,13 @@ namespace MWBase
 	protected:
 		int mPingCount;
 		std::string mRefId;
+		MWWorld::Ptr mPtr; //will be problem.
 
 	public :
 		void ping();
 		int getPings();
 		std::string getRefId();
+		MWWorld::Ptr & getPtr();
 
 	};
 
@@ -95,7 +98,7 @@ namespace MWBase
 	{
 
 		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
-		typedef std::map<int, SmartEntityInstance*> SmartInstanceMap;
+	
 		SmartTemplateMap mSmartTemplateMap;
 		SmartInstanceMap mSmartInstanceMap;
 		SmartInstanceMap mSmartInstancesInScene;
@@ -129,6 +132,8 @@ namespace MWBase
 		void removeSmartInstancesFromSceneViaCell(MWWorld::CellStore *cellStore);
 
 		bool hasSmartInstance(const MWWorld::Ptr &ptr);
+
+		SmartInstanceMap& getLiveSmartInstances();
 
 		void outputInSceneInstancesToLog();
 		

@@ -62,17 +62,20 @@ namespace MWBase
 		std::string mId;
 		int mRefNum;
 		MWWorld::CellStore *mOwnerCell;
+		MWBase::Awareness *mAwareness;
+		MWWorld::Ptr mPtr;
 
 	
 	public:
 
 		Life(std::string id)
 		{
-			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
+			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
-			mRefNum = ptr.getCellRef().getRefNum().mIndex;
-			mOwnerCell = ptr.getCell();
-			ptr.getBase()->mLife = this;
+			mRefNum = mPtr.getCellRef().getRefNum().mIndex;
+			mOwnerCell = mPtr.getCell();
+			mPtr.getBase()->mLife = this;
+			mAwareness = new MWBase::Awareness(mPtr);
 		}
 
 		void getDebugInfo();

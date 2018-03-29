@@ -21,12 +21,14 @@ namespace MWAwarenessReactions
 	public:
 		AwarenessReactionsManager();
 
+		virtual bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
+
 	/*	virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr);*/
 
-	/*	bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
+		//virtual bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
 
-		bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
-*/
+		//bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
+
 	};
 	
 }

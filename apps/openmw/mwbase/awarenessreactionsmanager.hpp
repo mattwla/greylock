@@ -55,11 +55,41 @@ namespace MWBase
 {
 	struct Life;
 
+	struct SensoryLink {
+		MWWorld::Ptr mPtr;
+
+		SensoryLink::SensoryLink(MWWorld::Ptr ptr)
+		{
+			mPtr = ptr;
+			
+		}
+	};
+
+	struct SensoryLinkStore {
+
+		std::vector<SensoryLink> mCurrentSensoryLinks;
+	
+		std::vector<SensoryLink> mSensoryLinksInMemory;
+
+		void addSensoryLink(SensoryLink sensorylink);
+
+		~SensoryLinkStore();
+	
+	};
+
+
 	class Awareness {
 
+		MWWorld::Ptr mPtr;
 
+		SensoryLinkStore* mSensoryLinkStore;
 
+	public:
+		void refresh();
 
+		void getDebugInfo();
+
+		Awareness::Awareness(MWWorld::Ptr ptr);
 
 
 	};
@@ -75,6 +105,7 @@ namespace MWBase
 */
 
 
+		virtual bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer) = 0;
 
 		virtual ~AwarenessReactionsManager() {}
 

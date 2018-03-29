@@ -43,6 +43,20 @@ void MWBase::LifeManager::newGame()
 }
 void GLLifeManager::LifeManager::update(float duration, bool paused)
 {
+	unsigned int itx = 0;
+	while (itx < mLifeList.size())
+	{
+	
+		
+		MWBase::Life * currentLife = mLifeList[itx];
+		if (inActiveRange(currentLife->mPtr))
+		{
+			currentLife->mAwareness->refresh();
+			
+		}
+		itx++;
+	}
+	
 	
 }
 
@@ -80,5 +94,41 @@ void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... intere
 
 bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 {
-	return true;
+	bool inProcessingRange = false;
+
+	//mwx fix me some bad redundency here against actors.cpp
+
+	const float aiProcessingDistance = 7168;
+
+	const float sqrAiProcessingDistance = aiProcessingDistance*aiProcessingDistance;
+
+	MWWorld::Ptr player = MWBase::Environment::get().getWorld()->getPlayerPtr();
+
+	if (npc.getCell()->isExterior())
+
+	{
+
+		inProcessingRange = (player.getRefData().getPosition().asVec3() - npc.getRefData().getPosition().asVec3()).length2() <= sqrAiProcessingDistance;
+
+	}
+
+	else
+
+	{
+
+		inProcessingRange = player.getCell() == npc.getCell();
+
+	}
+
+	//If player is resting, no one is in active range....
+
+	if (inProcessingRange)
+
+		inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
+
+
+
+	return inProcessingRange;
+	
+	//return true;
 }

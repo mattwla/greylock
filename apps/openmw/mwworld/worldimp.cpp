@@ -3601,6 +3601,7 @@ namespace MWWorld
 			std::cout << "is an NPC!!!!!!!" << std::endl;
 			MWBase::Life * life = object.getClass().getLife(object);
 			life->getDebugInfo();
+			life->mAwareness->getDebugInfo();
 			return;
 		}
 
