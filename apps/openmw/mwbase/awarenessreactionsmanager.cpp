@@ -1,5 +1,6 @@
 #include "awarenessreactionsmanager.hpp"
 #include "smartentitiesmanager.hpp"
+#include <iostream>
 
 void MWBase::Awareness::refresh()
 {
@@ -29,6 +30,18 @@ void MWBase::Awareness::refresh()
 
 
 
+}
+
+void MWBase::Awareness::getDebugInfo()
+{
+	std::cout << "I am aware of..." << std::endl;
+	unsigned int itx = 0;
+	
+	while (itx < mSensoryLinkStore->mCurrentSensoryLinks.size())
+	{
+		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefId() << std::endl;
+		itx += 1;
+	}
 }
 
 MWBase::Awareness::Awareness(MWWorld::Ptr ptr)
