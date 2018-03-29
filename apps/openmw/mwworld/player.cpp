@@ -16,6 +16,7 @@
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "../mwmechanics/movement.hpp"
 #include "../mwmechanics/npcstats.hpp"
@@ -256,9 +257,17 @@ namespace MWWorld
 
 	void Player::debugSE()
 	{
-		MWWorld::Ptr toDebug = MWBase::Environment::get().getWorld()->getFacedObject();
 		std::cout << "debug key pressed" << std::endl;
-		MWBase::Environment::get().getWorld()->debugSE(toDebug);
+		MWWorld::Ptr toDebug = MWBase::Environment::get().getWorld()->getFacedObject();
+		if (!toDebug)
+		{
+			MWBase::Environment::get().getSmartEntitiesManager()->outputInSceneInstancesToLog();
+		}
+		else
+		{
+			
+			MWBase::Environment::get().getWorld()->debugSE(toDebug);
+		}
 	}
 
     bool Player::wasTeleported() const

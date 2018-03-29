@@ -1,11 +1,15 @@
 #include "smartentitiesmanager.hpp"
 #include "../glsmartentities/bread.hpp"
+#include "../mwworld/worldimp.cpp"
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
 #include <map>
+#include "../mwworld/cellstore.hpp"
+#include "../mwworld/cellvisitors.hpp"
+
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
@@ -133,6 +137,74 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	else
 		return nullptr;
 	
+}
+
+void MWBase::SmartEntitiesManager::addSmartInstanceToScene(const MWWorld::Ptr & ptr)
+{
+	bool alreadyinscene = isInstanceInScene(ptr);
+	if (alreadyinscene)
+	{
+		std::cout << "error: smart instance requested to be added to scene, was already in scene" << std::endl;
+		std::cout << "id is: " + ptr.getCellRef().getRefId() << std::endl;
+		return;
+	}
+
+	//Do we assume one is already built?
+	SmartEntityInstance * instance = getSmartEntityInstance(ptr);
+	int refnum = ptr.getCellRef().getRefNum().mIndex;
+	
+	mSmartInstancesInScene[refnum] = instance;
+
+}
+
+bool MWBase::SmartEntitiesManager::isInstanceInScene(const MWWorld::Ptr & ptr)
+{
+	int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
+	if (!mSmartInstancesInScene.count(refnum))
+		return false;
+	else
+		return true;
+	
+}
+
+void MWBase::SmartEntitiesManager::removeSmartInstanceFromScene(const MWWorld::Ptr & ptr)
+{
+}
+
+void MWBase::SmartEntitiesManager::removeSmartInstancesFromSceneViaCell(MWWorld::CellStore * cellStore)
+{
+	MWWorld::ListObjectsVisitor visitor;
+	cellStore->forEach(visitor);
+
+	for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
+	{
+		int refnum = it->getCellRef().getRefNum().mIndex;
+		mSmartInstancesInScene.erase(refnum);
+	}
+
+}
+
+bool MWBase::SmartEntitiesManager::hasSmartInstance(const MWWorld::Ptr & ptr)
+{
+	
+		int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
+		if (!mSmartInstanceMap.count(refnum))
+			return false;
+		else
+			return true;
+	
+}
+
+void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
+{
+	std::map<int, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
+
+	while (it != mSmartInstancesInScene.end())
+	{
+		std::cout << std::to_string(it->first) + " " + it->second->getRefId() << std::endl;
+		it++;
+	}
+
 }
 
 MWBase::SmartEntitiesManager::SmartEntitiesManager()

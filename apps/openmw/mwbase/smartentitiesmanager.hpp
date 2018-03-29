@@ -98,6 +98,7 @@ namespace MWBase
 		typedef std::map<int, SmartEntityInstance*> SmartInstanceMap;
 		SmartTemplateMap mSmartTemplateMap;
 		SmartInstanceMap mSmartInstanceMap;
+		SmartInstanceMap mSmartInstancesInScene;
 		
 		void gatherSmartEntityTemplates();
 
@@ -119,14 +120,18 @@ namespace MWBase
 
 		SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
-		bool hasSmartInstance(const MWWorld::Ptr &ptr)
-		{
-			int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
-			if (!mSmartInstanceMap.count(refnum))
-				return false;
-			else
-				return true;
-		}
+		void addSmartInstanceToScene(const MWWorld::Ptr &ptr);
+
+		bool isInstanceInScene(const MWWorld::Ptr &ptr);
+
+		void removeSmartInstanceFromScene(const MWWorld::Ptr &ptr);
+
+		void removeSmartInstancesFromSceneViaCell(MWWorld::CellStore *cellStore);
+
+		bool hasSmartInstance(const MWWorld::Ptr &ptr);
+
+		void outputInSceneInstancesToLog();
+		
 
 
 	};

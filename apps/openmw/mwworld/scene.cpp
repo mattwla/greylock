@@ -97,6 +97,7 @@ namespace
 			if (instance)
 			{
 				ptr.getBase()->mSmartEntityInstance = instance;
+				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(ptr);
 			}
 			else
 				ptr.getBase()->mSmartEntityInstance = 0;
@@ -285,6 +286,8 @@ namespace MWWorld
 
         MWBase::Environment::get().getSoundManager()->stopSound (*iter);
         mActiveCells.erase(*iter);
+
+		MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstancesFromSceneViaCell(*iter); //mwx
     }
 
     void Scene::loadCell (CellStore *cell, Loading::Listener* loadingListener, bool respawn)
