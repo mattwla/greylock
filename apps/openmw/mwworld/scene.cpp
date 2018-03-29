@@ -387,7 +387,7 @@ namespace MWWorld
     {
        
 		std::cout << "pmoved" << std::endl;
-		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances(); //mwx
+		//MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances(); //mwx
 
 		Loading::Listener* loadingListener = MWBase::Environment::get().getWindowManager()->getLoadingScreen();
         Loading::ScopedLoad load(loadingListener);
@@ -508,7 +508,7 @@ namespace MWWorld
         MWBase::Environment::get().getWorld()->adjustSky();
 //		MWBase::Environment::get().getTasksManager()->forceUpdate(); // mwx
         mLastPlayerPos = pos.asVec3();
-		MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
+	//	MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances();
     }
 
     Scene::Scene (MWRender::RenderingManager& rendering, MWPhysics::PhysicsSystem *physics)

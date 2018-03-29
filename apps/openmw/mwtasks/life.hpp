@@ -30,10 +30,7 @@ namespace MWTasks
 
 		int mTickCounter;
 
-		MWBase::AIScheduleManager::Schedule * mSchedule;
-
-		std::vector<MWWorld::Ptr> mAwareOf;
-
+	
 		
 
 		

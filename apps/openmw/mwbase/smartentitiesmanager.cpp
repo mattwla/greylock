@@ -27,7 +27,7 @@ void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int
 
 	mSmartInstanceMap[refnum] = foundInstance;
 
-	std::cout << "loaded an instance" << std::endl;
+	//std::cout << "loaded an instance" << std::endl;
 }
 
 void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
@@ -186,13 +186,13 @@ void MWBase::SmartEntitiesManager::removeSmartInstanceFromScene(const MWWorld::P
 void MWBase::SmartEntitiesManager::removeSmartInstancesFromSceneViaCell(MWWorld::CellStore * cellStore)
 {
 
-	std::cout << "removing SMART INTS" << std::endl;
+	//std::cout << "removing SMART INTS" << std::endl;
 	MWWorld::ListObjectsVisitor visitor;
 	cellStore->forEach(visitor);
 
 	for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 	{
-		std::cout << it->getCellRef().getRefId() << std::endl;
+		//std::cout << it->getCellRef().getRefId() << std::endl;
 		if (isInstanceInScene(*it))
 		{
 			std::cout << "tried to remove " + it->getCellRef().getRefId() << std::endl;

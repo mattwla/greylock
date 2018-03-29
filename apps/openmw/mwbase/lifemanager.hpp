@@ -22,11 +22,10 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 
 
+
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
-
-
 
 namespace osg
 {
@@ -53,63 +52,29 @@ namespace Loading
 	class Listener;
 }
 
+
+
+
 namespace MWBase
 {
 	struct Life
 	{
+		std::string mId;
+		int mRefNum;
+		MWWorld::CellStore *mOwnerCell;
 
-		//Life class
-		//Its purpose: to manage all the systems that make greylocks life so interesting
-		//like hunger, thirst, and will
-		//Scheduled broad goals (sleep, work, play, eat)
-		//A taskchain related to scheduled broad goal
-
-		//determines which reaction takes precedence, determines if reaction can over ride currenttask.
-		
-		
-		
-		//Things Life class does not that it maybe should not do
-		//
-		//
-		//
-		//
-		//
-
-
-
-
-
+	
+	public:
 
 		Life(std::string id)
 		{
+			MWWorld::Ptr ptr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
-			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
-			mHunger = 0;
-			mThirst = 0;
-			mWill = 100;
-			mCurrentTask = 0;
-			mSchedule = new MWBase::AIScheduleManager::Schedule(id);
-			mTaskChain = new MWTasks::Life(id);
-			mAwareOfList = MWBase::Environment::get().getAwarenessReactionsManager()->calculateAwareness(mPtr);
-			mAvailableActions;
-			MWBase::Environment::get().getStatusManager()->initNpcStatus(mId);
-			mSubTask = 0;
+			mRefNum = ptr.getCellRef().getRefNum().mIndex;
+			mOwnerCell = ptr.getCell();
 		}
-	
-	public:
-		std::string mId;
-		MWWorld::Ptr mPtr;
-		float mHunger;
-		float mThirst;
-		float mWill;
-		MWBase::AIScheduleManager::Schedule* mSchedule;
-		MWTasks::Life* mTaskChain;
-		std::vector<MWWorld::Ptr> mAwareOfList;
-		MWTasks::Task* mCurrentTask;
-		std::map<MWTasks::Task*, int> mAvailableActions; //task enum, valence of task. Actions npc can take in the environment.
-		std::vector<MWBase::Status> mStatusList;
-		MWTasks::Task* mSubTask;
-		MWWorld::Ptr mCurrentGuardZone;
+
+		void getDebugInfo();
 
 	};
 
@@ -133,6 +98,8 @@ namespace MWBase
 		float mTimePassed;
 
 		float mTimeAccumulator;
+
+		
 
 	};
 

@@ -54,39 +54,26 @@ namespace Loading
 namespace MWBase
 {
 	struct Life;
+
+	class Awareness {
+
+
+
+
+
+
+	};
 	
-	//enum Status
-	//{
-	//	Shaman = 0,
-	//	Elder = 1,
-	//	Wounded = 2
-
-	//};
-
 	class AwarenessReactionsManager
 	{
-		/*AwarenessReactionsManager(const AwarenessReactionsManager&);
-		///< not implemented
-
-		AwarenessReactionsManager& operator= (const AwarenessReactionsManager&);
-		///< not implemented
-*/
+	
 	public:
-		std::vector<MWWorld::Ptr> mLiveCellAffordances; //all ways to interact with world in live cells
-
-		std::map<MWWorld::Ptr, int> mLiveCellGuardZones; //all guard zones with associated radius
-
-		std::map<MWWorld::Ptr, std::vector<MWWorld::Ptr>> mNpcAwareOf;
-
-		//std::map<MWWorld::Ptr, std::vector<MWBase::Status>> mNpcStatusList;
-		
-		virtual MWWorld::Ptr getGuardZoneOut(MWWorld::Ptr npcPtr) = 0;
-		
-		virtual void updateActiveAffordances() = 0;
+			
+	/*	virtual void updateActiveAffordances() = 0;
 
 		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
+*/
 
-		virtual std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) = 0;
 
 
 		virtual ~AwarenessReactionsManager() {}
