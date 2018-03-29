@@ -258,6 +258,7 @@ namespace MWWorld
     {
         std::cout << "Unloading cell\n";
         ListAndResetObjectsVisitor visitor;
+		MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstancesFromSceneViaCell(*iter); //mwx
 
         (*iter)->forEach<ListAndResetObjectsVisitor>(visitor);
         for (std::vector<MWWorld::Ptr>::const_iterator iter2 (visitor.mObjects.begin());
@@ -287,7 +288,7 @@ namespace MWWorld
         MWBase::Environment::get().getSoundManager()->stopSound (*iter);
         mActiveCells.erase(*iter);
 
-		MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstancesFromSceneViaCell(*iter); //mwx
+		
     }
 
     void Scene::loadCell (CellStore *cell, Loading::Listener* loadingListener, bool respawn)
@@ -664,7 +665,8 @@ namespace MWWorld
 
     void Scene::removeObjectFromScene (const Ptr& ptr)
     {
-        MWBase::Environment::get().getMechanicsManager()->remove (ptr);
+		MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstanceFromScene(ptr);
+		MWBase::Environment::get().getMechanicsManager()->remove (ptr);
         MWBase::Environment::get().getSoundManager()->stopSound3D (ptr);
         mPhysics->remove(ptr);
         mRendering.removeObject (ptr);

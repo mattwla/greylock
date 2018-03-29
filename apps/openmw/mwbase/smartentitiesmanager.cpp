@@ -169,16 +169,36 @@ bool MWBase::SmartEntitiesManager::isInstanceInScene(const MWWorld::Ptr & ptr)
 
 void MWBase::SmartEntitiesManager::removeSmartInstanceFromScene(const MWWorld::Ptr & ptr)
 {
+	bool alreadyinscene = isInstanceInScene(ptr);
+	if (!alreadyinscene)
+	{
+		std::cout << "error: smart instance requested to be removed to scene, was not in scene" << std::endl;
+		std::cout << "id is: " + ptr.getCellRef().getRefId() << std::endl;
+		return;
+	}
+
+	//Do we assume one is already built?
+	int refnum = ptr.getCellRef().getRefNum().mIndex;
+	mSmartInstancesInScene.erase(refnum);
+
 }
 
 void MWBase::SmartEntitiesManager::removeSmartInstancesFromSceneViaCell(MWWorld::CellStore * cellStore)
 {
+
+	std::cout << "removing SMART INTS" << std::endl;
 	MWWorld::ListObjectsVisitor visitor;
 	cellStore->forEach(visitor);
 
 	for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 	{
+		std::cout << it->getCellRef().getRefId() << std::endl;
+		if (isInstanceInScene(*it))
+		{
+			std::cout << "tried to remove " + it->getCellRef().getRefId() << std::endl;
+		}
 		int refnum = it->getCellRef().getRefNum().mIndex;
+
 		mSmartInstancesInScene.erase(refnum);
 	}
 
