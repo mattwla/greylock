@@ -1323,6 +1323,11 @@ namespace MWWorld
         {
             mWorldScene->playerMoved(vec);
         }
+
+		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr)) //mwx si position update
+		{
+			ptr.getBase()->mSmartEntityInstance->updatePtr(newPtr);
+		}
         return newPtr;
     }
 
@@ -3602,6 +3607,9 @@ namespace MWWorld
 			MWBase::Life * life = object.getClass().getLife(object);
 			life->getDebugInfo();
 			life->mAwareness->getDebugInfo();
+			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
+			
+
 			return;
 		}
 
@@ -3617,6 +3625,8 @@ namespace MWWorld
 			std::cout << "ping count was" << std::endl;
 			std::cout << instance->getPings() << std::endl;
 			object.getBase()->mSmartEntityInstance->ping();
+			osg::Vec3f pos = instance->getPtr().getRefData().getPosition().asVec3();
+			std::cout << std::to_string(pos[0]) + ", " + std::to_string(pos[1]) + ", " + std::to_string(pos[2]) << std::endl;
 		}
 
 

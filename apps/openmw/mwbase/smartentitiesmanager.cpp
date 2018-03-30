@@ -279,5 +279,14 @@ std::string MWBase::SmartEntityInstance::getRefId()
 
 MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 {
+	
+	
+	
 	return mPtr;
+}
+
+void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr & ptr)
+{
+
+	mPtr = ptr;
 }
