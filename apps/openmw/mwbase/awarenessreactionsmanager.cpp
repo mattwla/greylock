@@ -4,7 +4,7 @@
 
 void MWBase::Awareness::refresh()
 {
-	MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
+	/*MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
 
 	MWBase::SmartInstanceMap::iterator it = instances.begin();
 	SensoryLinkStore * newStore = new SensoryLinkStore;
@@ -28,7 +28,7 @@ void MWBase::Awareness::refresh()
 	}
 	mSensoryLinkStore = newStore;
 
-
+*/
 
 }
 

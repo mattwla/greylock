@@ -24,6 +24,7 @@
 #include "esmstore.hpp"
 #include "class.hpp"
 #include "containerstore.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 namespace
 {
@@ -106,6 +107,7 @@ namespace
         RecordType state;
         state.mRef = cref;
         state.load(reader);
+		//std::cout << "did something with" + state.mRef.mRefID << std::endl;
 
         // If the reference came from a content file, make sure this content file is loaded
         if (state.mRef.mRefNum.hasContentFile())
@@ -146,6 +148,7 @@ namespace
         MWWorld::LiveCellRef<T> ref (record);
         ref.load (state);
         collection.mList.push_back (ref);
+		
     }
 
     struct SearchByRefNumVisitor
@@ -668,6 +671,12 @@ namespace MWWorld
         }
 
         refNumToID[ref.mRefNum] = ref.mRefID;
+		int refnum = ref.mRefNum.mIndex;
+		MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ref.mRefID, refnum); //mwx smart
+		std::cout << mCell->mCellId.mIndex.mX << std::endl;
+		std::cout << mCell->mCellId.mIndex.mY << std::endl;
+		std::cout << mCell->mName << std::endl;
+
     }
 
     void CellStore::loadState (const ESM::CellState& state)
@@ -744,7 +753,8 @@ namespace MWWorld
 
     void CellStore::readReferences (ESM::ESMReader& reader, const std::map<int, int>& contentFileMap, GetCellStoreCallback* callback)
     {
-        mHasState = true;
+		//std::cout << "=======*******>>>>reading references<<<<<<<********=======" << std::endl;
+		mHasState = true;
 
         while (reader.isNextSub ("OBJE"))
         {

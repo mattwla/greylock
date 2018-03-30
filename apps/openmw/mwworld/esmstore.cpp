@@ -133,8 +133,10 @@ void ESMStore::setUp()
             std::vector<std::string> identifiers;
             storeIt->second->listIdentifier(identifiers);
 
-            for (std::vector<std::string>::const_iterator record = identifiers.begin(); record != identifiers.end(); ++record)
-                mIds[*record] = storeIt->first;
+			for (std::vector<std::string>::const_iterator record = identifiers.begin(); record != identifiers.end(); ++record)
+			{
+				mIds[*record] = storeIt->first;
+			}
         }
     }
     mSkills.setUp();

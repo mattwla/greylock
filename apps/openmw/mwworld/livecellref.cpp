@@ -14,10 +14,13 @@
 MWWorld::LiveCellRefBase::LiveCellRefBase(const std::string& type, const ESM::CellRef &cref)
   : mClass(&Class::get(type)), mRef(cref), mData(cref)
 {
+	/*std::cout << "does anything ever happen here?" << std::endl;
+	std::cout << cref.mRefID << std::endl;*/
 }
 
 void MWWorld::LiveCellRefBase::loadImp (const ESM::ObjectState& state)
 {
+	/*std::cout << "did this load imp thing" << std::endl;*/
     mRef = state.mRef;
     mData = RefData (state, mData.isDeletedByContentFile());
 

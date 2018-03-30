@@ -38,11 +38,11 @@ namespace MWTravelNodes
 {
 	TravelNodesManager::TravelNodesManager()
 	{
-		mtravelNodeMap = buildTravelNodes();
+		/*mtravelNodeMap = buildTravelNodes();
 		buildPathGrid(&mtravelPathGrid);
 		mtravelPathGridGraph = MWMechanics::PathgridGraph(&mtravelPathGrid);
 		mtravelPathGridGraph.load();
-	
+	*/
 
 	}
 

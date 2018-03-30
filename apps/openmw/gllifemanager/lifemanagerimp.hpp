@@ -24,6 +24,8 @@ namespace GLLifeManager
 	public:
 		LifeManager();
 
+		virtual void newGame();
+
 		virtual void update(float duration, bool paused);
 
 		virtual void initialize();

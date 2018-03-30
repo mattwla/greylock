@@ -2,6 +2,7 @@
 #define OPENMW_MWWORLD_CELLREF_H
 
 #include <components/esm/cellref.hpp>
+#include <iostream>
 
 namespace ESM
 {
@@ -20,6 +21,7 @@ namespace MWWorld
             : mCellRef(ref)
         {
             mChanged = false;
+			std::cout << "VANILLA CELL REF CONSTRUCTOR" << std::endl;
         }
 
         // Note: Currently unused for items in containers

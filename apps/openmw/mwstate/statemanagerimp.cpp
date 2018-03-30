@@ -29,6 +29,7 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/statusmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwworld/player.hpp"
 #include "../mwworld/class.hpp"
@@ -493,7 +494,7 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
                 currentPercent = progressPercent;
             }
         }
-
+		MWBase::Environment::get().getLifeManager()->initialize();
         mCharacterManager.setCurrentCharacter(character);
 
         mState = State_Running;
@@ -508,6 +509,7 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
         MWBase::Environment::get().getWindowManager()->updatePlayer();
         MWBase::Environment::get().getMechanicsManager()->playerLoaded();
 		MWBase::Environment::get().getSmartEntitiesManager()->loadGame(filepath);
+		
 
         if (firstPersonCam != MWBase::Environment::get().getWorld()->isFirstPerson())
             MWBase::Environment::get().getWorld()->togglePOV();

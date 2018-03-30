@@ -8,6 +8,8 @@ class SmartEntityBreadTemplate : public MWBase::SmartEntityTemplate {
 
 		virtual MWBase::SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr);
 
+		virtual MWBase::SmartEntityInstance * getInstance(std::string id, int refNum);
+
 		virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings);
 
 };

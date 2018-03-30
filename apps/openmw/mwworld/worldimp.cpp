@@ -3619,14 +3619,15 @@ namespace MWWorld
 		
 		if (hasInstance)
 		{
-			MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
+			MWBase::SmartEntityInstance * instance = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(object);
+				//object.getBase()->mSmartEntityInstance;
 			//MWBase::SmartEntityInstance * instance = object.getBase()->mSmartEntityInstance;
 			std::cout << "IS SMAHT KEHD" << std::endl;
 			std::cout << "ping count was" << std::endl;
 			std::cout << instance->getPings() << std::endl;
-			object.getBase()->mSmartEntityInstance->ping();
-			osg::Vec3f pos = instance->getPtr().getRefData().getPosition().asVec3();
-			std::cout << std::to_string(pos[0]) + ", " + std::to_string(pos[1]) + ", " + std::to_string(pos[2]) << std::endl;
+			instance->ping();
+			/*osg::Vec3f pos = instance->getPtr().getRefData().getPosition().asVec3();
+			std::cout << std::to_string(pos[0]) + ", " + std::to_string(pos[1]) + ", " + std::to_string(pos[2]) << std::endl;*/
 		}
 
 

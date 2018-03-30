@@ -60,16 +60,20 @@ namespace MWBase
 	struct Life
 	{
 		std::string mId;
+
 		int mRefNum;
+
 		MWWorld::CellStore *mOwnerCell;
+
 		MWBase::Awareness *mAwareness;
+
 		MWWorld::Ptr mPtr;
 
-	
 	public:
 
 		Life(std::string id)
 		{
+
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
 			mRefNum = mPtr.getCellRef().getRefNum().mIndex;
@@ -87,8 +91,7 @@ namespace MWBase
 		
 	public:
 
-		
-		void newGame();
+		virtual void newGame() = 0;
 		
 		virtual void update(float duration, bool paused) = 0;
 
@@ -109,7 +112,6 @@ namespace MWBase
 		
 
 	};
-
 	
 }
 #endif

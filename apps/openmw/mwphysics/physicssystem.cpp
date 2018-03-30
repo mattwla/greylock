@@ -979,8 +979,18 @@ namespace MWPhysics
 
     PhysicsSystem::RayResult PhysicsSystem::castRay(const osg::Vec3f &from, const osg::Vec3f &to, const MWWorld::ConstPtr& ignore, std::vector<MWWorld::Ptr> targets, int mask, int group) const
     {
+	
+		
+		btVector3 btTo = toBullet(to);
         btVector3 btFrom = toBullet(from);
-        btVector3 btTo = toBullet(to);
+		if (from == to)
+		{
+			osg::Vec3f fix;
+			fix = to;
+			fix.z() = fix.z() + .5;
+			btTo = toBullet(fix);
+		}
+    
 
         const btCollisionObject* me = NULL;
         std::vector<const btCollisionObject*> targetCollisionObjects;
@@ -1012,6 +1022,7 @@ namespace MWPhysics
         resultCallback.m_collisionFilterGroup = group;
         resultCallback.m_collisionFilterMask = mask;
 
+		
         mCollisionWorld->rayTest(btFrom, btTo, resultCallback);
 
         RayResult result;

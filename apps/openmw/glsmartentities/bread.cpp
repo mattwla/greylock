@@ -13,6 +13,13 @@ MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(const MWWorl
 	return instance;
 }
 
+MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(std::string id, int refNum)
+{
+	SmartEntityBreadInstance * instance = new SmartEntityBreadInstance(id, refNum, 0);
+
+	return instance;
+}
+
 MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, int refnum, int pings)
 {
 	
