@@ -116,26 +116,45 @@ namespace MWAwarenessReactions
 
 	bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer)
 	{
+
 		if (observer.getClass().getCreatureStats(observer).isDead() || !observer.getRefData().isEnabled())
+
 			return false;
+
 		osg::Vec3f pos1(ptr.getRefData().getPosition().asVec3());
+
 		osg::Vec3f pos2(observer.getRefData().getPosition().asVec3());
+
 		// is ptr behind the observer?
+
 		osg::Vec3f vec = pos1 - pos2;
+
 		if (observer.getRefData().getBaseNode())
+
 		{
+
 			osg::Vec3f observerDir = (observer.getRefData().getBaseNode()->getAttitude() * osg::Vec3f(0, 1, 0));
 
+
+
 			float angleRadians = std::acos(observerDir * vec / (observerDir.length() * vec.length()));
+
 			if (angleRadians > osg::DegreesToRadians(90.f))
+
 				return false;
+
 			else
+
 				return true;
+
 		}
 
-		//	std::cout << "couldnt get basenode for awareness check" << std::endl;
-		//	return false;
-		//}
+
+
+		std::cout << "couldnt get basenode for awareness check" << std::endl;
+
+		return false;
+	}
 
 		//std::map<MWTasks::Task*, int> AwarenessReactionsManager::calculateReactions(MWWorld::Ptr npc, MWBase::Life& life) //run every frame, figures out all the things npcs can do with what they can see.
 		//{
@@ -218,4 +237,3 @@ namespace MWAwarenessReactions
 		//	}
 		//}
 	}
-}

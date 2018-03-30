@@ -39,7 +39,8 @@ void MWBase::Awareness::getDebugInfo()
 	
 	while (itx < mSensoryLinkStore->mCurrentSensoryLinks.size())
 	{
-		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefId() << std::endl;
+		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefId() + " " + std::to_string(mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefNum().mIndex) << std::endl;
+
 		itx += 1;
 	}
 }
