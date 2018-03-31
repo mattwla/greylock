@@ -60,6 +60,7 @@ namespace MWBase
 
 	public :
 		void ping();
+		void debugInfo();
 		int getPings();
 		std::string getRefId();
 		MWWorld::Ptr & getPtr();

@@ -275,6 +275,12 @@ void MWBase::SmartEntityInstance::ping()
 	mPingCount += 1;
 }
 
+void MWBase::SmartEntityInstance::debugInfo()
+{
+	std::cout << mHomeCellX << std::endl;
+	std::cout << mHomeCellY << std::endl;
+}
+
 int MWBase::SmartEntityInstance::getPings()
 {
 	return mPingCount;

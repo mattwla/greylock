@@ -3629,6 +3629,8 @@ namespace MWWorld
 			std::cout << "ping count was" << std::endl;
 			std::cout << instance->getPings() << std::endl;
 			instance->ping();
+			instance->debugInfo();
+			
 			/*osg::Vec3f pos = instance->getPtr().getRefData().getPosition().asVec3();
 			std::cout << std::to_string(pos[0]) + ", " + std::to_string(pos[1]) + ", " + std::to_string(pos[2]) << std::endl;*/
 		}
