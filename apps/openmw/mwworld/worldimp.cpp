@@ -1324,10 +1324,13 @@ namespace MWWorld
             mWorldScene->playerMoved(vec);
         }
 
-		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr)) //mwx si position update
+		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(newPtr)) //mwx si position update
 		{
-			ptr.getBase()->mSmartEntityInstance->updatePtr(newPtr);
+			MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newPtr.getBase())->updatePtr(newPtr);
+			//ptr.getBase()->mSmartEntityInstance->updatePtr(newPtr);
 		}
+
+		
         return newPtr;
     }
 

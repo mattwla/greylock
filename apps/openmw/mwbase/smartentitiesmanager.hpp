@@ -52,6 +52,7 @@ namespace MWBase
 		int mPingCount;
 		std::string mRefId;
 		MWWorld::Ptr mPtr; //will be problem.
+		MWWorld::LiveCellRefBase * mLiveCellRef;
 	public :
 		void ping();
 		int getPings();
