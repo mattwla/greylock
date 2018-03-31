@@ -367,17 +367,17 @@ MWWorld::ContainerStoreIterator MWWorld::ContainerStore::addImp (const Ptr& ptr,
     }
 
     // determine whether to stack or not
-    for (MWWorld::ContainerStoreIterator iter (begin(type)); iter!=end(); ++iter)
-    {
-        if (stacks(*iter, ptr))
-        {
-            // stack
-            iter->getRefData().setCount( iter->getRefData().getCount() + count );
+    //for (MWWorld::ContainerStoreIterator iter (begin(type)); iter!=end(); ++iter)
+    //{
+    //    if (stacks(*iter, ptr))
+    //    {
+    //        // stack
+    //        iter->getRefData().setCount( iter->getRefData().getCount() + count );
 
-            flagAsModified();
-            return iter;
-        }
-    }
+    //        flagAsModified();
+    //        return iter;
+    //    }
+    //}
     // if we got here, this means no stacking
     return addNewStack(ptr, count);
 }

@@ -42,6 +42,7 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(const MWWorld::Ptr &ptr)
 
 SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, int refnum, int pings)
 {
+	std::cout << "new bread" << std::endl;
 	mPingCount = pings;
 	mRefId = refid;
 }

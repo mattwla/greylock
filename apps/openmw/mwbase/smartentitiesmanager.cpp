@@ -103,14 +103,14 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, int refNum)
 {
-	std::cout << ">>>> checking... " + id << std::endl;
+	//std::cout << ">>>> checking... " + id << std::endl;
 	
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
 	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
 	{
-		std::cout << "returned null" << std::endl;
+		//std::cout << "returned null" << std::endl;
 		return nullptr;
 	}
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
@@ -139,14 +139,14 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 		return nullptr;
 	int refNum = livecellref->mRef.getRefNum().mIndex;
 
-	std::cout << ">>>> checking... " + id << std::endl;
+	//std::cout << ">>>> checking... " + id << std::endl;
 
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
 	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
 	{
-		std::cout << "returned null" << std::endl;
+		//std::cout << "returned null" << std::endl;
 		return nullptr;
 	}
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);

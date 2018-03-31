@@ -21,7 +21,7 @@ namespace MWWorld
             : mCellRef(ref)
         {
             mChanged = false;
-			std::cout << "VANILLA CELL REF CONSTRUCTOR" << std::endl;
+			//std::cout << "VANILLA CELL REF CONSTRUCTOR" << std::endl;
         }
 
         // Note: Currently unused for items in containers
