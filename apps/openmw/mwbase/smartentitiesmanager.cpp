@@ -296,7 +296,7 @@ MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 	return mPtr; //one day, build one dynamically?
 }
 
-void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr & ptr)
+void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr ptr)
 {
 	mPtr = ptr;
 }

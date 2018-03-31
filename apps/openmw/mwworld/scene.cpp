@@ -91,13 +91,15 @@ namespace
 			//MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr); //mark as active? mwx fix me
 		if (!hasSmartInstance)
 		{
-			//MWBase::SmartEntityInstance * instance = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+			
 
 			//mwx smart injection
 			if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr))
 			{
 				//ptr.getBase()->mSmartEntityInstance = instance;
 				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(ptr);
+				MWBase::SmartEntityInstance * instance = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+				instance->updatePtr(ptr);
 			}
 			else
 				ptr.getBase()->mSmartEntityInstance = 0;

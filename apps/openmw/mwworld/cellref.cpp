@@ -17,7 +17,8 @@ namespace MWWorld
 
     void CellRef::unsetRefNum()
     {
-        mCellRef.mRefNum.unset();
+       // mCellRef.mRefNum.unset();
+		//mwx ref
     }
 
     std::string CellRef::getRefId() const

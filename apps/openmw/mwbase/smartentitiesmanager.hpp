@@ -64,7 +64,8 @@ namespace MWBase
 		int getPings();
 		std::string getRefId();
 		MWWorld::Ptr & getPtr();
-		void updatePtr(MWWorld::Ptr & ptr);
+		void updatePtr(MWWorld::Ptr ptr);
+		//void updatePtr(MWWorld::Ptr & ptr);
 		void registerHomeCell(const ESM::Cell * cell);
 	};
 

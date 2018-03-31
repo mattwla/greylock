@@ -141,7 +141,7 @@ namespace
                 }
 
             std::cerr << "Warning: Dropping reference to " << state.mRef.mRefID << " (invalid content file link)" << std::endl;
-            return;
+            //return;
         }
 
         // new reference
