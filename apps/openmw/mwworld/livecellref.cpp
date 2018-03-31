@@ -6,6 +6,7 @@
 
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "ptr.hpp"
 #include "class.hpp"
@@ -14,8 +15,8 @@
 MWWorld::LiveCellRefBase::LiveCellRefBase(const std::string& type, const ESM::CellRef &cref)
   : mClass(&Class::get(type)), mRef(cref), mData(cref)
 {
-	/*std::cout << "does anything ever happen here?" << std::endl;
-	std::cout << cref.mRefID << std::endl;*/
+	//Register pointer to me in smartentitymanager
+	MWBase::Environment::get().getSmartEntitiesManager()->initializeInstFromLiveCellRef(this);
 }
 
 void MWWorld::LiveCellRefBase::loadImp (const ESM::ObjectState& state)

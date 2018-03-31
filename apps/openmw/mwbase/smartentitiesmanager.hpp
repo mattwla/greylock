@@ -53,12 +53,18 @@ namespace MWBase
 		std::string mRefId;
 		MWWorld::Ptr mPtr; //will be problem.
 		MWWorld::LiveCellRefBase * mLiveCellRef;
+		std::string mHomeCellName;
+		bool mHomeCellIsExterior;
+		int mHomeCellX;
+		int mHomeCellY;
+
 	public :
 		void ping();
 		int getPings();
 		std::string getRefId();
 		MWWorld::Ptr & getPtr();
 		void updatePtr(MWWorld::Ptr & ptr);
+		void registerHomeCell(const ESM::Cell * cell);
 	};
 
 	class SmartEntityTemplate
@@ -94,6 +100,12 @@ namespace MWBase
 		SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
 		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, int refNum);
+
+		void registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell);
+
+		//void registerHomeCell(const MWWorld::CellRef * cellref, std::string name, bool isExterior, int x, int y);
+
+		MWBase::SmartEntityInstance * initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref);
 
 		void addSmartInstanceToScene(const MWWorld::Ptr &ptr);
 

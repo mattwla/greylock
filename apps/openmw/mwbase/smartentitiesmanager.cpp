@@ -9,6 +9,7 @@
 #include <map>
 #include "../mwworld/cellstore.hpp"
 #include "../mwworld/cellvisitors.hpp"
+#include "../mwworld/livecellref.hpp"
 
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
@@ -117,6 +118,47 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	return newInstance;
 }
 
+void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell)
+{
+
+	int refnum = cellref.mRefNum.mIndex;
+
+	if (!hasSmartInstance(refnum))
+		return;
+
+	SmartEntityInstance * instance = mSmartInstanceMap[refnum];
+	instance->registerHomeCell(cell);
+	//instance->
+}
+
+MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref)
+{
+
+	std::string id = livecellref->mRef.getRefId();
+	if (id == "")
+		return nullptr;
+	int refNum = livecellref->mRef.getRefNum().mIndex;
+
+	std::cout << ">>>> checking... " + id << std::endl;
+
+	//check if it already has one
+	if (hasSmartInstance(refNum))
+		return mSmartInstanceMap[refNum];
+	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
+	{
+		std::cout << "returned null" << std::endl;
+		return nullptr;
+	}
+	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
+	mSmartInstanceMap[refNum] = newInstance;
+	return newInstance;
+}
+
+
+
+
+
+
 void MWBase::SmartEntitiesManager::addSmartInstanceToScene(const MWWorld::Ptr & ptr)
 {
 	bool alreadyinscene = isInstanceInScene(ptr);
@@ -179,6 +221,8 @@ bool MWBase::SmartEntitiesManager::hasSmartInstance(const MWWorld::Ptr & ptr)
 
 bool MWBase::SmartEntitiesManager::hasSmartInstance(int refnum)
 {
+	if (refnum == 0)
+		return false;
 
 	if (!mSmartInstanceMap.count(refnum))
 		return false;
@@ -201,7 +245,8 @@ void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
 	}
 }
 
-MWBase::SmartEntitiesManager::SmartEntitiesManager()
+MWBase::SmartEntitiesManager::SmartEntitiesManager() :
+	mSmartInstanceMap()
 {
 	std::cout << "=====>Built SEManager<======" << std::endl;
 	std::cout << "Initializing templates" << std::endl;
@@ -248,4 +293,12 @@ MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr & ptr)
 {
 	mPtr = ptr;
+}
+
+void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
+{
+	mHomeCellIsExterior = cell->isExterior();
+	mHomeCellName = cell->mName;
+	mHomeCellX = cell->getGridX();
+	mHomeCellY = cell->getGridY();
 }

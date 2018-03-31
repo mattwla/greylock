@@ -671,11 +671,11 @@ namespace MWWorld
         }
 
         refNumToID[ref.mRefNum] = ref.mRefID;
-		int refnum = ref.mRefNum.mIndex;
-		MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ref.mRefID, refnum); //mwx smart
-		std::cout << mCell->mCellId.mIndex.mX << std::endl;
+		/*int refnum = ref.mRefNum.mIndex;*/
+		MWBase::Environment::get().getSmartEntitiesManager()->registerHomeCell(ref, mCell);
+		/*std::cout << mCell->mCellId.mIndex.mX << std::endl;
 		std::cout << mCell->mCellId.mIndex.mY << std::endl;
-		std::cout << mCell->mName << std::endl;
+		std::cout << mCell->mName << std::endl;*/
 
     }
 

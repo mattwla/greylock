@@ -521,6 +521,10 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 		//MWX
     }
 
+	//Create SmartEntitiesManager
+	MWBase::SmartEntitiesManager* smartentities = new MWBase::SmartEntitiesManager;
+	mEnvironment.setSmartEntitiesManager(smartentities);
+
     // Create the world
     mEnvironment.setWorld( new MWWorld::World (mViewer, rootNode, mResourceSystem.get(), mWorkQueue.get(),
         mFileCollections, mContentFiles, mEncoder, mFallbackMap,
@@ -561,9 +565,7 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 	MWAwarenessReactions::AwarenessReactionsManager* awarenessreactions = new MWAwarenessReactions::AwarenessReactionsManager;
 	mEnvironment.setAwarenessReactionsManager(awarenessreactions);
 
-	//Create SmartEntitiesManager
-	MWBase::SmartEntitiesManager* smartentities = new MWBase::SmartEntitiesManager;
-	mEnvironment.setSmartEntitiesManager(smartentities);
+
 
 	//Create status manager
 	MWStatus::StatusManager* status = new MWStatus::StatusManager;
