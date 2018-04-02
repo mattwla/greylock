@@ -38,6 +38,8 @@ void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 		std::string line;
 	
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+
+		bool haveParsedRefNumTicker = false;
 		
 		while (getline(in, line))
 		{
@@ -48,6 +50,13 @@ void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 			{
 				if (*it == "v1")
 					continue;
+				if (!haveParsedRefNumTicker)
+				{
+					mRuntimeRefNumTicker = std::stoi(*it);
+					haveParsedRefNumTicker = true;
+					continue;
+				}
+
 
 				idx += 1;
 				cache.push_back(*it);
@@ -81,6 +90,7 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 	}
 	boost::filesystem::ofstream filestream(path, std::ios::binary);
 	filestream << "v1" << std::endl;
+	filestream << std::to_string(mRuntimeRefNumTicker) << std::endl;
 	std::vector<std::string>::iterator itS = serializedinstances.begin();
 	while (itS != serializedinstances.end())
 	{
