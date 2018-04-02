@@ -203,7 +203,7 @@ void MWWorld::Cells::PreloadAll()
 	{
 		CellStore *cellStore = getCellStore(&(*iter));
 		cellStore->load();
-		std::cout << "description " + iter->getDescription() << std::endl;
+		//std::cout << "description " + iter->getDescription() << std::endl;
 
 	}
 
