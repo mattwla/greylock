@@ -2110,6 +2110,8 @@ namespace MWWorld
 
     Ptr World::copyObjectToCell(const ConstPtr &object, CellStore* cell, ESM::Position pos, int count, bool adjustPos)
     {
+
+
         if (cell->isExterior())
         {
             int cellX, cellY;
@@ -2134,6 +2136,8 @@ namespace MWWorld
             }
             addContainerScripts(dropped, cell);
         }
+
+		
 
         if (!object.getClass().isActor() && adjustPos && dropped.getRefData().getBaseNode())
         {

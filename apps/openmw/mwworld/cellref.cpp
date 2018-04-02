@@ -21,6 +21,11 @@ namespace MWWorld
 		//mwx ref
     }
 
+	void CellRef::setRefNum(int num)
+	{
+		mCellRef.mRefNum.mIndex = num;
+	}
+
     std::string CellRef::getRefId() const
     {
         return mCellRef.mRefID;

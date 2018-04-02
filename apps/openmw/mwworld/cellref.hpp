@@ -30,6 +30,8 @@ namespace MWWorld
         // Set RefNum to its default state.
         void unsetRefNum();
 
+		void setRefNum(int num);
+
         /// Does the RefNum have a content file?
         bool hasContentFile() const;
 

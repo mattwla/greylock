@@ -136,10 +136,19 @@ void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref)
 {
 
+
+
 	std::string id = livecellref->mRef.getRefId();
 	if (id == "")
 		return nullptr;
 	int refNum = livecellref->mRef.getRefNum().mIndex;
+	int contentNum = livecellref->mRef.getRefNum().mContentFile;
+
+	if (refNum == 0)
+	{
+		livecellref->mRef.setRefNum(99);
+		refNum = livecellref->mRef.getRefNum().mIndex;
+	}
 
 	//std::cout << ">>>> checking... " + id << std::endl;
 
