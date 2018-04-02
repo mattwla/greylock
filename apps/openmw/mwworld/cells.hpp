@@ -56,8 +56,14 @@ namespace MWWorld
             CellStore *getCell (const ESM::CellId& id);
 
             Ptr getPtr (const std::string& name, CellStore& cellStore, bool searchInContainers = false);
-            ///< \param searchInContainers Only affect loaded cells.
-            /// @note name must be lower case
+			///< \param searchInContainers Only affect loaded cells.
+			/// @note name must be lower case
+			
+			
+			void PreloadAll();
+            
+			
+		
 
             /// @note name must be lower case
             Ptr getPtr (const std::string& name);

@@ -632,6 +632,8 @@ namespace MWMechanics
         sActorId = 0;
     }
 
+
+
     void CreatureStats::writeActorIdCounter (ESM::ESMWriter& esm)
     {
         esm.startRecord(ESM::REC_ACTC);

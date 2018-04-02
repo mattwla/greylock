@@ -295,6 +295,8 @@ namespace MWWorld
         MWBase::Environment::get().getWindowManager()->updatePlayer();
 		mRendering->resetCamera();
 
+		preloadAll();
+		std::cout << "preloaded all" << std::endl;
 		MWBase::Environment::get().getLifeManager()->initialize();
 
 		//getPlayerPtr().getClass().getAutoMove();
@@ -680,6 +682,8 @@ namespace MWWorld
             ret = mCells.getPtr (lowerCaseName);
             if (!ret.isEmpty())
                 return ret;
+
+	
         }
 
         for (Scene::CellStoreCollection::const_iterator iter (mWorldScene->getActiveCells().begin());
@@ -696,6 +700,12 @@ namespace MWWorld
 
         return ptr;
     }
+
+	void World::preloadAll()
+	{
+		mCells.PreloadAll();
+		//mCells.getCell
+	}
 
     Ptr World::getPtr (const std::string& name, bool activeOnly)
     {
@@ -3611,6 +3621,7 @@ namespace MWWorld
 			life->getDebugInfo();
 			life->mAwareness->getDebugInfo();
 			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
+			std::cout << "ActorID: " + std::to_string(object.getClass().getCreatureStats(object).getActorId()) << std::endl;
 			
 
 			return;
@@ -3618,6 +3629,8 @@ namespace MWWorld
 
 			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;s
 		bool hasInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(object);
+		std::cout << "refnum: " + std::to_string(object.getCellRef().getRefNum().mIndex) << std::endl;
+		std::cout << "contentfile: " + std::to_string(object.getCellRef().getRefNum().mContentFile) << std::endl;
 		
 		
 		if (hasInstance)

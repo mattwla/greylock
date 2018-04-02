@@ -279,6 +279,7 @@ namespace MWMechanics
         /// assigned this function will return false).
 
         static void cleanup();
+		
     };
 }
 

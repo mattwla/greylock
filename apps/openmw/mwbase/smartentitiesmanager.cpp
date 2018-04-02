@@ -26,7 +26,9 @@ void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int
 
 void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 {
-		std::ifstream in(path.string() + "EMS");
+		
+	
+	std::ifstream in(path.string() + "EMS");
 
 		if (!in.is_open())
 			std::cout << "NOT OPEN" << std::endl;

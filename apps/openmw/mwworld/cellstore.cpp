@@ -453,7 +453,8 @@ namespace MWWorld
 
     void CellStore::preload ()
     {
-        if (mState==State_Unloaded)
+		std::cout << "listen dem refs " << std::endl;
+		if (mState==State_Unloaded)
         {
             listRefs ();
 
