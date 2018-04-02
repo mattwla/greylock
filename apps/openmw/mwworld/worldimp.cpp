@@ -3618,6 +3618,8 @@ namespace MWWorld
 
 			//std::cout << facedObject.getCellRef().getRefNum().mIndex << std::endl;s
 		bool hasInstance = MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(object);
+		std::cout << std::to_string(object.getCellRef().getRefNum().mContentFile) << std::endl;
+		std::cout << std::to_string(object.getCellRef().getRefNum().mIndex) << std::endl;
 		
 		
 		if (hasInstance)

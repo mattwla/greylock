@@ -121,8 +121,12 @@ namespace
             state.mRef.mRefNum.mContentFile = iter->second;
         }
 
-        if (!MWWorld::LiveCellRef<T>::checkState (state))
-            return; // not valid anymore with current content files -> skip
+		if (!MWWorld::LiveCellRef<T>::checkState(state))
+		{
+			std::cout << "got skipped" << std::endl;
+			return; // not valid anymore with current content files -> skip
+
+		}
 
         const T *record = esmStore.get<T>().search (state.mRef.mRefID);
 
@@ -136,6 +140,7 @@ namespace
                 if (iter->mRef.getRefNum()==state.mRef.mRefNum)
                 {
                     // overwrite existing reference
+					std::cout << "at overwrite" << std::endl;
                     iter->load (state);
                     return;
                 }
@@ -148,6 +153,7 @@ namespace
         MWWorld::LiveCellRef<T> ref (record);
         ref.load (state);
         collection.mList.push_back (ref);
+		std::cout << "new reference: " + ref.mRef.getRefId() << std::endl;
 		
     }
 
@@ -180,6 +186,7 @@ namespace MWWorld
     template <typename X>
     void CellRefList<X>::load(ESM::CellRef &ref, bool deleted, const MWWorld::ESMStore &esmStore)
     {
+		std::cout << "loaded...." + ref.mRefID << std::endl;
         const MWWorld::Store<X> &store = esmStore.get<X>();
 
         if (const X *ptr = store.search (ref.mRefID))
@@ -608,6 +615,7 @@ namespace MWWorld
         {
             if (it->second != ref.mRefID)
             {
+				std::cout << "changed refid" << std::endl;
                 // refID was modified, make sure we don't end up with duplicated refs
                 switch (store.find(it->second))
                 {
