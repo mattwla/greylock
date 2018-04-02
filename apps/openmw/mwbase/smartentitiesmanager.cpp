@@ -27,7 +27,7 @@ void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int
 void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 {
 		
-	
+	//get runtime id count
 	std::ifstream in(path.string() + "EMS");
 
 		if (!in.is_open())
@@ -141,12 +141,20 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 	std::string id = livecellref->mRef.getRefId();
 	if (id == "")
 		return nullptr;
+	
+	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
+	{
+		//std::cout << "returned null" << std::endl;
+		return nullptr;
+	}
+
+	
+	
 	int refNum = livecellref->mRef.getRefNum().mIndex;
 	int contentNum = livecellref->mRef.getRefNum().mContentFile;
-
 	if (refNum == 0)
 	{
-		livecellref->mRef.setRefNum(99);
+		livecellref->mRef.setRefNum(mRuntimeRefNumTicker++);
 		refNum = livecellref->mRef.getRefNum().mIndex;
 	}
 
@@ -155,11 +163,8 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
-	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
-	{
-		//std::cout << "returned null" << std::endl;
-		return nullptr;
-	}
+
+	
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
 	mSmartInstanceMap[refNum] = newInstance;
 	return newInstance;
@@ -259,6 +264,7 @@ void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
 MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 	mSmartInstanceMap()
 {
+	mRuntimeRefNumTicker = 0;
 	std::cout << "=====>Built SEManager<======" << std::endl;
 	std::cout << "Initializing templates" << std::endl;
 	gatherSmartEntityTemplates();

@@ -89,6 +89,7 @@ namespace MWBase
 		SmartInstanceMap mSmartInstancesInScene;
 		void gatherSmartEntityTemplates();
 		void loadSmartEntityInstance(std::string type, int refnum, int pings);
+		int mRuntimeRefNumTicker;
 	public:
 		
 		SmartEntitiesManager::SmartEntitiesManager();
