@@ -49,6 +49,11 @@ namespace Loading
 	class Listener;
 }
 
+namespace MWBase
+{
+	class SmartEntityInstance;
+}
+
 
 
 namespace MWBase
@@ -57,10 +62,12 @@ namespace MWBase
 
 	struct SensoryLink {
 		MWWorld::Ptr mPtr;
+		MWBase::SmartEntityInstance * mSEInstance;
 
-		SensoryLink::SensoryLink(MWWorld::Ptr ptr)
+		SensoryLink::SensoryLink(MWWorld::Ptr ptr, MWBase::SmartEntityInstance * sei)
 		{
 			mPtr = ptr;
+			mSEInstance = sei;
 			
 		}
 	};

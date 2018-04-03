@@ -17,7 +17,7 @@ void MWBase::Awareness::refresh()
 		
 		if (isaware)
 		{
-			newStore->addSensoryLink(MWBase::SensoryLink(it->second->getPtr()));
+			newStore->addSensoryLink(MWBase::SensoryLink(it->second->getPtr(), it->second));
 		}
 		it++;
 	}
