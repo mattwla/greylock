@@ -1337,7 +1337,6 @@ namespace MWWorld
 		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(newPtr)) //mwx si position update
 		{
 			MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newPtr.getBase())->updatePtr(newPtr);
-			//ptr.getBase()->mSmartEntityInstance->updatePtr(newPtr);
 		}
 
 		

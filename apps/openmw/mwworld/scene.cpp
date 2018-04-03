@@ -86,27 +86,20 @@ namespace
 
 		//MWX FIX ME is this the best place for injecting SE info? Probably not.
 
-		bool hasSmartInstance;
-		hasSmartInstance = false;
-			//MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr); //mark as active? mwx fix me
-		if (!hasSmartInstance)
-		{
-			
+		MWBase::SmartEntitiesManager* sem = MWBase::Environment::get().getSmartEntitiesManager();
 
-			//mwx smart injection
-			if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartInstance(ptr))
-			{
-				//ptr.getBase()->mSmartEntityInstance = instance;
-				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(ptr);
-				MWBase::SmartEntityInstance * instance = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
-				instance->updatePtr(ptr);
-			}
-			else
-				ptr.getBase()->mSmartEntityInstance = 0;
+		bool hasSmartTemplate = sem->hasSmartTemplate(ptr.getCellRef().getRefId());
+
+		if (hasSmartTemplate)
+		{
+			MWBase::SmartEntityInstance * instance = sem->getSmartEntityInstance(ptr);
+			sem->addSmartInstanceToScene(ptr);
+			instance->updatePtr(ptr);		
 		}
-			
-		//std::cout << "======>found smart object<=============" << std::endl;
-		//std::cout << "added..." + ptr.getCellRef().getRefId() << std::endl;
+		else
+		{
+			ptr.getBase()->mSmartEntityInstance = 0;
+		}
     }
 
     void updateObjectRotation (const MWWorld::Ptr& ptr, MWPhysics::PhysicsSystem& physics,
@@ -667,7 +660,11 @@ namespace MWWorld
 
     void Scene::removeObjectFromScene (const Ptr& ptr)
     {
-		MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstanceFromScene(ptr);
+		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartTemplate(ptr.getCellRef().getRefId()))
+			MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstanceFromScene(ptr);
+		
+
+		
 		MWBase::Environment::get().getMechanicsManager()->remove (ptr);
         MWBase::Environment::get().getSoundManager()->stopSound3D (ptr);
         mPhysics->remove(ptr);

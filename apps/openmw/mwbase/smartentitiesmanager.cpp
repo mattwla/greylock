@@ -106,7 +106,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 		return mSmartInstanceMap[ptr.getCellRef().getRefNum().mIndex];
 	std::string id = ptr.getCellRef().getRefId();
 	int refnum = ptr.getCellRef().getRefNum().mIndex;
-	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
+	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 		return nullptr;
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(ptr);
 	mSmartInstanceMap[refnum] = newInstance;
@@ -120,7 +120,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
-	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
+	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 	{
 		//std::cout << "returned null" << std::endl;
 		return nullptr;
@@ -152,7 +152,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 	if (id == "")
 		return nullptr;
 	
-	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
+	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 	{
 		//std::cout << "returned null" << std::endl;
 		return nullptr;
@@ -251,6 +251,14 @@ bool MWBase::SmartEntitiesManager::hasSmartInstance(int refnum)
 		return false;
 
 	if (!mSmartInstanceMap.count(refnum))
+		return false;
+	else
+		return true;
+}
+
+bool MWBase::SmartEntitiesManager::hasSmartTemplate(std::string id)
+{
+	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
 		return false;
 	else
 		return true;
