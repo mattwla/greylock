@@ -20,6 +20,7 @@
 #include "../mwbase/aischedulemanager.hpp"
 #include "../mwtasks/life.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
+#include "../subbrains/subbrain.hpp"
 
 
 
@@ -53,18 +54,9 @@ namespace Loading
 }
 
 
-
-
-
 namespace MWBase
 {
 	
-	
-
-	class SubBrain
-	{
-
-	};
 
 	class SubBrainsManager
 	{

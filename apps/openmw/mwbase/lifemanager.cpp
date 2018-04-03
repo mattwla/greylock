@@ -1,7 +1,8 @@
 #include "lifemanager.hpp"
 #include <iostream>
 #include "../mwworld/cellstore.hpp"
-#include "../mwworld/cells.hpp"
+#include "../mwworld/cells.hpp" 
+#include "../subbrains/subbrain.hpp"
 
 void MWBase::Life::getDebugInfo()
 {

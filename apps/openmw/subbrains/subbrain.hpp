@@ -3,7 +3,13 @@
 #include <components/esm/defs.hpp>
 
 
+namespace MWBase {
 
+	class SubBrain {
+
+};
+
+}
 #include <string>
 
 
