@@ -18,8 +18,11 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 }
 
-void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int refnum, int pings)
+void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int contentnum, int index, int pings)
 {
+	ESM::RefNum refnum;
+	refnum.mIndex = index;
+	refnum.mContentFile = contentnum;
 	SmartEntityInstance * foundInstance = mSmartTemplateMap[type]->loadInstance(type, refnum, pings); //template should contain save and load logic.
 	mSmartInstanceMap[refnum] = foundInstance;
 }
@@ -60,9 +63,9 @@ void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 
 				idx += 1;
 				cache.push_back(*it);
-				if (idx == 3)
+				if (idx == 4)
 				{
-					loadSmartEntityInstance(cache[1], std::stoi(cache[0]), std::stoi(cache[2]));
+					loadSmartEntityInstance(cache[2], std::stoi(cache[0]), std::stoi(cache[1]), std::stoi(cache[3]));
 					idx = 0;
 					cache.clear(); //temporary and messy logic
 				}	
@@ -77,10 +80,16 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 	path = path_s;
 	SmartInstanceMap::iterator it = mSmartInstanceMap.begin();
 	std::vector<std::string>serializedinstances;
+	ESM::RefNum refnum;
 	while (it != mSmartInstanceMap.end())
 	{
+		refnum = it->first;
+		int content = refnum.mContentFile;
+		int index = refnum.mIndex;
 		std::string savestring;
-		savestring += std::to_string(it->first);
+		savestring += std::to_string(content);
+		savestring += ",";
+		savestring += std::to_string(index);
 		savestring += ",";
 		savestring += it->second->getRefId();
 		savestring += ",";
@@ -103,9 +112,9 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 {
 	//check if it already has one
 	if (hasSmartInstance(ptr))
-		return mSmartInstanceMap[ptr.getCellRef().getRefNum().mIndex];
+		return mSmartInstanceMap[ptr.getCellRef().getRefNum()];
 	std::string id = ptr.getCellRef().getRefId();
-	int refnum = ptr.getCellRef().getRefNum().mIndex;
+	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
 	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 		return nullptr;
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(ptr);
@@ -113,7 +122,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	return newInstance;
 }
 
-MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, int refNum)
+MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, ESM::RefNum refNum)
 {
 	//std::cout << ">>>> checking... " + id << std::endl;
 	
@@ -133,7 +142,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell)
 {
 
-	int refnum = cellref.mRefNum.mIndex;
+	ESM::RefNum refnum = cellref.mRefNum;
 
 	if (!hasSmartInstance(refnum))
 		return;
@@ -160,12 +169,12 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 
 	
 	
-	int refNum = livecellref->mRef.getRefNum().mIndex;
+	ESM::RefNum refNum = livecellref->mRef.getRefNum();
 	int contentNum = livecellref->mRef.getRefNum().mContentFile;
-	if (refNum == 0)
+	if (contentNum == -1 && refNum.mIndex == 0) //dynamically generated, give it a valid refnum
 	{
 		livecellref->mRef.setRefNum(mRuntimeRefNumTicker++);
-		refNum = livecellref->mRef.getRefNum().mIndex;
+		refNum = livecellref->mRef.getRefNum();
 	}
 
 	//std::cout << ">>>> checking... " + id << std::endl;
@@ -195,13 +204,13 @@ void MWBase::SmartEntitiesManager::addSmartInstanceToScene(const MWWorld::Ptr & 
 		return;
 	}
 	SmartEntityInstance * instance = getSmartEntityInstance(ptr);
-	int refnum = ptr.getCellRef().getRefNum().mIndex;
+	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
 	mSmartInstancesInScene[refnum] = instance;
 }
 
 bool MWBase::SmartEntitiesManager::isInstanceInScene(const MWWorld::Ptr & ptr)
 {
-	int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
+	ESM::RefNum refnum = ptr.getBase()->mRef.getRefNum();
 	if (!mSmartInstancesInScene.count(refnum))
 		return false;
 	else
@@ -217,7 +226,7 @@ void MWBase::SmartEntitiesManager::removeSmartInstanceFromScene(const MWWorld::P
 		std::cout << "id is: " + ptr.getCellRef().getRefId() << std::endl;
 		return;
 	}
-	int refnum = ptr.getCellRef().getRefNum().mIndex;
+	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
 	mSmartInstancesInScene.erase(refnum);
 }
 
@@ -231,24 +240,22 @@ void MWBase::SmartEntitiesManager::removeSmartInstancesFromSceneViaCell(MWWorld:
 		{
 			std::cout << "tried to remove " + it->getCellRef().getRefId() << std::endl;
 		}
-		int refnum = it->getCellRef().getRefNum().mIndex;
+		ESM::RefNum refnum = it->getCellRef().getRefNum();
 		mSmartInstancesInScene.erase(refnum);
 	}
 }
 
 bool MWBase::SmartEntitiesManager::hasSmartInstance(const MWWorld::Ptr & ptr)
 {
-		int refnum = ptr.getBase()->mRef.getRefNum().mIndex;
+		ESM::RefNum refnum = ptr.getBase()->mRef.getRefNum();
 		if (!mSmartInstanceMap.count(refnum))
 			return false;
 		else
 			return true;
 }
 
-bool MWBase::SmartEntitiesManager::hasSmartInstance(int refnum)
+bool MWBase::SmartEntitiesManager::hasSmartInstance(ESM::RefNum refnum)
 {
-	if (refnum == 0)
-		return false;
 
 	if (!mSmartInstanceMap.count(refnum))
 		return false;
@@ -271,10 +278,10 @@ MWBase::SmartInstanceMap & MWBase::SmartEntitiesManager::getLiveSmartInstances()
 
 void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
 {
-	std::map<int, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
+	std::map<ESM::RefNum, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
 	while (it != mSmartInstancesInScene.end())
 	{
-		std::cout << std::to_string(it->first) + " " + it->second->getRefId() << std::endl;
+		std::cout << std::to_string(it->first.mIndex) + " " + it->second->getRefId() << std::endl;
 		it++;
 	}
 }
@@ -290,7 +297,7 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 
 void MWBase::SmartEntitiesManager::clear()
 {
-	std::map<int,MWBase::SmartEntityInstance*>::iterator it = mSmartInstanceMap.begin();
+	std::map<ESM::RefNum,MWBase::SmartEntityInstance*>::iterator it = mSmartInstanceMap.begin();
 	while (it != mSmartInstanceMap.end())
 	{
 		delete it->second;

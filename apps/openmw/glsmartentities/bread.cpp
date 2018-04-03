@@ -13,14 +13,14 @@ MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(const MWWorl
 	return instance;
 }
 
-MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(std::string id, int refNum)
+MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(std::string id, ESM::RefNum refNum)
 {
 	SmartEntityBreadInstance * instance = new SmartEntityBreadInstance(id, refNum, 0);
 
 	return instance;
 }
 
-MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, int refnum, int pings)
+MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, ESM::RefNum refnum, int pings)
 {
 	
 	//needs ptr
@@ -40,7 +40,7 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(const MWWorld::Ptr &ptr)
 	
 }
 
-SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, int refnum, int pings)
+SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNum refnum, int pings)
 {
 	std::cout << "new bread" << std::endl;
 	mPingCount = pings;

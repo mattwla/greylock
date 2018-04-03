@@ -44,7 +44,7 @@ namespace Loading
 
 namespace MWBase
 {
-	typedef std::map<int, SmartEntityInstance*> SmartInstanceMap;
+	typedef std::map<ESM::RefNum, SmartEntityInstance*> SmartInstanceMap;
 	
 	
 	class SmartEntityInstance
@@ -98,9 +98,9 @@ namespace MWBase
 		
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
 		
-		virtual SmartEntityInstance * getInstance(std::string id, int refnum) = 0;
+		virtual SmartEntityInstance * getInstance(std::string id, ESM::RefNum refnum) = 0;
 		
-		virtual SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings) = 0;
+		virtual SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings) = 0;
 	};
 
 	class SmartEntitiesManager
@@ -114,8 +114,10 @@ namespace MWBase
 		SmartInstanceMap mSmartInstancesInScene;
 		
 		void gatherSmartEntityTemplates();
+
+		void loadSmartEntityInstance(std::string type, int contentnum, int index, int pings);
 		
-		void loadSmartEntityInstance(std::string type, int refnum, int pings);
+		//void loadSmartEntityInstance(std::string type, int refnum, int pings);
 		
 		int mRuntimeRefNumTicker;
 	
@@ -127,7 +129,9 @@ namespace MWBase
 
 		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
-		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, int refNum);
+		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
+
+		//MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, int refNum);
 
 		void registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell);
 
@@ -141,7 +145,9 @@ namespace MWBase
 
 		bool hasSmartInstance(const MWWorld::Ptr &ptr);
 
-		bool hasSmartInstance(int refnum);
+		bool hasSmartInstance(ESM::RefNum refnum);
+
+		//bool hasSmartInstance(int refnum);
 
 		bool hasSmartTemplate(std::string id);
 
