@@ -117,8 +117,6 @@ namespace MWBase
 
 		void loadSmartEntityInstance(std::string type, int contentnum, int index, int pings);
 		
-		//void loadSmartEntityInstance(std::string type, int refnum, int pings);
-		
 		int mRuntimeRefNumTicker;
 	
 	public:
@@ -130,8 +128,6 @@ namespace MWBase
 		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
 		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
-
-		//MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, int refNum);
 
 		void registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell);
 
@@ -146,8 +142,6 @@ namespace MWBase
 		bool hasSmartInstance(const MWWorld::Ptr &ptr);
 
 		bool hasSmartInstance(ESM::RefNum refnum);
-
-		//bool hasSmartInstance(int refnum);
 
 		bool hasSmartTemplate(std::string id);
 

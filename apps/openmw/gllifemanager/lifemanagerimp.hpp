@@ -34,6 +34,8 @@ namespace GLLifeManager
 
 		virtual bool inActiveRange(MWWorld::Ptr npc);
 	};
+
+
 }
 
 #endif

@@ -55,8 +55,33 @@ namespace Loading
 
 
 
+
 namespace MWBase
 {
+	
+	
+
+	class SubBrain
+	{
+
+	};
+
+	class SubBrainsManager
+	{
+		std::vector<SubBrain> mSubBrains;
+
+
+	public:
+
+		void calculate(MWBase::Awareness * awareness);
+
+		SubBrainsManager::SubBrainsManager()
+		{
+			//initialize default subbrains
+		}
+	};
+	
+	
 	struct Life
 	{
 		std::string mId;
@@ -67,19 +92,22 @@ namespace MWBase
 
 		MWBase::Awareness *mAwareness;
 
+		MWBase::SubBrainsManager *mSubBrainsManager;
+
 		MWWorld::Ptr mPtr;
 
 	public:
 
 		Life(std::string id)
 		{
-
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
 			mRefNum = mPtr.getCellRef().getRefNum().mIndex;
 			mOwnerCell = mPtr.getCell();
 			mPtr.getBase()->mLife = this;
 			mAwareness = new MWBase::Awareness(mPtr);
+			mSubBrainsManager = new MWBase::SubBrainsManager();
+			
 		}
 
 		void getDebugInfo();
@@ -112,6 +140,8 @@ namespace MWBase
 		
 
 	};
+
+	
 	
 }
 #endif

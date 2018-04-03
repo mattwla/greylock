@@ -51,6 +51,11 @@ MWBase::Awareness::Awareness(MWWorld::Ptr ptr)
 	mSensoryLinkStore = new SensoryLinkStore;
 }
 
+MWBase::SensoryLinkStore * MWBase::Awareness::getSensoryLinkStore()
+{
+	return mSensoryLinkStore;
+}
+
 void MWBase::SensoryLinkStore::addSensoryLink(SensoryLink sensorylink)
 {
 	mCurrentSensoryLinks.push_back(sensorylink);

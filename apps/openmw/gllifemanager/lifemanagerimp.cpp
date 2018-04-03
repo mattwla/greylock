@@ -34,6 +34,7 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 		if (inActiveRange(currentLife->mPtr))
 		{
 			currentLife->mAwareness->refresh();
+			currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
 		}
 		itx++;
 	}
@@ -83,3 +84,4 @@ bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 		inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
 	return inProcessingRange;
 }
+

@@ -98,6 +98,8 @@ namespace MWBase
 
 		Awareness::Awareness(MWWorld::Ptr ptr);
 
+		SensoryLinkStore * getSensoryLinkStore();
+
 
 	};
 	
@@ -106,18 +108,11 @@ namespace MWBase
 	
 	public:
 			
-	/*	virtual void updateActiveAffordances() = 0;
-
-		virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr) = 0;
-*/
-
-
 		virtual bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer) = 0;
 
 		virtual ~AwarenessReactionsManager() {}
 
 	};
 
-	
 }
 #endif
