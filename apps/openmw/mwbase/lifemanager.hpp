@@ -56,6 +56,21 @@ namespace Loading
 
 namespace MWBase
 {
+
+	struct BigFive {
+		int mOpenness;
+		int mConscientiousness;
+		int mExtraversion;
+		int mAgreeableness;
+		int mNeuroticism;
+	};
+
+	struct Vitals {
+
+		int mHunger;
+
+	};
+
 	
 
 	class SubBrainsManager
@@ -87,6 +102,10 @@ namespace MWBase
 		MWBase::SubBrainsManager *mSubBrainsManager;
 
 		MWWorld::Ptr mPtr;
+
+		BigFive mBigFive;
+
+		Vitals mVitals;
 
 	public:
 
@@ -133,6 +152,7 @@ namespace MWBase
 
 	};
 
+	
 	
 	
 }

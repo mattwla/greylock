@@ -40,6 +40,7 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(const MWWorld::Ptr &ptr)
 	
 }
 
+
 SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNum refnum, int pings)
 {
 	std::cout << "new bread" << std::endl;
