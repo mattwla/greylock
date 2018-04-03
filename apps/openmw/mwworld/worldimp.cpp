@@ -3619,12 +3619,13 @@ namespace MWWorld
 		
 		if (object.getClass().isNpc())
 		{
-			std::cout << "is an NPC!!!!!!!" << std::endl;
+
 			MWBase::Life * life = object.getClass().getLife(object);
 			life->getDebugInfo();
 			life->mAwareness->getDebugInfo();
 			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
 			std::cout << "ActorID: " + std::to_string(object.getClass().getCreatureStats(object).getActorId()) << std::endl;
+
 			
 
 			return;

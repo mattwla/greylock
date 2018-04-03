@@ -67,7 +67,8 @@ namespace MWBase
 
 	struct Vitals {
 
-		int mHunger;
+		float mHunger;
+		float mSleepiness;
 
 	};
 
@@ -75,17 +76,18 @@ namespace MWBase
 
 	class SubBrainsManager
 	{
-		std::vector<SubBrain> mSubBrains;
+		std::vector<SubBrain*> mSubBrains;
 
 
 	public:
 
 		void calculate(MWBase::Awareness * awareness);
 
-		SubBrainsManager::SubBrainsManager()
-		{
-			//initialize default subbrains
-		}
+		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
+
+		//SubBrainsManager::SubBrainsManager();
+	
+
 	};
 	
 	
@@ -117,11 +119,19 @@ namespace MWBase
 			mOwnerCell = mPtr.getCell();
 			mPtr.getBase()->mLife = this;
 			mAwareness = new MWBase::Awareness(mPtr);
-			mSubBrainsManager = new MWBase::SubBrainsManager();
+			mSubBrainsManager = new MWBase::SubBrainsManager(this);
 			
 		}
 
 		void getDebugInfo();
+
+		void update(float duration);
+
+	private:
+
+		void metabolize(float duration);
+
+
 
 	};
 

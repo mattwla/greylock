@@ -33,8 +33,9 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 		MWBase::Life * currentLife = mLifeList[itx];
 		if (inActiveRange(currentLife->mPtr))
 		{
-			currentLife->mAwareness->refresh();
-			currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
+			currentLife->update(duration);
+			//currentLife->mAwareness->refresh();
+			//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
 		}
 		itx++;
 	}
