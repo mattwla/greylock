@@ -57,6 +57,15 @@ namespace Loading
 namespace MWBase
 {
 
+	class StatusChange {
+
+	};
+
+	class BehaviorObject {
+		//these can be inherent in an AI or in objects?
+		
+	};
+
 	struct BigFive {
 		int mOpenness;
 		int mConscientiousness;
@@ -73,7 +82,6 @@ namespace MWBase
 	};
 
 	
-
 	class SubBrainsManager
 	{
 		std::vector<SubBrain*> mSubBrains;
