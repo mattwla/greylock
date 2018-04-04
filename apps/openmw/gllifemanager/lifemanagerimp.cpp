@@ -46,6 +46,7 @@ void GLLifeManager::LifeManager::initialize()
 	mLifeList.clear();
 	mLifeList.shrink_to_fit();
 	buildLifeList();
+	std::cout << "init life list" << std::endl;
 }
 
 void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... interesting. 
@@ -85,4 +86,5 @@ bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 		inProcessingRange = !MWBase::Environment::get().getWindowManager()->getPlayerSleepingOrWaiting();
 	return inProcessingRange;
 }
+
 

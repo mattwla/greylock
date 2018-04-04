@@ -304,6 +304,7 @@ void MWState::StateManager::saveGame (const std::string& description, const Slot
 
 		std::cout << slot->mPath << std::endl;
 		MWBase::Environment::get().getSmartEntitiesManager()->saveGame(slot->mPath);
+		MWBase::Environment::get().getLifeManager()->saveGame(slot->mPath);
     }
     catch (const std::exception& e)
     {
@@ -494,7 +495,8 @@ void MWState::StateManager::loadGame (const Character *character, const std::str
                 currentPercent = progressPercent;
             }
         }
-		MWBase::Environment::get().getLifeManager()->initialize();
+		//MWBase::Environment::get().getLifeManager()->initialize();
+		MWBase::Environment::get().getLifeManager()->loadGame(filepath);
         mCharacterManager.setCurrentCharacter(character);
 
         mState = State_Running;

@@ -2,6 +2,7 @@
 #define GAME_GLSUBBRAINS_SUBBRAINHUNGER_H
 #include <components/esm/defs.hpp>
 #include "subbrain.hpp"
+#include <string>
 
 namespace MWBase{
 
@@ -19,10 +20,12 @@ namespace MWBase {
 
 		virtual void calculate(MWBase::Awareness * awareness);
 
+		virtual std::string getID();
+
 	};
 
 }
-#include <string>
+
 
 
 #endif

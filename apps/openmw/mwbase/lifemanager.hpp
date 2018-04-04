@@ -27,6 +27,7 @@
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
+#include <boost/filesystem/fstream.hpp>
 
 namespace osg
 {
@@ -79,6 +80,9 @@ namespace MWBase
 		float mHunger;
 		float mSleepiness;
 
+		std::string getSaveState();
+		void loadState(std::string);
+
 	};
 
 	
@@ -92,6 +96,10 @@ namespace MWBase
 		void calculate(MWBase::Awareness * awareness);
 
 		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
+
+		std::vector<std::string> getSaveStates();
+
+		void loadStates();
 
 		//SubBrainsManager::SubBrainsManager();
 	
@@ -166,7 +174,9 @@ namespace MWBase
 
 		float mTimeAccumulator;
 
-		
+		void loadGame(boost::filesystem::path path);
+
+		void saveGame(boost::filesystem::path path);
 
 	};
 

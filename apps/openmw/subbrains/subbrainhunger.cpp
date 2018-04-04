@@ -39,3 +39,8 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 	}
 	
 }
+
+std::string MWBase::SubBrainHunger::getID()
+{
+	return "sbhunger";
+}
