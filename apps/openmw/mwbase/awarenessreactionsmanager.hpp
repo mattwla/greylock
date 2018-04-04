@@ -92,6 +92,7 @@ namespace MWBase
 		SensoryLinkStore* mSensoryLinkStore;
 
 	public:
+		
 		void refresh();
 
 		void getDebugInfo();

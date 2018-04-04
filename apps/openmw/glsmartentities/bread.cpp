@@ -20,10 +20,11 @@ MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(std::string 
 	return instance;
 }
 
-MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, ESM::RefNum refnum, int pings)
+MWBase::SmartEntityInstance * SmartEntityBreadTemplate::loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate)
 {
-	
+	//instead, make pings "savestatestring"
 	//needs ptr
+	int pings = std::stoi(savestate);
 	SmartEntityBreadInstance * instance = new SmartEntityBreadInstance(refid, refnum, pings);
 
 	return instance;
@@ -46,4 +47,9 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNu
 	std::cout << "new bread" << std::endl;
 	mPingCount = pings;
 	mRefId = refid;
+}
+
+std::string SmartEntityBreadInstance::getSaveString()
+{
+	return std::to_string(mPingCount);
 }

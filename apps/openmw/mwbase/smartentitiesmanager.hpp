@@ -83,6 +83,8 @@ namespace MWBase
 		void updatePtr(MWWorld::Ptr ptr);
 		
 		void registerHomeCell(const ESM::Cell * cell);
+
+		virtual std::string getSaveString() = 0;
 	};
 
 	class SmartEntityTemplate
@@ -100,7 +102,7 @@ namespace MWBase
 		
 		virtual SmartEntityInstance * getInstance(std::string id, ESM::RefNum refnum) = 0;
 		
-		virtual SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings) = 0;
+		virtual SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate) = 0;
 	};
 
 	class SmartEntitiesManager
@@ -115,7 +117,9 @@ namespace MWBase
 		
 		void gatherSmartEntityTemplates();
 
-		void loadSmartEntityInstance(std::string type, int contentnum, int index, int pings);
+		void loadSmartEntityInstance(std::string type, int contentnum, int index, std::string savestate);
+
+		//void loadSmartEntityInstance(std::string type, int contentnum, int index, int pings);
 		
 		int mRuntimeRefNumTicker;
 	

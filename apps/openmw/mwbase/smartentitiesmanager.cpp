@@ -18,13 +18,14 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 }
 
-void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int contentnum, int index, int pings)
+void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int contentnum, int index, std::string savestate)
 {
 	ESM::RefNum refnum;
 	refnum.mIndex = index;
 	refnum.mContentFile = contentnum;
-	SmartEntityInstance * foundInstance = mSmartTemplateMap[type]->loadInstance(type, refnum, pings); //template should contain save and load logic.
+	SmartEntityInstance * foundInstance = mSmartTemplateMap[type]->loadInstance(type, refnum, savestate); //template should contain save and load logic.
 	mSmartInstanceMap[refnum] = foundInstance;
+	//type and refnum are generic, but "pings" should instead of "statestring"
 }
 
 void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
@@ -65,7 +66,7 @@ void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 				cache.push_back(*it);
 				if (idx == 4)
 				{
-					loadSmartEntityInstance(cache[2], std::stoi(cache[0]), std::stoi(cache[1]), std::stoi(cache[3]));
+					loadSmartEntityInstance(cache[2], std::stoi(cache[0]), std::stoi(cache[1]), cache[3]);
 					idx = 0;
 					cache.clear(); //temporary and messy logic
 				}	
@@ -86,6 +87,7 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 		refnum = it->first;
 		int content = refnum.mContentFile;
 		int index = refnum.mIndex;
+		//First store generic ref info, than info specific to instance
 		std::string savestring;
 		savestring += std::to_string(content);
 		savestring += ",";
@@ -93,7 +95,8 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 		savestring += ",";
 		savestring += it->second->getRefId();
 		savestring += ",";
-		savestring += std::to_string(it->second->getPings());
+		savestring += it->second->getSaveString();
+		//savestring += std::to_string(it->second->getPings());
 		serializedinstances.push_back(savestring);
 		it++;
 	}

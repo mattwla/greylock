@@ -10,7 +10,9 @@ class SmartEntityBreadTemplate : public MWBase::SmartEntityTemplate {
 
 		virtual MWBase::SmartEntityInstance * getInstance(std::string id, ESM::RefNum refNum);
 
-		virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings);
+		virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate);
+
+		//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings);
 
 		//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings);
 
@@ -26,4 +28,6 @@ class SmartEntityBreadInstance : public MWBase::SmartEntityInstance {
 		SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNum refnum, int pings);
 
 		//SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, int refnum, int pings);
+
+		virtual std::string getSaveString();
 };
