@@ -58,15 +58,6 @@ namespace Loading
 namespace MWBase
 {
 
-	class StatusChange {
-
-	};
-
-	//class BehaviorObject {
-	//	//these can be inherent in an AI or in objects?
-	//	
-	//};
-
 	struct BigFive {
 		int mOpenness;
 		int mConscientiousness;
@@ -89,6 +80,12 @@ namespace MWBase
 	class SubBrainsManager
 	{
 		std::vector<SubBrain*> mSubBrains;
+
+		//Beliefs, states from the subbrains, combined with sensorystore. Probe sensory store w/ status?
+
+		//Desires, recommended BOs from the subbrains
+
+		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
 
 
 	public:
@@ -124,6 +121,8 @@ namespace MWBase
 		BigFive mBigFive;
 
 		Vitals mVitals;
+
+		//IntentionList(Active BOs)
 
 	public:
 

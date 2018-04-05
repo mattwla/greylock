@@ -2,6 +2,7 @@
 #define GAME_GLSUBBRAINS_SUBBRAIN_H
 #include <components/esm/defs.hpp>
 #include <string>
+#include <vector>
 #include "../mwworld/ptr.hpp"
 
 namespace MWBase {
@@ -46,9 +47,6 @@ namespace MWBase {
 		GOAPData mGOAPData;
 
 	public:
-
-		
-
 			//start
 			//pause
 			//run
@@ -84,7 +82,14 @@ namespace MWBase {
 
 		MWBase::Life * mOwnerLife;
 
-		//A store of subbrains?
+		std::vector<GOAPStatus> mBeliefs;
+		//Beliefs
+		
+		std::vector<BehaviorObject> mDesires;
+		//Desires
+
+		
+		//Intentions
 
 	public:
 		
