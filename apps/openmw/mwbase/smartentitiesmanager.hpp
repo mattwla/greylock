@@ -17,6 +17,7 @@
 #include <iterator>
 #include <algorithm>
 #include <boost/filesystem/path.hpp>
+#include <vector>
 
 namespace osg
 {
@@ -67,6 +68,8 @@ namespace MWBase
 		int mHomeCellX;
 		
 		int mHomeCellY;
+
+		std::vector<std::string> mStatusList;
 
 		//Get available BehaviorObjects
 

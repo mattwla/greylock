@@ -44,3 +44,12 @@ std::string MWBase::SubBrainHunger::getID()
 {
 	return "sbhunger";
 }
+
+MWBase::BOEat::BOEat()
+{
+	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_IN_INVENTORY, "edible", 1);
+	mGOAPData.mInputs.push_back(statusinput);
+	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -100);
+	mGOAPData.mOutputs.push_back(statusoutput);
+
+}

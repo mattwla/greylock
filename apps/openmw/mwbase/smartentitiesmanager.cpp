@@ -323,8 +323,13 @@ void MWBase::SmartEntityInstance::ping()
 
 void MWBase::SmartEntityInstance::debugInfo()
 {
-	std::cout << mHomeCellX << std::endl;
-	std::cout << mHomeCellY << std::endl;
+	std::cout << "status list:" << std::endl;
+	std::vector<std::string>::iterator it = mStatusList.begin();
+	while (it != mStatusList.end())
+	{
+		std::cout << *it << std::endl;
+		it++;
+	}
 }
 
 int MWBase::SmartEntityInstance::getPings()

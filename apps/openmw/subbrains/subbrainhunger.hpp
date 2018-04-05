@@ -24,6 +24,19 @@ namespace MWBase {
 
 	};
 
+	class BOEat : public BehaviorObject
+	{
+		
+	
+	public:
+
+		BOEat::BOEat();
+
+
+
+
+	};
+
 }
 
 

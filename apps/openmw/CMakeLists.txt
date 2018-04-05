@@ -127,7 +127,7 @@ smartentitiesmanagerimp bread
 )
 
 add_openmw_dir (subbrains
-subbrain subbrainhunger
+subbrain subbrainhunger subbrainget subbraininventory
 
 )
 

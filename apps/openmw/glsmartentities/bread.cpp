@@ -38,6 +38,7 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(const MWWorld::Ptr &ptr)
 	mPingCount = 0;
 	mRefId = ptr.getCellRef().getRefId();
 	mPtr = ptr;
+	mStatusList.push_back("edible");
 	
 }
 
@@ -47,6 +48,7 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNu
 	std::cout << "new bread" << std::endl;
 	mPingCount = pings;
 	mRefId = refid;
+	mStatusList.push_back("edible");
 }
 
 std::string SmartEntityBreadInstance::getSaveString()

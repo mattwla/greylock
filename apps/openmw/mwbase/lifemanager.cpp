@@ -4,6 +4,8 @@
 #include "../mwworld/cells.hpp" 
 #include "../subbrains/subbrain.hpp"
 #include "../subbrains/subbrainhunger.hpp"
+#include "../subbrains/subbrainget.hpp"
+#include "../subbrains/subbraininventory.hpp"
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
@@ -43,8 +45,14 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 
 MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 {
+	//initialize default subbrains, this will have to be done on a per npc basis one day.
 	SubBrain * sb = new SubBrainHunger(life);
 	mSubBrains.push_back(sb);
+	sb = new SubBrainGet(life);
+	mSubBrains.push_back(sb);
+	sb = new SubBrainInventory(life);
+	mSubBrains.push_back(sb);
+
 }
 
 std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()

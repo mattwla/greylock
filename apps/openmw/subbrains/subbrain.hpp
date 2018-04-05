@@ -7,6 +7,8 @@
 namespace MWBase {
 	class Life;
 	class Awareness;
+	struct GOAPStatus;
+	struct GOAPData;
 };
 
 namespace MWWorld {
@@ -18,29 +20,62 @@ namespace ESM {
 }
 
 
+
 namespace MWBase {
 
+	typedef std::vector<GOAPStatus> statusstack;
 
+	struct GOAPData
+	{
+		statusstack mInputs;
+		statusstack mOutputs;
 
+		//getcost
+		//check inputs valid (pass ref to statuslist)
+	};
 
 	class BehaviorObject
 	{
+
+	protected:
+		
 		std::string mID;
 		BehaviorObject * mSubBehavior;
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
+		GOAPData mGOAPData;
 
 	public:
+
 		
-		struct GOAPData
-		{
-			//getcost
-			//input
-			//output
+
+			//start
+			//pause
+			//run
+	};
+		
+	struct GOAPStatus
+	{
+		enum StatusType {
+			HAS_IN_INVENTORY = 0,
+			VITALS = 1,
+
 		};
 
+		StatusType mStatusType;
+		std::string mExtraData;
+		int mAmount;
 
+		GOAPStatus::GOAPStatus(StatusType type, std::string extradata, int amount)
+		{
+			mStatusType = type;
+			mExtraData = extradata;
+			mAmount = amount;
+		};
 	};
+		
+
+
 
 
 	class SubBrain {
