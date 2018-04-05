@@ -68,6 +68,8 @@ namespace MWBase
 		
 		int mHomeCellY;
 
+		//Get available BehaviorObjects
+
 	public :
 		
 		void ping();
@@ -92,6 +94,9 @@ namespace MWBase
 		
 	protected: 
 		
+
+		//all possible BehaviorObjects (some can be enabled or disabled depending)
+
 		std::string mIngameID;
 	
 	public:

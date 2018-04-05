@@ -62,10 +62,10 @@ namespace MWBase
 
 	};
 
-	class BehaviorObject {
-		//these can be inherent in an AI or in objects?
-		
-	};
+	//class BehaviorObject {
+	//	//these can be inherent in an AI or in objects?
+	//	
+	//};
 
 	struct BigFive {
 		int mOpenness;
