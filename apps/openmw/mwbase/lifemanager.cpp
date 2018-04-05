@@ -12,6 +12,7 @@ void MWBase::Life::getDebugInfo()
 	std::cout << mId << std::endl;
 	std::cout << std::to_string(mRefNum) << std::endl;
 	std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
+	std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
 	//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
 }
 
@@ -25,6 +26,7 @@ void MWBase::Life::update(float duration)
 void MWBase::Life::metabolize(float duration)
 {
 	mVitals.mHunger += duration / 1000.0f;
+	mVitals.mSleepiness += duration / 2000.f;
 }
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
@@ -126,14 +128,26 @@ void MWBase::LifeManager::saveGame(boost::filesystem::path path)
 
 std::string MWBase::Vitals::getSaveState()
 {
-
+	
 	std::string save;
-	save += std::to_string(mHunger) + ",";
+	save += std::to_string(mHunger) + "-";
 	save += std::to_string(mSleepiness);
 	return save;
 }
 
 void MWBase::Vitals::loadState(std::string data)
 {
-	mHunger = std::stoi(data);
+	std::vector<int> cache;
+	typedef boost::tokenizer<boost::char_separator<char> > Tokenizer;
+	boost::char_separator<char> sep("-");
+	Tokenizer tok(data, sep);
+	for (Tokenizer::iterator tok_iter = tok.begin();
+		tok_iter != tok.end(); ++tok_iter)
+	{
+		cache.push_back(std::stoi(*tok_iter));
+	}
+
+	
+	mHunger = cache[0];
+	mSleepiness = cache[1];
 }

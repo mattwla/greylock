@@ -42,6 +42,7 @@ void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
 		std::string line;
 	
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
+		
 
 		bool haveParsedRefNumTicker = false;
 		
