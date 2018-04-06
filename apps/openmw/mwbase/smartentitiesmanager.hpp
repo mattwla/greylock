@@ -75,6 +75,10 @@ namespace MWBase
 
 	public :
 		
+		virtual ~SmartEntityInstance() {
+
+		};
+		
 		void ping();
 		
 		void debugInfo();
@@ -90,6 +94,8 @@ namespace MWBase
 		void registerHomeCell(const ESM::Cell * cell);
 
 		virtual std::string getSaveString() = 0;
+
+
 	};
 
 	class SmartEntityTemplate
@@ -104,6 +110,10 @@ namespace MWBase
 	
 	public:
 		
+		virtual ~SmartEntityTemplate() {
+
+		};
+
 		std::string getStringID();
 		
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;

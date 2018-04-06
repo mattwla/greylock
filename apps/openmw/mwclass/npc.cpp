@@ -595,7 +595,7 @@ namespace MWClass
         if(!weapon.isEmpty())
             weapskill = weapon.getClass().getEquipmentSkill(weapon);
 
-        float hitchance = MWMechanics::getHitChance(ptr, victim, ptr.getClass().getSkill(ptr, weapskill));
+       // float hitchance = MWMechanics::getHitChance(ptr, victim, ptr.getClass().getSkill(ptr, weapskill));
 
         //if (Misc::Rng::roll0to99() >= hitchance)
         if(false) //mwx hit chance

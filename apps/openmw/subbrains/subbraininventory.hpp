@@ -18,6 +18,10 @@ namespace MWBase {
 
 		SubBrainInventory::SubBrainInventory(MWBase::Life * life);
 
+		virtual ~SubBrainInventory() {
+
+		};
+
 		virtual void calculate(MWBase::Awareness * awareness);
 
 		virtual std::string getID();

@@ -131,7 +131,7 @@ namespace MWTasks
 			{
 				//mwx fix me horrid place for this code.
 				//person went out of range
-				unsigned int itx = 0;
+//				unsigned int itx = 0;
 				//while (itx < MWBase::Environment::get().getLifeManager()->mLifeList.size())
 					mDone = true;
 					/*{
@@ -162,6 +162,8 @@ namespace MWTasks
 			mLifeTask->mNpcPtr = mNpcPtr;
 			return mNpcPtr;
 		}
+
+		return mNpcPtr;
 	}
 
 	int ConfrontTrespasser::getTypeId() const

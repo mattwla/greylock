@@ -56,6 +56,10 @@ namespace MWBase {
 
 		virtual void getDebugInfo() = 0;
 
+		virtual ~BehaviorObject() {
+
+		};
+
 
 
 			//start
@@ -103,6 +107,10 @@ namespace MWBase {
 		//Intentions
 
 	public:
+		
+		virtual ~SubBrain() {
+
+		};
 		
 		virtual void calculate(MWBase::Awareness * awareness) = 0;
 

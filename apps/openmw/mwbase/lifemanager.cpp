@@ -34,7 +34,7 @@ void MWBase::Life::metabolize(float duration)
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
 	
-	MWBase::SensoryLinkStore * store = awareness->getSensoryLinkStore();
+	//MWBase::SensoryLinkStore * store = awareness->getSensoryLinkStore();
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
@@ -117,7 +117,7 @@ void MWBase::LifeManager::loadGame(boost::filesystem::path path)
 		}
 		
 		Tokenizer tok(line);
-		int idx = 0;
+//		int idx = 0;
 		std::vector<std::string> cache;
 		for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
 		{

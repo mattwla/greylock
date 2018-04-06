@@ -18,6 +18,10 @@ namespace MWBase {
 
 		SubBrainHunger::SubBrainHunger(MWBase::Life * life);
 
+		virtual ~SubBrainHunger() {
+
+		};
+
 		virtual void calculate(MWBase::Awareness * awareness);
 
 		virtual std::string getID();
@@ -47,6 +51,10 @@ namespace MWBase {
 		//void getDebugInfo();
 
 		virtual void getDebugInfo();
+
+		virtual ~BOEat() {
+
+		};
 
 	};
 

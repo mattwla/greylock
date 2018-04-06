@@ -18,6 +18,10 @@ namespace MWBase {
 
 		SubBrainGet::SubBrainGet(MWBase::Life * life);
 
+		virtual ~SubBrainGet() {
+
+		};
+
 		virtual void calculate(MWBase::Awareness * awareness);
 
 		virtual std::string getID();
@@ -30,6 +34,11 @@ namespace MWBase {
 
 	public:
 		virtual void getDebugInfo();
+
+		virtual ~BOGet()
+		{
+			
+		};
 
 	};
 

@@ -959,7 +959,7 @@ namespace MWWorld
 		//std::cout << getPlayer().getRefData().getPosition().rot[2] << std::endl;
 		//std::cout << MWBase::Environment::get().getWorld()->getCameraYaw() << std::endl;
 		//std::cout << getPlayer().getClass().getMovementSettings(mPtr).mRotation[2] << std::endl;
-		bool canwalljump = false;
+//		bool canwalljump = false;
 		float zscan = z;
 		const ESM::Position& playerpos = ptr.getRefData().getPosition();
 		auto playerposvec3 = playerpos.asVec3();
