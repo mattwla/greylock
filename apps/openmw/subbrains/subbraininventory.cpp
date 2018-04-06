@@ -27,3 +27,7 @@ std::string MWBase::SubBrainInventory::getID()
 {
 	return std::string();
 }
+
+void MWBase::SubBrainInventory::getDebugInfo()
+{
+}

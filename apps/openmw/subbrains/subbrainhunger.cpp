@@ -17,7 +17,8 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 		//std::cout << "HANGRY!!" << std::endl;
 		if (mDesires.size() < 1)
 		{
-			mDesires.push_back(BOEat());
+			BehaviorObject * bo = new BOEat(1);
+			mDesires.push_back(bo);
 		}
 
 		//push lower hunger urge subbrians output
@@ -49,12 +50,26 @@ std::string MWBase::SubBrainHunger::getID()
 	return "sbhunger";
 }
 
-MWBase::BOEat::BOEat() //input urge strength
+void MWBase::SubBrainHunger::getDebugInfo()
 {
+}
+
+
+
+MWBase::BOEat::BOEat(int valence) //input urge strength
+{
+	mIsDesire = true;
 	std::cout << "made eat BO" << std::endl;
+	mValence = valence;
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_IN_INVENTORY, "edible", 1);
 	mGOAPData.mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -100);
 	mGOAPData.mOutputs.push_back(statusoutput);
+	
 
+}
+
+void MWBase::BOEat::getDebugInfo()
+{
+	std::cout << "I am a eat BO" << std::endl;
 }

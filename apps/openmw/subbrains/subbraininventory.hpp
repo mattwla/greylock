@@ -22,6 +22,8 @@ namespace MWBase {
 
 		virtual std::string getID();
 
+		virtual void getDebugInfo();
+
 	};
 
 

@@ -26,3 +26,11 @@ std::string MWBase::SubBrainGet::getID()
 {
 	return std::string();
 }
+
+void MWBase::SubBrainGet::getDebugInfo()
+{
+}
+
+void MWBase::BOGet::getDebugInfo()
+{
+}

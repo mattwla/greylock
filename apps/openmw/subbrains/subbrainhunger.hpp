@@ -22,6 +22,13 @@ namespace MWBase {
 
 		virtual std::string getID();
 
+		virtual void getDebugInfo();
+
+	//	virtual std::vector<MWBase::BehaviorObject> getDesires();
+
+		//virtual std::vector<BehaviorObject> getDesires();
+
+
 	};
 
 	class BOEat : public BehaviorObject
@@ -30,10 +37,16 @@ namespace MWBase {
 	
 	public:
 
-		BOEat::BOEat();
+		//BOEat::BOEat();
 
 
 
+
+		BOEat::BOEat(int valence);
+
+		//void getDebugInfo();
+
+		virtual void getDebugInfo();
 
 	};
 

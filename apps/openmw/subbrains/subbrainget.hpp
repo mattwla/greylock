@@ -22,9 +22,14 @@ namespace MWBase {
 
 		virtual std::string getID();
 
+		virtual void getDebugInfo();
+
 	};
 
 	class BOGet : public MWBase::BehaviorObject {
+
+	public:
+		virtual void getDebugInfo();
 
 	};
 

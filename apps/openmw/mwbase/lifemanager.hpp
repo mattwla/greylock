@@ -83,6 +83,8 @@ namespace MWBase
 
 		//Beliefs, states from the subbrains, combined with sensorystore. Probe sensory store w/ status?
 
+
+		std::vector<BehaviorObject*> mDesires;
 		//Desires, recommended BOs from the subbrains
 
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
@@ -95,6 +97,8 @@ namespace MWBase
 		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
 
 		std::vector<std::string> getSaveStates();
+
+		void logDesires();
 
 		void loadStates();
 

@@ -14,7 +14,7 @@ void MWBase::Life::getDebugInfo()
 	std::cout << mId << std::endl;
 	std::cout << std::to_string(mRefNum) << std::endl;
 	std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
-	std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
+	mSubBrainsManager->logDesires();
 	//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
 }
 
@@ -38,7 +38,18 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
+		
+		typedef std::vector<MWBase::BehaviorObject*> bolist;
 		(*it)->calculate(awareness);
+		bolist desirelist = (*it)->getDesires();
+		if (mDesires.size() == 0) //tempory to prevent bloating.
+		{
+			for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
+			{
+				mDesires.push_back(*itb);
+			}
+		}
+		//mDesires.push_back()
 	}
 
 }
@@ -60,6 +71,23 @@ std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
 
 	std::vector<std::string> temp;
 	return temp;
+}
+
+void MWBase::SubBrainsManager::logDesires()
+{
+
+	if (mDesires.size() == 0)
+	{
+		std::cout << "no desires" << std::endl;
+		return;
+	}
+	std::cout << "desires:" << std::endl;
+	typedef std::vector<MWBase::BehaviorObject*> desirelist;
+	for (desirelist::iterator it = mDesires.begin(); it != mDesires.end(); it++)
+	{
+		(*it)->getDebugInfo();
+	}
+
 }
 
 

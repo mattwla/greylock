@@ -40,6 +40,8 @@ namespace MWBase {
 
 	protected:
 		
+		bool mIsDesire;
+		int mValence;
 		std::string mID;
 		BehaviorObject * mSubBehavior;
 		MWWorld::Ptr mOwnerPtr;
@@ -47,6 +49,15 @@ namespace MWBase {
 		GOAPData mGOAPData;
 
 	public:
+	/*	bool isDesire()
+		{
+			return mIsDesire;
+		};*/
+
+		virtual void getDebugInfo() = 0;
+
+
+
 			//start
 			//pause
 			//run
@@ -85,7 +96,7 @@ namespace MWBase {
 		std::vector<GOAPStatus> mBeliefs;
 		//Beliefs
 		
-		std::vector<BehaviorObject> mDesires;
+		std::vector<BehaviorObject*> mDesires;
 		//Desires
 
 		
@@ -96,6 +107,13 @@ namespace MWBase {
 		virtual void calculate(MWBase::Awareness * awareness) = 0;
 
 		virtual std::string getID() = 0;
+
+		std::vector<BehaviorObject*> getDesires()
+		{
+			return mDesires;
+		};
+
+		virtual void getDebugInfo() = 0;
 
 };
 
