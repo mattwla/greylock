@@ -11,7 +11,7 @@
 #include "../mwworld/cellstore.hpp"
 #include "../mwworld/cellvisitors.hpp"
 #include "../mwworld/livecellref.hpp"
-#include "/dev/greylock/components/esm/loadcell.hpp"
+#include <components/esm/loadcell.hpp>
 
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()

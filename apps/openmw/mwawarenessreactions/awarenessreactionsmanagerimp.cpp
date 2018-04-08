@@ -12,6 +12,8 @@
 
 #include <components/sceneutil/positionattitudetransform.hpp>
 
+#include "../mwbase/world.hpp"
+
 #include "../mwworld/esmstore.hpp"
 #include "../mwworld/inventorystore.hpp"
 #include "../mwworld/class.hpp"
@@ -43,7 +45,8 @@
 #include "../mwworld/projectilemanager.hpp"
 #include "../mwworld/weather.hpp"
 #include "../mwworld/scene.hpp"
-#include "../mwworld/worldimp.cpp"
+//#include "../mwworld/worldimp.cpp"
+
 #include "../mwbase/statusmanager.hpp"
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/fight.hpp"

@@ -2176,7 +2176,7 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 	//std::cout << getPlayer().getRefData().getPosition().rot[2] << std::endl;
 	//std::cout << MWBase::Environment::get().getWorld()->getCameraYaw() << std::endl;
 	//std::cout << getPlayer().getClass().getMovementSettings(mPtr).mRotation[2] << std::endl;
-	bool canwalljump = false;
+	//bool canwalljump = false;
 	float zscan = z;
 	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
 	auto playerposvec3 = playerpos.asVec3();
@@ -2210,7 +2210,7 @@ bool CharacterController::checkForObstruction(float z, float distance, bool abov
 MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, float distance, osg::Vec3f position, RayDirection dir)
 {
 
-	bool canwalljump = false;
+	//bool canwalljump = false;
 	float zscan = z;
 	const ESM::Position& playerpos = getPlayer().getRefData().getPosition();
 	auto playerposvec3 = playerpos.asVec3();
@@ -2393,6 +2393,7 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 	else if (canClimb)
 		MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
 
+	return true;
 }
 
 void CharacterController::persistAnimationState()

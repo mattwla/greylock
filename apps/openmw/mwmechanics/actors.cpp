@@ -1298,7 +1298,7 @@ namespace MWMechanics
                         }
                         if (timerUpdateHeadTrack == 0)
                         {
-                            float sqrHeadTrackDistance = std::numeric_limits<float>::max();
+//                            float sqrHeadTrackDistance = std::numeric_limits<float>::max();
                             MWWorld::Ptr headTrackTarget;
 
                             MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);

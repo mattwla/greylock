@@ -337,8 +337,8 @@ namespace MWGui
 		if (type == typeid(ESM::NPC).name())
 		{
 
-			auto faced = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
-			auto max = MWBase::Environment::get().getWorld()->getMaxActivationDistance();
+			//auto faced = MWBase::Environment::get().getWorld()->getDistanceToFacedObject();
+			//auto max = MWBase::Environment::get().getWorld()->getMaxActivationDistance();
 			if (MWBase::Environment::get().getWorld()->getDistanceToFacedObject() > MWBase::Environment::get().getWorld()->getMaxActivationDistance())
 			{
 				return "";

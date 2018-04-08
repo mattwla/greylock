@@ -94,6 +94,8 @@ namespace MWStatus
 	{
 		if (statusstring == "shaman")
 			return MWBase::Shaman;
+		else
+			return MWBase::Shaman; //mwx broken
 
 	}
 
