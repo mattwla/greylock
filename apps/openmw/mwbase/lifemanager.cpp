@@ -14,6 +14,7 @@ void MWBase::Life::getDebugInfo()
 	std::cout << mId << std::endl;
 	std::cout << std::to_string(mRefNum) << std::endl;
 	std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
+	std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
 	mSubBrainsManager->logDesires();
 	//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
 }

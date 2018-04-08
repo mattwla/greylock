@@ -1,6 +1,7 @@
 #include "smartentitiesmanager.hpp"
 #include "../glsmartentities/bread.hpp"
-#include "../mwworld/worldimp.cpp"
+//#include "../mwworld/worldimp.cpp"
+#include "../mwbase/world.hpp"
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/tokenizer.hpp>
@@ -10,6 +11,7 @@
 #include "../mwworld/cellstore.hpp"
 #include "../mwworld/cellvisitors.hpp"
 #include "../mwworld/livecellref.hpp"
+#include "/dev/greylock/components/esm/loadcell.hpp"
 
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
@@ -236,7 +238,22 @@ void MWBase::SmartEntitiesManager::removeSmartInstanceFromScene(const MWWorld::P
 
 void MWBase::SmartEntitiesManager::removeSmartInstancesFromSceneViaCell(MWWorld::CellStore * cellStore)
 {
-	MWWorld::ListObjectsVisitor visitor;
+	
+	struct ListObjectsVisitor
+	{
+		std::vector<MWWorld::Ptr> mObjects;
+
+		bool operator() (MWWorld::Ptr ptr)
+		{
+			if (ptr.getRefData().getBaseNode())
+				mObjects.push_back(ptr);
+			return true;
+		}
+	};
+	
+	
+	ListObjectsVisitor visitor;
+	
 	cellStore->forEach(visitor);
 	for (std::vector<MWWorld::Ptr>::iterator it = visitor.mObjects.begin(); it != visitor.mObjects.end(); ++it)
 	{

@@ -30,7 +30,8 @@ namespace MWBase {
 	{
 		statusstack mInputs;
 		statusstack mOutputs;
-
+		//check preconditions.... is this the "expanding node" funcitonality I am thinking about? Does it call the subbrain? 
+		//Maybe BOs don't NEED to be connected to subbrains.
 		//getcost
 		//check inputs valid (pass ref to statuslist)
 	};
@@ -60,7 +61,7 @@ namespace MWBase {
 
 		};
 
-
+			
 
 			//start
 			//pause

@@ -31,7 +31,7 @@
 
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/actorutil.hpp"
-#include "../mwrender/renderingmanager.cpp"
+//#include "../mwrender/renderingmanager.cpp"
 
 namespace MWInput
 {

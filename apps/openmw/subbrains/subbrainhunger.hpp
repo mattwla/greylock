@@ -43,7 +43,7 @@ namespace MWBase {
 
 		//BOEat::BOEat();
 
-
+		
 
 
 		BOEat::BOEat(int valence);
