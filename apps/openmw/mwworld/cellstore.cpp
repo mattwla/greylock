@@ -186,7 +186,7 @@ namespace MWWorld
     template <typename X>
     void CellRefList<X>::load(ESM::CellRef &ref, bool deleted, const MWWorld::ESMStore &esmStore)
     {
-		std::cout << "loaded...." + ref.mRefID << std::endl;
+		//std::cout << "loaded...." + ref.mRefID << std::endl;
         const MWWorld::Store<X> &store = esmStore.get<X>();
 
         if (const X *ptr = store.search (ref.mRefID))

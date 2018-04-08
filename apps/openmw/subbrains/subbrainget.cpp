@@ -14,7 +14,7 @@ void MWBase::SubBrainGet::calculate(MWBase::Awareness * awareness)
 	std::vector<SensoryLink>::iterator it = linkstore.begin();
 	while (it != linkstore.end())
 	{
-		std::cout << "Oh I see" + it->mPtr.getCellRef().getRefId() << std::endl;
+		//std::cout << "Oh I see" + it->mPtr.getCellRef().getRefId() << std::endl;
 		//for every item, create a getBO
 		it++;
 	}

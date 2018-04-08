@@ -58,7 +58,8 @@ namespace Loading
 namespace MWBase
 {
 
-	struct BigFive {
+	struct BigFive 
+	{
 		int mOpenness;
 		int mConscientiousness;
 		int mExtraversion;
@@ -66,29 +67,27 @@ namespace MWBase
 		int mNeuroticism;
 	};
 
-	struct Vitals {
-
+	struct Vitals 
+	{
 		float mHunger;
+		
 		float mSleepiness;
 
 		std::string getSaveState();
+		
 		void loadState(std::string);
-
 	};
 
-	
 	class SubBrainsManager
 	{
 		std::vector<SubBrain*> mSubBrains;
 
 		//Beliefs, states from the subbrains, combined with sensorystore. Probe sensory store w/ status?
 
-
 		std::vector<BehaviorObject*> mDesires;
 		//Desires, recommended BOs from the subbrains
 
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
-
 
 	public:
 
@@ -103,7 +102,6 @@ namespace MWBase
 		void loadStates();
 
 		//SubBrainsManager::SubBrainsManager();
-	
 
 	};
 	
@@ -151,7 +149,6 @@ namespace MWBase
 		void metabolize(float duration);
 
 
-
 	};
 
 	class LifeManager
@@ -183,8 +180,6 @@ namespace MWBase
 
 	};
 
-	
-	
 	
 }
 #endif
