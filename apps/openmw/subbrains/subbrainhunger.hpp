@@ -14,6 +14,8 @@ namespace MWBase {
 
 	class SubBrainHunger : public MWBase::SubBrain {
 
+		BehaviorObject * mEatBO;
+
 	public:
 
 		SubBrainHunger::SubBrainHunger(MWBase::Life * life);

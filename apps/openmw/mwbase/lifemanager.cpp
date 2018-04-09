@@ -30,6 +30,13 @@ namespace MWBase
 		metabolize(duration);
 		mAwareness->refresh();
 		mSubBrainsManager->calculate(mAwareness);
+		std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
+		std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
+		//extract desires, put into desireprioritizer
+
+		std::vector<GOAPData*> GOAPNodes = mSubBrainsManager->getGOAPNodes();
+		//extract BONodes, put into GOAP
+		
 	}
 
 	void Life::metabolize(float duration)
@@ -37,6 +44,13 @@ namespace MWBase
 		mVitals.mHunger += duration / 1000.0f;
 		mVitals.mSleepiness += duration / 2000.f;
 	}
+
+	std::vector<BehaviorObject*> Life::prioritizeDesires(std::vector<BehaviorObject*> desires)
+	{
+		return std::vector<BehaviorObject*>();
+	}
+
+
 
 
 	//LIFE MANAGER
@@ -147,27 +161,35 @@ namespace MWBase
 }
 
 
-
+//SUB BRAINS
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
-	
-	//MWBase::SensoryLinkStore * store = awareness->getSensoryLinkStore();
+	mDesires.clear();
+	mGOAPNodes.clear();
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
 		
 		typedef std::vector<MWBase::BehaviorObject*> bolist;
 		(*it)->calculate(awareness);
-		bolist desirelist = (*it)->getDesires();
-		if (mDesires.size() == 0) //tempory to prevent bloating.
+		
+		//collect GOAPNodes from subbrain, add to list.
+		std::vector<GOAPData*> goapnodes = (*it)->getGOAPNodes();
+		for (std::vector<GOAPData*>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
 		{
-			for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
-			{
-				mDesires.push_back(*itb);
-			}
+			mGOAPNodes.push_back(*itg);
 		}
-		//mDesires.push_back()
+		
+
+
+		//Collect desires from subbrain, add to list.
+		bolist desirelist = (*it)->getDesires();
+		for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
+		{
+			mDesires.push_back(*itb);
+		}
+	
 	}
 
 }
@@ -206,6 +228,11 @@ void MWBase::SubBrainsManager::logDesires()
 		(*it)->getDebugInfo();
 	}
 
+}
+
+std::vector<MWBase::BehaviorObject*> MWBase::SubBrainsManager::getDesires()
+{
+	return mDesires;
 }
 
 

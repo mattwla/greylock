@@ -10,6 +10,7 @@ namespace MWBase {
 	class Awareness;
 	struct GOAPStatus;
 	struct GOAPData;
+	class BehaviorObject;
 };
 
 namespace MWWorld {
@@ -30,6 +31,7 @@ namespace MWBase {
 	{
 		statusstack mInputs;
 		statusstack mOutputs;
+		MWBase::BehaviorObject * mBehaviorObject;
 		//check preconditions.... is this the "expanding node" funcitonality I am thinking about? Does it call the subbrain? 
 		//Maybe BOs don't NEED to be connected to subbrains.
 		//getcost
@@ -47,7 +49,7 @@ namespace MWBase {
 		BehaviorObject * mSubBehavior;
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
-		GOAPData mGOAPData;
+		GOAPData * mGOAPData;
 
 	public:
 	/*	bool isDesire()
@@ -60,6 +62,15 @@ namespace MWBase {
 		virtual ~BehaviorObject() {
 
 		};
+
+		GOAPData* getGOAPNode() {
+			return mGOAPData;
+		}
+
+		void setValence(int valence)
+		{
+			mValence = valence;
+		}
 
 			
 
@@ -105,6 +116,8 @@ namespace MWBase {
 		std::vector<BehaviorObject*> mDesires;
 		//Desires
 
+		std::vector<GOAPData*> mGOAPNodes;
+
 		
 		//Intentions
 
@@ -122,6 +135,11 @@ namespace MWBase {
 		{
 			return mDesires;
 		};
+
+		std::vector<GOAPData*> getGOAPNodes()
+		{
+			return mGOAPNodes;
+		}
 
 		virtual void getDebugInfo() = 0;
 

@@ -58,6 +58,13 @@ namespace Loading
 namespace MWBase
 {
 
+	struct BehaviorIntentionQueue 
+	{
+		std::vector<BehaviorObject> mQueue;
+		int mCurrentFocus;
+		int mLastFocus;
+	};
+
 	struct BigFive 
 	{
 		int mOpenness;
@@ -87,6 +94,8 @@ namespace MWBase
 		std::vector<BehaviorObject*> mDesires;
 		//Desires, recommended BOs from the subbrains
 
+		std::vector<GOAPData*> mGOAPNodes;
+
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
 
 	public:
@@ -98,6 +107,13 @@ namespace MWBase
 		std::vector<std::string> getSaveStates();
 
 		void logDesires();
+
+		std::vector<BehaviorObject*> getDesires();
+
+		std::vector<GOAPData*> getGOAPNodes()
+		{
+			return mGOAPNodes;
+		}
 
 		void loadStates();
 
@@ -124,6 +140,8 @@ namespace MWBase
 
 		Vitals mVitals;
 
+		BehaviorIntentionQueue *mBIQueue;
+
 		//IntentionList(Active BOs)
 
 	public:
@@ -137,6 +155,7 @@ namespace MWBase
 			mPtr.getBase()->mLife = this;
 			mAwareness = new MWBase::Awareness(mPtr);
 			mSubBrainsManager = new MWBase::SubBrainsManager(this);
+			mBIQueue = new BehaviorIntentionQueue();
 			
 		}
 
@@ -147,6 +166,8 @@ namespace MWBase
 	private:
 
 		void metabolize(float duration);
+
+		std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
 
 
 	};

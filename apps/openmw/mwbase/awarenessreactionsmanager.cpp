@@ -12,9 +12,6 @@ void MWBase::Awareness::refresh()
 	while (it != instances.end())
 	{
 		bool isaware = MWBase::Environment::get().getAwarenessReactionsManager()->awarenessCheck(it->second->getPtr(), mPtr);
-		
-		
-		
 		if (isaware)
 		{
 			newStore->addSensoryLink(MWBase::SensoryLink(it->second->getPtr(), it->second));
