@@ -511,8 +511,10 @@ namespace MWPhysics
 				inertia.z() += time * -627.2f; //gravity?
 				if (isOnSlope) //mwx
 				{
-					slowFall = .99;
+					slowFall = .98;
 				}
+				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlide))
+					slowFall = .95;
                 if (inertia.z() < 0)
                     inertia.z() *= slowFall;
                 if (slowFall < 1.f) {

@@ -92,7 +92,8 @@ namespace MWBase {
 
 
 
-	class SubBrain {
+	class SubBrain 
+	{
 
 	protected:
 
@@ -124,7 +125,7 @@ namespace MWBase {
 
 		virtual void getDebugInfo() = 0;
 
-};
+	};
 
 }
 #include <string>

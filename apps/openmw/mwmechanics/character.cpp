@@ -1852,14 +1852,16 @@ void CharacterController::update(float duration)
             forcestateupdate = true;
             jumpstate = JumpState_Landing;
 			
+			
 			vec.z() = 0.0f;
 
             float height = cls.getCreatureStats(mPtr).land();
             float healthLost = getFallDamage(mPtr, height);
 
-			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold))
+			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold) || MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
 			{
 				healthLost = 0;
+				MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
 			}
 
             if (healthLost > 0.0f)
@@ -1895,7 +1897,7 @@ void CharacterController::update(float duration)
         else
         {
             jumpstate = mAnimation->isPlaying(mCurrentJump) ? JumpState_Landing : JumpState_None;
-
+			MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
             vec.z() = 0.0f;
 
             inJump = false;
@@ -2309,10 +2311,22 @@ ClimbData CharacterController::checkCanClimb()
 
 bool CharacterController::checkActions() //checks if wall jumpable or climbable, also reads input and triggers actions.
 {
-
+	bool canGlide = !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide) && !MWBase::Environment::get().getWorld()->isOnGround(mPtr);
+		//true;
+	//if has glider equipped true
 	bool canClimb = false;
 	bool canWallJump = false;
 	const MWWorld::Class &cls = mPtr.getClass();
+	if (canGlide)
+	{
+		if (cls.getMovementSettings(mPtr).mAttemptSneak != mLastSneakStatus) //sneak toggle
+		{
+			mCurrentAction = new Glide(mPtr);
+			return true;
+		}
+	}
+
+	mLastSneakStatus = cls.getMovementSettings(mPtr).mAttemptSneak;
 
 	if (checkForObstruction(100.0f, 100.0f))
 	{
@@ -2973,6 +2987,42 @@ Climb::~Climb()
 {
 	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InClimb);
 }
+
+
+Glide::Glide(MWWorld::Ptr ptr)
+{
+	mDone = false;
+	std::cout << "started glide" << std::endl;
+	mPtr = ptr;
+	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlide);
+}
+
+Glide::~Glide()
+{
+	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
+}
+
+bool Glide::update(float duration)
+{
+	if (!mPtr.getClass().getMovementSettings(mPtr).mAttemptSneak || !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
+	{
+		std::cout << "attempt to deactivate" << std::endl;
+		mDone = true;
+		return false;
+	}
+	osg::Vec3f direction;
+	float forwardstrength = 5000.0f / (.25 / duration);
+	direction.y() = forwardstrength * 10;
+	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
+	return true;
+}
+
+ActionState Glide::getType()
+{
+
+	return ActionState_Gliding;
+}
+
 
 WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch)
 {

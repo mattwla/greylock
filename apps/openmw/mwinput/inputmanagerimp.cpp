@@ -23,6 +23,7 @@
 #include "../mwbase/statemanager.hpp"
 #include "../mwbase/environment.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 #include "../mwworld/player.hpp"
 #include "../mwworld/class.hpp"
@@ -553,7 +554,7 @@ namespace MWInput
 
                 if (actionIsActive(A_MoveLeft))
                 {
-					if (!mAlwaysRunActive)
+					if (!mAlwaysRunActive && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
 					{
 						triedToMove = true;
 						mPlayer->setLeftRight(-1);
@@ -565,7 +566,7 @@ namespace MWInput
                 }
                 else if (actionIsActive(A_MoveRight))
                 {
-					if (!mAlwaysRunActive)
+					if (!mAlwaysRunActive && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
 					{
 						triedToMove = true;
 						mPlayer->setLeftRight(1);
@@ -917,13 +918,13 @@ namespace MWInput
 			//mRot[1] = 0.0f;
 			//mRot[2] = -x;
 		
-			if (mAlwaysRunActive || MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()))
+			if (mAlwaysRunActive || MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) || MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
 			{
 				MWBase::Environment::get().getWorld()->rotateCamera(rot[0], rot[1], rot[2]); //MWX
 			}
 
             // Only actually turn player when we're not in vanity mode mwx, not in running mode, or not climbing
-            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && !MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()))
+            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && !MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
             {
                 mPlayer->yaw(x);
                 mPlayer->pitch(y);

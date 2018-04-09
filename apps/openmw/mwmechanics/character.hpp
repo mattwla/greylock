@@ -167,7 +167,8 @@ enum JumpingState {
 
 enum ActionState {
 	ActionState_Climbing = 0,
-	ActionState_WallHolding = 1
+	ActionState_WallHolding = 1,
+	ActionState_Gliding = 2
 };
 
 struct ClimbData {
@@ -220,6 +221,23 @@ public:
 	virtual bool update(float duration);
 
 	virtual ActionState getType();
+
+};
+
+class Glide : public MWMechanics::CharacterAction
+{
+
+
+	public :
+
+		Glide(MWWorld::Ptr ptr);
+
+		virtual ~Glide();
+
+		virtual bool update(float duration);
+
+		virtual ActionState getType();
+
 
 };
 
@@ -304,6 +322,7 @@ class CharacterController : public MWRender::Animation::TextKeyListener
 
 	float mClimbTimer;
 	bool mRotateStage;
+	bool mLastSneakStatus = 0;
 
 	bool mWallGrabCamSwitch;
 

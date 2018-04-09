@@ -11,6 +11,7 @@ namespace MWMechanics
         float mPosition[3];
         float mRotation[3];
 		bool mAttemptClimb = false; //mwx
+		bool mAttemptSneak = false;
 		bool mAttemptJump = false;
 		bool mJumpReleased = false;
 		int mWallGrabClimb = 0;

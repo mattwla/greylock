@@ -60,7 +60,8 @@ namespace MWBase
 		ConfrontingTrespasser = 5,
 		InWallHold = 6,
 		InWallJump = 7,
-		InClimb = 8
+		InClimb = 8,
+		InGlide = 9
 
 	};
 
