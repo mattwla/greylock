@@ -1984,7 +1984,7 @@ void CharacterController::update(float duration)
             mAnimation->adjustSpeedMult(mCurrentMovement, speedmult);
         }
 
-        if (!mSkipAnim)
+        if (!mSkipAnim && !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
         {
             if(!isKnockedDown() && !isKnockedOut())
             {
@@ -2995,6 +2995,7 @@ Glide::Glide(MWWorld::Ptr ptr)
 	std::cout << "started glide" << std::endl;
 	mPtr = ptr;
 	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlide);
+	mTiltState = RANDOM_DRIFT;
 }
 
 Glide::~Glide()
@@ -3004,15 +3005,154 @@ Glide::~Glide()
 
 bool Glide::update(float duration)
 {
-	if (!mPtr.getClass().getMovementSettings(mPtr).mAttemptSneak || !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
+	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
+	float rotatestrength = .1 / (.16 / duration);
+	
+		
+		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+	MWMechanics::Movement movement = mPtr.getClass().getMovementSettings(mPtr);
+	movement.mWallGrabClimb;
+	if (!movement.mAttemptSneak || !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
 	{
 		std::cout << "attempt to deactivate" << std::endl;
 		mDone = true;
 		return false;
 	}
+	if (movement.mWallGrabSlide > 0)
+	{
+		mTiltState = PLAYER_CONTROLLED;
+		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .3)
+			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+	
+			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, rotatestrength, true);//turn
+			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll/10.0f);
+		
+		std::cout << "attempt turn right" << std::endl;
+	}
+	else if (movement.mWallGrabSlide < 0)
+	{
+		mTiltState = PLAYER_CONTROLLED;
+		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.3)
+			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+		
+			//turn
+			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, -rotatestrength, true);//turn
+		
+		std::cout << "attempt turn left" << std::endl;
+	}
+	else
+	{
+		if (mTiltState == PLAYER_CONTROLLED) // player just released
+		{
+			if (MWBase::Environment::get().getWorld()->getCameraRoll() > 0)
+				mTiltState = INITIAL_RETURN_FROM_RIGHT;
+			else
+				mTiltState = INITIAL_RETURN_FROM_LEFT;
+		}
+		
+		if (mTiltState == INITIAL_RETURN_FROM_LEFT || mTiltState == INITIAL_RETURN_FROM_RIGHT)
+		{
+			//std::cout << "at initial return" << std::endl;
+			if (camroll > 0)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+			if (camroll < 0)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+			if (abs(camroll) < .01f)
+			{
+				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
+				if (mTiltState == INITIAL_RETURN_FROM_LEFT)
+					mTargetRoll = .1;
+				else
+					mTargetRoll = -.1;
+
+				mTiltState = OVER_RETURN;
+				return true;
+			}
+		}
+		if (mTiltState == OVER_RETURN)
+		{
+			//std::cout << camroll << std::endl;
+			//std::cout << "at over return" << std::endl;
+			if (camroll > mTargetRoll)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+			if (camroll < mTargetRoll)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+			if (abs(mTargetRoll - camroll) < .01f)
+			{
+				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
+				mTiltState = CORRECTIVE_RETURN;
+				return true;
+			}
+		}
+		if (mTiltState == CORRECTIVE_RETURN)
+		{
+			//std::cout << camroll << std::endl;
+			//std::cout << "at corrective return" << std::endl;
+			if (camroll > 0)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength/2, true);
+			if (camroll < 0)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength/2, true);
+			if (abs(camroll) < .01f)
+			{
+				mDriftTimer = rand() % 10 + 5;
+				MWBase::Environment::get().getWorld()->rollCamera(0, false);
+				mTiltState = RANDOM_DRIFT;
+				mTargetRoll = (rand() % 8 + 5) / 100.0;
+				bool negative = rand() % 2;
+				if (negative)
+					mTargetRoll = -mTargetRoll;
+				std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
+				return true;
+			}
+		}
+		if (mTiltState == RANDOM_DRIFT)
+		{
+			if (camroll > mTargetRoll)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength/4, true);
+			if (camroll < mTargetRoll)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength/4, true);
+			if (abs(mTargetRoll - camroll) < .01f)
+			{
+				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
+				mTiltState = RANDOM_DRIFT_RETURN;
+				return true;
+			}
+
+
+		}
+		if (mTiltState == RANDOM_DRIFT_RETURN)
+		{
+			if (camroll > 0)
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength / 4, true);
+			if (camroll < 0)
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength / 4, true);
+			if (abs(camroll) < .01f)
+			{
+				if (mDriftTimer > 0.0f)
+				{
+					mDriftTimer -= duration;
+					
+				}
+				else
+				{
+					mDriftTimer = rand() % 10 + 5;
+					MWBase::Environment::get().getWorld()->rollCamera(0, false);
+					mTiltState = RANDOM_DRIFT;
+					mTargetRoll = (rand() % 8 + 5) / 100.0;
+					bool negative = rand() % 2;
+					if (negative)
+						mTargetRoll = -mTargetRoll;
+					std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
+					return true;
+				}
+			}
+		}
+		
+	}
 	osg::Vec3f direction;
 	float forwardstrength = 5000.0f / (.25 / duration);
 	direction.y() = forwardstrength * 10;
+	MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
 	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
 	return true;
 }

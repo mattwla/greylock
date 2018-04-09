@@ -226,7 +226,22 @@ public:
 
 class Glide : public MWMechanics::CharacterAction
 {
+	enum TiltState
+	{
+		PLAYER_CONTROLLED = 0,
+		INITIAL_RETURN_FROM_RIGHT = 1,
+		INITIAL_RETURN_FROM_LEFT = 2,
+		OVER_RETURN = 3,
+		CORRECTIVE_RETURN = 4,
+		RANDOM_DRIFT = 5,
+		RANDOM_DRIFT_RETURN = 6
+	};
 
+	TiltState mTiltState;
+
+	float mTargetRoll;
+
+	float mDriftTimer;
 
 	public :
 

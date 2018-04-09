@@ -554,7 +554,7 @@ namespace MWInput
 
                 if (actionIsActive(A_MoveLeft))
                 {
-					if (!mAlwaysRunActive && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
+					if (!mAlwaysRunActive)// && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
 					{
 						triedToMove = true;
 						mPlayer->setLeftRight(-1);
@@ -566,7 +566,7 @@ namespace MWInput
                 }
                 else if (actionIsActive(A_MoveRight))
                 {
-					if (!mAlwaysRunActive && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
+					if (!mAlwaysRunActive)// && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
 					{
 						triedToMove = true;
 						mPlayer->setLeftRight(1);
