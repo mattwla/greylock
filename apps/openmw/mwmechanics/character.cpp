@@ -2995,7 +2995,9 @@ Glide::Glide(MWWorld::Ptr ptr)
 	std::cout << "started glide" << std::endl;
 	mPtr = ptr;
 	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlide);
-	mTiltState = RANDOM_DRIFT;
+	mTiltState = RANDOM_DRIFT_RETURN;
+	mDriftTimer = 10.0;
+
 }
 
 Glide::~Glide()
@@ -3007,6 +3009,7 @@ bool Glide::update(float duration)
 {
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
+	float forwardstrength = 5000.0f / (.25 / duration);
 	
 		
 		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
@@ -3018,6 +3021,13 @@ bool Glide::update(float duration)
 		mDone = true;
 		return false;
 	}
+	if (movement.mWallGrabClimb)
+	{
+		forwardstrength *= 2.0;
+		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
+	}
+	else
+		MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlideDescent);
 	if (movement.mWallGrabSlide > 0)
 	{
 		mTiltState = PLAYER_CONTROLLED;
@@ -3040,11 +3050,13 @@ bool Glide::update(float duration)
 		
 		std::cout << "attempt turn left" << std::endl;
 	}
+
 	else
 	{
 		if (mTiltState == PLAYER_CONTROLLED) // player just released
 		{
-			if (MWBase::Environment::get().getWorld()->getCameraRoll() > 0)
+			mTiltOnRelease = MWBase::Environment::get().getWorld()->getCameraRoll();
+			if (mTiltOnRelease > 0)
 				mTiltState = INITIAL_RETURN_FROM_RIGHT;
 			else
 				mTiltState = INITIAL_RETURN_FROM_LEFT;
@@ -3060,10 +3072,12 @@ bool Glide::update(float duration)
 			if (abs(camroll) < .01f)
 			{
 				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-				if (mTiltState == INITIAL_RETURN_FROM_LEFT)
+			/*	if (mTiltState == INITIAL_RETURN_FROM_LEFT)
 					mTargetRoll = .1;
 				else
-					mTargetRoll = -.1;
+					mTargetRoll = -.1;*/
+
+				mTargetRoll = -.1 / (.3 / mTiltOnRelease);
 
 				mTiltState = OVER_RETURN;
 				return true;
@@ -3096,7 +3110,7 @@ bool Glide::update(float duration)
 			{
 				mDriftTimer = rand() % 10 + 5;
 				MWBase::Environment::get().getWorld()->rollCamera(0, false);
-				mTiltState = RANDOM_DRIFT;
+				mTiltState = RANDOM_DRIFT_RETURN;
 				mTargetRoll = (rand() % 8 + 5) / 100.0;
 				bool negative = rand() % 2;
 				if (negative)
@@ -3150,7 +3164,7 @@ bool Glide::update(float duration)
 		
 	}
 	osg::Vec3f direction;
-	float forwardstrength = 5000.0f / (.25 / duration);
+	
 	direction.y() = forwardstrength * 10;
 	MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
 	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);

@@ -36,6 +36,16 @@ namespace MWBase {
 		//Maybe BOs don't NEED to be connected to subbrains.
 		//getcost
 		//check inputs valid (pass ref to statuslist)
+
+		//Current input valid?
+		//==?
+		//int getCost(bigfive, awareness) return 0 if impossible
+		//getLinkedBO
+		//bool outputTypeMatch(type)
+
+
+
+			
 	};
 
 	class BehaviorObject

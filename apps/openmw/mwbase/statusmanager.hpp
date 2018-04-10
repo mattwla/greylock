@@ -61,7 +61,8 @@ namespace MWBase
 		InWallHold = 6,
 		InWallJump = 7,
 		InClimb = 8,
-		InGlide = 9
+		InGlide = 9,
+		InGlideDescent = 10
 
 	};
 

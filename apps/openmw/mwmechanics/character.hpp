@@ -243,6 +243,8 @@ class Glide : public MWMechanics::CharacterAction
 
 	float mDriftTimer;
 
+	float mTiltOnRelease;
+
 	public :
 
 		Glide(MWWorld::Ptr ptr);

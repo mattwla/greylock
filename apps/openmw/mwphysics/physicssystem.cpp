@@ -514,7 +514,12 @@ namespace MWPhysics
 					slowFall = .98;
 				}
 				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlide))
-					slowFall = .95;
+				{
+					if (!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlideDescent))
+						slowFall = .98;
+					/*else
+						slowFall = .98;*/
+				}
                 if (inertia.z() < 0)
                     inertia.z() *= slowFall;
                 if (slowFall < 1.f) {
