@@ -3009,7 +3009,9 @@ bool Glide::update(float duration)
 {
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
-	float forwardstrength = 5000.0f / (.25 / duration);
+	float forwardstrength = 0.0f;
+		//5000.0f / (.25 / duration);
+	bool inDescent = false;
 	
 		
 		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
@@ -3023,8 +3025,9 @@ bool Glide::update(float duration)
 	}
 	if (movement.mWallGrabClimb)
 	{
-		forwardstrength *= 2.0;
+		forwardstrength = 7500.0 / (.25 / duration);
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
+		inDescent = true;
 	}
 	else
 		MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlideDescent);
@@ -3066,9 +3069,15 @@ bool Glide::update(float duration)
 		{
 			//std::cout << "at initial return" << std::endl;
 			if (camroll > 0)
+			{
 				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
+			}
 			if (camroll < 0)
+			{
+
 				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
+			}
+				
 			if (abs(camroll) < .01f)
 			{
 				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
@@ -3164,10 +3173,20 @@ bool Glide::update(float duration)
 		
 	}
 	osg::Vec3f direction;
-	
+	mCameraPitch = -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch();
 	direction.y() = forwardstrength * 10;
-	MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
+	if (inDescent)
+	{
+		if (mCameraPitch < 1.08)
+			mCameraPitch += .001 / duration;
+	}
+	/*else if (mCameraPitch > .2)
+		mCameraPitch -= .001 / duration;*/
+		
+		
+	MWBase::Environment::get().getWorld()->rotateObject(mPtr, mCameraPitch, getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
 	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
+	std::cout << mCameraPitch << std::endl;
 	return true;
 }
 

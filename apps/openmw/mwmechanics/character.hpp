@@ -245,6 +245,8 @@ class Glide : public MWMechanics::CharacterAction
 
 	float mTiltOnRelease;
 
+	float mCameraPitch;
+
 	public :
 
 		Glide(MWWorld::Ptr ptr);
