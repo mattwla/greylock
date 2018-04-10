@@ -3009,8 +3009,7 @@ bool Glide::update(float duration)
 {
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
-	float forwardstrength = 0.0f;
-		//5000.0f / (.25 / duration);
+	float forwardstrength = 5000.0f / (.25 / duration);
 	bool inDescent = false;
 	
 		
@@ -3025,7 +3024,7 @@ bool Glide::update(float duration)
 	}
 	if (movement.mWallGrabClimb)
 	{
-		forwardstrength = 7500.0 / (.25 / duration);
+		forwardstrength *= 2.0;
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
 		inDescent = true;
 	}
