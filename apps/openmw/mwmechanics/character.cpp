@@ -3028,7 +3028,16 @@ bool Glide::update(float duration)
 	if (movement.mWallGrabClimb)
 	{
 		//forwardstrength *= 2.0;
-		forwardstrength = 5000.0f / (.25 / duration);
+		if (mLastFrameWasDescending && mLastDescentSpeed < 20000.0f / (.25 / duration)) //accelerating
+			forwardstrength = mLastDescentSpeed + 20.f / (.25 / duration);
+		else if (!mLastFrameWasDescending)
+			forwardstrength = 2000.0f / (.25 / duration); // just starting
+		else
+			forwardstrength = mLastDescentSpeed;
+		
+		mLastDescentSpeed = forwardstrength;
+		std::cout << forwardstrength << std::endl;
+		
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
 		inDescent = true;
 		if (mLastFrameWasDescending)
@@ -3055,7 +3064,7 @@ bool Glide::update(float duration)
 			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, rotatestrength, true);//turn
 			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll/10.0f);
 		
-		std::cout << "attempt turn right" << std::endl;
+		//std::cout << "attempt turn right" << std::endl;
 	}
 	else if (movement.mWallGrabSlide < 0)
 	{
@@ -3066,7 +3075,7 @@ bool Glide::update(float duration)
 			//turn
 			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, -rotatestrength, true);//turn
 		
-		std::cout << "attempt turn left" << std::endl;
+		//std::cout << "attempt turn left" << std::endl;
 	}
 
 	else
@@ -3139,7 +3148,7 @@ bool Glide::update(float duration)
 				bool negative = rand() % 2;
 				if (negative)
 					mTargetRoll = -mTargetRoll;
-				std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
+				//std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
 				return true;
 			}
 		}
@@ -3180,7 +3189,7 @@ bool Glide::update(float duration)
 					bool negative = rand() % 2;
 					if (negative)
 						mTargetRoll = -mTargetRoll;
-					std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
+					//std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
 					return true;
 				}
 			}
@@ -3195,7 +3204,7 @@ bool Glide::update(float duration)
 		float pitchshift = .1 / (.2 / duration);
 		if (mPitchCounter > 0.0 && !mPitchReturn)
 		{
-			std::cout << "pitch down" << std::endl;
+			//std::cout << "pitch down" << std::endl;
 			mCameraPitch += pitchshift;
 			mPitchCounter -= pitchshift;
 		}
@@ -3204,7 +3213,7 @@ bool Glide::update(float duration)
 			mPitchReturn = true;
 			if (mPitchCounter < .1)
 			{
-				std::cout << "pitch up" << std::endl;
+				//std::cout << "pitch up" << std::endl;
 				mCameraPitch -= pitchshift;
 				mPitchCounter += pitchshift;
 			}
@@ -3219,7 +3228,7 @@ bool Glide::update(float duration)
 		
 	MWBase::Environment::get().getWorld()->rotateObject(mPtr, mCameraPitch, getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
 	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
-	std::cout << mCameraPitch << std::endl;
+	//std::cout << mCameraPitch << std::endl;
 	return true;
 }
 

@@ -253,6 +253,8 @@ class Glide : public MWMechanics::CharacterAction
 
 	bool mLastFrameWasDescending;
 
+	float mLastDescentSpeed;
+
 	public :
 
 		Glide(MWWorld::Ptr ptr);
