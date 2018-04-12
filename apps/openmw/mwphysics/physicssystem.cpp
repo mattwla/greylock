@@ -516,10 +516,23 @@ namespace MWPhysics
 				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlide))
 				{
 					if (!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlideDescent))
-						inertia.z() += time * -50.7; //-627.2f; //gravity?
-						//slowFall = .98;
-					/*else
-						slowFall = .98;*/
+					{
+						if (inertia.z() < -200.0f)
+							inertia.z() += time * 1200.7; //-627.2f; //gravity?
+						else if (inertia.z() > -210.0f)
+							inertia.z() += time * -980.7;
+					}
+					else
+					{
+						if (inertia.z() < -400.0f)
+							inertia.z() += time * 1200.7; //-627.2f; //gravity?
+						else if (inertia.z() > -410.0f)
+							inertia.z() += time * -980.7;
+					}
+					inertia.x() = 0.0f;
+					inertia.y() = 0.0f;
+						
+					
 				}
 				else
 					inertia.z() += time * -980.7; //-627.2f; //gravity?

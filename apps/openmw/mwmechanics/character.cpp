@@ -2997,6 +2997,8 @@ Glide::Glide(MWWorld::Ptr ptr)
 	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlide);
 	mTiltState = RANDOM_DRIFT_RETURN;
 	mDriftTimer = 10.0;
+	mPitchCounter = 0.0;
+	mLastFrameWasDescending = false;
 
 }
 
@@ -3009,8 +3011,9 @@ bool Glide::update(float duration)
 {
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
-	float forwardstrength = 5000.0f / (.25 / duration);
+	float forwardstrength = 0.0f;
 	bool inDescent = false;
+	bool continuingDescent = false;
 	
 		
 		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
@@ -3024,12 +3027,25 @@ bool Glide::update(float duration)
 	}
 	if (movement.mWallGrabClimb)
 	{
-		forwardstrength *= 2.0;
+		//forwardstrength *= 2.0;
+		forwardstrength = 5000.0f / (.25 / duration);
 		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
 		inDescent = true;
+		if (mLastFrameWasDescending)
+			continuingDescent = true;
+		else
+		{
+			mLastFrameWasDescending = true;
+			mPitchCounter = .1f;
+			mPitchReturn = false;
+		}
+
 	}
 	else
+	{
 		MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlideDescent);
+		mLastFrameWasDescending = false;
+	}
 	if (movement.mWallGrabSlide > 0)
 	{
 		mTiltState = PLAYER_CONTROLLED;
@@ -3176,9 +3192,27 @@ bool Glide::update(float duration)
 	direction.y() = forwardstrength * 10;
 	if (inDescent)
 	{
-		if (mCameraPitch < 1.08)
-			mCameraPitch += .001 / duration;
+		float pitchshift = .1 / (.2 / duration);
+		if (mPitchCounter > 0.0 && !mPitchReturn)
+		{
+			std::cout << "pitch down" << std::endl;
+			mCameraPitch += pitchshift;
+			mPitchCounter -= pitchshift;
+		}
+		else
+		{
+			mPitchReturn = true;
+			if (mPitchCounter < .1)
+			{
+				std::cout << "pitch up" << std::endl;
+				mCameraPitch -= pitchshift;
+				mPitchCounter += pitchshift;
+			}
+		}
+		/*if (mCameraPitch < 1.08)
+			mCameraPitch += .001 / duration;*/
 	}
+
 	/*else if (mCameraPitch > .2)
 		mCameraPitch -= .001 / duration;*/
 		

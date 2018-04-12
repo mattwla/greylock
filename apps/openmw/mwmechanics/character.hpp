@@ -247,6 +247,12 @@ class Glide : public MWMechanics::CharacterAction
 
 	float mCameraPitch;
 
+	float mPitchCounter;
+
+	bool mPitchReturn;
+
+	bool mLastFrameWasDescending;
+
 	public :
 
 		Glide(MWWorld::Ptr ptr);
