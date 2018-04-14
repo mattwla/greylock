@@ -3,8 +3,10 @@
 
 #include "../mwbase/lifemanager.hpp"
 #include "../mwbase/aischedulemanager.hpp"
+#include "goap.hpp"
 
 #include "../mwworld/ptr.hpp"
+
 
 #include <string>
 
