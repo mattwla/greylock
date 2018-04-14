@@ -119,7 +119,7 @@ statusmanagerimp
 )
 
 add_openmw_dir (gllifemanager
-lifemanagerimp
+lifemanagerimp goap astargoap
 )
 
 add_openmw_dir (glsmartentities
