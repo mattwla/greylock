@@ -26,7 +26,7 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 			mDesires.push_back(mEatBO);
 			WorldstateAtom ws("hungry", true);
 			mWorldState.push_back(ws);
-			GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "", -1);
+			GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
 			GOAPDesire desire(desirestatus, 1);
 			mGOAPDesires.push_back(desire);
 		}
@@ -75,7 +75,7 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
 	mGOAPData = new GOAPData();
 	mGOAPData->mInputs.push_back(statusinput);
-	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -100);
+	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
 	mGOAPData->mOutputs.push_back(statusoutput);
 	mGOAPData->mBehaviorObject = this;
 	

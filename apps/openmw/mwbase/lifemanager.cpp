@@ -38,7 +38,12 @@ namespace MWBase
 		//std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
 		
 		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
-		prioritizeDesires(GOAPDesires);
+		if (GOAPDesires.size() > 0)
+		{
+			prioritizeDesires(GOAPDesires);
+			//mSubBrainsManager->evaluateGOAPStatus(GOAPDesires[0].mStatus, mPtr);
+			mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
+		}
 		
 
 		//std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
@@ -197,13 +202,18 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 			break;
 	}
 	
-	
+	std::cout << "status" + status.mExtraData + "not true" << std::endl;
 	return false;
 }
 
 bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	//oh boy
+	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
+	{
+		(*it)->getMatchingBehaviorObjects(status);
+	}
+	
 	return false;
 }
 

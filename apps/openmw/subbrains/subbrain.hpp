@@ -103,6 +103,8 @@ namespace MWBase {
 		std::string mExtraData;
 		int mAmount;
 
+		bool operator==(GOAPStatus status);
+
 		GOAPStatus::GOAPStatus()
 		{
 
@@ -191,6 +193,9 @@ namespace MWBase {
 		{
 			return mWorldState;
 		}
+
+		//Return BOs that have matching output, for now only BOs that totally meet needs
+		std::vector<BehaviorObject> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
 
