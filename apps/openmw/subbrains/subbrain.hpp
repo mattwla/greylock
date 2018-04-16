@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "../mwworld/ptr.hpp"
+#include "../gllifemanager/goap.hpp"
 
 namespace MWBase {
 	class Life;
@@ -92,8 +93,9 @@ namespace MWBase {
 	struct GOAPStatus
 	{
 		enum StatusType {
-			HAS_IN_INVENTORY = 0,
+			HAS_ID_IN_INVENTORY = 0,
 			VITALS = 1,
+			HAS_OBJECT_STATUS_IN_INVENTORY = 2
 
 		};
 
@@ -101,12 +103,37 @@ namespace MWBase {
 		std::string mExtraData;
 		int mAmount;
 
+		GOAPStatus::GOAPStatus()
+		{
+
+		};
+
 		GOAPStatus::GOAPStatus(StatusType type, std::string extradata, int amount)
 		{
 			mStatusType = type;
 			mExtraData = extradata;
 			mAmount = amount;
 		};
+
+		
+	};
+
+	struct GOAPDesire
+	{
+
+		MWBase::GOAPStatus mStatus;
+		int mValence;
+		BehaviorObject * mIntentionPlan;
+		bool mIsIntention;
+
+		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)
+		{
+			mStatus = stat;
+			mValence = val;
+			mIntentionPlan = 0;
+			mIsIntention = false;
+		}
+
 	};
 		
 
@@ -126,7 +153,11 @@ namespace MWBase {
 		std::vector<BehaviorObject*> mDesires;
 		//Desires
 
+		std::vector<GOAPDesire> mGOAPDesires;
+
 		std::vector<GOAPData*> mGOAPNodes;
+
+		std::vector<WorldstateAtom> mWorldState;
 
 		
 		//Intentions
@@ -146,9 +177,19 @@ namespace MWBase {
 			return mDesires;
 		};
 
+		std::vector<GOAPDesire> getGOAPDesires()
+		{
+			return mGOAPDesires;
+		};
+
 		std::vector<GOAPData*> getGOAPNodes()
 		{
 			return mGOAPNodes;
+		}
+
+		std::vector<WorldstateAtom> getWorldstate()
+		{
+			return mWorldState;
 		}
 
 		virtual void getDebugInfo() = 0;
@@ -156,7 +197,6 @@ namespace MWBase {
 	};
 
 }
-#include <string>
 
 
 #endif

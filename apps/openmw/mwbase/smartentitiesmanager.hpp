@@ -82,6 +82,8 @@ namespace MWBase
 		void ping();
 		
 		void debugInfo();
+
+		bool hasStatus(std::string status);
 		
 		int getPings();
 		

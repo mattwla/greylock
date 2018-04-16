@@ -19,6 +19,16 @@ extern "C"
 
 typedef int64_t bfield_t;
 
+struct WorldstateAtom {
+	const char* mTag;
+	bool mValue;
+
+	WorldstateAtom(const char* tag, bool val) {
+		mTag = tag;
+		mValue = val;
+	}
+};
+
 struct worldstate_t {
 	bfield_t values;	//!< Values for atoms.
 	bfield_t dontcare;	//!< Mask for atoms that do not matter.

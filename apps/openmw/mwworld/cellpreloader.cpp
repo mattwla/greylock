@@ -227,7 +227,7 @@ namespace MWWorld
 
     void CellPreloader::preload(CellStore *cell, double timestamp)
     {
-		std::cout << "preloaddan" << std::endl;
+		//std::cout << "preloaddan" << std::endl;
 		
 		if (!mWorkQueue)
         {

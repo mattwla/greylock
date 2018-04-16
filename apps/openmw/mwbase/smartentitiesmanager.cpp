@@ -349,6 +349,18 @@ void MWBase::SmartEntityInstance::debugInfo()
 	}
 }
 
+bool MWBase::SmartEntityInstance::hasStatus(std::string status)
+{
+	std::vector<std::string>::iterator it = mStatusList.begin();
+	while (it != mStatusList.end())
+	{
+		if (*it == status)
+			return true;
+	}
+
+	return false;
+}
+
 int MWBase::SmartEntityInstance::getPings()
 {
 	return mPingCount;

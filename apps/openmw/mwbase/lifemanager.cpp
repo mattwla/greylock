@@ -6,8 +6,12 @@
 #include "../subbrains/subbrainhunger.hpp"
 #include "../subbrains/subbrainget.hpp"
 #include "../subbrains/subbraininventory.hpp"
+#include "../mwworld/inventorystore.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
+#include "../gllifemanager/goap.hpp"
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include "../mwworld/class.hpp"
 
 
 namespace MWBase
@@ -22,6 +26,7 @@ namespace MWBase
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
 		mSubBrainsManager->logDesires();
+		mSubBrainsManager->logWorldstate();
 		//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
 	}
 
@@ -30,18 +35,25 @@ namespace MWBase
 		metabolize(duration);
 		mAwareness->refresh();
 		mSubBrainsManager->calculate(mAwareness);
-		std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
-		std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
+		//std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
+		
+		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
+		prioritizeDesires(GOAPDesires);
+		
+
+		//std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
+		
+		//std::vector<WorldstateAtom> worldstate = mSubBrainsManager->getWorldstate();
 		//extract desires, put into desireprioritizer
 
-		std::vector<GOAPData*> GOAPNodes = mSubBrainsManager->getGOAPNodes();
+		//std::vector<GOAPData*> GOAPNodes = mSubBrainsManager->getGOAPNodes();
 		//extract BONodes, put into GOAP
 		
 	}
 
 	void Life::metabolize(float duration)
 	{
-		mVitals.mHunger += duration / 1000.0f;
+		mVitals.mHunger += duration / 300.0f;
 		mVitals.mSleepiness += duration / 2000.f;
 	}
 
@@ -49,6 +61,13 @@ namespace MWBase
 	{
 		return std::vector<BehaviorObject*>();
 	}
+
+	void Life::prioritizeDesires(std::vector<GOAPDesire>& desires)
+	{
+		desires;
+	}
+
+
 
 
 
@@ -163,10 +182,54 @@ namespace MWBase
 
 //SUB BRAINS
 
+bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
+{
+	switch (status.mStatusType) {
+		case MWBase::GOAPStatus::HAS_ID_IN_INVENTORY:
+			//evaluate inventory for specific id
+			break;
+		case MWBase::GOAPStatus::VITALS:
+			//evaluate vitals
+			break;
+		case MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY:
+			//evalualte if an object with a certain status is in inventory
+			return hasObjectStatusInInventory(status, ptr);
+			break;
+	}
+	
+	
+	return false;
+}
+
+bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
+{
+	//oh boy
+	return false;
+}
+
+bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
+{
+	auto sem = MWBase::Environment::get().getSmartEntitiesManager();
+
+	MWWorld::InventoryStore &inventoryStore = ptr.getClass().getInventoryStore(ptr);
+	for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)
+	{
+		if (sem->hasSmartInstance(*it))
+		{
+			auto sei = sem->getSmartEntityInstance(*it);
+			if (sei->hasStatus(status.mExtraData))
+				return true;
+			
+		}
+	}
+	return false;
+}
+
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
 	mDesires.clear();
 	mGOAPNodes.clear();
+	mWorldState.clear();
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
@@ -189,6 +252,20 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 		{
 			mDesires.push_back(*itb);
 		}
+
+		std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
+		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
+		{
+			mGOAPDesires.push_back(*gdl);
+		}
+
+		//Collect worldstate from subbrain, add to list.
+		std::vector<WorldstateAtom> worldstate = (*it)->getWorldstate();
+		for (std::vector<WorldstateAtom>::iterator itw = worldstate.begin(); itw != worldstate.end(); itw++)
+		{
+			mWorldState.push_back(*itw);
+		}
+
 	
 	}
 
@@ -230,9 +307,42 @@ void MWBase::SubBrainsManager::logDesires()
 
 }
 
+void MWBase::SubBrainsManager::logWorldstate()
+{
+
+	if (mWorldState.size() == 0)
+	{
+		std::cout << "no world state" << std::endl;
+		return;
+	}
+	std::cout << "WorldState:" << std::endl;
+	typedef std::vector<WorldstateAtom> wslist;
+	for (wslist::iterator it = mWorldState.begin(); it != mWorldState.end(); it++)
+	{
+		std::string value;
+		if (it->mValue)
+			value = "True";
+		else
+			value = "False";
+		std::cout << it->mTag << std::endl;
+		std::cout << value << std::endl;
+	}
+
+}
+
 std::vector<MWBase::BehaviorObject*> MWBase::SubBrainsManager::getDesires()
 {
 	return mDesires;
+}
+
+std::vector<MWBase::GOAPDesire> MWBase::SubBrainsManager::getGOAPDesires()
+{
+	return mGOAPDesires;
+}
+
+std::vector<WorldstateAtom> MWBase::SubBrainsManager::getWorldstate()
+{
+	return std::vector<WorldstateAtom>();
 }
 
 

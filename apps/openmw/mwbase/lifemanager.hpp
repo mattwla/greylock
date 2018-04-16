@@ -21,6 +21,7 @@
 #include "../mwtasks/life.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../subbrains/subbrain.hpp"
+#include "../gllifemanager/goap.hpp"
 
 
 
@@ -53,6 +54,8 @@ namespace Loading
 {
 	class Listener;
 }
+
+
 
 
 namespace MWBase
@@ -94,11 +97,22 @@ namespace MWBase
 		std::vector<BehaviorObject*> mDesires;
 		//Desires, recommended BOs from the subbrains
 
+		std::vector<GOAPDesire> mGOAPDesires;
+
 		std::vector<GOAPData*> mGOAPNodes;
+
+		std::vector<WorldstateAtom> mWorldState;
 
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
 
 	public:
+
+		//takes in a goap status and an npc, returns true if status is met and false otherwise
+		bool evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		bool createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
 		void calculate(MWBase::Awareness * awareness);
 
@@ -108,7 +122,13 @@ namespace MWBase
 
 		void logDesires();
 
+		void logWorldstate();
+
 		std::vector<BehaviorObject*> getDesires();
+
+		std::vector<GOAPDesire> getGOAPDesires();
+
+		std::vector<WorldstateAtom> getWorldstate();
 
 		std::vector<GOAPData*> getGOAPNodes()
 		{
@@ -168,6 +188,8 @@ namespace MWBase
 		void metabolize(float duration);
 
 		std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
+
+		void prioritizeDesires(std::vector<GOAPDesire> &desires);
 
 
 	};
