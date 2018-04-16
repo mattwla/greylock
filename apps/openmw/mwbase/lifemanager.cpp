@@ -187,6 +187,29 @@ namespace MWBase
 
 //SUB BRAINS
 
+void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>& planlist, std::vector<IntentionPlan>& completelist, MWWorld::Ptr ptr)
+{
+	typedef std::vector<IntentionPlan> plans;
+	plans newplanlist;
+
+	for (plans::iterator it = planlist.begin(); it != planlist.end(); it++)
+	{
+		GOAPData * currentplan = it->mGOAPDataList.back();
+		bool plancomplete = evaluateGOAPStatus(currentplan->mInputs[0], ptr); //currently only checks 1 status;
+		if (plancomplete)
+		{
+			completelist.push_back(*it);
+		}
+		else
+		{
+			newplanlist.push_back(*it);
+		}
+	}
+
+	planlist = newplanlist;
+
+}
+
 bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	switch (status.mStatusType) {
@@ -208,18 +231,75 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 
 bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
-	//oh boy
-	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
+	
+	typedef std::vector<IntentionPlan> planlist;
+	planlist possibleplans;
+	planlist completeplans;
+
+	typedef std::vector<GOAPData*> nodechain;
+	std::vector<nodechain> nodechainlist;
+	
+	//Seed the list, ask all subbrains if they have a behavior object that can meet our need.
+	nodechain nc = querySubBrainsForGOAPMatches(status);
+	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
 	{
-		(*it)->getMatchingBehaviorObjects(status);
+		IntentionPlan plan;
+		plan.mGOAPDataList.push_back(*itnc);
 	}
+
+	seperateCompletePlans(possibleplans, completeplans, ptr);
+
+	//Now we have a list of BOs that can meet our needs... but those BOs in turn might have needs that are not met.
+	//Iterate through the list, and whenever a BO has more than one way of being met, copy the nodechain and push it back, with a new branch for each possible method
+
+	unsigned int idx = 0;
+
+	while (possibleplans.size() > 0)
+	{
+
+
+		seperateCompletePlans(possibleplans, completeplans, ptr);
+
+	}
+
+
+
+	//see if any are complete, if so move to a special complete vector
+	//For rest, run them through matching thing again.
 	
 	return false;
+}
+
+std::vector<MWBase::GOAPData*> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
+{
+	typedef std::vector<MWBase::GOAPData*> goapdatalist;
+	goapdatalist result;
+
+	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
+	{
+		//ask the subbrain what behavior objects it has that can meet this status
+		goapdatalist nc = (*it)->getMatchingBehaviorObjects(status);
+		
+		//push them all into our result
+		for (goapdatalist::iterator itg = nc.begin(); itg != nc.end(); itg++)
+		{
+			result.push_back(*itg);
+		}	
+
+		//onto next subbrain
+	}
+
+
+	return result;
 }
 
 bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	auto sem = MWBase::Environment::get().getSmartEntitiesManager();
+
+
+
+
 
 	MWWorld::InventoryStore &inventoryStore = ptr.getClass().getInventoryStore(ptr);
 	for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)

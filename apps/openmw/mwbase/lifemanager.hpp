@@ -88,6 +88,13 @@ namespace MWBase
 		void loadState(std::string);
 	};
 
+	struct IntentionPlan
+	{
+		MWBase::GOAPStatus mDesiredState;
+		std::vector<GOAPData*> mGOAPDataList;
+		int mCurrentStep;
+	};
+
 	class SubBrainsManager
 	{
 		std::vector<SubBrain*> mSubBrains;
@@ -103,14 +110,20 @@ namespace MWBase
 
 		std::vector<WorldstateAtom> mWorldState;
 
+		//void seperateCompletePlans(std::vector<IntentionPlan> & planlist, std::vector<IntentionPlan> & completelist);
+
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
 
 	public:
+
+		void seperateCompletePlans(std::vector<IntentionPlan>& planlist, std::vector<IntentionPlan>& completelist, MWWorld::Ptr ptr);
 
 		//takes in a goap status and an npc, returns true if status is met and false otherwise
 		bool evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
 		bool createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		std::vector<GOAPData*> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
 
 		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 

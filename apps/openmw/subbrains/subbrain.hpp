@@ -195,7 +195,7 @@ namespace MWBase {
 		}
 
 		//Return BOs that have matching output, for now only BOs that totally meet needs
-		std::vector<BehaviorObject> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
 
