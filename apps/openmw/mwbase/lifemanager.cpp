@@ -252,14 +252,24 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 	//Now we have a list of BOs that can meet our needs... but those BOs in turn might have needs that are not met.
 	//Iterate through the list, and whenever a BO has more than one way of being met, copy the nodechain and push it back, with a new branch for each possible method
 
-	unsigned int idx = 0;
-
 	while (possibleplans.size() > 0)
 	{
+		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first
+		for (nodechain::iterator itb = possiblepaths.begin(); itb != possiblepaths.end(); itb++)
+		{
+			//copy plan
+			IntentionPlan copiedplan = possibleplans[0];
+			copiedplan.mGOAPDataList.push_back(*itb);
+			possibleplans.push_back(copiedplan);
+		}
+
+		//erase old plan, also serves to trim deadend plans
+		possibleplans.erase(possibleplans.begin());
 
 
+
+		//remove complete plans
 		seperateCompletePlans(possibleplans, completeplans, ptr);
-
 	}
 
 
