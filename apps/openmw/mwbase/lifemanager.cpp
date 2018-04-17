@@ -231,7 +231,7 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 
 bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
-	
+	std::cout << "attempting to create intention" << std::endl;
 	typedef std::vector<IntentionPlan> planlist;
 	planlist possibleplans;
 	planlist completeplans;
@@ -247,14 +247,28 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 		plan.mGOAPDataList.push_back(*itnc);
 	}
 
+
+	if (possibleplans.size() == 0)
+	{
+		std::cout << "could not start plan to meet goal: " + status.mExtraData << std::endl;
+	}
+
 	seperateCompletePlans(possibleplans, completeplans, ptr);
 
 	//Now we have a list of BOs that can meet our needs... but those BOs in turn might have needs that are not met.
 	//Iterate through the list, and whenever a BO has more than one way of being met, copy the nodechain and push it back, with a new branch for each possible method
 
+	
+
 	while (possibleplans.size() > 0)
 	{
+		
 		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first
+		if (possiblepaths.size() == 0)
+		{
+			std::cout << "dead end plan" << std::endl;
+			std::cout << possibleplans[0].mDesiredState.mExtraData << std::endl;
+		}
 		for (nodechain::iterator itb = possiblepaths.begin(); itb != possiblepaths.end(); itb++)
 		{
 			//copy plan

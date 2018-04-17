@@ -9,7 +9,7 @@ std::vector<MWBase::GOAPData*> MWBase::SubBrain::getMatchingBehaviorObjects(MWBa
 	{
 		if ((*it)->mOutputs[0] == status)
 		{
-			std::cout << "found matching BO node" << std::endl;
+			//std::cout << "found matching BO node" << std::endl;
 			matchingnodes.push_back(*it);
 		}
 	}
