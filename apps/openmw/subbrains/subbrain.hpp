@@ -33,6 +33,7 @@ namespace MWBase {
 		statusstack mInputs;
 		statusstack mOutputs;
 		MWBase::BehaviorObject * mBehaviorObject;
+		std::string mId; // for debugging.
 		//check preconditions.... is this the "expanding node" funcitonality I am thinking about? Does it call the subbrain? 
 		//Maybe BOs don't NEED to be connected to subbrains.
 		//getcost
@@ -95,7 +96,8 @@ namespace MWBase {
 		enum StatusType {
 			HAS_ID_IN_INVENTORY = 0,
 			VITALS = 1,
-			HAS_OBJECT_STATUS_IN_INVENTORY = 2
+			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
+			AWARE_OF_OBJECT_WITH_STATUS = 3
 
 		};
 
@@ -195,7 +197,7 @@ namespace MWBase {
 		}
 
 		//Return BOs that have matching output, for now only BOs that totally meet needs
-		std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		virtual std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
 

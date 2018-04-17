@@ -53,6 +53,13 @@ MWBase::SensoryLinkStore * MWBase::Awareness::getSensoryLinkStore()
 	return mSensoryLinkStore;
 }
 
+bool MWBase::SensoryLinkStore::hasLinkWithStatus(std::string status)
+{
+	
+	
+	return false;
+}
+
 void MWBase::SensoryLinkStore::addSensoryLink(SensoryLink sensorylink)
 {
 	mCurrentSensoryLinks.push_back(sensorylink);

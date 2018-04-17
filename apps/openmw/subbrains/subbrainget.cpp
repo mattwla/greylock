@@ -6,6 +6,8 @@
 MWBase::SubBrainGet::SubBrainGet(MWBase::Life * life)
 {
 	mOwnerLife = life;
+	mGetFromWorldBO = new BOGetFromWorld();	
+	mGOAPNodes.push_back(mGetFromWorldBO->getGOAPNode());
 }
 
 void MWBase::SubBrainGet::calculate(MWBase::Awareness * awareness)
@@ -31,6 +33,45 @@ void MWBase::SubBrainGet::getDebugInfo()
 {
 }
 
-void MWBase::BOGet::getDebugInfo()
+std::vector < MWBase:: GOAPData* > MWBase::SubBrainGet::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 {
+	
+	std::vector<GOAPData*> result;
+	
+	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY)
+	{
+
+		std::shared_ptr<GOAPData> node(new GOAPData);
+		node->mBehaviorObject = mGetFromWorldBO;
+
+		MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+		node->mInputs.push_back(statusinput);
+
+		MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+		node->mOutputs.push_back(statusoutput);
+
+		node->mId = "Get From World Node";
+
+		result.push_back(node.get());
+
+	}
+	return result;
+}
+
+void MWBase::BOGetFromWorld::getDebugInfo()
+{
+}
+
+MWBase::BOGetFromWorld::BOGetFromWorld()
+{
+	mIsDesire = false;
+	std::cout << "made GetFromWorld BO" << std::endl;
+	mValence = 1;
+	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
+	mGOAPData = new GOAPData();
+	mGOAPData->mInputs.push_back(statusinput);
+	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
+	mGOAPData->mOutputs.push_back(statusoutput);
+	mGOAPData->mBehaviorObject = this;
+	mGOAPData->mId = "BO GET FROM WORLD";
 }

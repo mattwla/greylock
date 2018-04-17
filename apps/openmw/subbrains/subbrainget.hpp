@@ -28,14 +28,21 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
+		BehaviorObject * mGetFromWorldBO;
+
+		virtual std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+
 	};
 
-	class BOGet : public MWBase::BehaviorObject {
+	class BOGetFromWorld : public MWBase::BehaviorObject {
 
 	public:
+
+		BOGetFromWorld::BOGetFromWorld();
+
 		virtual void getDebugInfo();
 
-		virtual ~BOGet()
+		virtual ~BOGetFromWorld()
 		{
 			
 		};

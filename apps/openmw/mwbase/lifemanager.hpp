@@ -110,6 +110,8 @@ namespace MWBase
 
 		std::vector<WorldstateAtom> mWorldState;
 
+		MWBase::Life * mLife;
+
 		//void seperateCompletePlans(std::vector<IntentionPlan> & planlist, std::vector<IntentionPlan> & completelist);
 
 		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
@@ -126,6 +128,8 @@ namespace MWBase
 		std::vector<GOAPData*> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
 
 		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		bool hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr);
 
 		void calculate(MWBase::Awareness * awareness);
 

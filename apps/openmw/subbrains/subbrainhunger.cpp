@@ -78,6 +78,7 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
 	mGOAPData->mOutputs.push_back(statusoutput);
 	mGOAPData->mBehaviorObject = this;
+	mGOAPData->mId = "BO EAT";
 	
 
 }

@@ -223,6 +223,11 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 			//evalualte if an object with a certain status is in inventory
 			return hasObjectStatusInInventory(status, ptr);
 			break;
+		case MWBase::GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS:
+			//evaluate if npc has object in its awareness
+			//return
+			return hadObjectStatusInAwareness(status.mExtraData, ptr);
+			break;
 	}
 	
 	std::cout << "status" + status.mExtraData + "not true" << std::endl;
@@ -339,6 +344,25 @@ bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus sta
 	return false;
 }
 
+bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr)
+{
+	typedef std::vector<SensoryLink> linklist;
+	MWBase::SensoryLinkStore * sensorystore = mLife->mAwareness->getSensoryLinkStore();
+	std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
+
+	for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
+	{
+		if (it->mSEInstance->hasStatus(status))
+		{
+			return true;
+		}
+	}
+	
+
+	
+	return false;
+}
+
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
 	mDesires.clear();
@@ -387,6 +411,7 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 
 MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 {
+	mLife = life;
 	//initialize default subbrains, this will have to be done on a per npc basis one day.
 	SubBrain * sb = new SubBrainHunger(life);
 	mSubBrains.push_back(sb);

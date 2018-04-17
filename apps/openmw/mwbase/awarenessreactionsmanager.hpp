@@ -78,6 +78,8 @@ namespace MWBase
 	
 		std::vector<SensoryLink> mSensoryLinksInMemory;
 
+		bool hasLinkWithStatus(std::string status);
+
 		void addSensoryLink(SensoryLink sensorylink);
 
 		~SensoryLinkStore();
