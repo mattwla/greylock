@@ -33,10 +33,10 @@ void MWBase::SubBrainGet::getDebugInfo()
 {
 }
 
-std::vector < MWBase:: GOAPData* > MWBase::SubBrainGet::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
+std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 {
 	
-	std::vector<GOAPData*> result;
+	std::vector<std::shared_ptr<GOAPData>> result;
 	
 	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY)
 	{
@@ -52,7 +52,7 @@ std::vector < MWBase:: GOAPData* > MWBase::SubBrainGet::getMatchingBehaviorObjec
 
 		node->mId = "Get From World Node";
 
-		result.push_back(node.get());
+		result.push_back(node);
 
 	}
 	return result;
@@ -68,7 +68,9 @@ MWBase::BOGetFromWorld::BOGetFromWorld()
 	std::cout << "made GetFromWorld BO" << std::endl;
 	mValence = 1;
 	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
-	mGOAPData = new GOAPData();
+	std::shared_ptr<GOAPData> gd(new GOAPData());
+	
+	mGOAPData = gd;
 	mGOAPData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
 	mGOAPData->mOutputs.push_back(statusoutput);

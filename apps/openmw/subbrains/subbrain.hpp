@@ -3,6 +3,7 @@
 #include <components/esm/defs.hpp>
 #include <string>
 #include <vector>
+#include <memory>
 #include "../mwworld/ptr.hpp"
 #include "../gllifemanager/goap.hpp"
 
@@ -61,7 +62,7 @@ namespace MWBase {
 		BehaviorObject * mSubBehavior;
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
-		GOAPData * mGOAPData;
+		std::shared_ptr<GOAPData> mGOAPData;
 
 	public:
 	/*	bool isDesire()
@@ -75,7 +76,7 @@ namespace MWBase {
 
 		};
 
-		GOAPData* getGOAPNode() {
+		std::shared_ptr<GOAPData> getGOAPNode() {
 			return mGOAPData;
 		}
 
@@ -159,7 +160,9 @@ namespace MWBase {
 
 		std::vector<GOAPDesire> mGOAPDesires;
 
-		std::vector<GOAPData*> mGOAPNodes;
+		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
+
+	
 
 		std::vector<WorldstateAtom> mWorldState;
 
@@ -186,7 +189,7 @@ namespace MWBase {
 			return mGOAPDesires;
 		};
 
-		std::vector<GOAPData*> getGOAPNodes()
+		std::vector<std::shared_ptr<GOAPData>> getGOAPNodes()
 		{
 			return mGOAPNodes;
 		}
@@ -197,7 +200,7 @@ namespace MWBase {
 		}
 
 		//Return BOs that have matching output, for now only BOs that totally meet needs
-		virtual std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
 

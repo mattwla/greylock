@@ -79,9 +79,9 @@ namespace MWBase
 
 	struct Vitals 
 	{
-		float mHunger;
+		float mHunger = 0.0f;
 		
-		float mSleepiness;
+		float mSleepiness = 0.0f;
 
 		std::string getSaveState();
 		
@@ -91,7 +91,7 @@ namespace MWBase
 	struct IntentionPlan
 	{
 		MWBase::GOAPStatus mDesiredState;
-		std::vector<GOAPData*> mGOAPDataList;
+		std::vector<std::shared_ptr<GOAPData>> mGOAPDataList;
 		int mCurrentStep;
 	};
 
@@ -106,7 +106,7 @@ namespace MWBase
 
 		std::vector<GOAPDesire> mGOAPDesires;
 
-		std::vector<GOAPData*> mGOAPNodes;
+		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
 
 		std::vector<WorldstateAtom> mWorldState;
 
@@ -125,7 +125,7 @@ namespace MWBase
 
 		bool createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
-		std::vector<GOAPData*> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
+		std::vector<std::shared_ptr<GOAPData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
 
 		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
@@ -147,7 +147,7 @@ namespace MWBase
 
 		std::vector<WorldstateAtom> getWorldstate();
 
-		std::vector<GOAPData*> getGOAPNodes()
+		std::vector<std::shared_ptr<GOAPData>> getGOAPNodes()
 		{
 			return mGOAPNodes;
 		}

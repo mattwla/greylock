@@ -1,11 +1,12 @@
 #include "subbrain.hpp"
+#include <memory>
 
-std::vector<MWBase::GOAPData*> MWBase::SubBrain::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
+std::vector<std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrain::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 {
-	std::vector<GOAPData*> matchingnodes;
+	std::vector<std::shared_ptr<GOAPData>> matchingnodes;
 	
 	
-	for (std::vector<MWBase::GOAPData*>::iterator it = mGOAPNodes.begin(); it != mGOAPNodes.end(); it++)
+	for (std::vector<std::shared_ptr<MWBase::GOAPData>>::iterator it = mGOAPNodes.begin(); it != mGOAPNodes.end(); it++)
 	{
 		if ((*it)->mOutputs[0] == status)
 		{

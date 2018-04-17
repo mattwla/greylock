@@ -30,7 +30,7 @@ namespace MWBase {
 
 		BehaviorObject * mGetFromWorldBO;
 
-		virtual std::vector<GOAPData*> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 	};
 

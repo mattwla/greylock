@@ -194,7 +194,7 @@ void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>&
 
 	for (plans::iterator it = planlist.begin(); it != planlist.end(); it++)
 	{
-		GOAPData * currentplan = it->mGOAPDataList.back();
+		std::shared_ptr<GOAPData> currentplan = it->mGOAPDataList.back();
 		bool plancomplete = evaluateGOAPStatus(currentplan->mInputs[0], ptr); //currently only checks 1 status;
 		if (plancomplete)
 		{
@@ -236,12 +236,12 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 
 bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
-	std::cout << "attempting to create intention" << std::endl;
+	//std::cout << "attempting to create intention" << std::endl;
 	typedef std::vector<IntentionPlan> planlist;
 	planlist possibleplans;
 	planlist completeplans;
 
-	typedef std::vector<GOAPData*> nodechain;
+	typedef std::vector<std::shared_ptr<GOAPData>> nodechain;
 	std::vector<nodechain> nodechainlist;
 	
 	//Seed the list, ask all subbrains if they have a behavior object that can meet our need.
@@ -249,13 +249,15 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
 	{
 		IntentionPlan plan;
+		plan.mDesiredState = status;
 		plan.mGOAPDataList.push_back(*itnc);
+		possibleplans.push_back(plan);
 	}
 
 
 	if (possibleplans.size() == 0)
 	{
-		std::cout << "could not start plan to meet goal: " + status.mExtraData << std::endl;
+		//std::cout << "could not start plan to meet goal: " + status.mExtraData << std::endl;
 	}
 
 	seperateCompletePlans(possibleplans, completeplans, ptr);
@@ -271,8 +273,8 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first
 		if (possiblepaths.size() == 0)
 		{
-			std::cout << "dead end plan" << std::endl;
-			std::cout << possibleplans[0].mDesiredState.mExtraData << std::endl;
+			//std::cout << "dead end plan" << std::endl;
+			//std::cout << possibleplans[0].mDesiredState.mExtraData << std::endl;
 		}
 		for (nodechain::iterator itb = possiblepaths.begin(); itb != possiblepaths.end(); itb++)
 		{
@@ -299,9 +301,9 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 	return false;
 }
 
-std::vector<MWBase::GOAPData*> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
+std::vector<std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
 {
-	typedef std::vector<MWBase::GOAPData*> goapdatalist;
+	typedef std::vector<std::shared_ptr<MWBase::GOAPData>> goapdatalist;
 	goapdatalist result;
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
@@ -335,6 +337,8 @@ bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus sta
 	{
 		if (sem->hasSmartInstance(*it))
 		{
+			std::cout << "found matching SI" << std::endl;
+			std::cout << (it)->getCellRef().getRefId() << std::endl;
 			auto sei = sem->getSmartEntityInstance(*it);
 			if (sei->hasStatus(status.mExtraData))
 				return true;
@@ -376,8 +380,8 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 		(*it)->calculate(awareness);
 		
 		//collect GOAPNodes from subbrain, add to list.
-		std::vector<GOAPData*> goapnodes = (*it)->getGOAPNodes();
-		for (std::vector<GOAPData*>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
+		std::vector<std::shared_ptr<GOAPData>> goapnodes = (*it)->getGOAPNodes();
+		for (std::vector<std::shared_ptr<GOAPData>>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
 		{
 			mGOAPNodes.push_back(*itg);
 		}

@@ -73,7 +73,8 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	std::cout << "made eat BO" << std::endl;
 	mValence = valence;
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
-	mGOAPData = new GOAPData();
+	std::shared_ptr<GOAPData> gd(new GOAPData());
+	mGOAPData = gd;
 	mGOAPData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
 	mGOAPData->mOutputs.push_back(statusoutput);

@@ -310,7 +310,7 @@ void MWBase::SmartEntitiesManager::outputInSceneInstancesToLog()
 MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 	mSmartInstanceMap()
 {
-	mRuntimeRefNumTicker = 0;
+	mRuntimeRefNumTicker = 1;
 	std::cout << "=====>Built SEManager<======" << std::endl;
 	std::cout << "Initializing templates" << std::endl;
 	gatherSmartEntityTemplates();
