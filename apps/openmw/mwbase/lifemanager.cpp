@@ -28,6 +28,20 @@ namespace MWBase
 		mSubBrainsManager->logDesires();
 		mSubBrainsManager->logWorldstate();
 		//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
+
+		if (mHasIntention)
+		{
+			std::cout << "intention info" << std::endl;
+			unsigned int itx = 0;
+			while (itx < mCurrentIntentionPlan.mGOAPDataList.size())
+			{
+				std::cout << mCurrentIntentionPlan.mGOAPDataList[itx]->mId << std::endl;
+
+				itx++;
+			}
+		}
+		else
+			std::cout << "has no intention" << std::endl;
 	}
 
 	void Life::update(float duration)
@@ -38,11 +52,17 @@ namespace MWBase
 		//std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
 		
 		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
-		if (GOAPDesires.size() > 0)
+		if (GOAPDesires.size() > 0 && !mHasIntention)
 		{
 			prioritizeDesires(GOAPDesires);
 			//mSubBrainsManager->evaluateGOAPStatus(GOAPDesires[0].mStatus, mPtr);
-			mCurrentIntentionPlan = mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
+			IntentionPlan newplan = mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
+			if (newplan.mPlanComplete)
+			{
+				mCurrentIntentionPlan = newplan;
+				mHasIntention = true;
+				std::cout << "I have an intention plan" << std::endl;
+			}
 		}
 		
 
