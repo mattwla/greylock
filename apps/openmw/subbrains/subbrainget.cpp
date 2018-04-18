@@ -2,9 +2,7 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
-#include "../mwmechanics/npcstats.hpp"
-#include "../mwmechanics/aitravel.hpp"
-#include "../mwworld/class.hpp"
+
 #include "../mwtasks/tasksmanagerimp.hpp"
 
 MWBase::SubBrainGet::SubBrainGet(MWBase::Life * life)
@@ -104,9 +102,9 @@ bool MWBase::SubBrainGet::InGrabbingRange(MWBase::SmartEntityInstance * sei)
 
 MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerptr)
 {
-	MWBase::JourneyManager * journeymanager;
+	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
 
-	if (inGrabbingDistance)
+	if (inGrabbingDistance())
 	{
 		std::cout << "im grabbing distance" << std::endl;
 		//grab
@@ -135,15 +133,6 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 
 
 
-	mOwnerPtr = ownerptr;
-	MWMechanics::AiSequence& seq = mOwnerPtr.getClass().getCreatureStats(mOwnerPtr).getAiSequence();
-	if ((seq.getTypeId() == -1 || seq.getTypeId() == 0))
-	{
-		auto pos = mSEITarget->getPtr().getRefData().getPosition();
-		seq.stack(MWMechanics::AiTravel(pos.pos[0], pos.pos[1], pos.pos[2]), mOwnerPtr);
-		std::cout << "attempting travel" << std::endl;
-	}
-
 //	mInJourney = mOwnerLife->mJourneyManager->requestNewJourney();
 	
 	
@@ -168,6 +157,7 @@ void MWBase::BOGetFromWorld::getDebugInfo()
 
 MWBase::BOGetFromWorld::BOGetFromWorld()
 {
+	mInJourney = false;
 	std::cout << "made GetFromWorld BO" << std::endl;
 	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
 	std::shared_ptr<GOAPData> gd(new GOAPData());
