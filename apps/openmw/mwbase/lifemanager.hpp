@@ -55,20 +55,8 @@ namespace Loading
 	class Listener;
 }
 
-
-
-
 namespace MWBase
 {
-
-
-	struct BehaviorIntentionQueue 
-	{
-		std::vector<BehaviorObject> mQueue;
-		int mCurrentFocus;
-		int mLastFocus;
-	};
-
 	struct BigFive 
 	{
 		int mOpenness;
@@ -81,11 +69,8 @@ namespace MWBase
 	struct Vitals 
 	{
 		float mHunger = 0.0f;
-		
 		float mSleepiness = 0.0f;
-
 		std::string getSaveState();
-		
 		void loadState(std::string);
 	};
 
@@ -100,55 +85,52 @@ namespace MWBase
 
 	class SubBrainsManager
 	{
-		std::vector<SubBrain*> mSubBrains;
-
-		//Beliefs, states from the subbrains, combined with sensorystore. Probe sensory store w/ status?
-
-		std::vector<BehaviorObject*> mDesires;
-		//Desires, recommended BOs from the subbrains
-
+		std::vector<SubBrain*> mSubBrains; //process objects in world, create goals to accomplish (desires), offer ways to solve problems (intentions)
 		std::vector<GOAPDesire> mGOAPDesires;
-
 		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
-
-		std::vector<WorldstateAtom> mWorldState;
-
 		MWBase::Life * mLife;
-
-		//void seperateCompletePlans(std::vector<IntentionPlan> & planlist, std::vector<IntentionPlan> & completelist);
-
-		//Intention... selected by the a higher order, life manager. Determined by selected desire + any GOAP plans the BO requests.
-
+		//std::vector<WorldstateAtom> mWorldState;
+	
+	
 	public:
-
-		void seperateCompletePlans(std::vector<IntentionPlan>& planlist, std::vector<IntentionPlan>& completelist, MWWorld::Ptr ptr);
-
-		//takes in a goap status and an npc, returns true if status is met and false otherwise
-		bool evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
-
-		IntentionPlan createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
-
-		std::vector<std::shared_ptr<GOAPData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
-
-		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
-
-		bool hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr);
-
-		void calculate(MWBase::Awareness * awareness);
 
 		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
 
+		//parses current plans to accomplish a given intention, seperates those that are ready to do vs those that need more planning
+		void seperateCompletePlans(std::vector<IntentionPlan>& planlist, std::vector<IntentionPlan>& completelist, MWWorld::Ptr ptr);
+
+		//takes in a goap status and an npc, returns true if input status is met and false otherwise
+		bool evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		//takes in an npc ptr and a status, returns true if the npc has an object w/ that status in their inventory
+		bool hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+		
+		//takes in an npc ptr and a status, returns true if npc has an object w/ that status in their awareness stores (they know of one that exists)
+		bool hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr);
+
+		//Given a desired status to achieve, creates a chain of behavior objects which can accomplish the task if run in sequence
+		IntentionPlan createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+
+		//Given a status, queries all the subrains for behavior objectas that can help make that status true
+		std::vector<std::shared_ptr<GOAPData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
+
+		//run every frame, lets subbrains calculate ways to react to world
+		void calculate(MWBase::Awareness * awareness);
+
+		//serializes all info in the sub brain manager, used for recording a savestate
 		std::vector<std::string> getSaveStates();
 
+		//debugging
 		void logDesires();
 
+		//debugging
 		void logWorldstate();
 
-		std::vector<BehaviorObject*> getDesires();
+		//std::vector<BehaviorObject*> getDesires();
 
 		std::vector<GOAPDesire> getGOAPDesires();
 
-		std::vector<WorldstateAtom> getWorldstate();
+		//std::vector<WorldstateAtom> getWorldstate();
 
 		std::vector<std::shared_ptr<GOAPData>> getGOAPNodes()
 		{
@@ -164,32 +146,37 @@ namespace MWBase
 	
 	struct Life
 	{
+		//id of npc who life belongs to, good for looking up outdated ptr
 		std::string mId;
 
-		int mRefNum;
+		//int mRefNum;
 
-		MWWorld::CellStore *mOwnerCell;
+		ESM::RefNum mRefNum;
 
+		//Not used now, perhaps potential solution for outdated ptrs in future
+		//MWWorld::CellStore *mOwnerCell;
+
+		//Awareness manager of npc, used to figure out what npc is aware of, and store things npc has seen in their memory
 		MWBase::Awareness *mAwareness;
 
+		//Calculated NPC reactions to world, hunger, desires, goals, the NPCs behavior essentially
 		MWBase::SubBrainsManager *mSubBrainsManager;
 
+		//ptr to npc
 		MWWorld::Ptr mPtr;
 
+		//NPCs personality
 		BigFive mBigFive;
 
+		//NPCs vitals, health, hunger, sleepiness, etc.
 		Vitals mVitals;
 
+		//Current plan NPC is working towards
 		IntentionPlan mCurrentIntentionPlan;
 
-		BehaviorIntentionQueue *mBIQueue;
-
+		//Does the NPC have an intention now? Should be FSM of THINKING, IN_ACTION, OR TRAVELLING
 		bool mHasIntention = false;
 
-
-
-
-		//IntentionList(Active BOs)
 
 	public:
 
@@ -197,13 +184,11 @@ namespace MWBase
 		{
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
-			mRefNum = mPtr.getCellRef().getRefNum().mIndex;
-			mOwnerCell = mPtr.getCell();
+			mRefNum = mPtr.getCellRef().getRefNum();
+			//mOwnerCell = mPtr.getCell();
 			mPtr.getBase()->mLife = this;
 			mAwareness = new MWBase::Awareness(mPtr);
 			mSubBrainsManager = new MWBase::SubBrainsManager(this);
-			mBIQueue = new BehaviorIntentionQueue();
-			
 		}
 
 		void getDebugInfo();
@@ -214,7 +199,7 @@ namespace MWBase
 
 		void metabolize(float duration);
 
-		std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
+		//std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
 
 		void prioritizeDesires(std::vector<GOAPDesire> &desires);
 

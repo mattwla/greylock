@@ -22,7 +22,7 @@ namespace MWBase
 	void Life::getDebugInfo()
 	{
 		std::cout << mId << std::endl;
-		std::cout << std::to_string(mRefNum) << std::endl;
+		//std::cout << std::to_string(mRefNum) << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
 		mSubBrainsManager->logDesires();
@@ -116,10 +116,10 @@ namespace MWBase
 		mVitals.mSleepiness += duration / 2000.f;
 	}
 
-	std::vector<BehaviorObject*> Life::prioritizeDesires(std::vector<BehaviorObject*> desires)
+	/*std::vector<BehaviorObject*> Life::prioritizeDesires(std::vector<BehaviorObject*> desires)
 	{
 		return std::vector<BehaviorObject*>();
-	}
+	}*/
 
 	void Life::prioritizeDesires(std::vector<GOAPDesire>& desires)
 	{
@@ -429,9 +429,9 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
-	mDesires.clear();
+	//mDesires.clear();
 	mGOAPNodes.clear();
-	mWorldState.clear();
+	//mWorldState.clear();
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
@@ -449,12 +449,12 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 
 
 		//Collect desires from subbrain, add to list.
-		bolist desirelist = (*it)->getDesires();
-		for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
+		/*bolist desirelist = (*it)->getDesires();*/
+		/*for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
 		{
 			mDesires.push_back(*itb);
 		}
-
+*/
 		std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
 		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
 		{
@@ -462,11 +462,11 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 		}
 
 		//Collect worldstate from subbrain, add to list.
-		std::vector<WorldstateAtom> worldstate = (*it)->getWorldstate();
+		/*std::vector<WorldstateAtom> worldstate = (*it)->getWorldstate();
 		for (std::vector<WorldstateAtom>::iterator itw = worldstate.begin(); itw != worldstate.end(); itw++)
 		{
 			mWorldState.push_back(*itw);
-		}
+		}*/
 
 	
 	}
@@ -496,24 +496,24 @@ std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
 void MWBase::SubBrainsManager::logDesires()
 {
 
-	if (mDesires.size() == 0)
-	{
-		std::cout << "no desires" << std::endl;
-		return;
-	}
-	std::cout << "desires:" << std::endl;
-	typedef std::vector<MWBase::BehaviorObject*> desirelist;
-	for (desirelist::iterator it = mDesires.begin(); it != mDesires.end(); it++)
-	{
-		(*it)->getDebugInfo();
-	}
+	//if (mDesires.size() == 0)
+	//{
+	//	std::cout << "no desires" << std::endl;
+	//	return;
+	//}
+	//std::cout << "desires:" << std::endl;
+	//typedef std::vector<MWBase::BehaviorObject*> desirelist;
+	//for (desirelist::iterator it = mDesires.begin(); it != mDesires.end(); it++)
+	//{
+	//	(*it)->getDebugInfo();
+	//}
 
 }
 
 void MWBase::SubBrainsManager::logWorldstate()
 {
 
-	if (mWorldState.size() == 0)
+	/*if (mWorldState.size() == 0)
 	{
 		std::cout << "no world state" << std::endl;
 		return;
@@ -529,23 +529,23 @@ void MWBase::SubBrainsManager::logWorldstate()
 			value = "False";
 		std::cout << it->mTag << std::endl;
 		std::cout << value << std::endl;
-	}
+	}*/
 
 }
 
-std::vector<MWBase::BehaviorObject*> MWBase::SubBrainsManager::getDesires()
-{
-	return mDesires;
-}
+//std::vector<MWBase::BehaviorObject*> MWBase::SubBrainsManager::getDesires()
+//{
+//	return mDesires;
+//}
 
 std::vector<MWBase::GOAPDesire> MWBase::SubBrainsManager::getGOAPDesires()
 {
 	return mGOAPDesires;
 }
 
-std::vector<WorldstateAtom> MWBase::SubBrainsManager::getWorldstate()
-{
-	return std::vector<WorldstateAtom>();
-}
+//std::vector<WorldstateAtom> MWBase::SubBrainsManager::getWorldstate()
+//{
+//	return std::vector<WorldstateAtom>();
+//}
 
 
