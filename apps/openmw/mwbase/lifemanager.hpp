@@ -202,8 +202,6 @@ namespace MWBase
 		//std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
 
 		void prioritizeDesires(std::vector<GOAPDesire> &desires);
-
-
 	};
 
 	class LifeManager

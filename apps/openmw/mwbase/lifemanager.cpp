@@ -16,19 +16,14 @@
 
 namespace MWBase
 {
-
 	//LIFE
-
 	void Life::getDebugInfo()
 	{
 		std::cout << mId << std::endl;
-		//std::cout << std::to_string(mRefNum) << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
 		mSubBrainsManager->logDesires();
 		mSubBrainsManager->logWorldstate();
-		//std::cout << "original cell: " + mOwnerCell->getCell  << std::endl;
-
 		if (mHasIntention)
 		{
 			std::cout << "intention info" << std::endl;
@@ -36,7 +31,6 @@ namespace MWBase
 			while (itx < mCurrentIntentionPlan.mGOAPDataList.size())
 			{
 				std::cout << mCurrentIntentionPlan.mGOAPDataList[itx]->mId << std::endl;
-
 				itx++;
 			}
 		}
@@ -49,24 +43,33 @@ namespace MWBase
 		metabolize(duration);
 		mAwareness->refresh();
 		mSubBrainsManager->calculate(mAwareness);
-		//std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
-
 		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
+		//What if we already have an intention? we need to weight it against new desires. Right now only one intention at a time.
 		if (GOAPDesires.size() > 0 && !mHasIntention)
 		{
 			prioritizeDesires(GOAPDesires);
-			//mSubBrainsManager->evaluateGOAPStatus(GOAPDesires[0].mStatus, mPtr);
-			IntentionPlan newplan = mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
-			if (newplan.mPlanComplete)
+			bool foundPossibleIntention = false;
+			unsigned int itx = 0;
+			while (!foundPossibleIntention && itx < GOAPDesires.size())
 			{
-				mCurrentIntentionPlan = newplan;
-				mHasIntention = true;
-				mCurrentIntentionPlan.mCurrentStep = mCurrentIntentionPlan.mGOAPDataList.size() - 1; // set at last step., we go backwards
-				std::cout << "I have an intention plan" << std::endl;
+				IntentionPlan newplan = mSubBrainsManager->createIntention(GOAPDesires[itx].mStatus, mPtr);
+				if (newplan.mPlanComplete)
+				{
+					mCurrentIntentionPlan = newplan;
+					mHasIntention = true;
+					mCurrentIntentionPlan.mCurrentStep = mCurrentIntentionPlan.mGOAPDataList.size() - 1; // set at last step, we go backwards
+					std::cout << "I have an intention plan" << std::endl;
+					foundPossibleIntention = true;
+				}
+				else
+				{
+					std::cout << "skipping desire which we can not meet" << std::endl;
+				}
+				itx += 1;
 			}
 		}
-
-		if (mHasIntention && mCurrentIntentionPlan.mCurrentBehaviorObject == 0)
+	
+		if (mHasIntention && mCurrentIntentionPlan.mCurrentBehaviorObject == 0) 	//Need to start an intention plan.
 		{
 			int step = mCurrentIntentionPlan.mCurrentStep;
 			MWBase::GOAPData * currentnode = mCurrentIntentionPlan.mGOAPDataList[step].get();
@@ -74,11 +77,8 @@ namespace MWBase
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
 			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
-			//not i got a BO
-
-				//new BehaviorObject(mCurrentIntentionPlan.mGOAPDataList[step]->mBehaviorObject);
 		}
-		else if (mHasIntention)
+		else if (mHasIntention) //need to continue an intention plan
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
 			MWBase::BOReturn status = bo->update(duration, mPtr);
@@ -86,28 +86,7 @@ namespace MWBase
 			{
 				//std::cout << "BO In progress" << std::endl;
 			}
-		
 		}
-		
-		//Start from last item in plan vector
-		//copy the BO
-		//configure the BO
-		//Start the BO
-		//On each frame check status
-		//When done, go to next BO
-		//Recheck inputs, if good, continue
-		//If not, recalculate
-		
-		
-		
-		//std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
-		
-		//std::vector<WorldstateAtom> worldstate = mSubBrainsManager->getWorldstate();
-		//extract desires, put into desireprioritizer
-
-		//std::vector<GOAPData*> GOAPNodes = mSubBrainsManager->getGOAPNodes();
-		//extract BONodes, put into GOAP
-		
 	}
 
 	void Life::metabolize(float duration)
@@ -116,20 +95,11 @@ namespace MWBase
 		mVitals.mSleepiness += duration / 2000.f;
 	}
 
-	/*std::vector<BehaviorObject*> Life::prioritizeDesires(std::vector<BehaviorObject*> desires)
-	{
-		return std::vector<BehaviorObject*>();
-	}*/
-
 	void Life::prioritizeDesires(std::vector<GOAPDesire>& desires)
 	{
+		//weigh against current one too
 		desires;
 	}
-
-
-
-
-
 
 	//LIFE MANAGER
 
@@ -204,14 +174,9 @@ namespace MWBase
 		}
 	}
 
-
 	//VITALS
-
-
-
 	std::string Vitals::getSaveState()
 	{
-
 		std::string save;
 		save += std::to_string(mHunger) + "-";
 		save += std::to_string(mSleepiness);
@@ -229,13 +194,9 @@ namespace MWBase
 		{
 			cache.push_back(std::stoi(*tok_iter));
 		}
-
-
 		mHunger = cache[0];
 		mSleepiness = cache[1];
 	}
-
-
 }
 
 
@@ -291,14 +252,11 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 
 MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
-	//std::cout << "attempting to create intention" << std::endl;
 	typedef std::vector<IntentionPlan> planlist;
 	planlist possibleplans;
 	planlist completeplans;
-
 	IntentionPlan emptyplan;
 	emptyplan.mPlanComplete = false;
-
 	typedef std::vector<std::shared_ptr<GOAPData>> nodechain;
 	std::vector<nodechain> nodechainlist;
 	
@@ -312,10 +270,10 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 		possibleplans.push_back(plan);
 	}
 
-
 	if (possibleplans.size() == 0)
 	{
-		//std::cout << "could not start plan to meet goal: " + status.mExtraData << std::endl;
+		//No way to meet desire
+		return emptyplan;
 	}
 
 	seperateCompletePlans(possibleplans, completeplans, ptr);
@@ -323,12 +281,9 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	//Now we have a list of BOs that can meet our needs... but those BOs in turn might have needs that are not met.
 	//Iterate through the list, and whenever a BO has more than one way of being met, copy the nodechain and push it back, with a new branch for each possible method
 
-	
-
 	while (possibleplans.size() > 0)
-	{
-		
-		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first
+	{		
+		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first input, no support for multiple for inputs for now
 		if (possiblepaths.size() == 0)
 		{
 			//std::cout << "dead end plan" << std::endl;
@@ -345,16 +300,13 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 		//erase old plan, also serves to trim deadend plans
 		possibleplans.erase(possibleplans.begin());
 
-
-
 		//remove complete plans
 		seperateCompletePlans(possibleplans, completeplans, ptr);
 	}
 
-	
-
 	//see if any are complete, if so move to a special complete vector
 	//For rest, run them through matching thing again.
+	//Should I return lowest cost one? But what if we want an alternate plan? Maybe optional blacklist parameter for when a plan fails (pass the status we couldn't make work)
 	if (completeplans.size() > 0)
 		return completeplans[0];
 	else
@@ -370,28 +322,19 @@ std::vector<std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainsManager::querySu
 	{
 		//ask the subbrain what behavior objects it has that can meet this status
 		goapdatalist nc = (*it)->getMatchingBehaviorObjects(status);
-		
 		//push them all into our result
 		for (goapdatalist::iterator itg = nc.begin(); itg != nc.end(); itg++)
 		{
 			result.push_back(*itg);
 		}	
-
 		//onto next subbrain
 	}
-
-
 	return result;
 }
 
 bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	auto sem = MWBase::Environment::get().getSmartEntitiesManager();
-
-
-
-
-
 	MWWorld::InventoryStore &inventoryStore = ptr.getClass().getInventoryStore(ptr);
 	for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)
 	{
@@ -402,7 +345,6 @@ bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus sta
 			auto sei = sem->getSmartEntityInstance(*it);
 			if (sei->hasStatus(status.mExtraData))
 				return true;
-			
 		}
 	}
 	return false;
@@ -413,7 +355,6 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 	typedef std::vector<SensoryLink> linklist;
 	MWBase::SensoryLinkStore * sensorystore = mLife->mAwareness->getSensoryLinkStore();
 	std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
-
 	for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 	{
 		if (it->mSEInstance->hasStatus(status))
@@ -421,54 +362,29 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 			return true;
 		}
 	}
-	
-
-	
 	return false;
 }
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
-	//mDesires.clear();
 	mGOAPNodes.clear();
-	//mWorldState.clear();
-
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
-		
-		typedef std::vector<MWBase::BehaviorObject*> bolist;
 		(*it)->calculate(awareness);
 		
 		//collect GOAPNodes from subbrain, add to list.
-		std::vector<std::shared_ptr<GOAPData>> goapnodes = (*it)->getGOAPNodes();
-		for (std::vector<std::shared_ptr<GOAPData>>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
-		{
-			mGOAPNodes.push_back(*itg);
-		}
-		
-
-
-		//Collect desires from subbrain, add to list.
-		/*bolist desirelist = (*it)->getDesires();*/
-		/*for (bolist::iterator itb = desirelist.begin(); itb != desirelist.end(); itb++)
-		{
-			mDesires.push_back(*itb);
-		}
-*/
+		/*std::vector<std::shared_ptr<GOAPData>> goapnodes = (*it)->getGOAPNodes();*/
+		//for (std::vector<std::shared_ptr<GOAPData>>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
+		//{
+		//	mGOAPNodes.push_back(*itg);
+		//}
+		//
 		std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
 		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
 		{
 			mGOAPDesires.push_back(*gdl);
 		}
 
-		//Collect worldstate from subbrain, add to list.
-		/*std::vector<WorldstateAtom> worldstate = (*it)->getWorldstate();
-		for (std::vector<WorldstateAtom>::iterator itw = worldstate.begin(); itw != worldstate.end(); itw++)
-		{
-			mWorldState.push_back(*itw);
-		}*/
-
-	
 	}
 
 }
@@ -483,12 +399,10 @@ MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 	mSubBrains.push_back(sb);
 	sb = new SubBrainInventory(life);
 	mSubBrains.push_back(sb);
-
 }
 
 std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
 {
-
 	std::vector<std::string> temp;
 	return temp;
 }
@@ -533,19 +447,8 @@ void MWBase::SubBrainsManager::logWorldstate()
 
 }
 
-//std::vector<MWBase::BehaviorObject*> MWBase::SubBrainsManager::getDesires()
-//{
-//	return mDesires;
-//}
-
 std::vector<MWBase::GOAPDesire> MWBase::SubBrainsManager::getGOAPDesires()
 {
 	return mGOAPDesires;
 }
-
-//std::vector<WorldstateAtom> MWBase::SubBrainsManager::getWorldstate()
-//{
-//	return std::vector<WorldstateAtom>();
-//}
-
 
