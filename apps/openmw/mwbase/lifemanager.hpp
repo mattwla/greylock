@@ -93,6 +93,7 @@ namespace MWBase
 		MWBase::GOAPStatus mDesiredState;
 		std::vector<std::shared_ptr<GOAPData>> mGOAPDataList;
 		int mCurrentStep;
+		bool mPlanComplete;
 	};
 
 	class SubBrainsManager
@@ -123,7 +124,7 @@ namespace MWBase
 		//takes in a goap status and an npc, returns true if status is met and false otherwise
 		bool evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
-		bool createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+		IntentionPlan createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
 		std::vector<std::shared_ptr<GOAPData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
 
@@ -177,7 +178,14 @@ namespace MWBase
 
 		Vitals mVitals;
 
+		IntentionPlan mCurrentIntentionPlan;
+
 		BehaviorIntentionQueue *mBIQueue;
+
+		bool mHasIntention = false;
+
+
+
 
 		//IntentionList(Active BOs)
 

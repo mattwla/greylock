@@ -13,6 +13,7 @@ namespace MWBase {
 	struct GOAPStatus;
 	struct GOAPData;
 	class BehaviorObject;
+	struct IntentionPlan;
 };
 
 namespace MWWorld {
@@ -129,6 +130,7 @@ namespace MWBase {
 		MWBase::GOAPStatus mStatus;
 		int mValence;
 		BehaviorObject * mIntentionPlan;
+		//MWBase::IntentionPlan mRealIntentionPlan;
 		bool mIsIntention;
 
 		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)

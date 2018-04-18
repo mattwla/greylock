@@ -42,7 +42,7 @@ namespace MWBase
 		{
 			prioritizeDesires(GOAPDesires);
 			//mSubBrainsManager->evaluateGOAPStatus(GOAPDesires[0].mStatus, mPtr);
-			mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
+			mCurrentIntentionPlan = mSubBrainsManager->createIntention(GOAPDesires[0].mStatus, mPtr);
 		}
 		
 
@@ -198,6 +198,7 @@ void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>&
 		bool plancomplete = evaluateGOAPStatus(currentplan->mInputs[0], ptr); //currently only checks 1 status;
 		if (plancomplete)
 		{
+			it->mPlanComplete = true;
 			completelist.push_back(*it);
 		}
 		else
@@ -234,12 +235,15 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 	return false;
 }
 
-bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
+MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	//std::cout << "attempting to create intention" << std::endl;
 	typedef std::vector<IntentionPlan> planlist;
 	planlist possibleplans;
 	planlist completeplans;
+
+	IntentionPlan emptyplan;
+	emptyplan.mPlanComplete = false;
 
 	typedef std::vector<std::shared_ptr<GOAPData>> nodechain;
 	std::vector<nodechain> nodechainlist;
@@ -293,12 +297,14 @@ bool MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorl
 		seperateCompletePlans(possibleplans, completeplans, ptr);
 	}
 
-
+	
 
 	//see if any are complete, if so move to a special complete vector
 	//For rest, run them through matching thing again.
-	
-	return false;
+	if (completeplans.size() > 0)
+		return completeplans[0];
+	else
+		return emptyplan;
 }
 
 std::vector<std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
