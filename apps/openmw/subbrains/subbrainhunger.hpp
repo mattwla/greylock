@@ -57,7 +57,7 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
-		virtual BOReturn update(float time);
+		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
 		
 		

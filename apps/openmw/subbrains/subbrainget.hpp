@@ -32,6 +32,8 @@ namespace MWBase {
 
 		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
+		int getCost(SmartEntityInstance * sei);
+
 	};
 
 	class BOGetFromWorld : public MWBase::BehaviorObject {
@@ -46,7 +48,7 @@ namespace MWBase {
 		}
 
 
-		virtual BOReturn update(float time);
+		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
 		virtual void getDebugInfo();
 

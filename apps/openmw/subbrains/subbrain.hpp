@@ -75,6 +75,7 @@ namespace MWBase {
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
 		std::shared_ptr<GOAPData> mGOAPData;
+		SmartEntityInstance * mSEITarget;
 
 	public:
 	/*	bool isDesire()
@@ -99,7 +100,12 @@ namespace MWBase {
 			mValence = valence;
 		}
 
-		virtual BOReturn update(float time) = 0;
+		virtual BOReturn update(float time, MWWorld::Ptr ownerptr) = 0;
+
+		void setTarget(SmartEntityInstance * sei)
+		{
+			mSEITarget = sei;
+		}
 
 			
 

@@ -2,6 +2,9 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/aitravel.hpp"
+#include "../mwworld/class.hpp"
 
 MWBase::SubBrainGet::SubBrainGet(MWBase::Life * life)
 {
@@ -59,7 +62,7 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
 				node->mOutputs.push_back(statusoutput);
 				node->mId = "Get From World Node - known location";
-				node->mCost = 10;
+				node->mCost = getCost(it->mSEInstance);
 				result.push_back(node);
 			}
 		}
@@ -86,8 +89,25 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 	return result;
 }
 
-MWBase::BOReturn MWBase::BOGetFromWorld::update(float time)
+int MWBase::SubBrainGet::getCost(MWBase::SmartEntityInstance * sei)
 {
+	MWWorld::Ptr seiptr = sei->getPtr();
+	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
+	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
+	std::cout << "distance to get object" + std::to_string(distance) << std::endl;
+	return distance;
+}
+
+MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerptr)
+{
+	mOwnerPtr = ownerptr;
+	MWMechanics::AiSequence& seq = mOwnerPtr.getClass().getCreatureStats(mOwnerPtr).getAiSequence();
+	if ((seq.getTypeId() == -1 || seq.getTypeId() == 0))
+	{
+		auto pos = mSEITarget->getPtr().getRefData().getPosition();
+		seq.stack(MWMechanics::AiTravel(pos.pos[0], pos.pos[1], pos.pos[2]), mOwnerPtr);
+		std::cout << "attempting travel" << std::endl;
+	}
 	return MWBase::IN_PROGRESS;
 }
 

@@ -72,6 +72,7 @@ namespace MWBase
 			MWBase::GOAPData * currentnode = mCurrentIntentionPlan.mGOAPDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
+			newbo->setTarget(currentnode->mSEI);
 			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
 			//not i got a BO
 
@@ -80,10 +81,10 @@ namespace MWBase
 		else if (mHasIntention)
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
-			MWBase::BOReturn status = bo->update(duration);
+			MWBase::BOReturn status = bo->update(duration, mPtr);
 			if (status == BOReturn::IN_PROGRESS)
 			{
-				std::cout << "BO In progress" << std::endl;
+				//std::cout << "BO In progress" << std::endl;
 			}
 		
 		}
