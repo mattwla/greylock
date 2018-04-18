@@ -21,9 +21,6 @@
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
-
-
-
 namespace osg
 {
 	class Vec3f;
@@ -32,7 +29,6 @@ namespace osg
 namespace ESM
 {
 	struct Class;
-
 	class ESMReader;
 	class ESMWriter;
 }
@@ -54,56 +50,51 @@ namespace MWBase
 	class SmartEntityInstance;
 }
 
-
-
 namespace MWBase
 {
-	struct Life;
-
-	struct SensoryLink {
+	struct SensoryLink 
+	{
 		MWWorld::Ptr mPtr;
+		
 		MWBase::SmartEntityInstance * mSEInstance;
-
+		
 		SensoryLink::SensoryLink(MWWorld::Ptr ptr, MWBase::SmartEntityInstance * sei)
 		{
 			mPtr = ptr;
 			mSEInstance = sei;
-			
 		}
+	
 	};
 
-	struct SensoryLinkStore {
-
+	struct SensoryLinkStore
+	{
 		std::vector<SensoryLink> mCurrentSensoryLinks;
-	
+		
 		std::vector<SensoryLink> mSensoryLinksInMemory;
-
+		
 		bool hasLinkWithStatus(std::string status);
-
+		
 		void addSensoryLink(SensoryLink sensorylink);
-
+		
 		~SensoryLinkStore();
-	
 	};
 
 
-	class Awareness {
-
+	class Awareness 
+	{
 		MWWorld::Ptr mPtr;
-
+		
 		SensoryLinkStore* mSensoryLinkStore;
-
+	
 	public:
 		
 		void refresh();
-
+		
 		void getDebugInfo();
-
+		
 		Awareness::Awareness(MWWorld::Ptr ptr);
-
+		
 		SensoryLinkStore * getSensoryLinkStore();
-
-
 	};
 	
 	class AwarenessReactionsManager
@@ -111,6 +102,7 @@ namespace MWBase
 	
 	public:
 			
+		//might want to move this somewhere else.
 		virtual bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer) = 0;
 
 		virtual ~AwarenessReactionsManager() {}

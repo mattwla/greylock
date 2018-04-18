@@ -24,8 +24,6 @@ namespace ESM {
 	class RefNum;
 }
 
-
-
 namespace MWBase {
 
 	typedef std::vector<GOAPStatus> statusstack;
@@ -36,52 +34,28 @@ namespace MWBase {
 		FAILED = 2
 	};
 
+	//serves a a node for NPC planning
 	struct GOAPData
 	{
 		statusstack mInputs;
 		statusstack mOutputs;
 		MWBase::BehaviorObject * mBehaviorObject;
 		std::string mId; // for debugging.
-		SmartEntityInstance * mSEI;
+		SmartEntityInstance * mSEI; //for the object the action will act upon. Like getting a BREAD or using an OVEN or talking to an NPC.
 		int mCost = 0;
-
-
-		//target SmartEntity (what are we acting on?)
-		//check preconditions.... is this the "expanding node" funcitonality I am thinking about? Does it call the subbrain? 
-		//Maybe BOs don't NEED to be connected to subbrains.
-		//getcost
-		//check inputs valid (pass ref to statuslist)
-
-		//Current input valid?
-		//==?
-		//int getCost(bigfive, awareness) return 0 if impossible
-		//getLinkedBO
-		//bool outputTypeMatch(type)
-
-
-
-			
 	};
 
 	class BehaviorObject
 	{
-
 	protected:
-		
-		bool mIsDesire;
-		int mValence;
 		std::string mID;
-		BehaviorObject * mSubBehavior;
+		BehaviorObject * mSubBehavior; //maybe should instead be a GOAPDESIRE? or GOAPSTATUS?
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
 		std::shared_ptr<GOAPData> mGOAPData;
 		SmartEntityInstance * mSEITarget;
 
 	public:
-	/*	bool isDesire()
-		{
-			return mIsDesire;
-		};*/
 
 		virtual BehaviorObject* Clone() = 0;
 
@@ -95,19 +69,12 @@ namespace MWBase {
 			return mGOAPData;
 		}
 
-		void setValence(int valence)
-		{
-			mValence = valence;
-		}
-
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr) = 0;
 
 		void setTarget(SmartEntityInstance * sei)
 		{
 			mSEITarget = sei;
 		}
-
-			
 
 			//start
 			//pause
@@ -121,11 +88,12 @@ namespace MWBase {
 			VITALS = 1,
 			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
 			AWARE_OF_OBJECT_WITH_STATUS = 3
-
 		};
 
 		StatusType mStatusType;
+		
 		std::string mExtraData;
+		
 		int mAmount;
 
 		bool operator==(GOAPStatus status);
@@ -150,10 +118,8 @@ namespace MWBase {
 
 		MWBase::GOAPStatus mStatus;
 		int mValence;
-		BehaviorObject * mIntentionPlan;
-		//MWBase::IntentionPlan mRealIntentionPlan;
+		BehaviorObject * mIntentionPlan; //mwx fix me even needed?
 		bool mIsIntention;
-
 		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)
 		{
 			mStatus = stat;
@@ -165,9 +131,6 @@ namespace MWBase {
 	};
 		
 
-
-
-
 	class SubBrain 
 	{
 
@@ -175,22 +138,15 @@ namespace MWBase {
 
 		MWBase::Life * mOwnerLife;
 
-		std::vector<GOAPStatus> mBeliefs;
 		//Beliefs
+		std::vector<GOAPStatus> mBeliefs;
 		
-		std::vector<BehaviorObject*> mDesires;
-		//Desires
-
+		//Desire
 		std::vector<GOAPDesire> mGOAPDesires;
 
 		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
 
-	
-
 		std::vector<WorldstateAtom> mWorldState;
-
-		
-		//Intentions
 
 	public:
 		
@@ -202,20 +158,10 @@ namespace MWBase {
 
 		virtual std::string getID() = 0;
 
-		std::vector<BehaviorObject*> getDesires()
-		{
-			return mDesires;
-		};
-
 		std::vector<GOAPDesire> getGOAPDesires()
 		{
 			return mGOAPDesires;
 		};
-
-		std::vector<std::shared_ptr<GOAPData>> getGOAPNodes()
-		{
-			return mGOAPNodes;
-		}
 
 		std::vector<WorldstateAtom> getWorldstate()
 		{

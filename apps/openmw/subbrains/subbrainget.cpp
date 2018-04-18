@@ -117,9 +117,9 @@ void MWBase::BOGetFromWorld::getDebugInfo()
 
 MWBase::BOGetFromWorld::BOGetFromWorld()
 {
-	mIsDesire = false;
+	
 	std::cout << "made GetFromWorld BO" << std::endl;
-	mValence = 1;
+
 	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
 	std::shared_ptr<GOAPData> gd(new GOAPData());
 	

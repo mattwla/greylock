@@ -372,13 +372,7 @@ void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 	{
 		(*it)->calculate(awareness);
 		
-		//collect GOAPNodes from subbrain, add to list.
-		/*std::vector<std::shared_ptr<GOAPData>> goapnodes = (*it)->getGOAPNodes();*/
-		//for (std::vector<std::shared_ptr<GOAPData>>::iterator itg = goapnodes.begin(); itg != goapnodes.end(); itg++)
-		//{
-		//	mGOAPNodes.push_back(*itg);
-		//}
-		//
+	
 		std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
 		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
 		{

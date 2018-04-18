@@ -14,7 +14,7 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 {
-	mDesires.clear();
+
 	mGOAPDesires.clear();
 	mWorldState.clear();
 	if (mOwnerLife->mVitals.mHunger > 100.0f)
@@ -23,7 +23,7 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 		/*if (mDesires.size() < 1)*/
 		{
 			//BehaviorObject * bo = new BOEat(1);
-			mDesires.push_back(mEatBO);
+			
 			WorldstateAtom ws("hungry", true);
 			mWorldState.push_back(ws);
 			GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
@@ -69,9 +69,9 @@ void MWBase::SubBrainHunger::getDebugInfo()
 
 MWBase::BOEat::BOEat(int valence) //input urge strength
 {
-	mIsDesire = true;
+	
 	std::cout << "made eat BO" << std::endl;
-	mValence = valence;
+
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
 	std::shared_ptr<GOAPData> gd(new GOAPData());
 	mGOAPData = gd;

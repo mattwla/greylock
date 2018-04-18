@@ -5,10 +5,8 @@
 void MWBase::Awareness::refresh()
 {
 	MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
-
 	MWBase::SmartInstanceMap::iterator it = instances.begin();
 	SensoryLinkStore * newStore = new SensoryLinkStore;
-
 	while (it != instances.end())
 	{
 		bool isaware = MWBase::Environment::get().getAwarenessReactionsManager()->awarenessCheck(it->second->getPtr(), mPtr);
@@ -19,6 +17,7 @@ void MWBase::Awareness::refresh()
 		it++;
 	}
 
+	//likely inefficient mwx fix me
 	if (mSensoryLinkStore)
 	{
 		delete mSensoryLinkStore;
@@ -37,7 +36,6 @@ void MWBase::Awareness::getDebugInfo()
 	while (itx < mSensoryLinkStore->mCurrentSensoryLinks.size())
 	{
 		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefId() + " " + std::to_string(mSensoryLinkStore->mCurrentSensoryLinks[itx].mPtr.getCellRef().getRefNum().mIndex) << std::endl;
-
 		itx += 1;
 	}
 }
@@ -55,8 +53,6 @@ MWBase::SensoryLinkStore * MWBase::Awareness::getSensoryLinkStore()
 
 bool MWBase::SensoryLinkStore::hasLinkWithStatus(std::string status)
 {
-	
-	
 	return false;
 }
 
