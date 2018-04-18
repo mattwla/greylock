@@ -42,6 +42,11 @@ namespace MWBase {
 		statusstack mOutputs;
 		MWBase::BehaviorObject * mBehaviorObject;
 		std::string mId; // for debugging.
+		SmartEntityInstance * mSEI;
+		int mCost = 0;
+
+
+		//target SmartEntity (what are we acting on?)
 		//check preconditions.... is this the "expanding node" funcitonality I am thinking about? Does it call the subbrain? 
 		//Maybe BOs don't NEED to be connected to subbrains.
 		//getcost

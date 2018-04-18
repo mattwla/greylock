@@ -40,19 +40,47 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 	
 	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY)
 	{
+		typedef std::vector<SensoryLink> linklist;
+		
+		//search memory for items that match status, create a node for each and cost dependant on distance to npc.
+		
+		MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
+		std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
 
-		std::shared_ptr<GOAPData> node(new GOAPData);
-		node->mBehaviorObject = mGetFromWorldBO;
+		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
+		{
+			if (it->mSEInstance->hasStatus(status.mExtraData))
+			{
+				std::shared_ptr<GOAPData> node(new GOAPData);
+				node->mBehaviorObject = mGetFromWorldBO;
+				node->mSEI = it->mSEInstance;
+				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+				node->mInputs.push_back(statusinput);
+				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+				node->mOutputs.push_back(statusoutput);
+				node->mId = "Get From World Node - known location";
+				node->mCost = 10;
+				result.push_back(node);
+			}
+		}
+		
+		if (result.size() == 0) //we didn't know of anything to get, make a node in case something can give us the info we need.
+		{
+			std::shared_ptr<GOAPData> node(new GOAPData);
+			node->mBehaviorObject = mGetFromWorldBO;
 
-		MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-		node->mInputs.push_back(statusinput);
+			MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+			node->mInputs.push_back(statusinput);
 
-		MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
-		node->mOutputs.push_back(statusoutput);
+			MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+			node->mOutputs.push_back(statusoutput);
 
-		node->mId = "Get From World Node";
+			node->mId = "Get From World Node - location unknown";
+			std::cout << "Get From World Node - location unknown" << std::endl;
 
-		result.push_back(node);
+
+			result.push_back(node);
+		}	
 
 	}
 	return result;
