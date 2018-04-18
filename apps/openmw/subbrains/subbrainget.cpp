@@ -2,8 +2,15 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwworld/class.hpp"
 
 #include "../mwtasks/tasksmanagerimp.hpp"
+
+#include "../mwmechanics/npcstats.hpp"
+
+
+#include "../mwmechanics/aiactivate.hpp"
+
 
 MWBase::SubBrainGet::SubBrainGet(MWBase::Life * life)
 {
@@ -107,6 +114,8 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	if (inGrabbingDistance())
 	{
 		std::cout << "im grabbing distance" << std::endl;
+		pickupItem(); //wut if pickup didn't work? How can we guarantee? Maybe verify status here?
+		return COMPLETE;
 		//grab
 	}
 	else if (mInJourney)
@@ -130,15 +139,27 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 		
 	}
 
-
-
-
 //	mInJourney = mOwnerLife->mJourneyManager->requestNewJourney();
 	
-	
 	return MWBase::IN_PROGRESS;
+}
 
-
+void MWBase::BOGetFromWorld::pickupItem()
+{
+	MWWorld::Ptr itemPtr = mSEITarget->getPtr();
+	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;
+	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+	//bool currentlyActive = MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr);
+	/*if (currentlyActive)*/
+	{
+		//seq.stack(MWMechanics::AiActivate(itemPtr), ownerPtr);
+		MWBase::Environment::get().getWorld()->activate(itemPtr, ownerPtr);
+		std::cout << "activated" << std::endl;
+	}
+	/*else
+	{
+		MWBase::Environment::get().getWorld()->activate(itemPtr, mNpcPtr);
+	}*/
 }
 
 bool MWBase::BOGetFromWorld::inGrabbingDistance()

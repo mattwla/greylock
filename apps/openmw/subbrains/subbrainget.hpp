@@ -55,6 +55,8 @@ namespace MWBase {
 	
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
+		void pickupItem();
+
 		virtual void getDebugInfo();
 
 		bool inGrabbingDistance();

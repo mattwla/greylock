@@ -25,5 +25,15 @@ bool MWBase::JourneyManager::requestNewJourney(ESM::Position pos)
 
 MWBase::JourneyStatus MWBase::JourneyManager::updateJourney(int ticket)
 {
-	return JourneyStatus();
+	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;
+	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+
+	if (seq.getTypeId() == -1 || seq.getTypeId() == 0)
+	{
+		return JOURNEY_COMPLETED;
+	}
+	else
+		return JOURNEY_IN_PROGRESS;
+
+	//return JourneyStatus();
 }

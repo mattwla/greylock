@@ -88,6 +88,12 @@ namespace MWBase
 			{
 				//std::cout << "BO In progress" << std::endl;
 			}
+			else if (status == BOReturn::COMPLETE)
+			{
+				delete bo;
+				mCurrentIntentionPlan.mCurrentBehaviorObject = 0;
+				mCurrentIntentionPlan.mCurrentStep -= 1;
+			}
 		}
 	}
 
