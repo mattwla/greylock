@@ -50,7 +50,7 @@ namespace MWBase
 		mAwareness->refresh();
 		mSubBrainsManager->calculate(mAwareness);
 		//std::vector<BehaviorObject*> desires = mSubBrainsManager->getDesires();
-		
+
 		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
 		if (GOAPDesires.size() > 0 && !mHasIntention)
 		{
@@ -61,11 +61,44 @@ namespace MWBase
 			{
 				mCurrentIntentionPlan = newplan;
 				mHasIntention = true;
+				mCurrentIntentionPlan.mCurrentStep = mCurrentIntentionPlan.mGOAPDataList.size() - 1; // set at last step., we go backwards
 				std::cout << "I have an intention plan" << std::endl;
 			}
 		}
-		
 
+		if (mHasIntention && mCurrentIntentionPlan.mCurrentBehaviorObject == 0)
+		{
+			int step = mCurrentIntentionPlan.mCurrentStep;
+			MWBase::GOAPData * currentnode = mCurrentIntentionPlan.mGOAPDataList[step].get();
+			std::cout << "trying to:..." + currentnode->mId << std::endl;
+			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
+			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
+			//not i got a BO
+
+				//new BehaviorObject(mCurrentIntentionPlan.mGOAPDataList[step]->mBehaviorObject);
+		}
+		else if (mHasIntention)
+		{
+			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
+			MWBase::BOReturn status = bo->update(duration);
+			if (status == BOReturn::IN_PROGRESS)
+			{
+				std::cout << "BO In progress" << std::endl;
+			}
+		
+		}
+		
+		//Start from last item in plan vector
+		//copy the BO
+		//configure the BO
+		//Start the BO
+		//On each frame check status
+		//When done, go to next BO
+		//Recheck inputs, if good, continue
+		//If not, recalculate
+		
+		
+		
 		//std::vector<BehaviorObject*> prioritizedDesires = prioritizeDesires(desires);
 		
 		//std::vector<WorldstateAtom> worldstate = mSubBrainsManager->getWorldstate();

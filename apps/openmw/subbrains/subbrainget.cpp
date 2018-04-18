@@ -58,6 +58,11 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 	return result;
 }
 
+MWBase::BOReturn MWBase::BOGetFromWorld::update(float time)
+{
+	return MWBase::IN_PROGRESS;
+}
+
 void MWBase::BOGetFromWorld::getDebugInfo()
 {
 }

@@ -61,6 +61,7 @@ namespace Loading
 namespace MWBase
 {
 
+
 	struct BehaviorIntentionQueue 
 	{
 		std::vector<BehaviorObject> mQueue;
@@ -94,6 +95,7 @@ namespace MWBase
 		std::vector<std::shared_ptr<GOAPData>> mGOAPDataList;
 		int mCurrentStep;
 		bool mPlanComplete;
+		BehaviorObject * mCurrentBehaviorObject = 0;
 	};
 
 	class SubBrainsManager

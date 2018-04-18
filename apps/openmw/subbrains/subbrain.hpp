@@ -30,6 +30,12 @@ namespace MWBase {
 
 	typedef std::vector<GOAPStatus> statusstack;
 
+	enum BOReturn {
+		IN_PROGRESS = 0,
+		COMPLETE = 1,
+		FAILED = 2
+	};
+
 	struct GOAPData
 	{
 		statusstack mInputs;
@@ -71,6 +77,8 @@ namespace MWBase {
 			return mIsDesire;
 		};*/
 
+		virtual BehaviorObject* Clone() = 0;
+
 		virtual void getDebugInfo() = 0;
 
 		virtual ~BehaviorObject() {
@@ -85,6 +93,8 @@ namespace MWBase {
 		{
 			mValence = valence;
 		}
+
+		virtual BOReturn update(float time) = 0;
 
 			
 

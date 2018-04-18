@@ -88,3 +88,8 @@ void MWBase::BOEat::getDebugInfo()
 {
 	std::cout << "I am a eat BO" << std::endl;
 }
+
+MWBase::BOReturn MWBase::BOEat::update(float time)
+{
+	return MWBase::IN_PROGRESS;
+}

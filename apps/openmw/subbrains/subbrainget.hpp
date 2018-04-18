@@ -40,11 +40,26 @@ namespace MWBase {
 
 		BOGetFromWorld::BOGetFromWorld();
 
+		BOGetFromWorld* Clone()
+		{
+			return new BOGetFromWorld(*this);
+		}
+
+
+		virtual BOReturn update(float time);
+
 		virtual void getDebugInfo();
 
 		virtual ~BOGetFromWorld()
 		{
 			
+		};
+
+	private:
+
+		BOGetFromWorld(BOGetFromWorld const &instance) 
+		{
+			std::cout << "cloned get BO" << std::endl;
 		};
 
 	};

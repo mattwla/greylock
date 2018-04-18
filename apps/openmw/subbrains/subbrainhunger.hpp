@@ -45,7 +45,10 @@ namespace MWBase {
 
 		//BOEat::BOEat();
 
-		
+		BOEat* Clone()
+		{
+			return new BOEat(*this);
+		};
 
 
 		BOEat::BOEat(int valence);
@@ -54,7 +57,18 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
+		virtual BOReturn update(float time);
+
+		
+		
 		virtual ~BOEat() {
+
+		};
+
+	private:
+
+		BOEat(BOEat const &instance)
+		{
 
 		};
 
