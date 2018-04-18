@@ -32,13 +32,18 @@ namespace MWBase {
 
 		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
-		int getCost(SmartEntityInstance * sei);
+		int getCost(SmartEntityInstance * sei); //what of for a different BO?
+
+		bool InGrabbingRange(MWBase::SmartEntityInstance * sei);
 
 	};
 
 	class BOGetFromWorld : public MWBase::BehaviorObject {
 
+		
+
 	public:
+
 
 		BOGetFromWorld::BOGetFromWorld();
 
@@ -47,10 +52,13 @@ namespace MWBase {
 			return new BOGetFromWorld(*this);
 		}
 
-
+	
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
 		virtual void getDebugInfo();
+
+		bool inGrabbingDistance();
+
 
 		virtual ~BOGetFromWorld()
 		{
@@ -75,3 +83,4 @@ namespace MWBase {
 
 
 #endif
+

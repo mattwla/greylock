@@ -52,14 +52,22 @@ namespace MWBase {
 		BehaviorObject * mSubBehavior; //maybe should instead be a GOAPDESIRE? or GOAPSTATUS?
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
+		MWBase::Life * mOwnerLife;
 		std::shared_ptr<GOAPData> mGOAPData;
 		SmartEntityInstance * mSEITarget;
+		bool mInJourney;
+		
 
 	public:
 
 		virtual BehaviorObject* Clone() = 0;
 
 		virtual void getDebugInfo() = 0;
+
+		void setOwner(MWBase::Life * life)
+		{
+			mOwnerLife = life;
+		}
 
 		virtual ~BehaviorObject() {
 
@@ -68,6 +76,8 @@ namespace MWBase {
 		std::shared_ptr<GOAPData> getGOAPNode() {
 			return mGOAPData;
 		}
+
+	
 
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr) = 0;
 

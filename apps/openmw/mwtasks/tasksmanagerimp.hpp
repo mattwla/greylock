@@ -3,6 +3,7 @@
 
 #include "../mwbase/tasksmanager.hpp"
 #include "../mwtasks/journey.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 #include "../mwworld/ptr.hpp"
 
@@ -48,6 +49,30 @@ namespace MWTasks
 		virtual void endLife(std::string npcId);
 
 	};
+
+
+	
+
+	//class JourneyManager : public MWBase::JourneyManager
+	//{
+
+	//	private:
+
+	//		MWBase::Life * mOwnerLife;
+	//		int mCurrentJourneyTicket = 0;
+	//	
+	//	public:
+	//		JourneyManager::JourneyManager(MWBase::Life * life)
+	//		{
+	//			mOwnerLife = life;
+
+	//		}
+
+	//		virtual bool requestNewJourney();
+
+	//		virtual MWBase::JourneyStatus updateJourney(int ticket);
+
+	//};
 }
 
 

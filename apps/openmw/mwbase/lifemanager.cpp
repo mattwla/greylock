@@ -81,6 +81,8 @@ namespace MWBase
 		else if (mHasIntention) //need to continue an intention plan
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
+			bo->setOwner(this);
+
 			MWBase::BOReturn status = bo->update(duration, mPtr);
 			if (status == BOReturn::IN_PROGRESS)
 			{

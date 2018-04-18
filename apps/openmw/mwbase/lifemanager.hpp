@@ -13,7 +13,7 @@
 #include <components/esm/loadpgrd.hpp>
 #include "../mwmechanics/pathgrid.hpp"
 #include "../mwworld/timestamp.hpp"
-
+#include "../mwbase/tasksmanager.hpp"
 #include "../mwworld/ptr.hpp"
 #include "../mwtasks/task.hpp"
 #include "../mwbase/statusmanager.hpp"
@@ -22,6 +22,8 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../subbrains/subbrain.hpp"
 #include "../gllifemanager/goap.hpp"
+#include "../mwtasks/task.hpp"
+#include "../mwtasks/journey.hpp"
 
 
 
@@ -55,6 +57,11 @@ namespace Loading
 	class Listener;
 }
 
+//namespace MWTasks
+//{
+//	class JourneyManager;
+//}
+
 namespace MWBase
 {
 	struct BigFive 
@@ -81,6 +88,14 @@ namespace MWBase
 		int mCurrentStep;
 		bool mPlanComplete;
 		BehaviorObject * mCurrentBehaviorObject = 0;
+		
+	};
+
+	enum LifeFSMState
+	{
+		FSM_THINKING = 0,
+		FSM_DOING = 1,
+		FSM_TRAVELLING = 2
 	};
 
 	class SubBrainsManager
@@ -177,6 +192,10 @@ namespace MWBase
 		//Does the NPC have an intention now? Should be FSM of THINKING, IN_ACTION, OR TRAVELLING
 		bool mHasIntention = false;
 
+		LifeFSMState mFSMState;
+
+		MWBase::JourneyManager * mJourneyManager;
+
 
 	public:
 
@@ -189,6 +208,8 @@ namespace MWBase
 			mPtr.getBase()->mLife = this;
 			mAwareness = new MWBase::Awareness(mPtr);
 			mSubBrainsManager = new MWBase::SubBrainsManager(this);
+			mJourneyManager = new MWBase::JourneyManager(this);
+			mFSMState = FSM_THINKING;
 		}
 
 		void getDebugInfo();

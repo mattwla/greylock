@@ -107,6 +107,37 @@ namespace MWBase
 	
 	};
 
+	enum JourneyStatus
+	{
+		JOURNEY_FAILED = 0,
+		JOURNEY_IN_PROGRESS = 1,
+		JOURNEY_COMPLETED = 2
+	};
+
+
+
+
+	class JourneyManager
+	{
+
+	private:
+
+		MWBase::Life * mOwnerLife;
+		int mCurrentJourneyTicket = 0;
+
+	public:
+		JourneyManager(MWBase::Life * life)
+		{
+			mOwnerLife = life;
+
+		}
+
+		bool requestNewJourney(ESM::Position pos);
+
+		JourneyStatus updateJourney(int ticket);
+
+	};
+
 }
 
 
