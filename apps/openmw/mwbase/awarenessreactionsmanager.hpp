@@ -110,6 +110,8 @@ namespace MWBase
 		//might want to move this somewhere else.
 		virtual bool AwarenessReactionsManager::awarenessCheck(const MWWorld::Ptr &ptr, const MWWorld::Ptr &observer) = 0;
 
+		virtual bool AwarenessReactionsManager::sightToPosCheck(const MWWorld::Ptr & ptr, const ESM::Position & worldpos) = 0;
+
 		virtual ~AwarenessReactionsManager() {}
 
 	};

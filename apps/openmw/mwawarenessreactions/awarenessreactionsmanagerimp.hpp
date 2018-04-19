@@ -23,6 +23,8 @@ namespace MWAwarenessReactions
 
 		virtual bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);
 
+		virtual bool sightToPosCheck(const MWWorld::Ptr & ptr, const ESM::Position & worldpos);
+
 	/*	virtual std::vector<MWWorld::Ptr> calculateAwareness(MWWorld::Ptr ptr);*/
 
 		//virtual bool awarenessCheck(const MWWorld::Ptr & ptr, const MWWorld::Ptr & observer);

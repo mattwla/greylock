@@ -126,12 +126,18 @@ namespace MWBase
 				}
 
 			}
+			else if (status == BOReturn::FAILED)
+			{
+				//hack logic for now, delete the failed bo and get new intention.
+				delete bo;
+				mHasIntention = false;
+			}
 		}
 	}
 
 	void Life::metabolize(float duration)
 	{
-		mVitals.mHunger += duration / 300.0f;
+		mVitals.mHunger += duration / 150.0f;
 		mVitals.mSleepiness += duration / 2000.f;
 	}
 

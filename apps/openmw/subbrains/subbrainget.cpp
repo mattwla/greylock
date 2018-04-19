@@ -94,7 +94,7 @@ int MWBase::SubBrainGet::getCost(MWBase::SmartEntityInstance * sei)
 	MWWorld::Ptr seiptr = sei->getPtr();
 	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
 	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
-	std::cout << "distance to get object" + std::to_string(distance) << std::endl;
+	//std::cout << "distance to get object" + std::to_string(distance) << std::endl;
 	return distance;
 }
 
@@ -103,7 +103,7 @@ bool MWBase::SubBrainGet::InGrabbingRange(MWBase::SmartEntityInstance * sei)
 	MWWorld::Ptr seiptr = sei->getPtr();
 	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
 	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
-	std::cout << "distance to get object" + std::to_string(distance) << std::endl;
+	//std::cout << "distance to get object" + std::to_string(distance) << std::endl;
 	return distance < 1000.0f;
 }
 
@@ -113,6 +113,14 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 
 	bool noticedItemGone = false;
 	noticedItemGone = checkItemGoneNotice();
+	if (noticedItemGone)
+	{
+		std::cout << "item changed position" << std::endl;
+		return FAILED;
+
+		//Look around for item
+		//if can't find, give up
+	}
 
 	if (inGrabbingDistance())
 	{
@@ -125,7 +133,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	{
 		MWBase::JourneyStatus jstatus = JOURNEY_IN_PROGRESS;
 		jstatus = journeymanager->updateJourney(10);
-		if (jstatus = JOURNEY_COMPLETED)
+		if (jstatus == JOURNEY_COMPLETED)
 		{
 			mInJourney = false;
 		}
@@ -148,7 +156,19 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 
 bool MWBase::BOGetFromWorld::checkItemGoneNotice()
 {
+	bool canseepos = MWBase::Environment::get().getAwarenessReactionsManager()->sightToPosCheck(mOwnerLife->mPtr, mExpectedPosition);
+	if (canseepos)
+	{
+		bool changedpos = mSEITarget->getPtr().getRefData().getPosition().asVec3() != mExpectedPosition.asVec3();
+		osg::Vec3f pos1(mSEITarget->getPtr().getRefData().getPosition().asVec3());
+		osg::Vec3f pos2(mExpectedPosition.asVec3());
+		if (changedpos)
+			return true;	
+	}
+
+	
 	return false;
+	
 
 }
 
@@ -175,7 +195,7 @@ bool MWBase::BOGetFromWorld::inGrabbingDistance()
 	MWWorld::Ptr seiptr = mSEITarget->getPtr();
 	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
 	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
-	std::cout << "distance to get object" + std::to_string(distance) << std::endl;
+	//std::cout << "distance to get object" + std::to_string(distance) << std::endl;
 	return distance < 1000.0f;
 
 }
