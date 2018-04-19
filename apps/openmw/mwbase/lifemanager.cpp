@@ -99,11 +99,15 @@ namespace MWBase
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
 			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
+			mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
+			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
+
+
 		}
 		else if (mHasIntention) //need to continue an intention plan
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
-			bo->setOwner(this);
+			//bo->setOwner(this);
 
 			MWBase::BOReturn status = bo->update(duration, mPtr);
 			if (status == BOReturn::IN_PROGRESS)

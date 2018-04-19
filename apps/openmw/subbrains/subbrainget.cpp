@@ -111,6 +111,9 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 {
 	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
 
+	bool noticedItemGone = false;
+	noticedItemGone = checkItemGoneNotice();
+
 	if (inGrabbingDistance())
 	{
 		std::cout << "im grabbing distance" << std::endl;
@@ -130,8 +133,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	}
 	else
 	{
-		ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
-		mInJourney = journeymanager->requestNewJourney(pos);
+		mInJourney = journeymanager->requestNewJourney(mExpectedPosition);
 		if (!mInJourney)
 		{
 			//return that we can't do this BO
@@ -142,6 +144,12 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 //	mInJourney = mOwnerLife->mJourneyManager->requestNewJourney();
 	
 	return MWBase::IN_PROGRESS;
+}
+
+bool MWBase::BOGetFromWorld::checkItemGoneNotice()
+{
+	return false;
+
 }
 
 void MWBase::BOGetFromWorld::pickupItem()
@@ -170,6 +178,19 @@ bool MWBase::BOGetFromWorld::inGrabbingDistance()
 	std::cout << "distance to get object" + std::to_string(distance) << std::endl;
 	return distance < 1000.0f;
 
+}
+
+MWBase::BOReturn MWBase::BOGetFromWorld::start()
+{
+	if (!mSEITarget)
+	{
+		std::cout << "get has no target, can't do!" << std::endl;
+		return BOReturn::FAILED;
+	}
+
+	ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
+	mExpectedPosition = pos;
+	return BOReturn::IN_PROGRESS;
 }
 
 void MWBase::BOGetFromWorld::getDebugInfo()

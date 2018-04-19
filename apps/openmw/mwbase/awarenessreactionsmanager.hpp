@@ -54,13 +54,18 @@ namespace MWBase
 {
 	struct SensoryLink 
 	{
-		MWWorld::Ptr mPtr;
+		//MWWorld::Ptr mPtr; //probably better just kept in the SEI
 		
 		MWBase::SmartEntityInstance * mSEInstance;
+
+		ESM::Position mLastPosition;
+
+
 		
 		SensoryLink::SensoryLink(MWWorld::Ptr ptr, MWBase::SmartEntityInstance * sei)
 		{
-			mPtr = ptr;
+			//mPtr = ptr;
+			mLastPosition = ptr.getRefData().getPosition();
 			mSEInstance = sei;
 		}
 	

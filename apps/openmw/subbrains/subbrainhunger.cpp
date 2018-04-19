@@ -77,3 +77,8 @@ MWBase::BOReturn MWBase::BOEat::update(float time, MWWorld::Ptr ownerptr)
 	//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(ownerptr, "wave", 0, 1);
 	return MWBase::COMPLETE;
 }
+
+MWBase::BOReturn MWBase::BOEat::start()
+{
+	return BOReturn::IN_PROGRESS;
+}

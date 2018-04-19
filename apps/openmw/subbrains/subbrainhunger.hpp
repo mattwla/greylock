@@ -59,7 +59,7 @@ namespace MWBase {
 
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
-		
+		virtual BOReturn start();
 		
 		virtual ~BOEat() {
 

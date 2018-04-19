@@ -55,11 +55,17 @@ namespace MWBase {
 	
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
 
+		bool checkItemGoneNotice();
+
 		void pickupItem();
 
 		virtual void getDebugInfo();
 
 		bool inGrabbingDistance();
+
+		ESM::Position mExpectedPosition;
+
+		virtual BOReturn start();
 
 
 		virtual ~BOGetFromWorld()

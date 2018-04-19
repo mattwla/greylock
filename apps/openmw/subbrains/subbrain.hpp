@@ -78,6 +78,7 @@ namespace MWBase {
 		}
 
 	
+		virtual BOReturn start() = 0;
 
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr) = 0;
 
