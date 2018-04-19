@@ -81,7 +81,7 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 			MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
 			node->mOutputs.push_back(statusoutput);
 			node->mId = "Get From World Node - location unknown";
-			std::cout << "Get From World Node - location unknown" << std::endl;
+			//std::cout << "Get From World Node - location unknown" << std::endl;
 			result.push_back(node);
 		}	
 
