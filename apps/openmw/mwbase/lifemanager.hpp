@@ -196,6 +196,8 @@ namespace MWBase
 
 		MWBase::JourneyManager * mJourneyManager;
 
+		MWBase::SmartEntityInstance * getSEIWithStatusFromInventory(std::string status);
+
 
 	public:
 

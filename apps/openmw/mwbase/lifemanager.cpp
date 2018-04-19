@@ -16,6 +16,28 @@
 
 namespace MWBase
 {
+	MWBase::SmartEntityInstance * Life::getSEIWithStatusFromInventory(std::string status)
+	{
+		MWWorld::Ptr ptr = mPtr;
+
+		auto sem = MWBase::Environment::get().getSmartEntitiesManager();
+		MWWorld::InventoryStore &inventoryStore = ptr.getClass().getInventoryStore(ptr);
+		for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)
+		{
+			if (sem->hasSmartInstance(*it))
+			{
+				std::cout << "found matching SI" << std::endl;
+				std::cout << (it)->getCellRef().getRefId() << std::endl;
+				auto sei = sem->getSmartEntityInstance(*it);
+				if (sei->hasStatus(status))
+					return sei;
+			}
+		}
+	
+
+		return nullptr;
+	}
+
 	//LIFE
 	void Life::getDebugInfo()
 	{
@@ -263,6 +285,7 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 	std::cout << "status" + status.mExtraData + "not true" << std::endl;
 	return false;
 }
+
 
 MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {

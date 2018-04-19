@@ -63,8 +63,17 @@ void MWBase::BOEat::getDebugInfo()
 
 MWBase::BOReturn MWBase::BOEat::update(float time, MWWorld::Ptr ownerptr)
 {
-	std::cout << "yum" << std::endl;
-	mOwnerLife->mVitals.mHunger = 0.0f;
-	MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(ownerptr, "wave", 0, 1);
+
+	MWBase::SmartEntityInstance * sei = mOwnerLife->getSEIWithStatusFromInventory("edible");
+	if (!sei)
+	{
+		std::cout << "could not find anything edible in inventory" << std::endl;
+		return MWBase::FAILED;
+	}
+
+	//std::cout << "yum" << std::endl;
+	//mOwnerLife->mVitals.mHunger = 0.0f;
+	sei->use(mOwnerLife);
+	//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(ownerptr, "wave", 0, 1);
 	return MWBase::COMPLETE;
 }

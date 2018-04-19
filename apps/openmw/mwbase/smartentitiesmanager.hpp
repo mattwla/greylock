@@ -97,6 +97,8 @@ namespace MWBase
 
 		virtual std::string getSaveString() = 0;
 
+		virtual bool use(MWBase::Life * user) = 0;
+
 
 	};
 

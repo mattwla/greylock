@@ -38,4 +38,6 @@ class SmartEntityBreadInstance : public MWBase::SmartEntityInstance {
 		//SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, int refnum, int pings);
 
 		virtual std::string getSaveString();
+
+		virtual bool use(MWBase::Life * user);
 };

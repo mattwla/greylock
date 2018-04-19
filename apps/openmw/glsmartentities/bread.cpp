@@ -1,4 +1,7 @@
 #include "bread.hpp"
+#include "../mwbase/lifemanager.hpp"
+#include "../mwworld/class.hpp"
+#include "../mwworld/action.hpp"
 #include <iostream>
 
 SmartEntityBreadTemplate::SmartEntityBreadTemplate()
@@ -54,4 +57,18 @@ SmartEntityBreadInstance::SmartEntityBreadInstance(std::string refid, ESM::RefNu
 std::string SmartEntityBreadInstance::getSaveString()
 {
 	return std::to_string(mPingCount);
+}
+
+bool SmartEntityBreadInstance::use(MWBase::Life * user)
+{
+	//maybe have return a pointer to a BO? Not a bad idea. But for now....
+	user->mVitals.mHunger = 0.0f;
+
+	std::shared_ptr<MWWorld::Action> action = mPtr.getClass().use(mPtr);
+
+	action->execute(user->mPtr);
+
+	
+	std::cout << "bread used" << std::endl;
+	return false;
 }
