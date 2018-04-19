@@ -405,6 +405,7 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
 	mGOAPNodes.clear();
+	mGOAPDesires.clear();
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
 		(*it)->calculate(awareness);
