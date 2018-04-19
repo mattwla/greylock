@@ -378,6 +378,7 @@ MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 
 void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr ptr)
 {
+	std::cout << "updated ptr" << std::endl;
 	mPtr = ptr;
 }
 

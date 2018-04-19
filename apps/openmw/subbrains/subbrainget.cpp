@@ -116,7 +116,9 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	if (noticedItemGone)
 	{
 		std::cout << "item changed position" << std::endl;
+		journeymanager->cancelJourney(10);
 		return FAILED;
+	
 
 		//Look around for item
 		//if can't find, give up
@@ -141,6 +143,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	}
 	else
 	{
+		std::cout << "new journey" << std::endl;
 		mInJourney = journeymanager->requestNewJourney(mExpectedPosition);
 		if (!mInJourney)
 		{
@@ -161,7 +164,9 @@ bool MWBase::BOGetFromWorld::checkItemGoneNotice()
 	{
 		bool changedpos = mSEITarget->getPtr().getRefData().getPosition().asVec3() != mExpectedPosition.asVec3();
 		osg::Vec3f pos1(mSEITarget->getPtr().getRefData().getPosition().asVec3());
+		std::cout << pos1[0] << std::endl;
 		osg::Vec3f pos2(mExpectedPosition.asVec3());
+		std::cout << pos2[0] << std::endl;
 		if (changedpos)
 			return true;	
 	}
@@ -207,7 +212,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::start()
 		std::cout << "get has no target, can't do!" << std::endl;
 		return BOReturn::FAILED;
 	}
-
+	std::cout << "started getfromworld" << std::endl;
 	ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
 	mExpectedPosition = pos;
 	return BOReturn::IN_PROGRESS;

@@ -21,7 +21,7 @@ namespace MWWorld
 		//alert SEManager... mwx
 		MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget().getCellRef().getRefId(), getTarget().getCellRef().getRefNum());
 			//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget());
-		
+		//std::cout << "updated ptr" << std::endl;
 		sei->updatePtr(newitem);
         MWBase::Environment::get().getWorld()->deleteObject (getTarget());
         setTarget(newitem);

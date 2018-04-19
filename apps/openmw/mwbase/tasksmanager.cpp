@@ -23,6 +23,13 @@ bool MWBase::JourneyManager::requestNewJourney(ESM::Position pos)
 	return true;
 }
 
+void MWBase::JourneyManager::cancelJourney(int ticket)
+{
+	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;
+	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+	seq.clear();
+}
+
 MWBase::JourneyStatus MWBase::JourneyManager::updateJourney(int ticket)
 {
 	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;

@@ -8,6 +8,7 @@
 
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/levelledlist.hpp"
@@ -298,6 +299,7 @@ MWWorld::ContainerStoreIterator MWWorld::ContainerStore::add (const Ptr& itemPtr
     pos.pos[1] = 0;
     pos.pos[2] = 0;
     item.getCellRef().setPosition(pos);
+	item.getRefData().setPosition(pos); //mwx
 
     // reset ownership stuff, owner was already handled above
     item.getCellRef().resetGlobalVariable();
@@ -335,8 +337,16 @@ MWWorld::ContainerStoreIterator MWWorld::ContainerStore::add (const Ptr& itemPtr
 
     if (mListener)
         mListener->itemAdded(item, count);
-
-    return it;
+	MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item.getCellRef().getRefId(), item.getCellRef().getRefNum());
+	if (sei)
+	{
+		//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item.getCellRef().getRefId(), item.getCellRef().getRefNum());
+		//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget());
+		//std::cout << "updated ptr" << std::endl;
+		sei->updatePtr(item);
+	}
+   
+	return it;
 }
 
 MWWorld::ContainerStoreIterator MWWorld::ContainerStore::addImp (const Ptr& ptr, int count)

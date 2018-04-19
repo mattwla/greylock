@@ -134,6 +134,8 @@ namespace MWBase
 
 		bool requestNewJourney(ESM::Position pos);
 
+		void cancelJourney(int ticket);
+
 		JourneyStatus updateJourney(int ticket);
 
 	};
