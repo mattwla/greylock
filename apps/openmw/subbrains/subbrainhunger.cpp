@@ -2,6 +2,7 @@
 #include "../mwbase/awarenessreactionsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
 
 
 
@@ -52,6 +53,7 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	mGOAPData->mOutputs.push_back(statusoutput);
 	mGOAPData->mBehaviorObject = this;
 	mGOAPData->mId = "BO EAT";
+
 }
 
 void MWBase::BOEat::getDebugInfo()
@@ -61,5 +63,8 @@ void MWBase::BOEat::getDebugInfo()
 
 MWBase::BOReturn MWBase::BOEat::update(float time, MWWorld::Ptr ownerptr)
 {
-	return MWBase::IN_PROGRESS;
+	std::cout << "yum" << std::endl;
+	mOwnerLife->mVitals.mHunger = 0.0f;
+	MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(ownerptr, "wave", 0, 1);
+	return MWBase::COMPLETE;
 }

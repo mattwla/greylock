@@ -93,6 +93,12 @@ namespace MWBase
 				delete bo;
 				mCurrentIntentionPlan.mCurrentBehaviorObject = 0;
 				mCurrentIntentionPlan.mCurrentStep -= 1;
+				if (mCurrentIntentionPlan.mCurrentStep = -1)
+				{
+					mHasIntention = false;
+
+				}
+
 			}
 		}
 	}
