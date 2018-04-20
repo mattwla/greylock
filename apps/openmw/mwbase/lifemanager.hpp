@@ -240,6 +240,12 @@ namespace MWBase
 		//std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
 
 		void prioritizeDesires(std::vector<GOAPDesire> &desires);
+
+		void selectIntentionPlan(std::vector<GOAPDesire>& desires);
+
+		void runTopIntentionPlan(float duration);
+
+	
 	};
 
 	class LifeManager
