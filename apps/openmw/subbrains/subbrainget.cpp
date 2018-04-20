@@ -3,8 +3,9 @@
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
 #include "../mwworld/class.hpp"
+#include "../mwbase/tasksmanager.hpp"
 
-#include "../mwtasks/tasksmanagerimp.hpp"
+//#include "../mwtasks/tasksmanagerimp.hpp"
 
 #include "../mwmechanics/npcstats.hpp"
 
