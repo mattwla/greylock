@@ -137,7 +137,12 @@ namespace MWBase {
 			mValence = val;
 			mIntentionPlan = 0;
 			mIsIntention = false;
-		}
+		};
+
+		GOAPDesire::GOAPDesire()
+		{
+
+		};
 
 	};
 		

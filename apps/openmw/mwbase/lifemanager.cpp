@@ -50,9 +50,9 @@ namespace MWBase
 		{
 			std::cout << "intention info" << std::endl;
 			unsigned int itx = 0;
-			while (itx < mCurrentIntentionPlan.mGOAPDataList.size())
+			while (itx < mCurrentIntentionPlans[0].mGOAPDataList.size())
 			{
-				std::cout << mCurrentIntentionPlan.mGOAPDataList[itx]->mId << std::endl;
+				std::cout << mCurrentIntentionPlans[0].mGOAPDataList[itx]->mId << std::endl;
 				itx++;
 			}
 		}
@@ -62,51 +62,78 @@ namespace MWBase
 
 	void Life::update(float duration)
 	{
+		typedef std::vector<GOAPDesire> desirelist;
+		typedef std::vector<IntentionPlan> intentionlist;
+
+		//change hunger, sleep, etc....
 		metabolize(duration);
+		//update objects npcs is aware of
 		mAwareness->refresh();
+		//pass awareness to subbrains, get back alist of desires
 		mSubBrainsManager->calculate(mAwareness);
-		std::vector<GOAPDesire> GOAPDesires = mSubBrainsManager->getGOAPDesires();
-		//What if we already have an intention? we need to weight it against new desires. Right now only one intention at a time.
-		if (GOAPDesires.size() > 0 && !mHasIntention)
+		desirelist GOAPDesires = mSubBrainsManager->getGOAPDesires();
+		
+		//Add current intentions into desire list, to weigh them against other desires
+		for (intentionlist::iterator it = mCurrentIntentionPlans.begin(); it != mCurrentIntentionPlans.end(); it++)
 		{
-			prioritizeDesires(GOAPDesires);
-			bool foundPossibleIntention = false;
-			unsigned int itx = 0;
-			while (!foundPossibleIntention && itx < GOAPDesires.size())
-			{
-				IntentionPlan newplan = mSubBrainsManager->createIntention(GOAPDesires[itx].mStatus, mPtr);
-				if (newplan.mPlanComplete)
-				{
-					mCurrentIntentionPlan = newplan;
-					mHasIntention = true;
-					mCurrentIntentionPlan.mCurrentStep = mCurrentIntentionPlan.mGOAPDataList.size() - 1; // set at last step, we go backwards
-					std::cout << "I have an intention plan" << std::endl;
-					foundPossibleIntention = true;
-				}
-				else
-				{
-					std::cout << "skipping desire which we can not meet" << std::endl;
-				}
-				itx += 1;
-			}
+			GOAPDesires.push_back(it->mDesire);
 		}
+		
+		if (GOAPDesires.size() == 0)
+			return;
 	
-		if (mHasIntention && mCurrentIntentionPlan.mCurrentBehaviorObject == 0) 	//Need to start an intention plan.
+
+		prioritizeDesires(GOAPDesires);
+
+		//We now have a list of NPC desires, run through priority list seeing if we can make a complete plan until we get one we can accomplish.
+		bool foundPossibleIntention = false;
+		unsigned int itx = 0;
+		while (!foundPossibleIntention && itx < GOAPDesires.size())
 		{
-			int step = mCurrentIntentionPlan.mCurrentStep;
-			MWBase::GOAPData * currentnode = mCurrentIntentionPlan.mGOAPDataList[step].get();
+			//Are we choosing a desire that we have already made a plan for?
+			if (GOAPDesires[itx].mIsIntention || (mCurrentIntentionPlans.size() > 0 && mCurrentIntentionPlans[0].mDesiredState == GOAPDesires[itx].mStatus))
+			{
+				std::cout << "selected desire that is already an intention" << std::endl;
+				foundPossibleIntention = true;
+				break;
+			}
+			
+			IntentionPlan newplan = mSubBrainsManager->createIntention(GOAPDesires[itx].mStatus, mPtr);
+			newplan.mDesire = GOAPDesires[itx];
+			if (newplan.mPlanComplete)
+			{
+				newplan.mDesire.mIsIntention = true;
+				mCurrentIntentionPlans.insert(mCurrentIntentionPlans.begin(), newplan);
+			//	mCurrentIntentionPlan = newplan;
+				mHasIntention = true;
+				mCurrentIntentionPlans[0].mCurrentStep = mCurrentIntentionPlans[0].mGOAPDataList.size() - 1; // set at last step, we go backwards
+				std::cout << "I have an intention plan" << std::endl;
+				foundPossibleIntention = true;
+				
+			}
+			else
+			{
+				std::cout << "skipping desire which we can not meet" << std::endl;
+			}
+			
+			itx += 1;
+		}
+		
+	
+		if (mHasIntention && mCurrentIntentionPlans[0].mCurrentBehaviorObject == 0) 	//Need to start an intention plan.
+		{
+			int step = mCurrentIntentionPlans[0].mCurrentStep;
+			MWBase::GOAPData * currentnode = mCurrentIntentionPlans[0].mGOAPDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
-			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
-			mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
-			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
-
-
+			mCurrentIntentionPlans[0].mCurrentBehaviorObject = newbo;
+			mCurrentIntentionPlans[0].mCurrentBehaviorObject->setOwner(this);
+			mCurrentIntentionPlans[0].mCurrentBehaviorObject->start();
 		}
 		else if (mHasIntention) //need to continue an intention plan
 		{
-			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
+			BehaviorObject * bo = mCurrentIntentionPlans[0].mCurrentBehaviorObject;
 			//bo->setOwner(this);
 
 			MWBase::BOReturn status = bo->update(duration, mPtr);
@@ -117,10 +144,11 @@ namespace MWBase
 			else if (status == BOReturn::COMPLETE)
 			{
 				delete bo;
-				mCurrentIntentionPlan.mCurrentBehaviorObject = 0;
-				mCurrentIntentionPlan.mCurrentStep -= 1;
-				if (mCurrentIntentionPlan.mCurrentStep = -1)
+				mCurrentIntentionPlans[0].mCurrentBehaviorObject = 0;
+				mCurrentIntentionPlans[0].mCurrentStep -= 1;
+				if (mCurrentIntentionPlans[0].mCurrentStep = -1)
 				{
+					mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 					mHasIntention = false;
 
 				}
@@ -130,6 +158,7 @@ namespace MWBase
 			{
 				//hack logic for now, delete the failed bo and get new intention.
 				delete bo;
+				mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 				mHasIntention = false;
 			}
 		}
@@ -302,7 +331,8 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	typedef std::vector<IntentionPlan> planlist;
 	planlist possibleplans;
 	planlist completeplans;
-	IntentionPlan emptyplan;
+	GOAPDesire emptydesire;
+	IntentionPlan emptyplan(emptydesire);
 	emptyplan.mPlanComplete = false;
 	typedef std::vector<std::shared_ptr<GOAPData>> nodechain;
 	std::vector<nodechain> nodechainlist;

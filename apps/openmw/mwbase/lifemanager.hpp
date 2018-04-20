@@ -88,7 +88,17 @@ namespace MWBase
 		int mCurrentStep;
 		bool mPlanComplete;
 		BehaviorObject * mCurrentBehaviorObject = 0;
-		
+		MWBase::GOAPDesire mDesire;
+
+		IntentionPlan(MWBase::GOAPDesire desire) : mDesire(desire)
+		{
+			
+		}
+
+		IntentionPlan()
+		{
+
+		}
 	};
 
 	enum LifeFSMState
@@ -108,6 +118,8 @@ namespace MWBase
 	
 	
 	public:
+
+		
 
 		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
 
@@ -187,7 +199,10 @@ namespace MWBase
 		Vitals mVitals;
 
 		//Current plan NPC is working towards
-		IntentionPlan mCurrentIntentionPlan;
+		//IntentionPlan mCurrentIntentionPlan;
+
+		//try to keep this at 2 at max.
+		std::vector<IntentionPlan> mCurrentIntentionPlans;
 
 		//Does the NPC have an intention now? Should be FSM of THINKING, IN_ACTION, OR TRAVELLING
 		bool mHasIntention = false;
