@@ -6,6 +6,7 @@
 #include "../subbrains/subbrainhunger.hpp"
 #include "../subbrains/subbrainget.hpp"
 #include "../subbrains/subbraininventory.hpp"
+#include "../subbrains/subbrainusese.hpp"
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../gllifemanager/goap.hpp"
