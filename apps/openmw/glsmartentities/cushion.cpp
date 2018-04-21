@@ -59,16 +59,12 @@ std::string SmartEntityCushionInstance::getSaveString()
 	return std::to_string(mPingCount);
 }
 
-bool SmartEntityCushionInstance::use(MWBase::Life * user)
+bool SmartEntityCushionInstance::isAvailableForUse()
 {
-	//maybe have return a pointer to a BO? Not a bad idea. But for now....
-	user->mVitals.mHunger = 0.0f;
-
-	std::shared_ptr<MWWorld::Action> action = mPtr.getClass().use(mPtr);
-
-	action->execute(user->mPtr);
-
-	
-	std::cout << "cushion used" << std::endl;
 	return false;
+}
+
+MWBase::BehaviorObject * SmartEntityCushionInstance::useWorldInstance(MWBase::Life * user)
+{
+	return nullptr;
 }

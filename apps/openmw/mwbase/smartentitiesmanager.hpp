@@ -8,11 +8,14 @@
 #include <stdint.h>
 #include <map>
 #include <list>
+#include "../mwbase/lifemanager.hpp"
+#include "../subbrains/subbrain.hpp"
 #include <components/esm/loadpgrd.hpp>
 #include "../mwmechanics/pathgrid.hpp"
 #include "../mwworld/timestamp.hpp"
 #include "../mwworld/ptr.hpp"
 #include "../mwtasks/task.hpp"
+
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
@@ -97,7 +100,25 @@ namespace MWBase
 
 		virtual std::string getSaveString() = 0;
 
-		virtual bool use(MWBase::Life * user) = 0;
+		virtual bool use(MWBase::Life * user) {
+
+			std::cout << "invalid use " << std::endl;
+			return false;
+		}
+
+		virtual bool isAvailableForUse()
+		{
+			//default behavior, true
+			return true;
+		}
+
+		virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user)
+		{
+			std::cout << "not able to be used in world" << std::endl;
+			return NULL;
+		}
+
+		
 
 
 	};

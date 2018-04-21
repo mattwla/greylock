@@ -35,9 +35,15 @@ class SmartEntityCushionInstance : public MWBase::SmartEntityInstance {
 
 		};
 
-		//SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, int refnum, int pings);
-
 		virtual std::string getSaveString();
 
-		virtual bool use(MWBase::Life * user);
+		virtual bool isAvailableForUse();
+	
+		virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user);
+
+
+
+	
+
+		
 };
