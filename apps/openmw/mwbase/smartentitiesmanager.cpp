@@ -1,5 +1,6 @@
 #include "smartentitiesmanager.hpp"
 #include "../glsmartentities/bread.hpp"
+#include "../glsmartentities/cushion.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
 #include <iostream>
@@ -17,6 +18,9 @@
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
 	SmartEntityTemplate * it = new SmartEntityBreadTemplate();
+	mSmartTemplateMap[it->getStringID()] = it;
+
+	it = new SmartEntityCushionTemplate();
 	mSmartTemplateMap[it->getStringID()] = it;
 }
 
@@ -356,6 +360,8 @@ bool MWBase::SmartEntityInstance::hasStatus(std::string status)
 	{
 		if (*it == status)
 			return true;
+
+		it++;
 	}
 
 	return false;

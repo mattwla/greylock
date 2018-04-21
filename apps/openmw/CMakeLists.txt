@@ -123,7 +123,7 @@ lifemanagerimp goap astargoap
 )
 
 add_openmw_dir (glsmartentities
-smartentitiesmanagerimp bread
+smartentitiesmanagerimp bread cushion
 )
 
 add_openmw_dir (subbrains
