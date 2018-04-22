@@ -7,8 +7,11 @@
 #include "../subbrains/subbrainget.hpp"
 #include "../subbrains/subbraininventory.hpp"
 #include "../subbrains/subbrainusese.hpp"
+#include "../subbrains/subbrainrelax.hpp"
+
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
+
 #include "../gllifemanager/goap.hpp"
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -51,9 +54,9 @@ namespace MWBase
 		{
 			std::cout << "intention info" << std::endl;
 			unsigned int itx = 0;
-			while (itx < mCurrentIntentionPlans[0].mGOAPDataList.size())
+			while (itx < mCurrentIntentionPlans[0].mGOAPNodeDataList.size())
 			{
-				std::cout << mCurrentIntentionPlans[0].mGOAPDataList[itx]->mId << std::endl;
+				std::cout << mCurrentIntentionPlans[0].mGOAPNodeDataList[itx]->mId << std::endl;
 				itx++;
 			}
 		}
@@ -118,23 +121,21 @@ namespace MWBase
 			//Are we choosing a desire that we have already made a plan for?
 			if (desires[itx].mIsIntention || (mCurrentIntentionPlans.size() > 0 && mCurrentIntentionPlans[0].mDesiredState == desires[itx].mStatus))
 			{
-				std::cout << "selected desire that is already an intention" << std::endl;
+				//std::cout << "selected desire that is already an intention" << std::endl;
 				foundPossibleIntention = true;
 				break;
 			}
 
 			IntentionPlan newplan = mSubBrainsManager->createIntention(desires[itx].mStatus, mPtr);
 			newplan.mDesire = desires[itx];
-			if (newplan.mPlanComplete)
+			if (newplan.mPlanComplete) //were we able to find a plan that works?
 			{
 				newplan.mDesire.mIsIntention = true;
 				mCurrentIntentionPlans.insert(mCurrentIntentionPlans.begin(), newplan);
-				//	mCurrentIntentionPlan = newplan;
 				mHasIntention = true;
-				mCurrentIntentionPlans[0].mCurrentStep = mCurrentIntentionPlans[0].mGOAPDataList.size() - 1; // set at last step, we go backwards
+				mCurrentIntentionPlans[0].mCurrentStep = mCurrentIntentionPlans[0].mGOAPNodeDataList.size() - 1; // set at last step, we go backwards
 				std::cout << "I have an intention plan" << std::endl;
 				foundPossibleIntention = true;
-
 			}
 			else
 			{
@@ -152,7 +153,7 @@ namespace MWBase
 		if (mCurrentIntentionPlans[0].mCurrentBehaviorObject == 0) 	//Need to start an intention plan BO.
 		{
 			int step = mCurrentIntentionPlans[0].mCurrentStep;
-			MWBase::GOAPData * currentnode = mCurrentIntentionPlans[0].mGOAPDataList[step].get();
+			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlans[0].mGOAPNodeDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
@@ -302,7 +303,7 @@ void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>&
 
 	for (plans::iterator it = planlist.begin(); it != planlist.end(); it++)
 	{
-		std::shared_ptr<GOAPData> currentplan = it->mGOAPDataList.back();
+		std::shared_ptr<GOAPNodeData> currentplan = it->mGOAPNodeDataList.back();
 		bool plancomplete = evaluateGOAPStatus(currentplan->mInputs[0], ptr); //currently only checks 1 status;
 		if (plancomplete)
 		{
@@ -337,6 +338,8 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 			//return
 			return hadObjectStatusInAwareness(status.mExtraData, ptr);
 			break;
+		case MWBase::GOAPStatus::STATUS_VOID: //no needed extra input
+			return true;
 	}
 	
 	std::cout << "status" + status.mExtraData + "not true" << std::endl;
@@ -352,7 +355,7 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	GOAPDesire emptydesire;
 	IntentionPlan emptyplan(emptydesire);
 	emptyplan.mPlanComplete = false;
-	typedef std::vector<std::shared_ptr<GOAPData>> nodechain;
+	typedef std::vector<std::shared_ptr<GOAPNodeData>> nodechain;
 	std::vector<nodechain> nodechainlist;
 	
 	//Seed the list, ask all subbrains if they have a behavior object that can meet our need.
@@ -361,7 +364,7 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	{
 		IntentionPlan plan;
 		plan.mDesiredState = status;
-		plan.mGOAPDataList.push_back(*itnc);
+		plan.mGOAPNodeDataList.push_back(*itnc);
 		possibleplans.push_back(plan);
 	}
 
@@ -378,7 +381,7 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 
 	while (possibleplans.size() > 0)
 	{		
-		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPDataList.back()->mInputs[0]); //only checks first input, no support for multiple for inputs for now
+		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPNodeDataList.back()->mInputs[0]); //only checks first input, no support for multiple for inputs for now
 		if (possiblepaths.size() == 0)
 		{
 			//std::cout << "dead end plan" << std::endl;
@@ -388,7 +391,7 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 		{
 			//copy plan
 			IntentionPlan copiedplan = possibleplans[0];
-			copiedplan.mGOAPDataList.push_back(*itb);
+			copiedplan.mGOAPNodeDataList.push_back(*itb);
 			possibleplans.push_back(copiedplan);
 		}
 
@@ -408,17 +411,17 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 		return emptyplan;
 }
 
-std::vector<std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
+std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)
 {
-	typedef std::vector<std::shared_ptr<MWBase::GOAPData>> goapdatalist;
-	goapdatalist result;
+	typedef std::vector<std::shared_ptr<MWBase::GOAPNodeData>> GOAPNodeDatalist;
+	GOAPNodeDatalist result;
 
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
 		//ask the subbrain what behavior objects it has that can meet this status
-		goapdatalist nc = (*it)->getMatchingBehaviorObjects(status);
+		GOAPNodeDatalist nc = (*it)->getMatchingBehaviorObjects(status);
 		//push them all into our result
-		for (goapdatalist::iterator itg = nc.begin(); itg != nc.end(); itg++)
+		for (GOAPNodeDatalist::iterator itg = nc.begin(); itg != nc.end(); itg++)
 		{
 			result.push_back(*itg);
 		}	
@@ -489,6 +492,10 @@ MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 	mSubBrains.push_back(sb);
 	sb = new SubBrainInventory(life);
 	mSubBrains.push_back(sb);
+	sb = new SubBrainRelax(life);
+	mSubBrains.push_back(sb);
+	sb = new SubBrainUseSE(life);
+	mSubBrains.push_back(sb);
 }
 
 std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
@@ -499,6 +506,13 @@ std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
 
 void MWBase::SubBrainsManager::logDesires()
 {
+	std::cout << "I desire....." << std::endl;
+	unsigned itx = 0;
+	while (itx < mGOAPDesires.size())
+	{
+		std::cout << mGOAPDesires[itx].debugInfo << std::endl;
+		itx += 1;
+	}
 
 	//if (mDesires.size() == 0)
 	//{

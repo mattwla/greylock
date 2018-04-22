@@ -11,7 +11,7 @@ namespace MWBase {
 	class Life;
 	class Awareness;
 	struct GOAPStatus;
-	struct GOAPData;
+	struct GOAPNodeData;
 	class BehaviorObject;
 	struct IntentionPlan;
 };
@@ -35,9 +35,9 @@ namespace MWBase {
 	};
 
 	//serves a a node for NPC planning
-	struct GOAPData
+	struct GOAPNodeData
 	{
-		statusstack mInputs;
+		statusstack mInputs; //AND or OR. Logic inside this to determine that.
 		statusstack mOutputs;
 		MWBase::BehaviorObject * mBehaviorObject;
 		std::string mId; // for debugging.
@@ -53,7 +53,7 @@ namespace MWBase {
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
 		MWBase::Life * mOwnerLife;
-		std::shared_ptr<GOAPData> mGOAPData;
+		std::shared_ptr<GOAPNodeData> mGOAPNodeData;
 		SmartEntityInstance * mSEITarget;
 		bool mInJourney;
 		
@@ -73,8 +73,8 @@ namespace MWBase {
 
 		};
 
-		std::shared_ptr<GOAPData> getGOAPNode() {
-			return mGOAPData;
+		std::shared_ptr<GOAPNodeData> getGOAPNode() {
+			return mGOAPNodeData;
 		}
 
 	
@@ -98,7 +98,8 @@ namespace MWBase {
 			HAS_ID_IN_INVENTORY = 0,
 			VITALS = 1,
 			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
-			AWARE_OF_OBJECT_WITH_STATUS = 3
+			AWARE_OF_OBJECT_WITH_STATUS = 3,
+			STATUS_VOID = 4
 		};
 
 		StatusType mStatusType;
@@ -131,6 +132,7 @@ namespace MWBase {
 		int mValence;
 		BehaviorObject * mIntentionPlan; //mwx fix me even needed?
 		bool mIsIntention;
+		std::string debugInfo = "desire template";
 		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)
 		{
 			mStatus = stat;
@@ -160,7 +162,7 @@ namespace MWBase {
 		//Desire
 		std::vector<GOAPDesire> mGOAPDesires;
 
-		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
+		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 
 		std::vector<WorldstateAtom> mWorldState;
 
@@ -185,7 +187,7 @@ namespace MWBase {
 		}
 
 		//Return BOs that have matching output, for now only BOs that totally meet needs
-		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
 

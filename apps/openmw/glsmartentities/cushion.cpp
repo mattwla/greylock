@@ -2,6 +2,7 @@
 #include "../mwbase/lifemanager.hpp"
 #include "../mwworld/class.hpp"
 #include "../mwworld/action.hpp"
+#include "../subbrains/subbrain.hpp"
 #include <iostream>
 
 SmartEntityCushionTemplate::SmartEntityCushionTemplate()
@@ -42,6 +43,24 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr)
 	mRefId = ptr.getCellRef().getRefId();
 	mPtr = ptr;
 	mStatusList.push_back("comfortable");
+
+	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData);
+	MWBase::GOAPStatus output(MWBase::GOAPStatus::VITALS, "stress", -1);
+	MWBase::GOAPStatus input(MWBase::GOAPStatus::STATUS_VOID, "void", 0);
+	node->mOutputs.push_back(output);
+	node->mInputs.push_back(input);
+	mGOAPNodeData.push_back(node);
+	
+	
+	
+	//node->mBehaviorObject = mUseSEInWorldBO;
+	//node->mSEI = it->mSEInstance;
+	//SEI (for now cushion) need to know all of this
+	/*MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, input.mExtraData, input.mAmount);
+	node->mInputs.push_back(statusinput);
+	MWBase::GOAPStatus statusoutput(output.mStatusType, output.mExtraData, output.mAmount);*/
+	/*node->mOutputs.push_back(statusoutput);*/
+
 	
 }
 
@@ -52,6 +71,10 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, ESM::R
 	mPingCount = pings;
 	mRefId = refid;
 	mStatusList.push_back("comfortable");
+
+	
+
+
 }
 
 std::string SmartEntityCushionInstance::getSaveString()

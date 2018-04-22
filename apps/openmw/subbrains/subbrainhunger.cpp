@@ -46,13 +46,13 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	//again a mess mwx fix me
 	std::cout << "made eat BO" << std::endl;
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
-	std::shared_ptr<GOAPData> gd(new GOAPData());
-	mGOAPData = gd;
-	mGOAPData->mInputs.push_back(statusinput);
+	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
+	mGOAPNodeData = gd;
+	mGOAPNodeData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
-	mGOAPData->mOutputs.push_back(statusoutput);
-	mGOAPData->mBehaviorObject = this;
-	mGOAPData->mId = "BO EAT";
+	mGOAPNodeData->mOutputs.push_back(statusoutput);
+	mGOAPNodeData->mBehaviorObject = this;
+	mGOAPNodeData->mId = "BO EAT";
 
 }
 

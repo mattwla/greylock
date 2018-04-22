@@ -127,7 +127,7 @@ smartentitiesmanagerimp bread cushion
 )
 
 add_openmw_dir (subbrains
-subbrain subbrainhunger subbrainget subbraininventory subbrainusese
+subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrelax
 
 )
 

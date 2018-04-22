@@ -30,7 +30,7 @@ namespace MWBase {
 
 		BehaviorObject * mUseSEInWorldBO;
 
-		virtual std::vector<std::shared_ptr<GOAPData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
+		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		int getCost(SmartEntityInstance * sei); //what of for a different BO?
 

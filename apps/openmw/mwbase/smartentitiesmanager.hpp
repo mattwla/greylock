@@ -74,6 +74,10 @@ namespace MWBase
 
 		std::vector<std::string> mStatusList;
 
+		//std::vector<MWBase::GOAPStatus> mGOAPList;
+
+		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> mGOAPNodeData;
+
 		//Get available BehaviorObjects
 
 	public :
@@ -117,6 +121,16 @@ namespace MWBase
 			std::cout << "not able to be used in world" << std::endl;
 			return NULL;
 		}
+
+		virtual bool meetsInputNeed(MWBase::GOAPStatus status)
+		{
+			return true;
+		}
+
+		virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getGOAPNodeData()
+		{
+			return mGOAPNodeData;
+		};
 
 		
 

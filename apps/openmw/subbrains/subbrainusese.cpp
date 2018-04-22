@@ -41,10 +41,10 @@ void MWBase::SubBrainUseSE::getDebugInfo()
 {
 }
 
-std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainUseSE::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
+std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 {
 	
-	std::vector<std::shared_ptr<GOAPData>> result;
+	std::vector<std::shared_ptr<GOAPNodeData>> result;
 
 
 	//search through all SEIs in sensory stores
@@ -52,7 +52,7 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainUseSE::getMatchi
 	//also store if SEIs need an input
 	//If so, build a node with associated cost and required input
 	
-	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
+	//if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
 	{
 		typedef std::vector<SensoryLink> linklist;
 		
@@ -63,34 +63,70 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainUseSE::getMatchi
 
 		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 		{
-			if (it->mSEInstance->hasStatus(status.mExtraData))
+			typedef std::vector<std::shared_ptr<MWBase::GOAPNodeData>> GOAPNodeDatalist;
+			GOAPNodeDatalist glo = it->mSEInstance->getGOAPNodeData();
+			for (GOAPNodeDatalist::iterator it2 = glo.begin(); it2 != glo.end(); it2++)
 			{
-				//a mess....
-				std::shared_ptr<GOAPData> node(new GOAPData);
-				node->mBehaviorObject = mUseSEInWorldBO;
-				node->mSEI = it->mSEInstance;
-				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-				node->mInputs.push_back(statusinput);
-				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
-				node->mOutputs.push_back(statusoutput);
-				node->mId = "Get From World Node - known location";
-				node->mCost = getCost(it->mSEInstance);
-				result.push_back(node);
+
+				
+				//need input and output
+				//only does 1 of each for now, will be fixed later for multiple
+				MWBase::GOAPStatus output = it2->get()->mOutputs[0];
+				MWBase::GOAPStatus input = it2->get()->mInputs[0];
+				bool match = output == status;
+				if (match)
+				{
+					//MWX FIX ME 
+
+					std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
+					node->mBehaviorObject = mUseSEInWorldBO;
+					node->mSEI = it->mSEInstance;
+					//SEI (for now cushion) need to know all of this
+					MWBase::GOAPStatus statusinput(input.mStatusType, input.mExtraData, input.mAmount);
+					node->mInputs.push_back(statusinput);
+					MWBase::GOAPStatus statusoutput(output.mStatusType, output.mExtraData, output.mAmount);
+					node->mOutputs.push_back(statusoutput);
+
+
+					node->mId = "Use SEI in world - location known.";
+					std::cout << node->mId << std::endl;
+					node->mCost = getCost(it->mSEInstance); //distance is fine for now.
+					result.push_back(node);
+				}
 			}
+
+
+
+
+
+			//if (it->mSEInstance->hasStatus(status.mExtraData))
+			//{
+			//	//a mess....
+			//	std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
+			//	node->mBehaviorObject = mUseSEInWorldBO;
+			//	node->mSEI = it->mSEInstance;
+			//	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+			//	node->mInputs.push_back(statusinput);
+			//	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+			//	node->mOutputs.push_back(statusoutput);
+			//	node->mId = "Get From World Node - known location";
+			//	node->mCost = getCost(it->mSEInstance);
+			//	result.push_back(node);
+			//}
 		}
 		
-		if (result.size() == 0) //we didn't know of anything to get, make a node requesting a node that can tell us where an item is.
-		{
-			std::shared_ptr<GOAPData> node(new GOAPData);
-			node->mBehaviorObject = mUseSEInWorldBO;
-			MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-			node->mInputs.push_back(statusinput);
-			MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
-			node->mOutputs.push_back(statusoutput);
-			node->mId = "Get From World Node - location unknown";
-			//std::cout << "Get From World Node - location unknown" << std::endl;
-			result.push_back(node);
-		}	
+		//if (result.size() == 0) //we didn't know of anything to get, make a node requesting a node that can tell us where an item is.
+		//{
+		//	std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
+		//	node->mBehaviorObject = mUseSEInWorldBO;
+		//	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+		//	node->mInputs.push_back(statusinput);
+		//	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+		//	node->mOutputs.push_back(statusoutput);
+		//	node->mId = "Get From World Node - location unknown";
+		//	//std::cout << "Get From World Node - location unknown" << std::endl;
+		//	result.push_back(node);
+		//}	
 
 	}
 	return result;
@@ -234,11 +270,11 @@ MWBase::BOUseSEInWorld::BOUseSEInWorld()
 	mInJourney = false;
 	std::cout << "made UseSEInWorld BO" << std::endl;
 	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
-	std::shared_ptr<GOAPData> gd(new GOAPData());
-	mGOAPData = gd;
-	mGOAPData->mInputs.push_back(statusinput);
+	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
+	mGOAPNodeData = gd;
+	mGOAPNodeData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
-	mGOAPData->mOutputs.push_back(statusoutput);
-	mGOAPData->mBehaviorObject = this;
-	mGOAPData->mId = "BO GET FROM WORLD";
+	mGOAPNodeData->mOutputs.push_back(statusoutput);
+	mGOAPNodeData->mBehaviorObject = this;
+	mGOAPNodeData->mId = "BO GET FROM WORLD";
 }

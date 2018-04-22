@@ -41,10 +41,10 @@ void MWBase::SubBrainGet::getDebugInfo()
 {
 }
 
-std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
+std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 {
 	
-	std::vector<std::shared_ptr<GOAPData>> result;
+	std::vector<std::shared_ptr<GOAPNodeData>> result;
 	
 	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
 	{
@@ -60,7 +60,7 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 			if (it->mSEInstance->hasStatus(status.mExtraData))
 			{
 				//a mess....
-				std::shared_ptr<GOAPData> node(new GOAPData);
+				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
 				node->mBehaviorObject = mGetFromWorldBO;
 				node->mSEI = it->mSEInstance;
 				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
@@ -75,7 +75,7 @@ std::vector <std::shared_ptr<MWBase::GOAPData>> MWBase::SubBrainGet::getMatching
 		
 		if (result.size() == 0) //we didn't know of anything to get, make a node requesting a node that can tell us where an item is.
 		{
-			std::shared_ptr<GOAPData> node(new GOAPData);
+			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
 			node->mBehaviorObject = mGetFromWorldBO;
 			MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
 			node->mInputs.push_back(statusinput);
@@ -228,11 +228,11 @@ MWBase::BOGetFromWorld::BOGetFromWorld()
 	mInJourney = false;
 	std::cout << "made GetFromWorld BO" << std::endl;
 	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
-	std::shared_ptr<GOAPData> gd(new GOAPData());
-	mGOAPData = gd;
-	mGOAPData->mInputs.push_back(statusinput);
+	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
+	mGOAPNodeData = gd;
+	mGOAPNodeData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
-	mGOAPData->mOutputs.push_back(statusoutput);
-	mGOAPData->mBehaviorObject = this;
-	mGOAPData->mId = "BO GET FROM WORLD";
+	mGOAPNodeData->mOutputs.push_back(statusoutput);
+	mGOAPNodeData->mBehaviorObject = this;
+	mGOAPNodeData->mId = "BO GET FROM WORLD";
 }

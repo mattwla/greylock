@@ -77,6 +77,7 @@ namespace MWBase
 	{
 		float mHunger = 0.0f;
 		float mSleepiness = 0.0f;
+		float mStress = 0.0f;
 		std::string getSaveState();
 		void loadState(std::string);
 	};
@@ -84,7 +85,7 @@ namespace MWBase
 	struct IntentionPlan
 	{
 		MWBase::GOAPStatus mDesiredState;
-		std::vector<std::shared_ptr<GOAPData>> mGOAPDataList;
+		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodeDataList;
 		int mCurrentStep;
 		bool mPlanComplete;
 		BehaviorObject * mCurrentBehaviorObject = 0;
@@ -112,7 +113,7 @@ namespace MWBase
 	{
 		std::vector<SubBrain*> mSubBrains; //process objects in world, create goals to accomplish (desires), offer ways to solve problems (intentions)
 		std::vector<GOAPDesire> mGOAPDesires;
-		std::vector<std::shared_ptr<GOAPData>> mGOAPNodes;
+		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 		MWBase::Life * mLife;
 		//std::vector<WorldstateAtom> mWorldState;
 	
@@ -139,7 +140,7 @@ namespace MWBase
 		IntentionPlan createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
 
 		//Given a status, queries all the subrains for behavior objectas that can help make that status true
-		std::vector<std::shared_ptr<GOAPData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
+		std::vector<std::shared_ptr<GOAPNodeData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
 
 		//run every frame, lets subbrains calculate ways to react to world
 		void calculate(MWBase::Awareness * awareness);
@@ -159,7 +160,7 @@ namespace MWBase
 
 		//std::vector<WorldstateAtom> getWorldstate();
 
-		std::vector<std::shared_ptr<GOAPData>> getGOAPNodes()
+		std::vector<std::shared_ptr<GOAPNodeData>> getGOAPNodes()
 		{
 			return mGOAPNodes;
 		}
