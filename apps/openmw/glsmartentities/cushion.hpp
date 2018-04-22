@@ -27,6 +27,11 @@ class SmartEntityCushionInstance : public MWBase::SmartEntityInstance {
 
 	public:
 
+		virtual float getActivationDistance()
+		{
+			return 1600.0f;
+		}
+
 		SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr);
 
 		SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, ESM::RefNum refnum, int pings);

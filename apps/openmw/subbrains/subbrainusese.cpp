@@ -152,13 +152,21 @@ bool MWBase::SubBrainUseSE::InUsingRange(MWBase::SmartEntityInstance * sei)
 
 MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerptr)
 {
+	if (mUsingSubBehavior)
+	{
+		MWBase::BOReturn status = mSubBehavior->update(time, mOwnerLife->mPtr);
+		return status;
+	}
+
+
+
 	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
 
-	bool noticedItemGone = false;
-	noticedItemGone = checkSEUnavailableNotice();
-	if (noticedItemGone)
+	bool noticedSEUnavailable = false;
+	noticedSEUnavailable = checkSEUnavailableNotice();
+	if (noticedSEUnavailable)
 	{
-		std::cout << "item changed position" << std::endl;
+		std::cout << "SE now in use." << std::endl;
 		journeymanager->cancelJourney(10);
 		return FAILED;
 	
@@ -169,9 +177,9 @@ MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerpt
 
 	if (inUsingDistance())
 	{
-		std::cout << "im grabbing distance" << std::endl;
+		std::cout << "in using distance" << std::endl;
 		useSE(); //wut if pickup didn't work? How can we guarantee? Maybe verify status here?
-		return COMPLETE;
+		//return COMPLETE;
 		//grab
 	}
 	else if (mInJourney)
@@ -186,7 +194,7 @@ MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerpt
 	}
 	else
 	{
-		std::cout << "new journey" << std::endl;
+		//std::cout << "new journey" << std::endl;
 		mInJourney = journeymanager->requestNewJourney(mExpectedPosition);
 		if (!mInJourney)
 		{
@@ -205,37 +213,32 @@ bool MWBase::BOUseSEInWorld::checkSEUnavailableNotice()
 	bool canseepos = MWBase::Environment::get().getAwarenessReactionsManager()->sightToPosCheck(mOwnerLife->mPtr, mExpectedPosition);
 	if (canseepos)
 	{
-		bool changedpos = mSEITarget->getPtr().getRefData().getPosition().asVec3() != mExpectedPosition.asVec3();
-		osg::Vec3f pos1(mSEITarget->getPtr().getRefData().getPosition().asVec3());
-		std::cout << pos1[0] << std::endl;
-		osg::Vec3f pos2(mExpectedPosition.asVec3());
-		std::cout << pos2[0] << std::endl;
-		if (changedpos)
-			return true;	
+		if (!mSEITarget->isAvailableForUse())
+			return true;
 	}
 
-	
 	return false;
-	
 
 }
 
 void MWBase::BOUseSEInWorld::useSE()
 {
+	std::cout << "attempted to use SE in world" << std::endl;
 	MWWorld::Ptr itemPtr = mSEITarget->getPtr();
 	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;
-	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
-	//bool currentlyActive = MWBase::Environment::get().getLifeManager()->inActiveRange(mNpcPtr);
-	/*if (currentlyActive)*/
+	
+	mSubBehavior = mSEITarget->useWorldInstance(mOwnerLife);
+	if (mSubBehavior)
 	{
-		//seq.stack(MWMechanics::AiActivate(itemPtr), ownerPtr);
-		MWBase::Environment::get().getWorld()->activate(itemPtr, ownerPtr);
-		std::cout << "activated" << std::endl;
+		
+		mUsingSubBehavior = true;
 	}
-	/*else
+	else
 	{
-		MWBase::Environment::get().getWorld()->activate(itemPtr, mNpcPtr);
-	}*/
+		std::cout << "no sub behavior given" << std::endl;
+	}
+
+
 }
 
 bool MWBase::BOUseSEInWorld::inUsingDistance()
@@ -244,7 +247,7 @@ bool MWBase::BOUseSEInWorld::inUsingDistance()
 	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
 	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
 	//std::cout << "distance to get object" + std::to_string(distance) << std::endl;
-	return distance < 1000.0f;
+	return distance < mSEITarget->getActivationDistance();
 
 }
 
@@ -255,7 +258,7 @@ MWBase::BOReturn MWBase::BOUseSEInWorld::start()
 		std::cout << "get has no target, can't do!" << std::endl;
 		return BOReturn::FAILED;
 	}
-	std::cout << "started getfromworld" << std::endl;
+	std::cout << "started use se in world" << std::endl;
 	ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
 	mExpectedPosition = pos;
 	return BOReturn::IN_PROGRESS;

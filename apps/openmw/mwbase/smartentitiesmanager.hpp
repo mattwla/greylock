@@ -78,12 +78,21 @@ namespace MWBase
 
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> mGOAPNodeData;
 
+		
+
 		//Get available BehaviorObjects
 
-		int mCurrentUserCount = 0;
+		
 
 	public :
 		
+
+
+		virtual float getActivationDistance() {
+			return 1000.0f;
+			//default
+		}
+
 		virtual ~SmartEntityInstance() {
 
 		};
@@ -96,7 +105,7 @@ namespace MWBase
 		
 		int getPings();
 		
-		
+		int mCurrentUserCount = 0;
 		
 		std::string getRefId();
 		

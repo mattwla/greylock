@@ -3,6 +3,8 @@
 #include "../mwworld/class.hpp"
 #include "../mwworld/action.hpp"
 #include "../subbrains/subbrain.hpp"
+#include "../mwmechanics/creaturestats.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
 #include <iostream>
 
 SmartEntityCushionTemplate::SmartEntityCushionTemplate()
@@ -93,15 +95,22 @@ std::string SmartEntityCushionInstance::getSaveString()
 
 bool SmartEntityCushionInstance::isAvailableForUse()
 {
-	return false;
+	if (mCurrentUserCount != 0)
+		return false;
+	else
+		return true;
 }
 
 MWBase::BehaviorObject * SmartEntityCushionInstance::useWorldInstance(MWBase::Life * user)
 {
+	std::cout << "I was requested to be used" << std::endl;
 	mCurrentUserCount = 1;
+	MWBase::BehaviorObject * bo = new BOCushionSit(1);
+	bo->setOwner(user);
+	bo->setTarget(this);
 	//new BOCushionSit(user);
 	
-	return nullptr;
+	return bo;
 }
 
 BOCushionSit::BOCushionSit(int valence)
@@ -116,11 +125,28 @@ BOCushionSit::BOCushionSit(int valence)
 
 void BOCushionSit::getDebugInfo()
 {
+	
 }
 
 MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 {
-	return MWBase::BOReturn();
+	
+	MWWorld::Ptr marker = mSEITarget->getPtr(); //what if I don't have ptr... btw I don't think I do. until I am on scene... so ok for now?
+	MWWorld::Ptr npc = mOwnerLife->mPtr;
+	ESM::Position markerPos = marker.getRefData().getPosition();
+	MWBase::Environment::get().getWorld()->rotateObject(npc, 0, 0, markerPos.rot[2]); //face direction of zoneslot
+
+	auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
+
+
+	
+	seq.clear();
+	MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npc, "sitground", 0, 1);
+	
+	
+	
+	
+	return MWBase::IN_PROGRESS;
 }
 
 MWBase::BOReturn BOCushionSit::start()

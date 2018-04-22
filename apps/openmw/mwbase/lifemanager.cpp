@@ -139,7 +139,7 @@ namespace MWBase
 			}
 			else
 			{
-				std::cout << "skipping desire which we can not meet" << std::endl;
+				//std::cout << "skipping desire which we can not meet" << std::endl;
 			}
 
 			itx += 1;

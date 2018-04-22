@@ -50,6 +50,7 @@ namespace MWBase {
 	protected:
 		std::string mID;
 		BehaviorObject * mSubBehavior; //maybe should instead be a GOAPDESIRE? or GOAPSTATUS?
+		bool mUsingSubBehavior = false;
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
 		MWBase::Life * mOwnerLife;
