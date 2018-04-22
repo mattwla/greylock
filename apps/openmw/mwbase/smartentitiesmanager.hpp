@@ -80,6 +80,8 @@ namespace MWBase
 
 		//Get available BehaviorObjects
 
+		int mCurrentUserCount = 0;
+
 	public :
 		
 		virtual ~SmartEntityInstance() {
@@ -93,6 +95,8 @@ namespace MWBase
 		bool hasStatus(std::string status);
 		
 		int getPings();
+		
+		
 		
 		std::string getRefId();
 		

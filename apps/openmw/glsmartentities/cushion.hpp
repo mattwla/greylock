@@ -47,3 +47,40 @@ class SmartEntityCushionInstance : public MWBase::SmartEntityInstance {
 
 		
 };
+
+class BOCushionSit : public MWBase::BehaviorObject
+{
+
+
+public:
+
+	//BOCushionSit::BOCushionSit();
+
+	BOCushionSit* Clone()
+	{
+		return new BOCushionSit(*this);
+	};
+
+
+	BOCushionSit::BOCushionSit(int valence);
+
+	//void getDebugInfo();
+
+	virtual void getDebugInfo();
+
+	virtual MWBase::BOReturn update(float time, MWWorld::Ptr ownerptr);
+
+	virtual MWBase::BOReturn start();
+
+	virtual ~BOCushionSit() {
+
+	};
+
+private:
+
+	BOCushionSit(BOCushionSit const &instance)
+	{
+
+	};
+
+};

@@ -98,5 +98,34 @@ bool SmartEntityCushionInstance::isAvailableForUse()
 
 MWBase::BehaviorObject * SmartEntityCushionInstance::useWorldInstance(MWBase::Life * user)
 {
+	mCurrentUserCount = 1;
+	//new BOCushionSit(user);
+	
 	return nullptr;
+}
+
+BOCushionSit::BOCushionSit(int valence)
+{
+
+
+
+
+
+
+}
+
+void BOCushionSit::getDebugInfo()
+{
+}
+
+MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
+{
+	return MWBase::BOReturn();
+}
+
+MWBase::BOReturn BOCushionSit::start()
+{
+	
+
+	return MWBase::BOReturn();
 }
