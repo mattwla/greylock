@@ -57,6 +57,7 @@ namespace MWBase {
 		std::shared_ptr<GOAPNodeData> mGOAPNodeData;
 		SmartEntityInstance * mSEITarget;
 		bool mInJourney;
+		bool mStopRequested = false;
 		
 
 	public:
@@ -91,6 +92,13 @@ namespace MWBase {
 			//start
 			//pause
 			//run
+
+		virtual bool stop()
+		{
+			//by default no stop logic;
+			std::cout << "BO with no stop logic recieved stop request" << std::endl;
+			return false;
+		};
 	};
 		
 	struct GOAPStatus

@@ -351,6 +351,11 @@ void MWBase::SmartEntityInstance::debugInfo()
 		std::cout << *it << std::endl;
 		it++;
 	}
+	bool usable = isAvailableForUse();
+	if (usable)
+		std::cout << "is usable" << std::endl;
+	else
+		std::cout << "not usable" << std::endl;
 }
 
 bool MWBase::SmartEntityInstance::hasStatus(std::string status)

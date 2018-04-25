@@ -73,6 +73,17 @@ namespace MWBase {
 			
 		};
 
+		virtual bool stop()
+		{
+			mStopRequested = true;
+			//by default no stop logic;
+			if (mUsingSubBehavior)
+				return mSubBehavior->stop();
+			else
+				return true;
+		};
+
+
 	private:
 
 		BOUseSEInWorld(BOUseSEInWorld const &instance)

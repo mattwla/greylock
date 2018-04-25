@@ -26,6 +26,7 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 
 		GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
 		GOAPDesire desire(desirestatus, 1);
+		desire.debugInfo = "eat desire";
 		mGOAPDesires.push_back(desire);
 	}
 }
@@ -42,7 +43,7 @@ void MWBase::SubBrainHunger::getDebugInfo()
 
 MWBase::BOEat::BOEat(int valence) //input urge strength
 {
-
+	
 	//again a mess mwx fix me
 	std::cout << "made eat BO" << std::endl;
 	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);

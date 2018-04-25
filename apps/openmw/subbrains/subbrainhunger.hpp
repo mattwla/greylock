@@ -65,10 +65,19 @@ namespace MWBase {
 
 		};
 
+		virtual bool stop()
+		{
+			//by default no stop logic;
+			std::cout << "BO with no stop logic recieved stop request" << std::endl;
+			return false;
+		};
+
+
 	private:
 
 		BOEat(BOEat const &instance)
 		{
+			
 
 		};
 

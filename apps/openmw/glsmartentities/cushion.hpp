@@ -81,6 +81,8 @@ public:
 
 	};
 
+	virtual bool stop();
+
 private:
 
 	BOCushionSit(BOCushionSit const &instance)

@@ -90,6 +90,7 @@ namespace MWBase
 		bool mPlanComplete;
 		BehaviorObject * mCurrentBehaviorObject = 0;
 		MWBase::GOAPDesire mDesire;
+		bool stop();
 
 		IntentionPlan(MWBase::GOAPDesire desire) : mDesire(desire)
 		{

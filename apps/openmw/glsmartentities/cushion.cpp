@@ -130,7 +130,14 @@ void BOCushionSit::getDebugInfo()
 
 MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 {
-	
+	if (mStopRequested)
+	{
+		std::cout << "stop requested condition entered in sit BO" << std::endl;
+		mSEITarget->mCurrentUserCount = 0; //direct hack not good mwx fix me
+		return MWBase::COMPLETE;
+	}
+
+
 	MWWorld::Ptr marker = mSEITarget->getPtr(); //what if I don't have ptr... btw I don't think I do. until I am on scene... so ok for now?
 	MWWorld::Ptr npc = mOwnerLife->mPtr;
 	ESM::Position markerPos = marker.getRefData().getPosition();
@@ -154,4 +161,17 @@ MWBase::BOReturn BOCushionSit::start()
 	
 
 	return MWBase::BOReturn();
+}
+
+bool BOCushionSit::stop()
+{
+	std::cout << "stop requested function call in cushionsitbo" << std::endl;
+	mStopRequested = true;
+	//flag it is time to get up.
+
+
+	//let cushion SEI know we are no longer in use.
+
+	//assume always can stop for now.
+	return true;
 }

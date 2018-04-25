@@ -130,6 +130,16 @@ namespace MWBase
 			newplan.mDesire = desires[itx];
 			if (newplan.mPlanComplete) //were we able to find a plan that works?
 			{
+				if (mHasIntention) // do we already have intention?
+				{
+					//request intention stop
+					//monitor until it reports it is complete
+					mCurrentIntentionPlans[0].stop();
+					foundPossibleIntention = true;
+					break;
+				}
+
+
 				newplan.mDesire.mIsIntention = true;
 				mCurrentIntentionPlans.insert(mCurrentIntentionPlans.begin(), newplan);
 				mHasIntention = true;
@@ -290,6 +300,15 @@ namespace MWBase
 		}
 		mHunger = cache[0];
 		mSleepiness = cache[1];
+	}
+	bool IntentionPlan::stop()
+	{
+		//request current BO to stop;
+		//Return if BO said it was possible
+		bool possible = mCurrentBehaviorObject->stop();
+
+
+		return possible;
 	}
 }
 

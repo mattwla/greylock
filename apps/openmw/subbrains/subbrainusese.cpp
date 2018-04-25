@@ -74,7 +74,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 				MWBase::GOAPStatus output = it2->get()->mOutputs[0];
 				MWBase::GOAPStatus input = it2->get()->mInputs[0];
 				bool match = output == status;
-				if (match)
+				if (match && it->mSEInstance->isAvailableForUse())
 				{
 					//MWX FIX ME 
 

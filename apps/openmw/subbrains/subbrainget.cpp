@@ -165,9 +165,9 @@ bool MWBase::BOGetFromWorld::checkItemGoneNotice()
 	{
 		bool changedpos = mSEITarget->getPtr().getRefData().getPosition().asVec3() != mExpectedPosition.asVec3();
 		osg::Vec3f pos1(mSEITarget->getPtr().getRefData().getPosition().asVec3());
-		std::cout << pos1[0] << std::endl;
+		// std::cout << pos1[0] << std::endl;
 		osg::Vec3f pos2(mExpectedPosition.asVec3());
-		std::cout << pos2[0] << std::endl;
+		//std::cout << pos2[0] << std::endl;
 		if (changedpos)
 			return true;	
 	}
