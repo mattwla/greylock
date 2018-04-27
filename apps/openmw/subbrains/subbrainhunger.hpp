@@ -33,6 +33,8 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
+		//virtual std::vector<std::shared_ptr<GOAPDesire>> getGOAPDesires();
+
 
 
 	//	virtual std::vector<MWBase::BehaviorObject> getDesires();

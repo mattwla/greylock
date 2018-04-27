@@ -169,7 +169,7 @@ namespace MWBase {
 		std::vector<GOAPStatus> mBeliefs;
 		
 		//Desire
-		std::vector<GOAPDesire> mGOAPDesires;
+		//std::vector<GOAPDesire> mGOAPDesires;
 
 		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 
@@ -185,11 +185,8 @@ namespace MWBase {
 
 		virtual std::string getID() = 0;
 
-		std::vector<GOAPDesire> getGOAPDesires()
-		{
-			return mGOAPDesires;
-		};
-
+		//virtual std::vector<std::shared_ptr<GOAPDesire>> getGOAPDesires() = 0;
+	
 		std::vector<WorldstateAtom> getWorldstate()
 		{
 			return mWorldState;

@@ -78,25 +78,49 @@ namespace MWBase
 		
 		
 		
-		desirelist GOAPDesires = mSubBrainsManager->getGOAPDesires();
+
+			
+			
+			//mSubBrainsManager->getGOAPDesires();
 		
 		
 		
 		//Add current intentions into desire list, to weigh them against other desires
-		for (intentionlist::iterator it = mCurrentIntentionPlans.begin(); it != mCurrentIntentionPlans.end(); it++)
+	/*	for (intentionlist::iterator it = mCurrentIntentionPlans.begin(); it != mCurrentIntentionPlans.end(); it++)
 		{
 			GOAPDesires.push_back(it->mDesire);
 		}
 		
 		if (GOAPDesires.size() == 0)
+			return;*/
+
+		if (mDesireList.size() == 0)
 			return;
 	
 		//sort desires from most desired to least
-		prioritizeDesires(GOAPDesires);
+		prioritizeDesires();
+
+		//New top desire?
+
+
 
 		//parse through desires from to bottom, if already has a plan do nothing, if needs a plan try to make one, if can't make plan go to next desire
 		//Words by manipulating mCurrentIntentionPlans
-		selectIntentionPlan(GOAPDesires);
+
+
+		bool foundPlan = false;
+		int itx = 0;
+		while (itx < mDesireList.size() && foundPlan != true)
+		{
+			//is this desire one we are currently working on? if so carry on. Else attempt to make a plan for this new desire.
+			if (mDesireList[itx].get()->mStatus == mCurrentIntentionPlans[0].mDesire.mStatus)
+				break;
+			else
+			{
+				IntentionPlan plan = selectIntentionPlan(mDesireList[itx]);
+				foundPlan = plan.mPlanComplete;
+			}
+		}
 
 		if (mHasIntention)
 			runTopIntentionPlan(duration);
@@ -108,7 +132,7 @@ namespace MWBase
 	{
 
 
-
+		mDesireList.push_back(desire);
 
 	}
 
@@ -118,57 +142,31 @@ namespace MWBase
 		mVitals.mSleepiness += duration / 2000.f;
 	}
 
-	void Life::prioritizeDesires(std::vector<GOAPDesire>& desires)
+
+	void Life::prioritizeDesires()
 	{
-		//weigh against current one too
-		desires;
+		mDesireList;
 	}
 
-	void Life::selectIntentionPlan(std::vector<GOAPDesire>& desires)
+	IntentionPlan Life::selectIntentionPlan(std::shared_ptr<GOAPDesire> desire)
 	{
-		//We now have a list of NPC desires, run through priority list seeing if we can make a complete plan until we get one we can accomplish.
-		bool foundPossibleIntention = false;
-		unsigned int itx = 0;
-		while (!foundPossibleIntention && itx < desires.size())
+		bool foundPossibleIntention;
+		GOAPDesire desireobject = *desire.get();
+		IntentionPlan newplan = mSubBrainsManager->createIntention(desireobject.mStatus, mPtr);
+		newplan.mDesire = desireobject; // <<<<<
+		if (newplan.mPlanComplete) //were we able to find a plan that works?
 		{
-			//Are we choosing a desire that we have already made a plan for?
-			if (desires[itx].mIsIntention || (mCurrentIntentionPlans.size() > 0 && mCurrentIntentionPlans[0].mDesiredState == desires[itx].mStatus))
-			{
-				//std::cout << "selected desire that is already an intention" << std::endl;
-				foundPossibleIntention = true;
-				break;
-			}
-
-			IntentionPlan newplan = mSubBrainsManager->createIntention(desires[itx].mStatus, mPtr);
-			newplan.mDesire = desires[itx];
-			if (newplan.mPlanComplete) //were we able to find a plan that works?
-			{
-				if (mHasIntention) // do we already have intention?
-				{
-					//request intention stop
-					//monitor until it reports it is complete
-					mCurrentIntentionPlans[0].stop();
-					foundPossibleIntention = true;
-					break;
-				}
-
-
-				newplan.mDesire.mIsIntention = true;
-				mCurrentIntentionPlans.insert(mCurrentIntentionPlans.begin(), newplan);
-				mHasIntention = true;
-				mCurrentIntentionPlans[0].mCurrentStep = mCurrentIntentionPlans[0].mGOAPNodeDataList.size() - 1; // set at last step, we go backwards
-				std::cout << "I have an intention plan" << std::endl;
-				foundPossibleIntention = true;
-			}
-			else
-			{
-				//std::cout << "skipping desire which we can not meet" << std::endl;
-			}
-
-			itx += 1;
+			newplan.mDesire.mIsIntention = true;
+			mCurrentIntentionPlans.insert(mCurrentIntentionPlans.begin(), newplan);
+			mHasIntention = true;
+			mCurrentIntentionPlans[0].mCurrentStep = mCurrentIntentionPlans[0].mGOAPNodeDataList.size() - 1; // set at last step, we go backwards
+			std::cout << "I have an intention plan" << std::endl;
+			foundPossibleIntention = true;
 		}
 
+		return newplan;
 	}
+		
 
 	void Life::runTopIntentionPlan(float duration)
 	{
@@ -497,18 +495,18 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
-	mGOAPNodes.clear();
-	mGOAPDesires.clear();
+	//mGOAPNodes.clear();
+	//mGOAPDesires.clear();
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
 		(*it)->calculate(awareness);
 		
 	
-		std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
+		/*std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
 		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
 		{
 			mGOAPDesires.push_back(*gdl);
-		}
+		}*/
 
 	}
 

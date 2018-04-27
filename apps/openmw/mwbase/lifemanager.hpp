@@ -231,6 +231,8 @@ namespace MWBase
 			mFSMState = FSM_THINKING;
 		}
 
+		std::vector<std::shared_ptr<MWBase::GOAPDesire>> mDesireList;
+
 		void getDebugInfo();
 
 		void update(float duration);
@@ -243,12 +245,12 @@ namespace MWBase
 
 		//std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
 
-		void prioritizeDesires(std::vector<GOAPDesire> &desires);
+		void prioritizeDesires();
 
-		void selectIntentionPlan(std::vector<GOAPDesire>& desires);
+		IntentionPlan selectIntentionPlan(std::shared_ptr<GOAPDesire> desire);
 
 		void runTopIntentionPlan(float duration);
-
+		
 	
 	};
 

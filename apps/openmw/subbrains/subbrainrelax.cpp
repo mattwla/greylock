@@ -13,13 +13,13 @@ MWBase::SubBrainRelax::SubBrainRelax(MWBase::Life * life)
 
 void MWBase::SubBrainRelax::calculate(MWBase::Awareness * awareness)
 {
-	mGOAPDesires.clear();
+//	mGOAPDesires.clear();
 	mWorldState.clear();
 
 	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "stress", -1);
 	GOAPDesire desire(desirestatus, 1);
 	desire.debugInfo = "relax desire";
-	mGOAPDesires.push_back(desire);
+	//mGOAPDesires.push_back(desire);
 	
 }
 

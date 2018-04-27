@@ -9,6 +9,9 @@
 
 MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 {
+
+
+
 	mOwnerLife = life;
 	mEatBO = new BOEat(1);
 	mGOAPNodes.push_back(mEatBO->getGOAPNode());
@@ -20,7 +23,7 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 {
-	mGOAPDesires.clear();
+	//mGOAPDesires.clear();
 	mWorldState.clear();
 	if (mOwnerLife->mVitals.mHunger > 100.0f)
 	{
@@ -50,6 +53,8 @@ void MWBase::SubBrainHunger::getDebugInfo()
 {
 
 }
+
+
 
 MWBase::BOEat::BOEat(int valence) //input urge strength
 {
