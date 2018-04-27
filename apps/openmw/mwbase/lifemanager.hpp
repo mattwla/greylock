@@ -89,10 +89,10 @@ namespace MWBase
 		int mCurrentStep;
 		bool mPlanComplete;
 		BehaviorObject * mCurrentBehaviorObject = 0;
-		MWBase::GOAPDesire mDesire;
+		std::shared_ptr<MWBase::GOAPDesire> mDesire;
 		bool stop();
 
-		IntentionPlan(MWBase::GOAPDesire desire) : mDesire(desire)
+		IntentionPlan(std::shared_ptr<MWBase::GOAPDesire> desire) : mDesire(desire)
 		{
 			
 		}
