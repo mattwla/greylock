@@ -3,6 +3,7 @@
 #include <components/esm/defs.hpp>
 #include "subbrain.hpp"
 #include <string>
+#include <memory>
 
 namespace MWBase{
 
@@ -15,6 +16,8 @@ namespace MWBase {
 	class SubBrainHunger : public MWBase::SubBrain {
 
 		BehaviorObject * mEatBO;
+
+		std::shared_ptr<GOAPDesire> mHungerDesire;
 
 	public:
 
@@ -29,6 +32,8 @@ namespace MWBase {
 		virtual std::string getID();
 
 		virtual void getDebugInfo();
+
+
 
 	//	virtual std::vector<MWBase::BehaviorObject> getDesires();
 

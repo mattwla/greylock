@@ -235,6 +235,8 @@ namespace MWBase
 
 		void update(float duration);
 
+		void submitDesirePtr(std::shared_ptr<MWBase::GOAPDesire> desire);
+
 	private:
 
 		void metabolize(float duration);

@@ -3,6 +3,7 @@
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include <memory>
 
 
 
@@ -11,6 +12,10 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 	mOwnerLife = life;
 	mEatBO = new BOEat(1);
 	mGOAPNodes.push_back(mEatBO->getGOAPNode());
+	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
+	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
+	mHungerDesire = pDesire;
+	mOwnerLife->submitDesirePtr(pDesire);
 }
 
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
@@ -23,11 +28,16 @@ void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 		mWorldState.push_back(ws);*/
 
 		//A list of desires that is maintained?
+		
+		
+		
+		//mHungerDesire = pDesire;
 
-		GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
-		GOAPDesire desire(desirestatus, 1);
-		desire.debugInfo = "eat desire";
-		mGOAPDesires.push_back(desire);
+
+	
+		//GOAPDesire desire(desirestatus, 1);
+		//desire.debugInfo = "eat desire";
+		//mGOAPDesires.push_back(desire);
 	}
 }
 

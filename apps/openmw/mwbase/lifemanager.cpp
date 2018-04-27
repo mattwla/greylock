@@ -75,7 +75,12 @@ namespace MWBase
 		mAwareness->refresh();
 		//pass awareness to subbrains, get back alist of desires
 		mSubBrainsManager->calculate(mAwareness);
+		
+		
+		
 		desirelist GOAPDesires = mSubBrainsManager->getGOAPDesires();
+		
+		
 		
 		//Add current intentions into desire list, to weigh them against other desires
 		for (intentionlist::iterator it = mCurrentIntentionPlans.begin(); it != mCurrentIntentionPlans.end(); it++)
@@ -97,6 +102,14 @@ namespace MWBase
 			runTopIntentionPlan(duration);
 
 		
+	}
+
+	void Life::submitDesirePtr(std::shared_ptr<MWBase::GOAPDesire> desire)
+	{
+
+
+
+
 	}
 
 	void Life::metabolize(float duration)
