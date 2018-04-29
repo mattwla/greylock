@@ -155,6 +155,10 @@ namespace MWBase {
 
 		};
 
+		bool operator> (const GOAPDesire& gd2) {
+			return mValence > gd2.mValence;
+		}
+
 	};
 		
 

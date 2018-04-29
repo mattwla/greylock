@@ -204,16 +204,22 @@ namespace MWBase
 		//IntentionPlan mCurrentIntentionPlan;
 
 		//try to keep this at 2 at max.
-		std::vector<IntentionPlan> mCurrentIntentionPlans;
+		IntentionPlan mCurrentIntentionPlan;
+
+		IntentionPlan mQueuedIntentionPlan;
 
 		//Does the NPC have an intention now? Should be FSM of THINKING, IN_ACTION, OR TRAVELLING
 		bool mHasIntention = false;
+
+		bool mHasQueuedIntention = false;
 
 		LifeFSMState mFSMState;
 
 		MWBase::JourneyManager * mJourneyManager;
 
 		MWBase::SmartEntityInstance * getSEIWithStatusFromInventory(std::string status);
+
+		
 
 
 	public:
@@ -247,9 +253,15 @@ namespace MWBase
 
 		void prioritizeDesires();
 
+		void determineIntention();
+
 		IntentionPlan selectIntentionPlan(std::shared_ptr<GOAPDesire> desire);
 
 		void runTopIntentionPlan(float duration);
+
+		void runSwapIntentionPlan(float duration);
+
+		bool mSuccsessfulStopRequest;
 		
 	
 	};

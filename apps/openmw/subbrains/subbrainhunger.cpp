@@ -18,30 +18,13 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
 	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
 	mHungerDesire = pDesire;
+	pDesire->debugInfo = "hunger desire";
 	mOwnerLife->submitDesirePtr(pDesire);
 }
 
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 {
-	//mGOAPDesires.clear();
-	mWorldState.clear();
-	if (mOwnerLife->mVitals.mHunger > 100.0f)
-	{
-		/*WorldstateAtom ws("hungry", true);
-		mWorldState.push_back(ws);*/
-
-		//A list of desires that is maintained?
-		
-		
-		
-		//mHungerDesire = pDesire;
-
-
-	
-		//GOAPDesire desire(desirestatus, 1);
-		//desire.debugInfo = "eat desire";
-		//mGOAPDesires.push_back(desire);
-	}
+	mHungerDesire->mValence = mOwnerLife->mVitals.mHunger;
 }
 
 std::string MWBase::SubBrainHunger::getID()

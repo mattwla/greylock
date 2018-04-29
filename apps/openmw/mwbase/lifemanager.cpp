@@ -48,15 +48,25 @@ namespace MWBase
 		std::cout << mId << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
-		mSubBrainsManager->logDesires();
+		//mSubBrainsManager->logDesires();
+
+		unsigned int ditx = 0;
+		while (ditx < mDesireList.size())
+		{
+			std::cout << mDesireList[ditx]->debugInfo << std::endl;
+			std::cout << mDesireList[ditx]->mValence << std::endl;
+			ditx += 1;
+		}
+
+
 		mSubBrainsManager->logWorldstate();
 		if (mHasIntention)
 		{
 			std::cout << "intention info" << std::endl;
 			unsigned int itx = 0;
-			while (itx < mCurrentIntentionPlans[0].mGOAPNodeDataList.size())
+			while (itx < mCurrentIntentionPlan.mGOAPNodeDataList.size())
 			{
-				std::cout << mCurrentIntentionPlans[0].mGOAPNodeDataList[itx]->mId << std::endl;
+				std::cout << mCurrentIntentionPlan.mGOAPNodeDataList[itx]->mId << std::endl;
 				itx++;
 			}
 		}
@@ -84,35 +94,17 @@ namespace MWBase
 		prioritizeDesires();
 
 		//Run through desires from strongest to weakest until we find one we are already working on, or find one we can accomplish.
-		bool foundPlan = false;
-		bool newIntention = false;
-		bool continueIntention = false;
-		int itx = 0;
-		while (itx < mDesireList.size() && foundPlan != true)
-		{
-			//is this desire one we are currently working on? if so carry on. Else attempt to make a plan for this new desire.
-			if (mDesireList[itx].get()->mStatus == mCurrentIntentionPlans[0].mDesire->mStatus)
-			{
-				continueIntention = true;
-				foundPlan = true;
-				newIntention = false;
-			}
-			else
-			{
-				IntentionPlan plan = selectIntentionPlan(mDesireList[itx]);
-				foundPlan = plan.mPlanComplete;
-				newIntention = true;
-			}
+		determineIntention();
 
-			itx += 1;
-		}
-
-
-
-
-
-		if (mHasIntention)
+		if (mHasQueuedIntention)
+			runSwapIntentionPlan(duration);
+		else
 			runTopIntentionPlan(duration);
+
+
+
+		//if (foundPlan)
+	
 
 		
 	}
@@ -134,7 +126,47 @@ namespace MWBase
 
 	void Life::prioritizeDesires()
 	{
-		mDesireList;
+		std::sort(mDesireList.begin(), mDesireList.end(), [](const std::shared_ptr<GOAPDesire> d1, std::shared_ptr<GOAPDesire> d2) -> bool {return d1->mValence > d2->mValence; });
+		
+		//mDesireList;
+	}
+
+	void Life::determineIntention()
+	{
+
+		bool foundPlan = false;
+		bool continueIntention = false;
+		unsigned int itx = 0;
+		while (itx < mDesireList.size() && foundPlan != true)
+		{
+			//is this desire one we are currently working on? if so carry on. Else attempt to make a plan for this new desire.
+			if (mDesireList[itx]->mIsIntention)
+			{
+				continueIntention = true;
+				foundPlan = true;
+			}
+			else
+			{
+				IntentionPlan plan = selectIntentionPlan(mDesireList[itx]);
+				foundPlan = plan.mPlanComplete;
+				if (foundPlan)
+				{
+					if (mHasIntention)
+					{
+						mHasQueuedIntention = true;
+						mQueuedIntentionPlan = plan;
+					}
+					else
+					{
+						mCurrentIntentionPlan = plan;
+						mHasIntention = true;
+					}			
+				
+				}
+			}
+
+			itx += 1;
+		}
 	}
 
 	IntentionPlan Life::selectIntentionPlan(std::shared_ptr<GOAPDesire> desire)
@@ -158,20 +190,20 @@ namespace MWBase
 	void Life::runTopIntentionPlan(float duration)
 	{
 
-		if (mCurrentIntentionPlans[0].mCurrentBehaviorObject == 0) 	//Need to start an intention plan BO.
+		if (mCurrentIntentionPlan.mCurrentBehaviorObject == 0) 	//Need to start an intention plan BO.
 		{
-			int step = mCurrentIntentionPlans[0].mCurrentStep;
-			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlans[0].mGOAPNodeDataList[step].get();
+			int step = mCurrentIntentionPlan.mCurrentStep;
+			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlan.mGOAPNodeDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
-			mCurrentIntentionPlans[0].mCurrentBehaviorObject = newbo;
-			mCurrentIntentionPlans[0].mCurrentBehaviorObject->setOwner(this);
-			mCurrentIntentionPlans[0].mCurrentBehaviorObject->start();
+			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
+			mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
+			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
 		}
 		else //need to continue an intention plan BO
 		{
-			BehaviorObject * bo = mCurrentIntentionPlans[0].mCurrentBehaviorObject;
+			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
 			//bo->setOwner(this);
 
 			MWBase::BOReturn status = bo->update(duration, mPtr);
@@ -182,11 +214,11 @@ namespace MWBase
 			else if (status == BOReturn::COMPLETE)
 			{
 				delete bo;
-				mCurrentIntentionPlans[0].mCurrentBehaviorObject = 0;
-				mCurrentIntentionPlans[0].mCurrentStep -= 1;
-				if (mCurrentIntentionPlans[0].mCurrentStep = -1)
+				mCurrentIntentionPlan.mCurrentBehaviorObject = 0;
+				mCurrentIntentionPlan.mCurrentStep -= 1;
+				if (mCurrentIntentionPlan.mCurrentStep = -1)
 				{
-					mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
+					//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 					mHasIntention = false;
 
 				}
@@ -197,10 +229,29 @@ namespace MWBase
 				//hack logic for now, delete the failed bo and get new intention.
 				//In future, resubmit to planner for new way of accomplishing this node.
 				delete bo;
-				mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
+				//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 				mHasIntention = false;
 			}
 		}
+	}
+
+	void Life::runSwapIntentionPlan(float duration)
+	{
+
+		MWBase::BOReturn status;
+
+		if(!mSuccsessfulStopRequest)
+			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop();
+
+		status = mCurrentIntentionPlan.mCurrentBehaviorObject[mCurrentIntentionPlan.mCurrentStep].update(duration, mPtr);
+
+		if (status == COMPLETE)
+		{
+			mCurrentIntentionPlan = mQueuedIntentionPlan;
+			mHasQueuedIntention = false;
+			mSuccsessfulStopRequest = false;
+		}
+
 	}
 
 	//LIFE MANAGER
