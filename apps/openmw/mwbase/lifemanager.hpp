@@ -261,7 +261,7 @@ namespace MWBase
 
 		void runSwapIntentionPlan(float duration);
 
-		bool mSuccsessfulStopRequest;
+		bool mSuccsessfulStopRequest = false;
 		
 	
 	};

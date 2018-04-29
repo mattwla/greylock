@@ -98,7 +98,7 @@ namespace MWBase
 
 		if (mHasQueuedIntention)
 			runSwapIntentionPlan(duration);
-		else
+		else if (mHasIntention)
 			runTopIntentionPlan(duration);
 
 
@@ -220,6 +220,7 @@ namespace MWBase
 				{
 					//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 					mHasIntention = false;
+					mCurrentIntentionPlan.mDesire->mIsIntention = false;
 
 				}
 
@@ -231,25 +232,28 @@ namespace MWBase
 				delete bo;
 				//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 				mHasIntention = false;
+				mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			}
 		}
 	}
 
 	void Life::runSwapIntentionPlan(float duration)
 	{
-
+		std::cout << "attempt intention swap" << std::endl;
 		MWBase::BOReturn status;
 
 		if(!mSuccsessfulStopRequest)
 			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop();
 
-		status = mCurrentIntentionPlan.mCurrentBehaviorObject[mCurrentIntentionPlan.mCurrentStep].update(duration, mPtr);
+		status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
 
 		if (status == COMPLETE)
 		{
+			mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			mCurrentIntentionPlan = mQueuedIntentionPlan;
 			mHasQueuedIntention = false;
 			mSuccsessfulStopRequest = false;
+			
 		}
 
 	}

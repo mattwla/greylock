@@ -75,6 +75,8 @@ namespace MWBase {
 
 		virtual bool stop()
 		{
+			std::cout << "use se bo got stop request" << std::endl;
+
 			mStopRequested = true;
 			//by default no stop logic;
 			if (mUsingSubBehavior)
