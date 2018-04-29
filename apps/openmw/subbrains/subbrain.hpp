@@ -56,12 +56,12 @@ namespace MWBase {
 		MWBase::Life * mOwnerLife;
 		std::shared_ptr<GOAPNodeData> mGOAPNodeData;
 		SmartEntityInstance * mSEITarget;
-		bool mInJourney;
+		bool mInJourney = false;
 		bool mStopRequested = false;
 		
 
 	public:
-
+		 
 		virtual BehaviorObject* Clone() = 0;
 
 		virtual void getDebugInfo() = 0;

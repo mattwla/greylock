@@ -178,6 +178,7 @@ MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerpt
 	if (inUsingDistance())
 	{
 		std::cout << "in using distance" << std::endl;
+		journeymanager->cancelJourney(10);
 		useSE(); //wut if pickup didn't work? How can we guarantee? Maybe verify status here?
 		//return COMPLETE;
 		//grab
