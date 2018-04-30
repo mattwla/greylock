@@ -88,6 +88,10 @@ void MWBase::SensoryLinkStore::addSensoryLink(ESM::RefNum refnum, SensoryLink se
 
 }
 
+void MWBase::SensoryLinkStore::removeSensoryLink(ESM::RefNum)
+{
+}
+
 MWBase::SensoryLinkStore::~SensoryLinkStore()
 {
 	

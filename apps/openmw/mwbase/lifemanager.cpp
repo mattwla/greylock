@@ -197,6 +197,7 @@ namespace MWBase
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
 			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
 			newbo->setTarget(currentnode->mSEI);
+			//newbo->setTargetSensoryLink();
 			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
 			mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
 			mCurrentIntentionPlan.mCurrentBehaviorObject->start();

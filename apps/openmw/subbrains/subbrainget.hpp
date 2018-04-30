@@ -76,7 +76,7 @@ namespace MWBase {
 		virtual bool stop()
 		{
 			//by default no stop logic;
-			std::cout << "BO with no stop logic recieved stop request" << std::endl;
+			std::cout << "BO with no stop logic recieved stop request.... get" << std::endl;
 			return false;
 		};
 

@@ -128,7 +128,9 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	if (inGrabbingDistance())
 	{
 		std::cout << "im grabbing distance" << std::endl;
+		journeymanager->cancelJourney(10);
 		pickupItem(); //wut if pickup didn't work? How can we guarantee? Maybe verify status here?
+		
 		return COMPLETE;
 		//grab
 	}

@@ -95,6 +95,8 @@ namespace MWBase
 		bool hasLinkWithStatus(std::string status);
 		
 		void addSensoryLink(ESM::RefNum, SensoryLink sensorylink);
+
+		void removeSensoryLink(ESM::RefNum);
 		
 		~SensoryLinkStore();
 	};
