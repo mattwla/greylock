@@ -17,11 +17,16 @@ void MWBase::Awareness::refresh()
 		it++;
 	}
 
+
 	//likely inefficient mwx fix me
 	if (mSensoryLinkStore)
 	{
-		delete mSensoryLinkStore;
+		SensoryLinkStore * oldStore = mSensoryLinkStore;
+		//delete mSensoryLinkStore;
 	}
+
+	moveSensoryLinksToMemory();
+
 	mSensoryLinkStore = newStore;
 
 
@@ -38,6 +43,12 @@ void MWBase::Awareness::getDebugInfo()
 		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mSEInstance->getPtr().getCellRef().getRefId() + " " + std::to_string(mSensoryLinkStore->mCurrentSensoryLinks[itx].mSEInstance->getPtr().getCellRef().getRefNum().mIndex) << std::endl;
 		itx += 1;
 	}
+}
+
+void MWBase::Awareness::moveSensoryLinksToMemory()
+{
+
+
 }
 
 MWBase::Awareness::Awareness(MWWorld::Ptr ptr)

@@ -7,6 +7,7 @@
 #include <set>
 #include <stdint.h>
 #include <map>
+#include <unordered_map>
 
 #include <list>
 
@@ -74,7 +75,9 @@ namespace MWBase
 	struct SensoryLinkStore
 	{
 		std::vector<SensoryLink> mCurrentSensoryLinks;
-		
+
+		std::unordered_map<SmartEntityInstance*, SensoryLink> mSensoryLinks;
+
 		std::vector<SensoryLink> mSensoryLinksInMemory;
 		
 		bool hasLinkWithStatus(std::string status);
@@ -96,6 +99,8 @@ namespace MWBase
 		void refresh();
 		
 		void getDebugInfo();
+
+		void moveSensoryLinksToMemory();
 		
 		Awareness::Awareness(MWWorld::Ptr ptr);
 		
