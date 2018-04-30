@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <map>
 #include <unordered_map>
+#include <iostream>
+
 
 #include <list>
 
@@ -17,11 +19,13 @@
 
 #include "../mwworld/ptr.hpp"
 #include "../mwtasks/task.hpp"
+#include "../mwworld/cellref.hpp"
 
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
+#include <functional>
 namespace osg
 {
 	class Vec3f;
@@ -53,7 +57,7 @@ namespace MWBase
 
 namespace MWBase
 {
-	struct SensoryLink 
+	struct SensoryLink //imprint of state of SE when NPC last saw. [should this be how GOAP interacts with SEs??]
 	{
 		//MWWorld::Ptr mPtr; //probably better just kept in the SEI
 		
@@ -61,6 +65,11 @@ namespace MWBase
 
 		ESM::Position mLastPosition;
 
+
+		SensoryLink::SensoryLink()
+		{
+
+		}
 
 		
 		SensoryLink::SensoryLink(MWWorld::Ptr ptr, MWBase::SmartEntityInstance * sei)
@@ -74,15 +83,18 @@ namespace MWBase
 
 	struct SensoryLinkStore
 	{
-		std::vector<SensoryLink> mCurrentSensoryLinks;
+		//std::vector<SensoryLink> mCurrentSensoryLinks;
 
-		std::unordered_map<SmartEntityInstance*, SensoryLink> mSensoryLinks;
+		std::unordered_map<ESM::RefNum, SensoryLink>mSensoryLinks;
 
-		std::vector<SensoryLink> mSensoryLinksInMemory;
+			
+			//refnum? Need to plan for the situation of an SE being consumed but npc not knowing about it. Sensory link? Needs quick lookup.
+
+		//std::vector<SensoryLink> mSensoryLinksInMemory;
 		
 		bool hasLinkWithStatus(std::string status);
 		
-		void addSensoryLink(SensoryLink sensorylink);
+		void addSensoryLink(ESM::RefNum, SensoryLink sensorylink);
 		
 		~SensoryLinkStore();
 	};

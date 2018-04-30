@@ -48,7 +48,7 @@ namespace Loading
 
 namespace MWBase
 {
-	typedef std::map<ESM::RefNum, SmartEntityInstance*> SmartInstanceMap;
+	typedef std::map<ESM::RefNum, SmartEntityInstance*> SmartInstanceMap; //should be unordered?
 	
 	
 	class SmartEntityInstance

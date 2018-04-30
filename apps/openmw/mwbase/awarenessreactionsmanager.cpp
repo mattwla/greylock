@@ -7,12 +7,16 @@ void MWBase::Awareness::refresh()
 	MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
 	MWBase::SmartInstanceMap::iterator it = instances.begin();
 	SensoryLinkStore * newStore = new SensoryLinkStore; //mwx fix me, better to maintain one.
+
+	
+
 	while (it != instances.end())
 	{
 		bool isaware = MWBase::Environment::get().getAwarenessReactionsManager()->awarenessCheck(it->second->getPtr(), mPtr);
 		if (isaware)
 		{
-			newStore->addSensoryLink(MWBase::SensoryLink(it->second->getPtr(), it->second));
+			ESM::RefNum refnum = it->second->getPtr().getCellRef().getRefNum();
+			newStore->addSensoryLink(refnum, MWBase::SensoryLink(it->second->getPtr(), it->second));
 		}
 		it++;
 	}
@@ -38,11 +42,16 @@ void MWBase::Awareness::getDebugInfo()
 	std::cout << "I am aware of..." << std::endl;
 	unsigned int itx = 0;
 	
-	while (itx < mSensoryLinkStore->mCurrentSensoryLinks.size())
+	for (auto i : mSensoryLinkStore->mSensoryLinks)
+	{
+		std::cout << i.second.mSEInstance->getPtr().getCellRef().getRefId() << std::endl;
+	}
+
+	/*while (itx < mSensoryLinkStore->mCurrentSensoryLinks.size())
 	{
 		std::cout << mSensoryLinkStore->mCurrentSensoryLinks[itx].mSEInstance->getPtr().getCellRef().getRefId() + " " + std::to_string(mSensoryLinkStore->mCurrentSensoryLinks[itx].mSEInstance->getPtr().getCellRef().getRefNum().mIndex) << std::endl;
 		itx += 1;
-	}
+	}*/
 }
 
 void MWBase::Awareness::moveSensoryLinksToMemory()
@@ -67,9 +76,14 @@ bool MWBase::SensoryLinkStore::hasLinkWithStatus(std::string status)
 	return false;
 }
 
-void MWBase::SensoryLinkStore::addSensoryLink(SensoryLink sensorylink)
+void MWBase::SensoryLinkStore::addSensoryLink(ESM::RefNum refnum, SensoryLink sensorylink)
 {
-	mCurrentSensoryLinks.push_back(sensorylink);
+	//mCurrentSensoryLinks[refnum] = (sensorylink);
+
+	mSensoryLinks[refnum] = sensorylink;
+
+	
+
 }
 
 MWBase::SensoryLinkStore::~SensoryLinkStore()

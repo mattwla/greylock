@@ -48,27 +48,27 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 	
 	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
 	{
-		typedef std::vector<SensoryLink> linklist;
+		typedef std::unordered_map<ESM::RefNum, SensoryLink> linklist;
 		
 		//search memory for items that match status, create a node for each and cost dependant on distance to npc.
 		
 		MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
-		std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
+		linklist currentlinks = sensorystore->mSensoryLinks;
 
 		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 		{
-			if (it->mSEInstance->hasStatus(status.mExtraData))
+			if (it->second.mSEInstance->hasStatus(status.mExtraData))
 			{
 				//a mess....
 				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
 				node->mBehaviorObject = mGetFromWorldBO;
-				node->mSEI = it->mSEInstance;
+				node->mSEI = it->second.mSEInstance;
 				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
 				node->mInputs.push_back(statusinput);
 				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
 				node->mOutputs.push_back(statusoutput);
 				node->mId = "Get From World Node - known location";
-				node->mCost = getCost(it->mSEInstance);
+				node->mCost = getCost(it->second.mSEInstance);
 				result.push_back(node);
 			}
 		}

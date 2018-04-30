@@ -2,8 +2,13 @@
 #define OPENMW_ESM_CELLREF_H
 
 #include <string>
+#include <functional>
+
 
 #include "defs.hpp"
+
+
+
 
 namespace ESM
 {
@@ -115,5 +120,18 @@ namespace ESM
     bool operator== (const RefNum& left, const RefNum& right);
     bool operator< (const RefNum& left, const RefNum& right);
 }
+
+namespace std
+{
+	template<>
+	class std::hash<ESM::RefNum> {
+	public:
+		size_t operator()(const ESM::RefNum &refnum) const
+		{
+			return hash<int>()(refnum.mContentFile) ^ hash<int>()(refnum.mIndex);
+		}
+		};
+}
+
 
 #endif

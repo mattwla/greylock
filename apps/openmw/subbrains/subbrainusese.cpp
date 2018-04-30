@@ -4,6 +4,7 @@
 #include "../mwbase/lifemanager.hpp"
 #include "../mwworld/class.hpp"
 #include "../mwbase/tasksmanager.hpp"
+#include <unordered_map>
 
 //#include "../mwtasks/tasksmanagerimp.hpp"
 
@@ -54,17 +55,21 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 	
 	//if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
 	{
-		typedef std::vector<SensoryLink> linklist;
+		typedef std::unordered_map<ESM::RefNum, SensoryLink> linklist;
 		
 		//search memory for items that match status, create a node for each and cost dependant on distance to npc.
 		
 		MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
-		std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
+		linklist currentlinks = sensorystore->mSensoryLinks;
+		//std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
+
+
 
 		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 		{
 			typedef std::vector<std::shared_ptr<MWBase::GOAPNodeData>> GOAPNodeDatalist;
-			GOAPNodeDatalist glo = it->mSEInstance->getGOAPNodeData();
+			GOAPNodeDatalist glo = it->second.mSEInstance->getGOAPNodeData();
+				//->second->mSEInstance->
 			for (GOAPNodeDatalist::iterator it2 = glo.begin(); it2 != glo.end(); it2++)
 			{
 
@@ -74,13 +79,13 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 				MWBase::GOAPStatus output = it2->get()->mOutputs[0];
 				MWBase::GOAPStatus input = it2->get()->mInputs[0];
 				bool match = output == status;
-				if (match && it->mSEInstance->isAvailableForUse())
+				if (match && it->second.mSEInstance->isAvailableForUse())
 				{
 					//MWX FIX ME 
 
 					std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
 					node->mBehaviorObject = mUseSEInWorldBO;
-					node->mSEI = it->mSEInstance;
+					node->mSEI = it->second.mSEInstance;
 					//SEI (for now cushion) need to know all of this
 					MWBase::GOAPStatus statusinput(input.mStatusType, input.mExtraData, input.mAmount);
 					node->mInputs.push_back(statusinput);
@@ -90,7 +95,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 
 					node->mId = "Use SEI in world - location known.";
 					std::cout << node->mId << std::endl;
-					node->mCost = getCost(it->mSEInstance); //distance is fine for now.
+					node->mCost = getCost(it->second.mSEInstance); //distance is fine for now.
 					result.push_back(node);
 				}
 			}

@@ -521,7 +521,7 @@ bool MWBase::SubBrainsManager::hasObjectStatusInInventory(MWBase::GOAPStatus sta
 }
 
 bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr)
-{
+{/*
 	typedef std::vector<SensoryLink> linklist;
 	MWBase::SensoryLinkStore * sensorystore = mLife->mAwareness->getSensoryLinkStore();
 	std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
@@ -531,7 +531,7 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 		{
 			return true;
 		}
-	}
+	}*/
 	return false;
 }
 
