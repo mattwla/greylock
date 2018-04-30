@@ -6,7 +6,9 @@ void MWBase::Awareness::refresh()
 {
 	MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
 	MWBase::SmartInstanceMap::iterator it = instances.begin();
-	SensoryLinkStore * newStore = new SensoryLinkStore; //mwx fix me, better to maintain one.
+	SensoryLinkStore * newStore = mSensoryLinkStore;
+		
+	//	new SensoryLinkStore; //mwx fix me, better to maintain one.
 
 	
 
@@ -23,15 +25,15 @@ void MWBase::Awareness::refresh()
 
 
 	//likely inefficient mwx fix me
-	if (mSensoryLinkStore)
-	{
-		SensoryLinkStore * oldStore = mSensoryLinkStore;
-		//delete mSensoryLinkStore;
-	}
+	//if (mSensoryLinkStore)
+	//{
+	//	SensoryLinkStore * oldStore = mSensoryLinkStore;
+	//	//delete mSensoryLinkStore;
+	//}
 
-	moveSensoryLinksToMemory();
+	//moveSensoryLinksToMemory();
 
-	mSensoryLinkStore = newStore;
+	//mSensoryLinkStore = newStore;
 
 
 
