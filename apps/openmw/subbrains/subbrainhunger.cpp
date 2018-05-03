@@ -14,7 +14,7 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 
 	mOwnerLife = life;
 	mEatBO = new BOEat(1);
-	mGOAPNodes.push_back(mEatBO->getGOAPNode());
+	//mGOAPNodes.push_back(mEatBO->getGOAPNode());
 	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
 	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
 	mHungerDesire = pDesire;
@@ -37,6 +37,34 @@ void MWBase::SubBrainHunger::getDebugInfo()
 
 }
 
+std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainHunger::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
+{
+	
+	std::vector < std::shared_ptr < MWBase::GOAPNodeData >> results;
+	
+	MWBase::GOAPStatus gs;
+	gs.mAmount = -1;
+	gs.mStatusType = GOAPStatus::VITALS;
+	gs.mExtraData = "hunger";
+
+	if (status == gs)
+	{
+
+	//actually search inventory for thing to eat?
+	//std::vector<std::shared_ptr<MWBase::GOAPNodeData>> results;
+	MWBase::GOAPStatus statusinput(MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
+	MWBase::GOAPStatus statusoutput(MWBase::GOAPStatus::VITALS, "hunger", -1);
+	ESM::RefNum refnum;
+	refnum.unset();
+
+	std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mEatBO, refnum, 1, "eat bo node"));
+	results.push_back(node);
+
+
+	}
+	return results;
+}
+
 
 
 MWBase::BOEat::BOEat(int valence) //input urge strength
@@ -44,14 +72,14 @@ MWBase::BOEat::BOEat(int valence) //input urge strength
 	
 	//again a mess mwx fix me
 	std::cout << "made eat BO" << std::endl;
-	MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
-	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
-	mGOAPNodeData = gd;
-	mGOAPNodeData->mInputs.push_back(statusinput);
-	MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
-	mGOAPNodeData->mOutputs.push_back(statusoutput);
-	mGOAPNodeData->mBehaviorObject = this;
-	mGOAPNodeData->mId = "BO EAT";
+	//MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
+	//std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
+	//mGOAPNodeData = gd;
+	//mGOAPNodeData->mInputs.push_back(statusinput);
+	//MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
+	//mGOAPNodeData->mOutputs.push_back(statusoutput);
+	//mGOAPNodeData->mBehaviorObject = this;
+	//mGOAPNodeData->mId = "BO EAT";
 
 }
 

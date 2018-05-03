@@ -47,9 +47,12 @@ namespace MWBase {
 
 		BOGetFromWorld::BOGetFromWorld();
 
-		BOGetFromWorld* Clone()
+		BOGetFromWorld* Clone(MWBase::Life * life, ESM::RefNum refnum)
 		{
-			return new BOGetFromWorld(*this);
+			BOGetFromWorld * newbo = new BOGetFromWorld(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			return newbo;
 		}
 
 	

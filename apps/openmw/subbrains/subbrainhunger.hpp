@@ -33,6 +33,8 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
+		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status);
+
 		//virtual std::vector<std::shared_ptr<GOAPDesire>> getGOAPDesires();
 
 
@@ -52,9 +54,12 @@ namespace MWBase {
 
 		//BOEat::BOEat();
 
-		BOEat* Clone()
+		BOEat* Clone(MWBase::Life * life, ESM::RefNum refnum)
 		{
-			return new BOEat(*this);
+			BOEat * newbo = new BOEat(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			return newbo;
 		};
 
 

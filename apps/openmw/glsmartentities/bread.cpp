@@ -68,7 +68,7 @@ bool SmartEntityBreadInstance::use(MWBase::Life * user)
 
 	action->execute(user->mPtr);
 
-	
+	user->mAwareness->getSensoryLinkStore()->removeSensoryLink(mPtr.getCellRef().getRefNum());
 	std::cout << "bread used" << std::endl;
 	return false;
 }

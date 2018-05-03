@@ -17,7 +17,7 @@ MWBase::SubBrainGet::SubBrainGet(MWBase::Life * life)
 {
 	mOwnerLife = life;
 	mGetFromWorldBO = new BOGetFromWorld();	
-	mGOAPNodes.push_back(mGetFromWorldBO->getGOAPNode());
+	//mGOAPNodes.push_back(mGetFromWorldBO->getGOAPNode());
 }
 
 void MWBase::SubBrainGet::calculate(MWBase::Awareness * awareness)
@@ -59,31 +59,24 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 		{
 			if (it->second.mSEInstance->hasStatus(status.mExtraData))
 			{
-				//a mess....
-				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
-				node->mBehaviorObject = mGetFromWorldBO;
-				node->mSEI = it->second.mSEInstance;
 				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-				node->mInputs.push_back(statusinput);
 				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
-				node->mOutputs.push_back(statusoutput);
-				node->mId = "Get From World Node - known location";
-				node->mCost = getCost(it->second.mSEInstance);
+				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mGetFromWorldBO, it->first, 1, "get from world" + it->second.mSEInstance->getRefId() ));
 				result.push_back(node);
 			}
 		}
 		
 		if (result.size() == 0) //we didn't know of anything to get, make a node requesting a node that can tell us where an item is.
 		{
-			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
-			node->mBehaviorObject = mGetFromWorldBO;
-			MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-			node->mInputs.push_back(statusinput);
-			MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
-			node->mOutputs.push_back(statusoutput);
-			node->mId = "Get From World Node - location unknown";
-			//std::cout << "Get From World Node - location unknown" << std::endl;
-			result.push_back(node);
+			//std::shared_ptr<GOAPNodeData> node(new GOAPNodeData);
+			//node->mBehaviorObject = mGetFromWorldBO;
+			//MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+			//node->mInputs.push_back(statusinput);
+			//MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+			//node->mOutputs.push_back(statusoutput);
+			//node->mId = "Get From World Node - location unknown";
+			////std::cout << "Get From World Node - location unknown" << std::endl;
+			//result.push_back(node);
 		}	
 
 	}
@@ -117,6 +110,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	if (noticedItemGone)
 	{
 		std::cout << "item changed position" << std::endl;
+		mOwnerLife->mAwareness->getSensoryLinkStore()->removeSensoryLink(mSEITarget->getPtr().getCellRef().getRefNum());
 		journeymanager->cancelJourney(10);
 		return FAILED;
 	
@@ -162,6 +156,15 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 
 bool MWBase::BOGetFromWorld::checkItemGoneNotice()
 {
+	osg::Vec3f ininv(0, 0, 0);
+
+	//HACK HACK MWX FIX ME
+	//if npc magically sense that item location is 0 0 0 which often means in someones inventory than report failure, so hacky.
+	if (mSEITarget->getPtr().getRefData().getPosition().asVec3() == ininv)
+	{
+		return true;
+	}
+
 	bool canseepos = MWBase::Environment::get().getAwarenessReactionsManager()->sightToPosCheck(mOwnerLife->mPtr, mExpectedPosition);
 	if (canseepos)
 	{
@@ -210,14 +213,15 @@ bool MWBase::BOGetFromWorld::inGrabbingDistance()
 
 MWBase::BOReturn MWBase::BOGetFromWorld::start()
 {
-	if (!mSEITarget)
-	{
-		std::cout << "get has no target, can't do!" << std::endl;
-		return BOReturn::FAILED;
-	}
+	//if (!mSEITarget)
+	//{
+	//	std::cout << "get has no target, can't do!" << std::endl;
+	//	return BOReturn::FAILED;
+	//}
 	std::cout << "started getfromworld" << std::endl;
-	ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
-	mExpectedPosition = pos;
+	mSEITarget = mOwnerLife->mAwareness->getSensoryLinkStore()->mSensoryLinks[mTargetRefNum].mSEInstance;
+	//ESM::Position pos = mSEITarget->getPtr().getRefData().getPosition();
+	mExpectedPosition = mOwnerLife->mAwareness->getSensoryLinkStore()->mSensoryLinks[mTargetRefNum].mLastPosition;
 	return BOReturn::IN_PROGRESS;
 }
 
@@ -229,12 +233,12 @@ MWBase::BOGetFromWorld::BOGetFromWorld()
 {
 	mInJourney = false;
 	std::cout << "made GetFromWorld BO" << std::endl;
-	MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
+	/*MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
 	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
 	mGOAPNodeData = gd;
 	mGOAPNodeData->mInputs.push_back(statusinput);
 	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
 	mGOAPNodeData->mOutputs.push_back(statusoutput);
 	mGOAPNodeData->mBehaviorObject = this;
-	mGOAPNodeData->mId = "BO GET FROM WORLD";
+	mGOAPNodeData->mId = "BO GET FROM WORLD";*/
 }

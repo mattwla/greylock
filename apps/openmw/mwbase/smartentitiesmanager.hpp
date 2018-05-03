@@ -108,6 +108,8 @@ namespace MWBase
 		int mCurrentUserCount = 0;
 		
 		std::string getRefId();
+
+		ESM::RefNum getRefNum();
 		
 		MWWorld::Ptr & getPtr();
 		

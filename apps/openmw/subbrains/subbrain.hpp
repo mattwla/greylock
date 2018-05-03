@@ -24,7 +24,44 @@ namespace ESM {
 	class RefNum;
 }
 
+
+
+
+
 namespace MWBase {
+
+	struct GOAPStatus
+	{
+		enum StatusType {
+			HAS_ID_IN_INVENTORY = 0,
+			VITALS = 1,
+			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
+			AWARE_OF_OBJECT_WITH_STATUS = 3,
+			STATUS_VOID = 4
+		};
+
+		StatusType mStatusType;
+
+		std::string mExtraData;
+
+		int mAmount;
+
+		bool operator==(GOAPStatus status);
+
+		GOAPStatus::GOAPStatus()
+		{
+
+		};
+
+		GOAPStatus::GOAPStatus(StatusType type, std::string extradata, int amount)
+		{
+			mStatusType = type;
+			mExtraData = extradata;
+			mAmount = amount;
+		};
+
+
+	};
 
 	typedef std::vector<GOAPStatus> statusstack;
 
@@ -41,8 +78,48 @@ namespace MWBase {
 		statusstack mOutputs;
 		MWBase::BehaviorObject * mBehaviorObject;
 		std::string mId; // for debugging.
-		SmartEntityInstance * mSEI; //for the object the action will act upon. Like getting a BREAD or using an OVEN or talking to an NPC.
+		ESM::RefNum mRefNum;
+		//SmartEntityInstance * mSEI; //for the object the action will act upon. Like getting a BREAD or using an OVEN or talking to an NPC.
 		int mCost = 0;
+		MWBase::BehaviorObject * getNewBehaviorObject(MWBase::Life * ownerlife, ESM::RefNum seirefnum);
+
+		//constructor for objects with single input and output
+		GOAPNodeData(MWBase::GOAPStatus input, MWBase::GOAPStatus output, MWBase::BehaviorObject * behaviorobject, ESM::RefNum refnum, int cost, std::string debugid)
+		{
+			statusstack inputs;
+			inputs.push_back(input);
+			mInputs = inputs;
+
+			statusstack outputs;
+			outputs.push_back(output);
+			mOutputs = outputs;
+
+			mBehaviorObject = behaviorobject;
+
+			mRefNum = refnum;
+
+			mCost = cost;
+
+			mId = debugid;
+
+		}
+
+		//constructor for objects with multiple inputs and outputs
+		GOAPNodeData(statusstack input, statusstack output, MWBase::BehaviorObject * behaviorobject, ESM::RefNum refnum, int cost, std::string debugid) {
+
+			mInputs = input;
+
+			mOutputs = output;
+
+			mBehaviorObject = behaviorobject;
+
+			mRefNum = refnum;
+
+			mCost = cost;
+
+			mId = debugid;
+
+		};
 	};
 
 	class BehaviorObject
@@ -53,16 +130,18 @@ namespace MWBase {
 		bool mUsingSubBehavior = false;
 		MWWorld::Ptr mOwnerPtr;
 		ESM::RefNum mOwnerRefNum;
+		ESM::RefNum mTargetRefNum;
 		MWBase::Life * mOwnerLife;
-		std::shared_ptr<GOAPNodeData> mGOAPNodeData;
+		//std::shared_ptr<GOAPNodeData> mGOAPNodeData;
 		SmartEntityInstance * mSEITarget;
 		bool mInJourney = false;
 		bool mStopRequested = false;
+		//MWBase::SensoryLinkStore * mOwnerSensoryStore;
 		
 
 	public:
 		 
-		virtual BehaviorObject* Clone() = 0;
+		virtual BehaviorObject* Clone(MWBase::Life * life, ESM::RefNum refnum) = 0;
 
 		virtual void getDebugInfo() = 0;
 
@@ -75,9 +154,9 @@ namespace MWBase {
 
 		};
 
-		std::shared_ptr<GOAPNodeData> getGOAPNode() {
-			return mGOAPNodeData;
-		}
+		//std::shared_ptr<GOAPNodeData> getGOAPNode() {
+		//	//return mGOAPNodeData;
+		//}
 
 	
 		virtual BOReturn start() = 0;
@@ -101,38 +180,7 @@ namespace MWBase {
 		};
 	};
 		
-	struct GOAPStatus
-	{
-		enum StatusType {
-			HAS_ID_IN_INVENTORY = 0,
-			VITALS = 1,
-			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
-			AWARE_OF_OBJECT_WITH_STATUS = 3,
-			STATUS_VOID = 4
-		};
-
-		StatusType mStatusType;
-		
-		std::string mExtraData;
-		
-		int mAmount;
-
-		bool operator==(GOAPStatus status);
-
-		GOAPStatus::GOAPStatus()
-		{
-
-		};
-
-		GOAPStatus::GOAPStatus(StatusType type, std::string extradata, int amount)
-		{
-			mStatusType = type;
-			mExtraData = extradata;
-			mAmount = amount;
-		};
-
-		
-	};
+	
 
 	struct GOAPDesire
 	{
@@ -175,7 +223,7 @@ namespace MWBase {
 		//Desire
 		//std::vector<GOAPDesire> mGOAPDesires;
 
-		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
+		//std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 
 		std::vector<WorldstateAtom> mWorldState;
 

@@ -47,9 +47,13 @@ namespace MWBase {
 
 		BOUseSEInWorld::BOUseSEInWorld();
 
-		BOUseSEInWorld* Clone()
+		BOUseSEInWorld* Clone(MWBase::Life * life, ESM::RefNum refnum)
 		{
-			return new BOUseSEInWorld(*this);
+			BOUseSEInWorld * newbo = new BOUseSEInWorld(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			
+			return newbo;
 		}
 
 	

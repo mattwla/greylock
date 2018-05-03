@@ -60,10 +60,14 @@ class BOCushionSit : public MWBase::BehaviorObject
 public:
 
 	//BOCushionSit::BOCushionSit();
-
-	BOCushionSit* Clone()
+	
+	BOCushionSit* Clone(MWBase::Life * life, ESM::RefNum refnum)
 	{
-		return new BOCushionSit(*this);
+
+		BOCushionSit * newbo = new BOCushionSit(*this);
+		newbo->mOwnerLife = life;
+		newbo->mTargetRefNum = refnum;
+		return newbo;
 	};
 
 

@@ -96,7 +96,7 @@ namespace MWBase
 		
 		void addSensoryLink(ESM::RefNum, SensoryLink sensorylink);
 
-		void removeSensoryLink(ESM::RefNum);
+		void removeSensoryLink(ESM::RefNum refnum);
 		
 		~SensoryLinkStore();
 	};

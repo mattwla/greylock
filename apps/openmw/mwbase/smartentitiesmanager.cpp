@@ -382,6 +382,11 @@ std::string MWBase::SmartEntityInstance::getRefId()
 	return mRefId;
 }
 
+ESM::RefNum MWBase::SmartEntityInstance::getRefNum()
+{
+	return mPtr.getCellRef().getRefNum();
+}
+
 MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 {
 	return mPtr; //one day, build one dynamically?

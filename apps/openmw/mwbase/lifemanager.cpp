@@ -195,11 +195,13 @@ namespace MWBase
 			int step = mCurrentIntentionPlan.mCurrentStep;
 			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlan.mGOAPNodeDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
-			BehaviorObject * newbo = currentnode->mBehaviorObject->Clone();
-			newbo->setTarget(currentnode->mSEI);
-			//newbo->setTargetSensoryLink();
-			mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
-			mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
+
+			//BehaviorObject * newbo = currentnode->getNewBehaviorObject(this, currentnode->mSEI->getRefNum());
+			mCurrentIntentionPlan.mCurrentBehaviorObject = currentnode->mBehaviorObject->Clone(this, currentnode->mRefNum);
+			//newbo->setTarget(currentnode->mSEI);
+			////newbo->setTargetSensoryLink();
+			//mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
+			//mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
 			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
 		}
 		else //need to continue an intention plan BO
