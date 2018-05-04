@@ -8,6 +8,7 @@
 #include "../subbrains/subbraininventory.hpp"
 #include "../subbrains/subbrainusese.hpp"
 #include "../subbrains/subbrainrelax.hpp"
+#include "../subbrains/subbraincircadianrhythm.hpp"
 
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
@@ -23,7 +24,6 @@ namespace MWBase
 	MWBase::SmartEntityInstance * Life::getSEIWithStatusFromInventory(std::string status)
 	{
 		MWWorld::Ptr ptr = mPtr;
-
 		auto sem = MWBase::Environment::get().getSmartEntitiesManager();
 		MWWorld::InventoryStore &inventoryStore = ptr.getClass().getInventoryStore(ptr);
 		for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)
@@ -37,8 +37,6 @@ namespace MWBase
 					return sei;
 			}
 		}
-	
-
 		return nullptr;
 	}
 
@@ -48,8 +46,7 @@ namespace MWBase
 		std::cout << mId << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
-		//mSubBrainsManager->logDesires();
-
+	
 		unsigned int ditx = 0;
 		while (ditx < mDesireList.size())
 		{
@@ -57,7 +54,6 @@ namespace MWBase
 			std::cout << mDesireList[ditx]->mValence << std::endl;
 			ditx += 1;
 		}
-
 
 		mSubBrainsManager->logWorldstate();
 		if (mHasIntention)
@@ -100,40 +96,27 @@ namespace MWBase
 			runSwapIntentionPlan(duration);
 		else if (mHasIntention)
 			runTopIntentionPlan(duration);
-
-
-
-		//if (foundPlan)
-	
-
-		
 	}
 
 	void Life::submitDesirePtr(std::shared_ptr<MWBase::GOAPDesire> desire)
 	{
-
-
 		mDesireList.push_back(desire);
-
 	}
 
 	void Life::metabolize(float duration)
 	{
 		mVitals.mHunger += duration / 150.0f;
-		mVitals.mSleepiness += duration / 2000.f;
+		mVitals.mSleepiness += duration / 400.f;
 	}
 
 
 	void Life::prioritizeDesires()
 	{
 		std::sort(mDesireList.begin(), mDesireList.end(), [](const std::shared_ptr<GOAPDesire> d1, std::shared_ptr<GOAPDesire> d2) -> bool {return d1->mValence > d2->mValence; });
-		
-		//mDesireList;
 	}
 
 	void Life::determineIntention()
 	{
-
 		bool foundPlan = false;
 		bool continueIntention = false;
 		unsigned int itx = 0;
@@ -164,8 +147,7 @@ namespace MWBase
 				
 				}
 			}
-
-			itx += 1;
+		itx += 1;
 		}
 	}
 
@@ -280,7 +262,6 @@ namespace MWBase
 
 		typedef boost::tokenizer<boost::escaped_list_separator<char> > Tokenizer;
 
-
 		while (getline(in, line))
 		{
 			if (line == "v1")
@@ -362,8 +343,6 @@ namespace MWBase
 		//request current BO to stop;
 		//Return if BO said it was possible
 		bool possible = mCurrentBehaviorObject->stop();
-
-
 		return possible;
 	}
 }
@@ -390,9 +369,7 @@ void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>&
 			newplanlist.push_back(*it);
 		}
 	}
-
 	planlist = newplanlist;
-
 }
 
 bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
@@ -432,7 +409,6 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	emptyplan.mPlanComplete = false;
 	typedef std::vector<std::shared_ptr<GOAPNodeData>> nodechain;
 	std::vector<nodechain> nodechainlist;
-	
 	//Seed the list, ask all subbrains if they have a behavior object that can meet our need.
 	nodechain nc = querySubBrainsForGOAPMatches(status);
 	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
@@ -540,21 +516,11 @@ bool MWBase::SubBrainsManager::hadObjectStatusInAwareness(std::string status, MW
 
 void MWBase::SubBrainsManager::calculate(MWBase::Awareness * awareness)
 {
-	//mGOAPNodes.clear();
-	//mGOAPDesires.clear();
 	for (std::vector<MWBase::SubBrain*>::iterator it = mSubBrains.begin(); it != mSubBrains.end(); ++it)
 	{
 		(*it)->calculate(awareness);
-		
 	
-		/*std::vector<MWBase::GOAPDesire> gdesirelist = (*it)->getGOAPDesires();
-		for (std::vector<MWBase::GOAPDesire>::iterator gdl = gdesirelist.begin(); gdl != gdesirelist.end(); gdl++)
-		{
-			mGOAPDesires.push_back(*gdl);
-		}*/
-
 	}
-
 }
 
 MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
@@ -570,6 +536,8 @@ MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 	sb = new SubBrainRelax(life);
 	mSubBrains.push_back(sb);
 	sb = new SubBrainUseSE(life);
+	mSubBrains.push_back(sb);
+	sb = new SubBrainCircadianRhythm(life);
 	mSubBrains.push_back(sb);
 }
 
@@ -588,41 +556,10 @@ void MWBase::SubBrainsManager::logDesires()
 		std::cout << mGOAPDesires[itx].debugInfo << std::endl;
 		itx += 1;
 	}
-
-	//if (mDesires.size() == 0)
-	//{
-	//	std::cout << "no desires" << std::endl;
-	//	return;
-	//}
-	//std::cout << "desires:" << std::endl;
-	//typedef std::vector<MWBase::BehaviorObject*> desirelist;
-	//for (desirelist::iterator it = mDesires.begin(); it != mDesires.end(); it++)
-	//{
-	//	(*it)->getDebugInfo();
-	//}
-
 }
 
 void MWBase::SubBrainsManager::logWorldstate()
 {
-
-	/*if (mWorldState.size() == 0)
-	{
-		std::cout << "no world state" << std::endl;
-		return;
-	}
-	std::cout << "WorldState:" << std::endl;
-	typedef std::vector<WorldstateAtom> wslist;
-	for (wslist::iterator it = mWorldState.begin(); it != mWorldState.end(); it++)
-	{
-		std::string value;
-		if (it->mValue)
-			value = "True";
-		else
-			value = "False";
-		std::cout << it->mTag << std::endl;
-		std::cout << value << std::endl;
-	}*/
 
 }
 

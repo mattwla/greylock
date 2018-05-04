@@ -71,6 +71,7 @@ namespace MWBase {
 		virtual BOReturn start();
 
 
+
 		virtual ~BOGetFromWorld()
 		{
 			
@@ -80,7 +81,7 @@ namespace MWBase {
 		{
 			//by default no stop logic;
 			std::cout << "BO with no stop logic recieved stop request.... get" << std::endl;
-			return false;
+			return true;
 		};
 
 	private:
