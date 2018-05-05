@@ -105,8 +105,17 @@ namespace MWBase
 
 	void Life::metabolize(float duration)
 	{
-		mVitals.mHunger += duration / 150.0f;
-		mVitals.mSleepiness += duration / 400.f;
+		//mVitals.mHunger += duration / 150.0f;
+
+		mVitals.mHunger += duration / 50.0f;
+
+		mVitals.mSleepiness += duration / 200.0f;
+		
+		
+		//mVitals.mSleepiness += duration / 400.f;
+
+
+
 	}
 
 
@@ -218,13 +227,14 @@ namespace MWBase
 				//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 				mHasIntention = false;
 				mCurrentIntentionPlan.mDesire->mIsIntention = false;
+				mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
 			}
 		}
 	}
 
 	void Life::runSwapIntentionPlan(float duration)
 	{
-		std::cout << "attempt intention swap" << std::endl;
+		//std::cout << "attempt intention swap" << std::endl;
 		MWBase::BOReturn status;
 
 		if(!mSuccsessfulStopRequest)

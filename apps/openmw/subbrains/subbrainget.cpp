@@ -103,7 +103,19 @@ bool MWBase::SubBrainGet::InGrabbingRange(MWBase::SmartEntityInstance * sei)
 
 MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerptr)
 {
+
+
+
 	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
+
+
+	if (mStopRequested)
+	{
+		journeymanager->cancelJourney(10);
+		return COMPLETE;
+		//mwx fix me hack
+	}
+
 
 	bool noticedItemGone = false;
 	noticedItemGone = checkItemGoneNotice();
@@ -140,7 +152,7 @@ MWBase::BOReturn MWBase::BOGetFromWorld::update(float time, MWWorld::Ptr ownerpt
 	}
 	else
 	{
-		std::cout << "new journey" << std::endl;
+		//std::cout << "new journey" << std::endl;
 		mInJourney = journeymanager->requestNewJourney(mExpectedPosition);
 		if (!mInJourney)
 		{

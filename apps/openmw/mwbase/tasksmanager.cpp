@@ -17,7 +17,7 @@ bool MWBase::JourneyManager::requestNewJourney(ESM::Position pos)
 	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
 	
 		seq.stack(MWMechanics::AiTravel(pos.pos[0], pos.pos[1], pos.pos[2]), ownerPtr);
-		std::cout << "attempting travel" << std::endl;
+		//std::cout << "attempting travel" << std::endl;
 	
 	
 	return true;

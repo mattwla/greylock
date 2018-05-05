@@ -113,21 +113,29 @@ bool MWBase::SubBrainUseSE::InUsingRange(MWBase::SmartEntityInstance * sei)
 
 MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerptr)
 {
+
+	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
 	if (mUsingSubBehavior)
 	{
 		MWBase::BOReturn status = mSubBehavior->update(time, mOwnerLife->mPtr);
 		return status;
 	}
+	else if (mStopRequested)
+	{
+		journeymanager->cancelJourney(10);
+		return COMPLETE;
+		//mwx hack fix me not actually complete
+	}
 
 
 
-	MWBase::JourneyManager * journeymanager = mOwnerLife->mJourneyManager;
+
 
 	bool noticedSEUnavailable = false;
 	noticedSEUnavailable = checkSEUnavailableNotice();
 	if (noticedSEUnavailable)
 	{
-		std::cout << "SE now in use." << std::endl;
+		//std::cout << "SE now in use." << std::endl;
 		journeymanager->cancelJourney(10);
 		return FAILED;
 	
