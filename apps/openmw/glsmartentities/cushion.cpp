@@ -53,16 +53,7 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr)
 	
 
 	mGOAPNodeData.push_back(node);
-	
-	
-	
-	//node->mBehaviorObject = mUseSEInWorldBO;
-	//node->mSEI = it->mSEInstance;
-	//SEI (for now cushion) need to know all of this
-	/*MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, input.mExtraData, input.mAmount);
-	node->mInputs.push_back(statusinput);
-	MWBase::GOAPStatus statusoutput(output.mStatusType, output.mExtraData, output.mAmount);*/
-	/*node->mOutputs.push_back(statusoutput);*/
+
 
 	
 }
@@ -78,18 +69,10 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, ESM::R
 
 	MWBase::GOAPStatus output(MWBase::GOAPStatus::VITALS, "stress", -1);
 	MWBase::GOAPStatus input(MWBase::GOAPStatus::STATUS_VOID, "void", 0);
-
-
-
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, refnum, 1, "cusion node"));
 
 
 	mGOAPNodeData.push_back(node);
-
-
-	
-
-
 }
 
 std::string SmartEntityCushionInstance::getSaveString()
@@ -119,11 +102,6 @@ MWBase::BehaviorObject * SmartEntityCushionInstance::useWorldInstance(MWBase::Li
 
 BOCushionSit::BOCushionSit(int valence)
 {
-
-
-
-
-
 
 }
 

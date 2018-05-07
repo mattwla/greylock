@@ -1,6 +1,7 @@
 #include "smartentitiesmanager.hpp"
 #include "../glsmartentities/bread.hpp"
 #include "../glsmartentities/cushion.hpp"
+#include "../glsmartentities/zonehome.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
 #include <iostream>
@@ -21,6 +22,9 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 
 	it = new SmartEntityCushionTemplate();
+	mSmartTemplateMap[it->getStringID()] = it;
+
+	it = new SmartZoneHomeTemplate();
 	mSmartTemplateMap[it->getStringID()] = it;
 }
 
