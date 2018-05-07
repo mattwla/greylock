@@ -22,6 +22,12 @@ class SmartZoneHomeInstance : public MWBase::SmartEntityInstance {
 
 	};
 
+public:
+
+	SmartZoneHomeInstance(const MWWorld::Ptr &ptr);
+
+	SmartZoneHomeInstance(std::string id, ESM::RefNum);
+
 	virtual std::string getSaveString();
 
 	virtual bool isAvailableForUse();
