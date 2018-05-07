@@ -91,6 +91,13 @@ void MWBase::BOSleepOnGround::getDebugInfo()
 
 MWBase::BOReturn MWBase::BOSleepOnGround::update(float time, MWWorld::Ptr ownerptr)
 {
+
+	if (mStopRequested)
+	{
+		return COMPLETE;
+	}
+
+
 	auto seq = ownerptr.getClass().getCreatureStats(ownerptr).getAiSequence();
 	seq.clear();
 	if (MWBase::Environment::get().getLifeManager()->inActiveRange(ownerptr))

@@ -90,6 +90,10 @@ void MWBase::BOEat::getDebugInfo()
 
 MWBase::BOReturn MWBase::BOEat::update(float time, MWWorld::Ptr ownerptr)
 {
+	if (mStopRequested)
+	{
+		return MWBase::COMPLETE;
+	}
 
 	MWBase::SmartEntityInstance * sei = mOwnerLife->getSEIWithStatusFromInventory("edible");
 	if (!sei)

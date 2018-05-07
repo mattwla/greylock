@@ -285,8 +285,8 @@ namespace MWPhysics
             const ESM::Position& refpos = ptr.getRefData().getPosition();
             // Early-out for totally static creatures
             // (Not sure if gravity should still apply?)
-            if (!ptr.getClass().isMobile(ptr))
-                return position;
+           /* if (!ptr.getClass().isMobile(ptr))
+                return position;*/
 
             // Reset per-frame data
             physicActor->setWalkingOnWater(false);

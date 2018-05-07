@@ -177,6 +177,15 @@ namespace MWBase
 		virtual SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate) = 0;
 	};
 
+
+	class SmartZoneTemplate : public SmartEntityTemplate
+	{
+
+		std::vector<SmartEntityInstance> mOwnedSEIList;
+
+	};
+
+
 	class SmartEntitiesManager
 	{
 		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
@@ -232,6 +241,7 @@ namespace MWBase
 		void saveGame(boost::filesystem::path path);
 		
 	};
+
 
 }
 #endif

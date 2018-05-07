@@ -2145,7 +2145,8 @@ namespace MWWorld
             computeBounds.setTraversalMask(~MWRender::Mask_ParticleSystem);
             dropped.getRefData().getBaseNode()->accept(computeBounds);
             osg::BoundingBox bounds = computeBounds.getBoundingBox();
-            if (bounds.valid())
+          
+			if (bounds.valid())
             {
                 bounds.set(bounds._min - pos.asVec3(), bounds._max - pos.asVec3());
 
