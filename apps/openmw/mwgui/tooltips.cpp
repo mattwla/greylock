@@ -940,7 +940,21 @@ namespace MWGui
 		const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
 	
 		// this the maximum width of the tooltip before it starts word-wrapping MWX interesting
-		setCoord(0, 0, 300, 300);
+		osg::Vec4f bounds = MWBase::Environment::get().getWorld()->getScreenBounds(speaker);
+	
+		std::cout << bounds.w() << std::endl;
+
+		int screenwidth = MyGUI::RenderManager::getInstance().getViewSize().width;
+		int screenheight = MyGUI::RenderManager::getInstance().getViewSize().height;
+
+
+
+
+		setCoord(bounds.x()*screenwidth, bounds.y()*screenheight, 300, 300);
+
+
+
+
 
 		const MyGUI::IntPoint padding(8, 8);
 		std::string caption = "hey im talkin over heah";

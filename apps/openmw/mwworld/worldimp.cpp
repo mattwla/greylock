@@ -1904,6 +1904,11 @@ namespace MWWorld
         MWBase::Environment::get().getWindowManager()->setFocusObject(object);
     }
 
+	osg::Vec4f World::getScreenBounds(MWWorld::Ptr ptr)
+	{
+		return mRendering->getScreenBounds(ptr);
+	}
+
     MWWorld::Ptr World::getFacedObject(float maxDistance, bool ignorePlayer)
     {
         const float camDist = mRendering->getCameraDistance();

@@ -471,6 +471,8 @@ namespace MWWorld
 
             void updateWindowManager () override;
 
+			osg::Vec4f getScreenBounds(MWWorld::Ptr ptr) override;
+
             MWWorld::Ptr placeObject (const MWWorld::ConstPtr& object, float cursorX, float cursorY, int amount) override;
             ///< copy and place an object into the gameworld at the specified cursor position
             /// @param object
