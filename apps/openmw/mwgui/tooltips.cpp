@@ -78,6 +78,7 @@ namespace MWGui
         while (mDynamicToolTipBox->getChildCount())
         {
             MyGUI::Gui::getInstance().destroyWidget(mDynamicToolTipBox->getChildAt(0));
+			std::cout << "killed widget" << std::endl;
         }
 
         // start by hiding everything
@@ -878,5 +879,350 @@ namespace MWGui
         mDelay = delay;
         mRemainingDelay = mDelay;
     }
+
+
+	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+	//##############################GREYLOCK AMBIENT DIALOGUE#################################################
+	//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
+	void AmbientDialogue::createAmbientDialogue(MyGUI::Widget * widget, MWWorld::Ptr speaker)
+	{
+	}
+
+	bool AmbientDialogue::checkOwned()
+	{
+		return false;
+	}
+
+	MyGUI::IntSize AmbientDialogue::getToolTipViaPtr(int count, bool image, bool isOwned)
+	{
+		//this the maximum width of the tooltip before it starts word - wrapping
+			setCoord(0, 0, 300, 300);
+
+		MyGUI::IntSize tooltipSize;
+
+		const MWWorld::Class& object = mFocusObject.getClass();
+		if (!object.hasToolTip(mFocusObject))
+		{
+			mAmbientDialogueBox->setVisible(false);
+		}
+		else
+		{
+			mAmbientDialogueBox->setVisible(true);
+
+			ToolTipInfo info = object.getToolTipInfo(mFocusObject, count);
+			if (!image)
+				info.icon = "";
+			//tooltipSize = createAmbientDialogue(info, isOwned);
+		}
+
+		return tooltipSize;
+	}
+
+	MyGUI::IntSize AmbientDialogue::createAmbientDialogue(MWWorld::Ptr speaker, std::string speech)
+	{
+		mAmbientDialogueBox->setVisible(true);
+
+		mAmbientDialogueBox->changeWidgetSkin(MWBase::Environment::get().getWindowManager()->isGuiMode() ? "HUD_Box_NoTransp" : "HUD_Box");
+
+		//std::string caption = info.caption;
+		//std::string image = info.icon;
+		//int imageSize = (image != "") ? info.imageSize : 0;
+		std::string text = "getContextText()";//info.text;
+
+											// remove the first newline (easier this way)
+		if (text.size() > 0 && text[0] == '\n')
+			text.erase(0, 1);
+
+	
+		const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+	
+		// this the maximum width of the tooltip before it starts word-wrapping MWX interesting
+		setCoord(0, 0, 300, 300);
+
+		const MyGUI::IntPoint padding(8, 8);
+		std::string caption = "hey im talkin over heah";
+		const int imageCaptionHPadding = (caption != "" ? 8 : 0);
+		const int imageCaptionVPadding = (caption != "" ? 4 : 0);
+
+		const int maximumWidth = MyGUI::RenderManager::getInstance().getViewSize().width - imageCaptionHPadding * 2;
+
+	//	std::string realImage = MWBase::Environment::get().getWindowManager()->correctIconPath(image);
+
+		MyGUI::EditBox* captionWidget = mAmbientDialogueBox->createWidget<MyGUI::EditBox>("NormalText", MyGUI::IntCoord(0, 0, 300, 300), MyGUI::Align::Left | MyGUI::Align::Top, "ToolTipCaption");
+		captionWidget->setEditStatic(true);
+		captionWidget->setNeedKeyFocus(false);
+		captionWidget->setCaptionWithReplacing(caption);//name
+		MyGUI::IntSize captionSize = captionWidget->getTextSize();
+		int imageSize = 0;
+		int captionHeight = captionSize.height;
+
+		MyGUI::EditBox* textWidget = mAmbientDialogueBox->createWidget<MyGUI::EditBox>("SandText", MyGUI::IntCoord(0, captionHeight + imageCaptionVPadding, 300, 300 - captionHeight - imageCaptionVPadding), MyGUI::Align::Stretch, "ToolTipText");
+		textWidget->setEditStatic(true);
+		textWidget->setEditMultiLine(true);
+		textWidget->setEditWordWrap(false);
+		textWidget->setCaptionWithReplacing(text); //attributes
+		textWidget->setTextAlign(MyGUI::Align::HCenter | MyGUI::Align::Top);
+		textWidget->setNeedKeyFocus(false);
+		MyGUI::IntSize textSize = textWidget->getTextSize();
+
+		captionSize += MyGUI::IntSize(imageSize, 0); // adjust for image
+		MyGUI::IntSize totalSize = MyGUI::IntSize(textSize.width, captionHeight);
+
+		/*for (std::vector<std::string>::const_iterator it = info.notes.begin(); it != info.notes.end(); ++it)
+		{
+			MyGUI::ImageBox* icon = mAmbientDialogueBox->createWidget<MyGUI::ImageBox>("MarkerButton",
+				MyGUI::IntCoord(padding.left, totalSize.height + padding.top, 8, 8), MyGUI::Align::Default);
+			icon->setColour(MyGUI::Colour(1.0f, 0.3f, 0.3f));
+			MyGUI::EditBox* edit = mAmbientDialogueBox->createWidget<MyGUI::EditBox>("SandText",
+				MyGUI::IntCoord(padding.left + 8 + 4, totalSize.height + padding.top, 300 - padding.left - 8 - 4, 300 - totalSize.height),
+				MyGUI::Align::Default);
+			edit->setEditMultiLine(true);
+			edit->setEditWordWrap(true);
+			edit->setCaption(*it);
+			edit->setSize(edit->getWidth(), edit->getTextSize().height);
+			icon->setPosition(icon->getLeft(), (edit->getTop() + edit->getBottom()) / 2 - icon->getHeight() / 2);
+			totalSize.height += std::max(edit->getHeight(), icon->getHeight());
+			totalSize.width = std::max(totalSize.width, edit->getWidth() + 8 + 4);
+		}
+*/
+		
+
+		captionWidget->setCoord((totalSize.width - captionSize.width) / 2 + imageSize,
+			(captionHeight - captionSize.height) / 2,
+			captionSize.width - imageSize,
+			captionSize.height);
+
+		//if its too long we do hscroll with the caption
+		if (captionSize.width > maximumWidth)
+		{
+			mHorizontalScrollIndex = mHorizontalScrollIndex + 2;
+			if (mHorizontalScrollIndex > captionSize.width) {
+				mHorizontalScrollIndex = -totalSize.width;
+			}
+			int horizontal_scroll = mHorizontalScrollIndex;
+			if (horizontal_scroll < 40) {
+				horizontal_scroll = 40;
+			}
+			else {
+				horizontal_scroll = 80 - mHorizontalScrollIndex;
+			}
+			captionWidget->setPosition(MyGUI::IntPoint(horizontal_scroll, captionWidget->getPosition().top + padding.top));
+		}
+		else {
+			captionWidget->setPosition(captionWidget->getPosition() + padding);
+		}
+
+		textWidget->setPosition(textWidget->getPosition() + MyGUI::IntPoint(0, padding.top)); // only apply vertical padding, the horizontal works automatically due to Align::HCenter
+
+		totalSize += MyGUI::IntSize(padding.left * 2, padding.top * 2);
+
+		return totalSize;
+	}
+
+	
+
+	void AmbientDialogue::position(MyGUI::IntPoint & position, MyGUI::IntSize size, MyGUI::IntSize viewportSize)
+	{
+	}
+
+	AmbientDialogue::AmbientDialogue()
+		:
+		Layout("openmw_ambientdialogue.layout")
+		, mFocusToolTipX(0.0)
+		, mFocusToolTipY(0.0)
+		, mHorizontalScrollIndex(0)
+		, mDelay(0.0)
+		, mRemainingDelay(0.0)
+		, mLastMouseX(0)
+		, mLastMouseY(0)
+		, mEnabled(true)
+		, mFullHelp(false)
+		, mShowOwned(0)
+		, mFrameDuration(0.f)
+	{
+		getWidget(mAmbientDialogueBox, "AmbientDialogueBox");
+
+		mAmbientDialogueBox->setVisible(false);
+
+	//	// turn off mouse focus so that getMouseFocusWidget returns the correct widget,
+	//	// even if the mouse is over the tooltip
+		mAmbientDialogueBox->setNeedMouseFocus(false);
+		mMainWidget->setNeedMouseFocus(false);
+
+	//	mDelay = Settings::Manager::getFloat("tooltip delay", "GUI");
+	//	mRemainingDelay = mDelay;
+
+		for (unsigned int i = 0; i < mMainWidget->getChildCount(); ++i)
+		{
+			mMainWidget->getChildAt(i)->setVisible(false);
+		}
+
+	//	mShowOwned = Settings::Manager::getInt("show owned", "Game");
+	//}
+	//{
+	}
+
+	void AmbientDialogue::onFrame(float frameDuration)
+	{
+		mFrameDuration = frameDuration;
+	}
+
+	void AmbientDialogue::update(float frameDuration)
+	{
+		while (mAmbientDialogueBox->getChildCount()) //more like, check if each has nothing left on its timer
+		{
+			MyGUI::Gui::getInstance().destroyWidget(mAmbientDialogueBox->getChildAt(0));
+		}
+
+		// start by hiding everything
+		for (unsigned int i = 0; i < mMainWidget->getChildCount(); ++i)
+		{
+			mMainWidget->getChildAt(i)->setVisible(false);
+		}
+
+		const MyGUI::IntSize &viewSize = MyGUI::RenderManager::getInstance().getViewSize();
+
+		if (!mEnabled)
+		{
+			return;
+		}
+
+		bool guiMode = MWBase::Environment::get().getWindowManager()->isGuiMode();
+
+		if (guiMode)
+		{
+			if (!MWBase::Environment::get().getWindowManager()->getCursorVisible())
+				return;
+			const MyGUI::IntPoint& mousePos = MyGUI::InputManager::getInstance().getMousePosition();
+
+			if (MWBase::Environment::get().getWindowManager()->getWorldMouseOver() && ((MWBase::Environment::get().getWindowManager()->getMode() == GM_Console)
+				|| (MWBase::Environment::get().getWindowManager()->getMode() == GM_Container)
+				|| (MWBase::Environment::get().getWindowManager()->getMode() == GM_Inventory)))
+			{
+				if (mFocusObject.isEmpty()) //object of focus.... very different in my case.
+					return;
+
+				const MWWorld::Class& objectclass = mFocusObject.getClass();
+
+				MyGUI::IntSize tooltipSize;
+				if ((!objectclass.hasToolTip(mFocusObject)) && (MWBase::Environment::get().getWindowManager()->getMode() == GM_Console))
+				{
+					setCoord(0, 0, 300, 300);
+					mAmbientDialogueBox->setVisible(true);
+					ToolTipInfo info;
+					info.caption = mFocusObject.getClass().getName(mFocusObject);
+					if (info.caption.empty())
+						info.caption = mFocusObject.getCellRef().getRefId();
+					info.icon = "";
+					//tooltipSize = createAmbientDialogue(info, checkOwned());
+				}
+				else
+					tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), true);
+
+				MyGUI::IntPoint tooltipPosition = MyGUI::InputManager::getInstance().getMousePosition(); //position, big.
+				position(tooltipPosition, tooltipSize, viewSize);
+
+				setCoord(tooltipPosition.left, tooltipPosition.top, tooltipSize.width, tooltipSize.height);
+			}
+
+			else
+			{
+				if (mousePos.left == mLastMouseX && mousePos.top == mLastMouseY)
+				{
+					mRemainingDelay -= frameDuration;
+				}
+				else
+				{
+					mHorizontalScrollIndex = 0;
+					mRemainingDelay = mDelay;
+				}
+				mLastMouseX = mousePos.left;
+				mLastMouseY = mousePos.top;
+
+
+				if (mRemainingDelay > 0)
+					return;
+
+				MyGUI::Widget* focus = MyGUI::InputManager::getInstance().getMouseFocusWidget();
+				if (focus == 0)
+					return;
+
+				MyGUI::IntSize tooltipSize;
+
+				// try to go 1 level up until there is a widget that has tooltip
+				// this is necessary because some skin elements are actually separate widgets
+				int i = 0;
+				while (!focus->isUserString("ToolTipType"))
+				{
+					focus = focus->getParent();
+					if (!focus)
+						return;
+					++i;
+				}
+
+		
+				mFocusObject = *focus->getUserData<MWWorld::Ptr>();
+				tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), false, checkOwned());
+				
+				
+				MyGUI::IntPoint tooltipPosition = MyGUI::InputManager::getInstance().getMousePosition();
+
+				position(tooltipPosition, tooltipSize, viewSize);
+
+				setCoord(tooltipPosition.left, tooltipPosition.top, tooltipSize.width, tooltipSize.height);
+			}
+		}
+		else
+		{
+			if (!mFocusObject.isEmpty())
+			{
+				MyGUI::IntSize tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), true, checkOwned());
+
+				setCoord(viewSize.width / 2 - tooltipSize.width / 2,
+					std::max(0, int(mFocusToolTipY*viewSize.height - tooltipSize.height)),
+					tooltipSize.width,
+					tooltipSize.height);
+
+				mAmbientDialogueBox->setVisible(true);
+			}
+		}
+
+
+	}
+
+	void AmbientDialogue::setEnabled(bool enabled)
+	{
+		mEnabled = enabled;
+	}
+
+	void AmbientDialogue::setDelay(float delay)
+	{
+	}
+
+	void AmbientDialogue::setFocusObject(const MWWorld::Ptr & focus)
+	{
+		mFocusObject = focus;
+
+		update(mFrameDuration);
+
+	}
+
+	void AmbientDialogue::setFocusObjectScreenCoords(float min_x, float min_y, float max_x, float max_y)
+	{
+
+	}
+
+	std::string AmbientDialogue::toString(const float value)
+	{
+		return std::string();
+	}
+
+	std::string AmbientDialogue::toString(const int value)
+	{
+		return std::string();
+	}
 
 }

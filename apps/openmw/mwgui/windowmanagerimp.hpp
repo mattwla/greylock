@@ -99,6 +99,7 @@ namespace MWGui
   class CharacterCreation;
   class DragAndDrop;
   class ToolTips;
+  class AmbientDialogue;
   class TextInputDialog;
   class InfoBoxDialog;
   class MessageBoxManager;
@@ -435,6 +436,7 @@ namespace MWGui
     MapWindow *mMap;
     MWRender::LocalMap* mLocalMapRender;
     ToolTips *mToolTips;
+	AmbientDialogue *mAmbientDialogue;
     StatsWindow *mStatsWindow;
     MessageBoxManager *mMessageBoxManager;
 	BodyContextManager *mBodyContextManager;

@@ -145,6 +145,7 @@ namespace MWGui
       , mMap(NULL)
       , mLocalMapRender(NULL)
       , mToolTips(NULL)
+	  , mAmbientDialogue(NULL)
       , mStatsWindow(NULL)
       , mMessageBoxManager(NULL)
 	  , mBodyContextManager(NULL)
@@ -393,6 +394,7 @@ namespace MWGui
         mWindows.push_back(mHud);
 
         mToolTips = new ToolTips();
+		mAmbientDialogue = new AmbientDialogue();
 
         mScrollWindow = new ScrollWindow();
         mWindows.push_back(mScrollWindow);
@@ -571,6 +573,8 @@ namespace MWGui
 		delete mCursorManager;
 
 		delete mToolTips;
+
+		delete mAmbientDialogue;
 
 
 
