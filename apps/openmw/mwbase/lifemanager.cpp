@@ -9,6 +9,7 @@
 #include "../subbrains/subbrainusese.hpp"
 #include "../subbrains/subbrainrelax.hpp"
 #include "../subbrains/subbraincircadianrhythm.hpp"
+#include "../mwbase/windowmanager.hpp"
 
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
@@ -72,6 +73,9 @@ namespace MWBase
 
 	void Life::update(float duration)
 	{
+	
+		MWBase::Environment::get().getWindowManager()->ambientDialogueBox(mPtr, "I AM ALIVE");
+
 		typedef std::vector<GOAPDesire> desirelist;
 		typedef std::vector<IntentionPlan> intentionlist;
 

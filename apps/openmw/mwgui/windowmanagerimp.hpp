@@ -276,6 +276,7 @@ namespace MWGui
     virtual void exitCurrentGuiMode();
 
     virtual void messageBox (const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode = MWGui::ShowInDialogueMode_IfPossible);
+	virtual void ambientDialogueBox(MWWorld::Ptr speaker, std::string speech);
     virtual void staticMessageBox(const std::string& message);
     virtual void removeStaticMessageBox();
     virtual void interactiveMessageBox (const std::string& message,

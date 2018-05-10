@@ -950,6 +950,12 @@ namespace MWGui
         }
     }
 
+	void WindowManager::ambientDialogueBox(MWWorld::Ptr speaker, std::string speech)
+	{
+		mAmbientDialogue->createAmbientDialogue(speaker, speech);
+	}
+
+
 	void WindowManager::BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode)
 	{
 		//std::cout << "wm body context" << std::endl;

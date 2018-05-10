@@ -78,7 +78,7 @@ namespace MWGui
         while (mDynamicToolTipBox->getChildCount())
         {
             MyGUI::Gui::getInstance().destroyWidget(mDynamicToolTipBox->getChildAt(0));
-			std::cout << "killed widget" << std::endl;
+			//std::cout << "killed widget" << std::endl;
         }
 
         // start by hiding everything

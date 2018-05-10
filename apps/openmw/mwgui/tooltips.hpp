@@ -188,6 +188,10 @@ bool wordWrap;
 		bool checkOwned();
 		/// Returns True if taking mFocusObject would be crime
 
+		MyGUI::IntSize createAmbientDialogue(MWWorld::Ptr speaker, std::string speech);
+		///< @return requested tooltip size
+		/// @param isFocusObject Is the object this tooltips originates from mFocusObject?
+
 	private:
 		MyGUI::Widget* mAmbientDialogueBox;
 
@@ -196,9 +200,7 @@ bool wordWrap;
 		MyGUI::IntSize getToolTipViaPtr(int count, bool image = true, bool isOwned = false);
 		///< @return requested tooltip size
 
-		MyGUI::IntSize createAmbientDialogue(MWWorld::Ptr speaker, std::string speech);
-		///< @return requested tooltip size
-		/// @param isFocusObject Is the object this tooltips originates from mFocusObject?
+		
 
 		float mFocusToolTipX;
 		float mFocusToolTipY;
