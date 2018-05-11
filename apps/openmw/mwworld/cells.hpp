@@ -6,6 +6,7 @@
 #include <string>
 
 #include "ptr.hpp"
+#include "store.hpp"
 
 namespace ESM
 {
@@ -19,6 +20,7 @@ namespace Loading
 {
     class Listener;
 }
+
 
 namespace MWWorld
 {
@@ -56,6 +58,8 @@ namespace MWWorld
             CellStore *getCell (const ESM::CellId& id);
 
             Ptr getPtr (const std::string& name, CellStore& cellStore, bool searchInContainers = false);
+
+			MWWorld::Store<ESM::Cell> getExteriorStore();
 			///< \param searchInContainers Only affect loaded cells.
 			/// @note name must be lower case
 			

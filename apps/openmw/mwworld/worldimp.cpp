@@ -244,7 +244,7 @@ namespace MWWorld
         }
         else
             mGlobalVariables["chargenstate"].setInteger (-1);
-
+		preloadAll();
         if (bypass && !mStartCell.empty())
         {
             ESM::Position pos;
@@ -295,7 +295,7 @@ namespace MWWorld
         MWBase::Environment::get().getWindowManager()->updatePlayer();
 		mRendering->resetCamera();
 
-		preloadAll();
+		
 		std::cout << "preloaded all" << std::endl;
 		MWBase::Environment::get().getLifeManager()->initialize();
 
@@ -703,7 +703,31 @@ namespace MWWorld
 
 	void World::preloadAll()
 	{
-		mCells.PreloadAll();
+		int cellsloaded = 0;
+		const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
+		MWWorld::Store<ESM::Cell>::iterator iter;
+		for (iter = cells.extBegin(); iter != cells.extEnd(); ++iter)
+		{
+			ESM::Position pos;
+			//findExteriorPosition(iter->mName, pos);
+			ESM::Cell ext = *iter;
+			
+			int x = ext.getGridX();
+			int y = ext.getGridY();
+			indexToPosition(x, y, pos.pos[0], pos.pos[1], true);
+
+			// Note: Z pos will be adjusted by adjustPosition later
+			pos.pos[2] = 0;
+			changeToExteriorCell(pos, false);
+			cellsloaded += 1;
+			
+		}
+
+		std::cout << "==============cells loaded =========" << std::endl;
+		std::cout << cellsloaded << std::endl;
+		
+
+		//mCells.PreloadAll();
 		//mCells.getCell
 	}
 

@@ -187,6 +187,10 @@ MWWorld::Ptr MWWorld::Cells::getPtr (const std::string& name, CellStore& cell,
     return Ptr();
 }
 
+MWWorld::Store<ESM::Cell> MWWorld::Cells::getExteriorStore() {
+	return mStore.get<ESM::Cell>();
+}
+
 void MWWorld::Cells::PreloadAll()
 {
 	const MWWorld::Store<ESM::Cell> &cells = mStore.get<ESM::Cell>();
