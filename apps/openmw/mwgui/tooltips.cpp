@@ -957,7 +957,10 @@ namespace MWGui
 		// this the maximum width of the tooltip before it starts word-wrapping MWX interesting
 		osg::Vec4f bounds = MWBase::Environment::get().getWorld()->getScreenBounds(speaker);
 	
-		std::cout << bounds.w() << std::endl;
+		/*std::cout << "x" << std::endl;
+		std::cout << bounds.x() << std::endl;
+		std::cout << "y" << std::endl;
+		std::cout << bounds.y() << std::endl;*/
 
 		int screenwidth = MyGUI::RenderManager::getInstance().getViewSize().width;
 		int screenheight = MyGUI::RenderManager::getInstance().getViewSize().height;
@@ -1001,7 +1004,14 @@ namespace MWGui
 		textWidget->setTextAlign(MyGUI::Align::HCenter | MyGUI::Align::Top);
 		textWidget->setNeedKeyFocus(false);
 		MyGUI::IntSize textSize = textWidget->getTextSize();
-		setCoord(bounds.x()*screenwidth, bounds.y()*screenheight, textSize.width + padding.left, textSize.height + padding.top);
+
+		bool isaware = MWBase::Environment::get().getAwarenessReactionsManager()->awarenessCheck(speaker, MWMechanics::getPlayer());
+		if (isaware)
+			setCoord(bounds.x()*screenwidth, bounds.y()*screenheight, textSize.width + padding.left, textSize.height + padding.top);
+		else
+			setCoord(0, 0, textSize.width + padding.left, textSize.height + padding.top);
+		
+		
 		captionSize += MyGUI::IntSize(imageSize, 0); // adjust for image
 		MyGUI::IntSize totalSize = MyGUI::IntSize(textSize.width, captionHeight);
 		textWidget->setCaptionWithReplacing("");
