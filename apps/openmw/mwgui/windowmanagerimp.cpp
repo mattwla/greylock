@@ -145,7 +145,7 @@ namespace MWGui
       , mMap(NULL)
       , mLocalMapRender(NULL)
       , mToolTips(NULL)
-	  , mAmbientDialogue(NULL)
+	  , mAmbientDialogueList(NULL)
       , mStatsWindow(NULL)
       , mMessageBoxManager(NULL)
 	  , mBodyContextManager(NULL)
@@ -394,7 +394,7 @@ namespace MWGui
         mWindows.push_back(mHud);
 
         mToolTips = new ToolTips();
-		mAmbientDialogue = new AmbientDialogue();
+		//mAmbientDialogue = new AmbientDialogue();
 
         mScrollWindow = new ScrollWindow();
         mWindows.push_back(mScrollWindow);
@@ -574,7 +574,7 @@ namespace MWGui
 
 		delete mToolTips;
 
-		delete mAmbientDialogue;
+		mAmbientDialogueList.clear(); //mwx fix me cleanup too
 
 
 
@@ -952,12 +952,14 @@ namespace MWGui
 
 	void WindowManager::ambientDialogueBox(MWWorld::Ptr speaker, std::string speech)
 	{
-		mAmbientDialogue->createAmbientDialogue(speaker, speech);
+		//mAmbientDialogue->createAmbientDialogue(speaker, speech);
 	}
 
 	void WindowManager::createSpeech(std::shared_ptr<MWBase::Speech> speechobject)
 	{
-		mAmbientDialogue->pushSpeechToStack(speechobject);
+		MWGui::AmbientDialogue * ad = new AmbientDialogue();
+		ad->pushSpeechToStack(speechobject);
+		mAmbientDialogueList.push_back(ad);
 	}
 
 
@@ -1051,12 +1053,26 @@ namespace MWGui
 		mBodyContextManager->onFrame(frameDuration);
 
         mToolTips->onFrame(frameDuration);
-
-		mAmbientDialogue->onFrame(frameDuration);
 		
+		std::vector<AmbientDialogue*> newspeechlist;
 
-        if (mLocalMapRender)
-            mLocalMapRender->cleanupCameras();
+		for (std::vector<AmbientDialogue*>::iterator it = mAmbientDialogueList.begin(); it != mAmbientDialogueList.end(); it++)
+		{
+			(*it)->onFrame(frameDuration);
+			if ((*it)->isDone())
+			{
+				delete *it;
+			}
+			else
+			{
+				newspeechlist.push_back(*it);
+			}
+		}
+
+		mAmbientDialogueList = newspeechlist;
+
+	       if (mLocalMapRender)
+        mLocalMapRender->cleanupCameras();
 
         if (MWBase::Environment::get().getStateManager()->getState()==
             MWBase::StateManager::State_NoGame)

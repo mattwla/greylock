@@ -444,7 +444,7 @@ namespace MWGui
     MapWindow *mMap;
     MWRender::LocalMap* mLocalMapRender;
     ToolTips *mToolTips;
-	AmbientDialogue *mAmbientDialogue;
+	std::vector<AmbientDialogue*> mAmbientDialogueList;
     StatsWindow *mStatsWindow;
     MessageBoxManager *mMessageBoxManager;
 	BodyContextManager *mBodyContextManager;

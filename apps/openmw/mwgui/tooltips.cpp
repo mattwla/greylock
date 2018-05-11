@@ -1106,6 +1106,11 @@ namespace MWGui
 		update(mFrameDuration);
 	}
 
+	bool AmbientDialogue::isDone()
+	{
+		return mSpeechList[0]->mDone;
+	}
+
 	void AmbientDialogue::update(float frameDuration)
 	{
 		while (mAmbientDialogueBox->getChildCount()) //more like, check if each has nothing left on its timer
@@ -1118,7 +1123,7 @@ namespace MWGui
 		for (speechlist::iterator it = mSpeechList.begin(); it != mSpeechList.end(); it++)
 		{
 			std::shared_ptr<MWBase::Speech> object = *it;
-			if (object->mDuration == 0.0)
+			if (object->mDuration <= 0.0)
 			{
 				object->mDone = true;
 			}

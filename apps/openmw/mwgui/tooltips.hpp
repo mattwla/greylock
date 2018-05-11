@@ -148,6 +148,7 @@ bool wordWrap;
 		AmbientDialogue();
 
 		void onFrame(float frameDuration);
+		bool isDone();
 		void update(float frameDuration);
 
 		void setEnabled(bool enabled);

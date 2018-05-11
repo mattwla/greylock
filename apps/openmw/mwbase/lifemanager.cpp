@@ -127,7 +127,7 @@ namespace MWBase
 
 		mVitals.mHunger += duration / 50.0f;
 
-		mVitals.mSleepiness += duration / 200.0f;
+		mVitals.mSleepiness += duration / 500.0f;
 		
 		
 		//mVitals.mSleepiness += duration / 400.f;

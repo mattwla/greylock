@@ -219,7 +219,7 @@ bool MWBase::BOGetFromWorld::inGrabbingDistance()
 	MWWorld::Ptr npcptr = mOwnerLife->mPtr;
 	float distance = (npcptr.getRefData().getPosition().asVec3() - seiptr.getRefData().getPosition().asVec3()).length2();
 	//std::cout << "distance to get object" + std::to_string(distance) << std::endl;
-	return distance < 1000.0f;
+	return distance < 2000.0f;
 
 }
 
