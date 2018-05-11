@@ -704,24 +704,46 @@ namespace MWWorld
 	void World::preloadAll()
 	{
 		int cellsloaded = 0;
-		const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
-		MWWorld::Store<ESM::Cell>::iterator iter;
-		for (iter = cells.extBegin(); iter != cells.extEnd(); ++iter)
+		/*const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
+		MWWorld::Store<ESM::Cell>::iterator iter;*/
+		int xload = -19;
+		int yload = 7;
+		while (xload <= -11)
 		{
-			ESM::Position pos;
-			//findExteriorPosition(iter->mName, pos);
-			ESM::Cell ext = *iter;
-			
-			int x = ext.getGridX();
-			int y = ext.getGridY();
-			indexToPosition(x, y, pos.pos[0], pos.pos[1], true);
+			while (yload <= 12)
+			{
+				ESM::Position pos;
+				indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
+				changeToExteriorCell(pos, false);
+				yload += 1;
+				cellsloaded += 1;
+			}
 
-			// Note: Z pos will be adjusted by adjustPosition later
-			pos.pos[2] = 0;
-			changeToExteriorCell(pos, false);
-			cellsloaded += 1;
-			
+			yload = 7;
+			xload += 1;
+
+
 		}
+
+
+		//for (iter = cells.extBegin(); iter != cells.extEnd(); ++iter)
+		//{
+
+		//	//maybe instead just load game area?
+		//	ESM::Position pos;
+		//	//findExteriorPosition(iter->mName, pos);
+		//	ESM::Cell ext = *iter;
+		//	
+		//	int x = ext.getGridX();
+		//	int y = ext.getGridY();
+		//	indexToPosition(x, y, pos.pos[0], pos.pos[1], true);
+
+		//	// Note: Z pos will be adjusted by adjustPosition later
+		//	pos.pos[2] = 0;
+		//	changeToExteriorCell(pos, false);
+		//	cellsloaded += 1;
+		//	
+		//}
 
 		std::cout << "==============cells loaded =========" << std::endl;
 		std::cout << cellsloaded << std::endl;
