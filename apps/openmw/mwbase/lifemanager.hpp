@@ -76,6 +76,11 @@ namespace MWBase
 			mSpeaker = speaker;
 			mText = text;
 		}
+
+		~Speech()
+		{
+			std::cout << "speech object destroyed" << std::endl;
+		}
 	};
 	
 
