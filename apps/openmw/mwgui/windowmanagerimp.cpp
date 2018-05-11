@@ -955,6 +955,11 @@ namespace MWGui
 		mAmbientDialogue->createAmbientDialogue(speaker, speech);
 	}
 
+	void WindowManager::createSpeech(std::shared_ptr<MWBase::Speech> speechobject)
+	{
+		mAmbientDialogue->pushSpeechToStack(speechobject);
+	}
+
 
 	void WindowManager::BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode)
 	{
@@ -1046,6 +1051,9 @@ namespace MWGui
 		mBodyContextManager->onFrame(frameDuration);
 
         mToolTips->onFrame(frameDuration);
+
+		mAmbientDialogue->onFrame(frameDuration);
+		
 
         if (mLocalMapRender)
             mLocalMapRender->cleanupCameras();

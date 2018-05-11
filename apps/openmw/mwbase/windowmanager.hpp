@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <memory>
 
 #include <MyGUI_KeyCode.h>
 
@@ -48,6 +49,11 @@ namespace MWWorld
 {
     class CellStore;
     class Ptr;
+}
+
+namespace MWBase
+{
+	struct Speech;
 }
 
 namespace MWGui
@@ -250,6 +256,8 @@ namespace MWBase
                                                 const std::vector<std::string>& buttons = std::vector<std::string>(), bool block=false) = 0;
 
 			virtual void ambientDialogueBox(MWWorld::Ptr speaker, std::string speech) = 0;
+
+			virtual void createSpeech(std::shared_ptr<MWBase::Speech> speechobject) = 0;
 
 			virtual void BodyContext(const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode = MWGui::ShowInDialogueMode_IfPossible) = 0;
 			

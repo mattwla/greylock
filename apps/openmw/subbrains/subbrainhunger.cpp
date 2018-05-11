@@ -104,6 +104,10 @@ MWBase::BOReturn MWBase::BOEat::update(float time, MWWorld::Ptr ownerptr)
 
 	//std::cout << "yum" << std::endl;
 	//mOwnerLife->mVitals.mHunger = 0.0f;
+	if (mOwnerLife->mCurrentSpeech == 0)
+	{
+		mOwnerLife->say("Yum");
+	}
 	sei->use(mOwnerLife);
 	//MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(ownerptr, "wave", 0, 1);
 	return MWBase::COMPLETE;

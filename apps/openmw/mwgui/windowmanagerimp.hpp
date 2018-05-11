@@ -87,6 +87,11 @@ namespace MWRender
     class LocalMap;
 }
 
+namespace MWBase
+{
+	struct Speech;
+}
+
 namespace MWGui
 {
   class WindowBase;
@@ -277,6 +282,8 @@ namespace MWGui
 
     virtual void messageBox (const std::string& message, enum MWGui::ShowInDialogueMode showInDialogueMode = MWGui::ShowInDialogueMode_IfPossible);
 	virtual void ambientDialogueBox(MWWorld::Ptr speaker, std::string speech);
+	virtual void createSpeech(std::shared_ptr<MWBase::Speech> speechobject);
+
     virtual void staticMessageBox(const std::string& message);
     virtual void removeStaticMessageBox();
     virtual void interactiveMessageBox (const std::string& message,

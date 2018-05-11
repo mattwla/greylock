@@ -64,6 +64,21 @@ namespace Loading
 
 namespace MWBase
 {
+	struct Speech
+	{
+		MWWorld::Ptr mSpeaker;
+		std::string mText;
+		float mDuration = 5.0f;
+		bool mDone = false;
+
+		Speech(MWWorld::Ptr speaker, std::string text)
+		{
+			mSpeaker = speaker;
+			mText = text;
+		}
+	};
+	
+
 	struct BigFive 
 	{
 		int mOpenness;
@@ -191,6 +206,8 @@ namespace MWBase
 		//Calculated NPC reactions to world, hunger, desires, goals, the NPCs behavior essentially
 		MWBase::SubBrainsManager *mSubBrainsManager;
 
+		std::shared_ptr<Speech> mCurrentSpeech = 0;
+
 		//ptr to npc
 		MWWorld::Ptr mPtr;
 
@@ -218,6 +235,8 @@ namespace MWBase
 		MWBase::JourneyManager * mJourneyManager;
 
 		MWBase::SmartEntityInstance * getSEIWithStatusFromInventory(std::string status);
+
+		void say(std::string speech);
 
 		
 

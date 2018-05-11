@@ -41,6 +41,16 @@ namespace MWBase
 		return nullptr;
 	}
 
+	void Life::say(std::string speech)
+	{
+		std::shared_ptr<Speech> speechobject = std::make_shared<Speech>(mPtr, speech);
+		MWBase::Environment::get().getWindowManager()->createSpeech(speechobject);
+		mCurrentSpeech = speechobject;
+		//Speech * speechobject = new Speech(mPtr, speech);
+		//MWBase::Environment::get().getWindowManager()->ambientDialogueBox(mPtr, "I am saying something.");
+	
+	}
+
 	//LIFE
 	void Life::getDebugInfo()
 	{
@@ -74,7 +84,11 @@ namespace MWBase
 	void Life::update(float duration)
 	{
 	
-		MWBase::Environment::get().getWindowManager()->ambientDialogueBox(mPtr, "I AM ALIVE");
+	
+		if (mCurrentSpeech && mCurrentSpeech->mDone)
+		{
+			mCurrentSpeech = 0;
+		}
 
 		typedef std::vector<GOAPDesire> desirelist;
 		typedef std::vector<IntentionPlan> intentionlist;

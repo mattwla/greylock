@@ -12,6 +12,11 @@ namespace ESM
     struct Race;
 }
 
+namespace MWBase
+{
+	struct Speech;
+}
+
 namespace MWGui
 {
     // Info about tooltip that is supplied by the MWWorld::Class object
@@ -185,6 +190,8 @@ bool wordWrap;
 
 		static void createAmbientDialogue(MyGUI::Widget* widget, MWWorld::Ptr speaker);
 
+		void pushSpeechToStack(std::shared_ptr<MWBase::Speech> speech);
+
 		bool checkOwned();
 		/// Returns True if taking mFocusObject would be crime
 
@@ -193,6 +200,12 @@ bool wordWrap;
 		/// @param isFocusObject Is the object this tooltips originates from mFocusObject?
 
 	private:
+		typedef std::vector<std::shared_ptr<MWBase::Speech>> speechlist;
+
+		speechlist mSpeechList;
+
+		
+
 		MyGUI::Widget* mAmbientDialogueBox;
 
 		MWWorld::Ptr mFocusObject;
