@@ -151,6 +151,16 @@ namespace MWBase
 			return mGOAPNodeData;
 		};
 
+		virtual void buildBoundingBox()
+		{
+			std::cout << "Something that is not a smartzone had a request to build a bounding box" << std::endl;
+		}
+
+		virtual bool isSmartZone()
+		{
+			return mIsSmartZone;
+		}
+
 		
 
 
@@ -243,6 +253,8 @@ namespace MWBase
 		void loadGame(boost::filesystem::path path);
 
 		void saveGame(boost::filesystem::path path);
+
+		void initializeActiveCell();
 		
 	};
 

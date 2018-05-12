@@ -34,4 +34,7 @@ public:
 
 	virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user);
 
+	virtual void buildBoundingBox();
+
+
 };

@@ -27,10 +27,7 @@ SmartZoneHomeInstance::SmartZoneHomeInstance(const MWWorld::Ptr & ptr)
 {
 	std::cout << "new home ptr method" << std::endl;
 	mIsSmartZone = true;
-	osg::ComputeBoundsVisitor computeBounds;
-
-	ptr.getRefData().getBaseNode()->accept(computeBounds);
-	mBoundingBox = computeBounds.getBoundingBox();
+	
 	
 
 }
@@ -53,4 +50,13 @@ bool SmartZoneHomeInstance::isAvailableForUse()
 MWBase::BehaviorObject * SmartZoneHomeInstance::useWorldInstance(MWBase::Life * user)
 {
 	return nullptr;
+}
+
+void SmartZoneHomeInstance::buildBoundingBox()
+{
+	std::cout << "building bbox" << std::endl;
+	osg::ComputeBoundsVisitor computeBounds;
+
+	mPtr.getRefData().getBaseNode()->accept(computeBounds);
+	mBoundingBox = computeBounds.getBoundingBox();
 }

@@ -721,6 +721,11 @@ namespace MWWorld
 				ESM::Position pos;
 				indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
 				changeToExteriorCell(pos, false);
+
+				//SEManager inits smartzones here.
+				MWBase::Environment::get().getSmartEntitiesManager()->initializeActiveCell();
+
+
 				yload += 1;
 				cellsloaded += 1;
 			}

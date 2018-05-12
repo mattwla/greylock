@@ -126,6 +126,20 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 	}
 }
 
+void MWBase::SmartEntitiesManager::initializeActiveCell()
+{
+	std::map<ESM::RefNum, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
+	while (it != mSmartInstancesInScene.end())
+	{
+		if (it->second->isSmartZone())
+		{
+			it->second->buildBoundingBox();
+		}
+		it++;
+	}
+
+}
+
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
 {
 	//check if it already has one
