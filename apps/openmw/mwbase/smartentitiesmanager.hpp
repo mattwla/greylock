@@ -83,6 +83,11 @@ namespace MWBase
 
 		bool mIsSmartZone = false;
 		
+		bool mIsManagedBySmartzone = false;
+
+		SmartEntityInstance * mMySmartZone;
+
+		std::vector<SmartEntityInstance*> mMyManagedEntities;
 
 		//Get available BehaviorObjects
 
@@ -161,8 +166,30 @@ namespace MWBase
 			return mIsSmartZone;
 		}
 
-		
+		virtual bool containsPtr(MWWorld::Ptr ptr)
+		{
+			std::cout << "warning: asked not a smartzone if it contained something" << std::endl;
+			return false;
+		}
 
+		virtual void assignZone(SmartEntityInstance * zone)
+		{
+			mMySmartZone = zone;
+			mIsManagedBySmartzone = true;
+		}
+
+		virtual void giveEntityToManage(SmartEntityInstance * instance)
+		{
+
+			mMyManagedEntities.push_back(instance);
+		}
+
+		virtual bool isManagedBySmartZone()
+		{
+			return mIsManagedBySmartzone;
+		}
+			
+		
 
 	};
 
@@ -255,6 +282,9 @@ namespace MWBase
 		void saveGame(boost::filesystem::path path);
 
 		void initializeActiveCell();
+
+		bool linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone);
+		
 		
 	};
 

@@ -36,5 +36,7 @@ public:
 
 	virtual void buildBoundingBox();
 
+	virtual bool containsPtr(MWWorld::Ptr ptr);
+
 
 };

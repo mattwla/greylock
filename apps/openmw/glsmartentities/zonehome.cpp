@@ -60,3 +60,10 @@ void SmartZoneHomeInstance::buildBoundingBox()
 	mPtr.getRefData().getBaseNode()->accept(computeBounds);
 	mBoundingBox = computeBounds.getBoundingBox();
 }
+
+bool SmartZoneHomeInstance::containsPtr(MWWorld::Ptr ptr)
+{
+	osg::Vec3f pos = ptr.getRefData().getPosition().asVec3();
+
+	return mBoundingBox.contains(pos);
+}

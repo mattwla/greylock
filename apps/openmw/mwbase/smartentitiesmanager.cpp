@@ -129,15 +129,48 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 void MWBase::SmartEntitiesManager::initializeActiveCell()
 {
 	std::map<ESM::RefNum, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
+	std::vector<MWBase::SmartEntityInstance*> smartzonelist;
+
 	while (it != mSmartInstancesInScene.end())
 	{
 		if (it->second->isSmartZone())
 		{
 			it->second->buildBoundingBox();
+			smartzonelist.push_back(it->second);
 		}
 		it++;
 	}
 
+	for (std::vector<MWBase::SmartEntityInstance*>::iterator zit = smartzonelist.begin(); zit != smartzonelist.end(); zit++)
+	{
+		
+		it = mSmartInstancesInScene.begin();
+		while (it != mSmartInstancesInScene.end())
+		{
+			if (!it->second->isSmartZone())
+			{
+				if ((*zit)->containsPtr(it->second->getPtr()))
+				{
+					linkSEtoZone(it->second, (*zit));
+				}
+			}
+			it++;
+		}
+	}
+
+
+}
+
+bool MWBase::SmartEntitiesManager::linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone)
+{
+	if (!zone->isSmartZone())
+	{
+		std::cout << "error tried to assign SEI to not a zone" << std::endl;
+		return false;
+	}
+	zone->giveEntityToManage(entity);
+	entity->assignZone(zone);
+	return true;
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
@@ -388,6 +421,10 @@ void MWBase::SmartEntityInstance::debugInfo()
 			std::cout << "player in" << std::endl;
 		else
 			std::cout << "player not in " << std::endl;
+	}
+	if (mIsManagedBySmartzone)
+	{
+		std::cout << "I am managed by a smart zone" << std::endl;
 	}
 }
 
