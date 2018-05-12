@@ -360,6 +360,17 @@ void MWBase::SmartEntityInstance::debugInfo()
 		std::cout << "is usable" << std::endl;
 	else
 		std::cout << "not usable" << std::endl;
+
+	if (mIsSmartZone)
+	{
+		std::cout << "I am smart zone" << std::endl;
+		MWWorld::Ptr playerptr = MWBase::Environment::get().getWorld()->getPlayerPtr();
+		bool playerisin = mBoundingBox.contains(playerptr.getRefData().getPosition().asVec3());
+		if (playerisin)
+			std::cout << "player in" << std::endl;
+		else
+			std::cout << "player not in " << std::endl;
+	}
 }
 
 bool MWBase::SmartEntityInstance::hasStatus(std::string status)

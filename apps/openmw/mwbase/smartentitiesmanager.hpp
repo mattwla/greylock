@@ -81,7 +81,7 @@ namespace MWBase
 
 		osg::BoundingBox mBoundingBox;
 
-		bool isSmartZone = false;
+		bool mIsSmartZone = false;
 		
 
 		//Get available BehaviorObjects

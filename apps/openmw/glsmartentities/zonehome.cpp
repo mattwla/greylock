@@ -1,5 +1,7 @@
 #include "zonehome.hpp"
-
+#include <osg/Group>
+#include <osg/ComputeBoundsVisitor>
+#include <components/sceneutil/positionattitudetransform.hpp>
 SmartZoneHomeTemplate::SmartZoneHomeTemplate()
 {
 	mIngameID = "cargo_container";
@@ -24,7 +26,12 @@ MWBase::SmartEntityInstance * SmartZoneHomeTemplate::loadInstance(std::string re
 SmartZoneHomeInstance::SmartZoneHomeInstance(const MWWorld::Ptr & ptr)
 {
 	std::cout << "new home ptr method" << std::endl;
+	mIsSmartZone = true;
+	osg::ComputeBoundsVisitor computeBounds;
 
+	ptr.getRefData().getBaseNode()->accept(computeBounds);
+	mBoundingBox = computeBounds.getBoundingBox();
+	
 
 }
 
