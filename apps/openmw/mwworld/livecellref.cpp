@@ -16,7 +16,7 @@ MWWorld::LiveCellRefBase::LiveCellRefBase(const std::string& type, const ESM::Ce
   : mClass(&Class::get(type)), mRef(cref), mData(cref)
 {
 	//Register pointer to me in smartentitymanager
-	MWBase::Environment::get().getSmartEntitiesManager()->initializeInstFromLiveCellRef(this);
+	//MWBase::Environment::get().getSmartEntitiesManager()->initializeInstFromLiveCellRef(this);
 }
 
 void MWWorld::LiveCellRefBase::loadImp (const ESM::ObjectState& state)

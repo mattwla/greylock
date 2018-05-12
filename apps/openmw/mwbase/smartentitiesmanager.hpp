@@ -15,6 +15,7 @@
 #include "../mwworld/timestamp.hpp"
 #include "../mwworld/ptr.hpp"
 #include "../mwtasks/task.hpp"
+#include <osg/BoundingBox>
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -78,6 +79,9 @@ namespace MWBase
 
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> mGOAPNodeData;
 
+		osg::BoundingBox mBoundingBox;
+
+		bool isSmartZone = false;
 		
 
 		//Get available BehaviorObjects
