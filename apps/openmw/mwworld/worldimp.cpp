@@ -217,7 +217,11 @@ namespace MWWorld
     }
 
     void World::startNewGame (bool bypass)
-    {
+	{
+
+		mInitializingWorld = true;
+
+
         mGoToJail = false;
         mLevitationEnabled = true;
         mTeleportEnabled = true;
@@ -300,6 +304,8 @@ namespace MWWorld
 		MWBase::Environment::get().getLifeManager()->initialize();
 
 		//getPlayerPtr().getClass().getAutoMove();
+
+		mInitializingWorld = false;
     }
 
     void World::clear()
@@ -2102,6 +2108,11 @@ namespace MWWorld
     {
         return mRendering->toggleRenderMode(MWRender::Render_Scene);
     }
+
+	bool World::isInitializingWorld()
+	{
+		return mInitializingWorld;
+	}
 
     void World::PCDropped (const Ptr& item)
     {

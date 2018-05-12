@@ -520,6 +520,8 @@ namespace MWBase
 
 			virtual osg::Vec4f getScreenBounds(MWWorld::Ptr ptr) = 0;
 
+			virtual bool isInitializingWorld() = 0;
+
 		//	virtual bool checkForObstruction(MWWorld::Ptr ptr, float z, float distance) = 0;
 
 			virtual bool isOnSlope(const MWWorld::Ptr & ptr) const = 0;

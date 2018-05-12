@@ -174,6 +174,8 @@ namespace MWWorld
             bool mGoToJail;
             int mDaysInPrison;
 
+			bool mInitializingWorld = false;
+
             float mSpellPreloadTimer;
 
             float feetToGameUnits(float feet);
@@ -221,6 +223,8 @@ namespace MWWorld
 
             bool toggleWater() override;
             bool toggleWorld() override;
+
+			virtual bool isInitializingWorld();
 
             void adjustSky() override;
 

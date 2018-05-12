@@ -382,7 +382,11 @@ namespace MWWorld
 
     void Scene::changeCellGrid (int X, int Y, bool changeEvent)
     {
-       
+		int oldsize = mHalfGridSize;
+		if (MWBase::Environment::get().getWorld()->isInitializingWorld()) //mwx we want to initialize world one cell at a time, not in groups
+		{
+			mHalfGridSize = 0;
+		}
 		std::cout << "pmoved" << std::endl;
 		//MWBase::Environment::get().getAwarenessReactionsManager()->updateActiveAffordances(); //mwx
 
@@ -466,6 +470,8 @@ namespace MWWorld
 
         if (changeEvent)
             mCellChanged = true;
+
+		mHalfGridSize = oldsize;
     }
 
     void Scene::changePlayerCell(CellStore *cell, const ESM::Position &pos, bool adjustPlayerPos)
