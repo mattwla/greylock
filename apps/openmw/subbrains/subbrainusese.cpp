@@ -78,6 +78,13 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 				bool match = output == status;
 				if (match && it->second.mSEInstance->isAvailableForUse())
 				{
+					if (it->second.mSEInstance->isManagedBySmartZone())
+					{
+						if (!it->second.mSEInstance->getSmartZone()->isAllowedTerritory(mOwnerLife))
+							continue;
+					}
+				
+
 					//MWX FIX ME 
 					//SEI (for now cushion) need to know all of this
 					MWBase::GOAPStatus statusinput(input.mStatusType, input.mExtraData, input.mAmount);

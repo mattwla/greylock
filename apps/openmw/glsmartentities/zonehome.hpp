@@ -17,6 +17,51 @@ public:
 
 };
 
+class ZoneBrain
+{
+	class HomeSubBrain : public MWBase::SubBrain
+	{
+		ZoneBrain * mParentBrain;
+	
+		public:
+		
+			MWBase::SubBrain * getSubBrain()
+			{
+				new HomeSubBrain();
+			}
+
+			virtual void calculate(MWBase::Awareness * awareness) {
+			};
+
+			virtual std::string getID()
+			{
+				return "home subbrain";
+			};
+
+			virtual void getDebugInfo()
+			{
+
+			};
+
+			virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status) 
+			{
+				mParentBrain->getMatchingBehaviorObjects(status);
+	
+			};
+
+	};
+
+	public:
+	
+		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status) {
+		
+
+
+	};
+
+};
+
+
 class SmartZoneHomeInstance : public MWBase::SmartEntityInstance {
 	virtual ~SmartZoneHomeInstance() {
 

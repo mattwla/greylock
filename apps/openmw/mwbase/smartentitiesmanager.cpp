@@ -141,6 +141,8 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 		it++;
 	}
 
+	std::vector<Life*> lifelist = MWBase::Environment::get().getLifeManager()->mLifeList;
+
 	for (std::vector<MWBase::SmartEntityInstance*>::iterator zit = smartzonelist.begin(); zit != smartzonelist.end(); zit++)
 	{
 		
@@ -156,7 +158,22 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 			}
 			it++;
 		}
+
+		for (std::vector<Life*>::iterator itl = lifelist.begin(); itl != lifelist.end(); itl++)
+		{
+			if ((*zit)->containsPtr((*itl)->mPtr))
+			{
+				(*zit)->addAllowedNPC((*itl)->mPtr);
+			}
+		}
+
+
+
 	}
+
+	
+	
+
 
 
 }

@@ -206,7 +206,12 @@ namespace MWBase {
 	};
 		
 
-	class SubBrain 
+	class MetaBrain //manages subbrains for group behavior or behavior determined by logic embedded in environment
+	{
+
+	};
+
+	class SubBrain //used by NPCs to make decisions and solve problems
 	{
 
 	protected:
@@ -222,6 +227,8 @@ namespace MWBase {
 		//std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 
 		std::vector<WorldstateAtom> mWorldState;
+
+		MetaBrain * mMetaBrain;
 
 	public:
 		
@@ -246,6 +253,8 @@ namespace MWBase {
 		virtual void getDebugInfo() = 0;
 
 	};
+
+	
 
 }
 

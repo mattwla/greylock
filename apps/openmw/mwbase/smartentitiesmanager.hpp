@@ -89,7 +89,8 @@ namespace MWBase
 
 		std::vector<SmartEntityInstance*> mMyManagedEntities;
 
-		//Get available BehaviorObjects
+	
+		std::vector<std::string> mAllowedNPCIds;
 
 		
 
@@ -172,6 +173,14 @@ namespace MWBase
 			return false;
 		}
 
+		virtual void addAllowedNPC(MWWorld::Ptr ptr)
+		{
+			if (!mIsSmartZone)
+				std::cout << "ERROR tried to add permission to something that is not a smart zone" << std::endl;
+			else
+				mAllowedNPCIds.push_back(ptr.getCellRef().getRefId());
+		}
+
 		virtual void assignZone(SmartEntityInstance * zone)
 		{
 			mMySmartZone = zone;
@@ -187,6 +196,36 @@ namespace MWBase
 		virtual bool isManagedBySmartZone()
 		{
 			return mIsManagedBySmartzone;
+		}
+
+		virtual SmartEntityInstance * getSmartZone()
+		{
+			return mMySmartZone;
+		}
+
+		virtual bool isAllowedTerritory(MWBase::Life * life)
+		{
+			if (!mIsSmartZone)
+			{
+				std::cout << "ERROR: SEI that is not a zone asked if it is allowed territory" << std::endl;
+				return false;
+			}
+			else
+			{
+				
+				unsigned int itx = 0;
+				while (itx < mAllowedNPCIds.size())
+				{
+					if (mAllowedNPCIds[itx] == life->mPtr.getCellRef().getRefId())
+						return true;
+					
+					itx += 1;
+				}
+			
+
+
+			}
+			return false;
 		}
 			
 		

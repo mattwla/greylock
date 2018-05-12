@@ -248,6 +248,7 @@ namespace MWWorld
         }
         else
             mGlobalVariables["chargenstate"].setInteger (-1);
+		MWBase::Environment::get().getLifeManager()->initialize();
 		preloadAll();
         if (bypass && !mStartCell.empty())
         {
@@ -301,7 +302,7 @@ namespace MWWorld
 
 		
 		std::cout << "preloaded all" << std::endl;
-		MWBase::Environment::get().getLifeManager()->initialize();
+		
 
 		//getPlayerPtr().getClass().getAutoMove();
 
