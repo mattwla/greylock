@@ -59,7 +59,7 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainCircadia
 	refnum.unset();
 
 	std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mSleepOnGroundBO, refnum, 1, "sleep on ground node"));
-	results.push_back(node);
+	//results.push_back(node);
 
 
 	}

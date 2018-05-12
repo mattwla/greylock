@@ -76,6 +76,10 @@ namespace MWBase
 				std::cout << mCurrentIntentionPlan.mGOAPNodeDataList[itx]->mId << std::endl;
 				itx++;
 			}
+			if (mHasQueuedIntention)
+			{
+				std::cout << "I have intention in queue" << std::endl;
+			}
 		}
 		else
 			std::cout << "has no intention" << std::endl;
@@ -165,11 +169,13 @@ namespace MWBase
 					{
 						mHasQueuedIntention = true;
 						mQueuedIntentionPlan = plan;
+						
 					}
 					else
 					{
 						mCurrentIntentionPlan = plan;
 						mHasIntention = true;
+						
 					}			
 				
 				}

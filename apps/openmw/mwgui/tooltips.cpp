@@ -1118,7 +1118,10 @@ namespace MWGui
 
 	bool AmbientDialogue::isDone()
 	{
-		return mSpeechList[0]->mDone;
+		if (mSpeechList.size() == 0)
+			return true;
+		else
+			return mSpeechList[0]->mDone;
 	}
 
 	void AmbientDialogue::update(float frameDuration)
@@ -1225,7 +1228,7 @@ namespace MWGui
 
 		//		MyGUI::IntSize tooltipSize;
 
-		//		// try to go 1 level up until there is a widget that has tooltip
+		//		// try to go 1 level up until there is a widget that has tooltip'
 		//		// this is necessary because some skin elements are actually separate widgets
 		//		int i = 0;
 		//		while (!focus->isUserString("ToolTipType"))
