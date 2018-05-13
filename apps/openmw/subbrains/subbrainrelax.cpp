@@ -20,14 +20,8 @@ MWBase::SubBrainRelax::SubBrainRelax(MWBase::Life * life)
 
 void MWBase::SubBrainRelax::calculate(MWBase::Awareness * awareness)
 {
-//	mGOAPDesires.clear();
+
 	mWorldState.clear();
-
-	
-	
-
-	//mGOAPDesires.push_back(desire);
-	
 }
 
 std::string MWBase::SubBrainRelax::getID()

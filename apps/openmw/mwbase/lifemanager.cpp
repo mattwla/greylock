@@ -10,18 +10,18 @@
 #include "../subbrains/subbrainrelax.hpp"
 #include "../subbrains/subbraincircadianrhythm.hpp"
 #include "../mwbase/windowmanager.hpp"
-
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
-
 #include "../gllifemanager/goap.hpp"
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include "../mwworld/class.hpp"
 
-
 namespace MWBase
 {
+
+
+	//LIFE
 	MWBase::SmartEntityInstance * Life::getSEIWithStatusFromInventory(std::string status)
 	{
 		MWWorld::Ptr ptr = mPtr;
@@ -38,6 +38,7 @@ namespace MWBase
 					return sei;
 			}
 		}
+		std::cout << "ERROR: NPC tried to request an item with status from inventory and there was nothing there" << std::endl;
 		return nullptr;
 	}
 
@@ -46,18 +47,13 @@ namespace MWBase
 		std::shared_ptr<Speech> speechobject = std::make_shared<Speech>(mPtr, speech);
 		MWBase::Environment::get().getWindowManager()->createSpeech(speechobject);
 		mCurrentSpeech = speechobject;
-		//Speech * speechobject = new Speech(mPtr, speech);
-		//MWBase::Environment::get().getWindowManager()->ambientDialogueBox(mPtr, "I am saying something.");
-	
 	}
 
-	//LIFE
 	void Life::getDebugInfo()
 	{
 		std::cout << mId << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
-	
 		unsigned int ditx = 0;
 		while (ditx < mDesireList.size())
 		{
@@ -65,8 +61,6 @@ namespace MWBase
 			std::cout << mDesireList[ditx]->mValence << std::endl;
 			ditx += 1;
 		}
-
-		mSubBrainsManager->logWorldstate();
 		if (mHasIntention)
 		{
 			std::cout << "intention info" << std::endl;
@@ -87,31 +81,26 @@ namespace MWBase
 
 	void Life::update(float duration)
 	{
-	
-	
+		//If you were talking, and are now done talking, destroy the speech object
 		if (mCurrentSpeech && mCurrentSpeech->mDone)
 		{
 			mCurrentSpeech = 0;
 		}
-
-		typedef std::vector<GOAPDesire> desirelist;
-		typedef std::vector<IntentionPlan> intentionlist;
-
 		//change hunger, sleep, etc....
 		metabolize(duration);
 		//update objects npcs is aware of
 		mAwareness->refresh();
-		//pass awareness to subbrains, get back alist of desires
+		//pass awareness to subbrains, get back a list of desires. Subbrains push desires to life on their own, and maintain a pointer to them to update or remove them.
 		mSubBrainsManager->calculate(mAwareness);
 
-		//if we don't have a desire, just chill until we do. Wow how mindful.
+		//if we don't have a desire, just chill until we do. Wow how mindful. This will likely never happen. 
 		if (mDesireList.size() == 0)
 			return;
 	
 		//sort desires from most desired to least
 		prioritizeDesires();
 
-		//Run through desires from strongest to weakest until we find one we are already working on, or find one we can accomplish.
+		//Run through desires from strongest to weakest until we find one we are already working on, or find one we can accomplish. I supose it is determineIntentionAndMakePlan()
 		determineIntention();
 
 		if (mHasQueuedIntention)
@@ -128,18 +117,10 @@ namespace MWBase
 	void Life::metabolize(float duration)
 	{
 		//mVitals.mHunger += duration / 150.0f;
-
 		mVitals.mHunger += duration / 50.0f;
-
 		mVitals.mSleepiness += duration / 500.0f;
-		
-		
 		//mVitals.mSleepiness += duration / 400.f;
-
-
-
 	}
-
 
 	void Life::prioritizeDesires()
 	{
@@ -165,19 +146,20 @@ namespace MWBase
 				foundPlan = plan.mPlanComplete;
 				if (foundPlan)
 				{
+					//We found a new plan, do we already have an intention we need to stop?
+					//MWX FIX ME THIS NEEDS REFACTORING
 					if (mHasIntention)
 					{
 						mHasQueuedIntention = true;
 						mQueuedIntentionPlan = plan;
 						
 					}
-					else
+					else //had no plan before, so lets just start this one.
 					{
 						mCurrentIntentionPlan = plan;
 						mHasIntention = true;
 						
 					}			
-				
 				}
 			}
 		itx += 1;
@@ -197,11 +179,9 @@ namespace MWBase
 			std::cout << "I have an intention plan" << std::endl;
 			foundPossibleIntention = true;
 		}
-
 		return newplan;
 	}
 		
-
 	void Life::runTopIntentionPlan(float duration)
 	{
 
@@ -210,24 +190,15 @@ namespace MWBase
 			int step = mCurrentIntentionPlan.mCurrentStep;
 			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlan.mGOAPNodeDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
-
-			//BehaviorObject * newbo = currentnode->getNewBehaviorObject(this, currentnode->mSEI->getRefNum());
 			mCurrentIntentionPlan.mCurrentBehaviorObject = currentnode->mBehaviorObject->Clone(this, currentnode->mRefNum);
-			//newbo->setTarget(currentnode->mSEI);
-			////newbo->setTargetSensoryLink();
-			//mCurrentIntentionPlan.mCurrentBehaviorObject = newbo;
-			//mCurrentIntentionPlan.mCurrentBehaviorObject->setOwner(this);
 			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
 		}
 		else //need to continue an intention plan BO
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
-			//bo->setOwner(this);
-
 			MWBase::BOReturn status = bo->update(duration, mPtr);
 			if (status == BOReturn::IN_PROGRESS)
 			{
-				//std::cout << "BO In progress" << std::endl;
 			}
 			else if (status == BOReturn::COMPLETE)
 			{
@@ -236,19 +207,16 @@ namespace MWBase
 				mCurrentIntentionPlan.mCurrentStep -= 1;
 				if (mCurrentIntentionPlan.mCurrentStep = -1)
 				{
-					//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
+					//Whole plan done. Success.
 					mHasIntention = false;
 					mCurrentIntentionPlan.mDesire->mIsIntention = false;
-
 				}
-
 			}
 			else if (status == BOReturn::FAILED)
 			{
 				//hack logic for now, delete the failed bo and get new intention.
 				//In future, resubmit to planner for new way of accomplishing this node.
 				delete bo;
-				//mCurrentIntentionPlans.erase(mCurrentIntentionPlans.begin());
 				mHasIntention = false;
 				mCurrentIntentionPlan.mDesire->mIsIntention = false;
 				mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
@@ -258,26 +226,20 @@ namespace MWBase
 
 	void Life::runSwapIntentionPlan(float duration)
 	{
-		//std::cout << "attempt intention swap" << std::endl;
 		MWBase::BOReturn status;
-
 		if(!mSuccsessfulStopRequest)
 			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop();
-
 		status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
-
 		if (status == COMPLETE)
 		{
 			mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			mCurrentIntentionPlan = mQueuedIntentionPlan;
 			mHasQueuedIntention = false;
 			mSuccsessfulStopRequest = false;
-			
 		}
-
 	}
 
-	//LIFE MANAGER
+	//===================LIFE MANAGER ================================
 
 	void LifeManager::loadGame(boost::filesystem::path path)
 	{
@@ -349,7 +311,7 @@ namespace MWBase
 		}
 	}
 
-	//VITALS
+	//===================================VITALS=================================================
 	std::string Vitals::getSaveState()
 	{
 		std::string save;
@@ -372,6 +334,13 @@ namespace MWBase
 		mHunger = cache[0];
 		mSleepiness = cache[1];
 	}
+
+
+
+	//================================INTENTION PLAN=============================================
+
+
+
 	bool IntentionPlan::stop()
 	{
 		//request current BO to stop;
@@ -382,7 +351,7 @@ namespace MWBase
 }
 
 
-//SUB BRAINS
+//========================================SUBBRAINS MANAGER===============================================
 
 void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>& planlist, std::vector<IntentionPlan>& completelist, MWWorld::Ptr ptr)
 {
@@ -448,7 +417,6 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
 	{
 		IntentionPlan plan;
-		plan.mDesiredState = status;
 		plan.mGOAPNodeDataList.push_back(*itnc);
 		possibleplans.push_back(plan);
 	}
@@ -580,25 +548,3 @@ std::vector<std::string> MWBase::SubBrainsManager::getSaveStates()
 	std::vector<std::string> temp;
 	return temp;
 }
-
-void MWBase::SubBrainsManager::logDesires()
-{
-	std::cout << "I desire....." << std::endl;
-	unsigned itx = 0;
-	while (itx < mGOAPDesires.size())
-	{
-		std::cout << mGOAPDesires[itx].debugInfo << std::endl;
-		itx += 1;
-	}
-}
-
-void MWBase::SubBrainsManager::logWorldstate()
-{
-
-}
-
-std::vector<MWBase::GOAPDesire> MWBase::SubBrainsManager::getGOAPDesires()
-{
-	return mGOAPDesires;
-}
-

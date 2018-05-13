@@ -7,7 +7,6 @@
 #include <set>
 #include <stdint.h>
 #include <map>
-
 #include <list>
 
 #include <components/esm/loadpgrd.hpp>
@@ -25,8 +24,6 @@
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/journey.hpp"
 
-
-
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
@@ -40,7 +37,6 @@ namespace osg
 namespace ESM
 {
 	struct Class;
-
 	class ESMReader;
 	class ESMWriter;
 }
@@ -56,11 +52,6 @@ namespace Loading
 {
 	class Listener;
 }
-
-//namespace MWTasks
-//{
-//	class JourneyManager;
-//}
 
 namespace MWBase
 {
@@ -83,7 +74,6 @@ namespace MWBase
 		}
 	};
 	
-
 	struct BigFive 
 	{
 		int mOpenness;
@@ -104,7 +94,6 @@ namespace MWBase
 
 	struct IntentionPlan
 	{
-		MWBase::GOAPStatus mDesiredState;
 		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodeDataList;
 		int mCurrentStep;
 		bool mPlanComplete;
@@ -114,12 +103,10 @@ namespace MWBase
 
 		IntentionPlan(std::shared_ptr<MWBase::GOAPDesire> desire) : mDesire(desire)
 		{
-			
 		}
 
 		IntentionPlan()
 		{
-
 		}
 	};
 
@@ -133,15 +120,8 @@ namespace MWBase
 	class SubBrainsManager
 	{
 		std::vector<SubBrain*> mSubBrains; //process objects in world, create goals to accomplish (desires), offer ways to solve problems (intentions)
-		std::vector<GOAPDesire> mGOAPDesires;
-		std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
 		MWBase::Life * mLife;
-		//std::vector<WorldstateAtom> mWorldState;
-	
-	
 	public:
-
-		
 
 		SubBrainsManager::SubBrainsManager(MWBase::Life * life);
 
@@ -169,26 +149,9 @@ namespace MWBase
 		//serializes all info in the sub brain manager, used for recording a savestate
 		std::vector<std::string> getSaveStates();
 
-		//debugging
-		void logDesires();
-
-		//debugging
-		void logWorldstate();
-
-		//std::vector<BehaviorObject*> getDesires();
-
-		std::vector<GOAPDesire> getGOAPDesires();
-
-		//std::vector<WorldstateAtom> getWorldstate();
-
-		std::vector<std::shared_ptr<GOAPNodeData>> getGOAPNodes()
-		{
-			return mGOAPNodes;
-		}
-
 		void loadStates();
 
-		//SubBrainsManager::SubBrainsManager();
+
 
 	};
 	
@@ -273,8 +236,6 @@ namespace MWBase
 
 		void metabolize(float duration);
 
-		//std::vector<BehaviorObject*> prioritizeDesires(std::vector<BehaviorObject*> desires); 
-
 		void prioritizeDesires();
 
 		void determineIntention();
@@ -286,7 +247,6 @@ namespace MWBase
 		void runSwapIntentionPlan(float duration);
 
 		bool mSuccsessfulStopRequest = false;
-		
 	
 	};
 
@@ -316,9 +276,7 @@ namespace MWBase
 		void loadGame(boost::filesystem::path path);
 
 		void saveGame(boost::filesystem::path path);
-
 	};
 
-	
 }
 #endif
