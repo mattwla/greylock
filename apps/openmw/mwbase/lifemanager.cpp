@@ -17,6 +17,9 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include "../mwworld/class.hpp"
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/creaturestats.hpp"
+#include "../mwclass/npc.hpp"
 
 namespace MWBase
 {
@@ -119,6 +122,14 @@ namespace MWBase
 	{
 		//mVitals.mHunger += duration / 150.0f;
 		mVitals.mHunger += duration / 50.0f;
+		if (mVitals.mHunger > 1000.0f)
+		{
+			std::cout << "npc starving" << std::endl;
+			MWMechanics::CreatureStats& stats = mPtr.getClass().getCreatureStats(mPtr);
+			MWMechanics::DynamicStat<float> health(mPtr.getClass().getCreatureStats(mPtr).getHealth());
+			health.setCurrent(health.getCurrent() - 100.0f);
+			stats.setHealth(health);
+		}
 		mVitals.mSleepiness += duration / 500.0f;
 		//mVitals.mSleepiness += duration / 400.f;
 	}
