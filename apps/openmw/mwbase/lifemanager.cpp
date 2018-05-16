@@ -169,16 +169,13 @@ namespace MWBase
 
 	IntentionPlan Life::selectIntentionPlan(std::shared_ptr<GOAPDesire> desire)
 	{
-		bool foundPossibleIntention;
-		GOAPDesire desireobject = *desire.get();
-		IntentionPlan newplan = mSubBrainsManager->createIntention(desireobject.mStatus, mPtr);
-		newplan.mDesire = desire; // <<<<<
+		IntentionPlan newplan = mSubBrainsManager->createIntention(desire, mPtr);
 		if (newplan.mPlanComplete) //were we able to find a plan that works?
 		{
-			newplan.mDesire->mIsIntention = true;
-			newplan.mCurrentStep = newplan.mGOAPNodeDataList.size() - 1; // set at last step, we go backwards
-			std::cout << "I have an intention plan" << std::endl;
-			foundPossibleIntention = true;
+			//lets do it, let the desire know it is now an intention
+			desire->mIsIntention = true;
+			// set at last step, we go backwards
+			newplan.mCurrentStep = newplan.mGOAPNodeDataList.size() - 1; 
 		}
 		return newplan;
 	}
@@ -221,7 +218,7 @@ namespace MWBase
 				delete bo;
 				mHasIntention = false;
 				mCurrentIntentionPlan.mDesire->mIsIntention = false;
-				//mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
+				//3mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
 			}
 		}
 	}
@@ -404,49 +401,45 @@ bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWW
 }
 
 
-MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
+MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(std::shared_ptr<MWBase::GOAPDesire> desire, MWWorld::Ptr ptr)
 {
 	typedef std::vector<IntentionPlan> planlist;
+	//plans in progress, not complete
 	planlist possibleplans;
+	//complete plans
 	planlist completeplans;
-	GOAPDesire emptydesire;
-	IntentionPlan emptyplan(0);
-	emptyplan.mPlanComplete = false;
+	
+	//A chain of nodes that need to be done to meet desire
 	typedef std::vector<std::shared_ptr<GOAPNodeData>> nodechain;
 	std::vector<nodechain> nodechainlist;
+
 	//Seed the list, ask all subbrains if they have a behavior object that can meet our need.
-	nodechain nc = querySubBrainsForGOAPMatches(status);
+	nodechain nc = querySubBrainsForGOAPMatches(desire->mStatus);
 	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
 	{
 		IntentionPlan plan;
+		plan.mDesire = desire;
 		plan.mGOAPNodeDataList.push_back(*itnc);
 		possibleplans.push_back(plan);
 	}
 
-	if (possibleplans.size() == 0)
-	{
-		//No way to meet desire
-		return emptyplan;
-	}
-
-	seperateCompletePlans(possibleplans, completeplans, ptr);
+	//Now we have a list of actions NPC can take to meet desire, but some of those actions might not be possible yet.Seperate those we can do from those we need more planning to do
+	if (possibleplans.size() > 0)
+		seperateCompletePlans(possibleplans, completeplans, ptr);
 
 	//Now we have a list of BOs that can meet our needs... but those BOs in turn might have needs that are not met.
 	//Iterate through the list, and whenever a BO has more than one way of being met, copy the nodechain and push it back, with a new branch for each possible method
-
 	while (possibleplans.size() > 0)
 	{		
+		//find all the ways we could possible be able to meet the requirements of starting this node
 		nodechain possiblepaths = querySubBrainsForGOAPMatches(possibleplans[0].mGOAPNodeDataList.back()->mInputs[0]); //only checks first input, no support for multiple for inputs for now
-		if (possiblepaths.size() == 0)
-		{
-			//std::cout << "dead end plan" << std::endl;
-			//std::cout << possibleplans[0].mDesiredState.mExtraData << std::endl;
-		}
 		for (nodechain::iterator itb = possiblepaths.begin(); itb != possiblepaths.end(); itb++)
 		{
 			//copy plan
 			IntentionPlan copiedplan = possibleplans[0];
+			//add the new node we found to plan
 			copiedplan.mGOAPNodeDataList.push_back(*itb);
+			//push this new plan (not sure if complete yet) into our list of possible plan
 			possibleplans.push_back(copiedplan);
 		}
 
@@ -457,13 +450,17 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(MWBase::GOAPStat
 		seperateCompletePlans(possibleplans, completeplans, ptr);
 	}
 
-	//see if any are complete, if so move to a special complete vector
-	//For rest, run them through matching thing again.
 	//Should I return lowest cost one? But what if we want an alternate plan? Maybe optional blacklist parameter for when a plan fails (pass the status we couldn't make work)
 	if (completeplans.size() > 0)
 		return completeplans[0];
 	else
+	{
+		//used if we can't come up with a plan to meet this desire
+		GOAPDesire emptydesire;
+		IntentionPlan emptyplan(0);
+		emptyplan.mPlanComplete = false;
 		return emptyplan;
+	}
 }
 
 std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainsManager::querySubBrainsForGOAPMatches(MWBase::GOAPStatus status)

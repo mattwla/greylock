@@ -140,7 +140,7 @@ namespace MWBase
 		bool hadObjectStatusInAwareness(std::string status, MWWorld::Ptr ptr);
 
 		//Given a desired status to achieve, creates a chain of behavior objects which can accomplish the task if run in sequence
-		IntentionPlan createIntention(MWBase::GOAPStatus status, MWWorld::Ptr ptr);
+		IntentionPlan createIntention(std::shared_ptr<GOAPDesire> desire, MWWorld::Ptr ptr);
 
 		//Given a status, queries all the subrains for behavior objectas that can help make that status true
 		std::vector<std::shared_ptr<GOAPNodeData>> querySubBrainsForGOAPMatches(MWBase::GOAPStatus status);
