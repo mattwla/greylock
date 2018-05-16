@@ -195,8 +195,18 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	//check if it already has one
 	if (hasSmartInstance(ptr))
 		return mSmartInstanceMap[ptr.getCellRef().getRefNum()];
+
+
+
+
+
 	std::string id = ptr.getCellRef().getRefId();
 	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
+
+
+
+
+
 	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 		return nullptr;
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(ptr);

@@ -35,6 +35,7 @@ SmartZoneHomeInstance::SmartZoneHomeInstance(const MWWorld::Ptr & ptr)
 SmartZoneHomeInstance::SmartZoneHomeInstance(std::string id, ESM::RefNum)
 {
 	std::cout << "new home id refnum method" << std::endl;
+	mIsSmartZone = true;
 }
 
 std::string SmartZoneHomeInstance::getSaveString()
