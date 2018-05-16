@@ -24,22 +24,19 @@ namespace ESM {
 	class RefNum;
 }
 
-
-
-
-
 namespace MWBase {
+	
+	enum StatusType {
+		HAS_ID_IN_INVENTORY = 0,
+		VITALS = 1,
+		HAS_OBJECT_STATUS_IN_INVENTORY = 2,
+		AWARE_OF_OBJECT_WITH_STATUS = 3,
+		STATUS_VOID = 4
+	};
 
 	struct GOAPStatus
 	{
-		enum StatusType {
-			HAS_ID_IN_INVENTORY = 0,
-			VITALS = 1,
-			HAS_OBJECT_STATUS_IN_INVENTORY = 2,
-			AWARE_OF_OBJECT_WITH_STATUS = 3,
-			STATUS_VOID = 4
-		};
-
+	
 		StatusType mStatusType;
 
 		std::string mExtraData;

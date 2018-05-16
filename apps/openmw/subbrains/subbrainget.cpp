@@ -46,7 +46,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 	
 	std::vector<std::shared_ptr<GOAPNodeData>> result;
 	
-	if (status.mStatusType == MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
+	if (status.mStatusType == MWBase::HAS_OBJECT_STATUS_IN_INVENTORY) //does npc want something in its inventory, we can help.
 	{
 		typedef std::unordered_map<ESM::RefNum, SensoryLink> linklist;
 		
@@ -59,8 +59,8 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 		{
 			if (it->second.mSEInstance->hasStatus(status.mExtraData))
 			{
-				MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
-				MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
+				MWBase::GOAPStatus statusinput(MWBase::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
+				MWBase::GOAPStatus statusoutput(MWBase::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
 				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mGetFromWorldBO, it->first, 1, "get from world" + it->second.mSEInstance->getRefId() ));
 				result.push_back(node);
 			}

@@ -16,7 +16,7 @@ MWBase::SubBrainCircadianRhythm::SubBrainCircadianRhythm(MWBase::Life * life)
 	mOwnerLife = life;
 	mSleepOnGroundBO = new BOSleepOnGround(1);
 	//mGOAPNodes.push_back(mEatBO->getGOAPNode());
-	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "sleepiness", -1);
+	GOAPStatus desirestatus(MWBase::VITALS, "sleepiness", -1);
 	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
 	mSleepDesire = pDesire;
 	pDesire->debugInfo = "sleep desire";
@@ -45,7 +45,7 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainCircadia
 	
 	MWBase::GOAPStatus gs;
 	gs.mAmount = -1;
-	gs.mStatusType = GOAPStatus::VITALS;
+	gs.mStatusType = MWBase::VITALS;
 	gs.mExtraData = "sleepiness";
 
 	if (status == gs)
@@ -53,8 +53,8 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainCircadia
 
 	//actually search inventory for thing to eat?
 	//std::vector<std::shared_ptr<MWBase::GOAPNodeData>> results;
-	MWBase::GOAPStatus statusinput(MWBase::GOAPStatus::STATUS_VOID, "", 0);
-	MWBase::GOAPStatus statusoutput(MWBase::GOAPStatus::VITALS, "sleepiness", -1);
+	MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 0);
+	MWBase::GOAPStatus statusoutput(MWBase::VITALS, "sleepiness", -1);
 	ESM::RefNum refnum;
 	refnum.unset();
 

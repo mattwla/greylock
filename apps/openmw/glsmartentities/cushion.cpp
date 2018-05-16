@@ -45,8 +45,8 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr)
 	mRefId = ptr.getCellRef().getRefId();
 	mPtr = ptr;
 	mStatusList.push_back("comfortable");
-	MWBase::GOAPStatus output(MWBase::GOAPStatus::VITALS, "stress", -1);
-	MWBase::GOAPStatus input(MWBase::GOAPStatus::STATUS_VOID, "void", 0);
+	MWBase::GOAPStatus output(MWBase::VITALS, "stress", -1);
+	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
 
 
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, mPtr.getCellRef().getRefNum(), 1, "cusion node"));
@@ -67,8 +67,8 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, ESM::R
 	mStatusList.push_back("comfortable");
 
 
-	MWBase::GOAPStatus output(MWBase::GOAPStatus::VITALS, "stress", -1);
-	MWBase::GOAPStatus input(MWBase::GOAPStatus::STATUS_VOID, "void", 0);
+	MWBase::GOAPStatus output(MWBase::VITALS, "stress", -1);
+	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, refnum, 1, "cusion node"));
 
 

@@ -15,7 +15,7 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 	mOwnerLife = life;
 	mEatBO = new BOEat(1);
 	//mGOAPNodes.push_back(mEatBO->getGOAPNode());
-	GOAPStatus desirestatus(MWBase::GOAPStatus::VITALS, "hunger", -1);
+	GOAPStatus desirestatus(MWBase::VITALS, "hunger", -1);
 	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
 	mHungerDesire = pDesire;
 	pDesire->debugInfo = "hunger desire";
@@ -44,7 +44,7 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainHunger::
 	
 	MWBase::GOAPStatus gs;
 	gs.mAmount = -1;
-	gs.mStatusType = GOAPStatus::VITALS;
+	gs.mStatusType = MWBase::VITALS;
 	gs.mExtraData = "hunger";
 
 	if (status == gs)
@@ -52,8 +52,8 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainHunger::
 
 	//actually search inventory for thing to eat?
 	//std::vector<std::shared_ptr<MWBase::GOAPNodeData>> results;
-	MWBase::GOAPStatus statusinput(MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
-	MWBase::GOAPStatus statusoutput(MWBase::GOAPStatus::VITALS, "hunger", -1);
+	MWBase::GOAPStatus statusinput(MWBase::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
+	MWBase::GOAPStatus statusoutput(MWBase::VITALS, "hunger", -1);
 	ESM::RefNum refnum;
 	refnum.unset();
 

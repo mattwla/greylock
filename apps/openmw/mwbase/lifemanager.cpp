@@ -378,22 +378,22 @@ void MWBase::SubBrainsManager::seperateCompletePlans(std::vector<IntentionPlan>&
 bool MWBase::SubBrainsManager::evaluateGOAPStatus(MWBase::GOAPStatus status, MWWorld::Ptr ptr)
 {
 	switch (status.mStatusType) {
-		case MWBase::GOAPStatus::HAS_ID_IN_INVENTORY:
+		case MWBase::HAS_ID_IN_INVENTORY:
 			//evaluate inventory for specific id
 			break;
-		case MWBase::GOAPStatus::VITALS:
+		case MWBase::VITALS:
 			//evaluate vitals
 			break;
-		case MWBase::GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY:
+		case MWBase::HAS_OBJECT_STATUS_IN_INVENTORY:
 			//evalualte if an object with a certain status is in inventory
 			return hasObjectStatusInInventory(status, ptr);
 			break;
-		case MWBase::GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS:
+		case MWBase::AWARE_OF_OBJECT_WITH_STATUS:
 			//evaluate if npc has object in its awareness
 			//return
 			return hadObjectStatusInAwareness(status.mExtraData, ptr);
 			break;
-		case MWBase::GOAPStatus::STATUS_VOID: //no needed extra input
+		case MWBase::STATUS_VOID: //no needed extra input
 			return true;
 	}
 	
