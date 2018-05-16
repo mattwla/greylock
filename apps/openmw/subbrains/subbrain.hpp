@@ -65,7 +65,9 @@ namespace MWBase {
 	enum BOReturn {
 		IN_PROGRESS = 0,
 		COMPLETE = 1,
-		FAILED = 2
+		FAILED = 2,
+		STOPPED = 3,
+		PAUSED = 4
 	};
 
 	//serves a a node for NPC planning.

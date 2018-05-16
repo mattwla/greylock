@@ -22,7 +22,7 @@ namespace MWBase
 {
 
 
-	//LIFE
+	//====================================LIFE OBJECT===========================================
 	MWBase::SmartEntityInstance * Life::getSEIWithStatusFromInventory(std::string status)
 	{
 		MWWorld::Ptr ptr = mPtr;
@@ -182,7 +182,6 @@ namespace MWBase
 		
 	void Life::runTopIntentionPlan(float duration)
 	{
-
 		if (mCurrentIntentionPlan.mCurrentBehaviorObject == 0) 	//Need to start an intention plan BO.
 		{
 			int step = mCurrentIntentionPlan.mCurrentStep;
@@ -225,10 +224,13 @@ namespace MWBase
 
 	void Life::runSwapIntentionPlan(float duration)
 	{
-		MWBase::BOReturn status;
+		//this condition doesn't really do anything
 		if(!mSuccsessfulStopRequest)
-			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop();
-		status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop(); //request current intention plan to srop
+		
+		//stop will eventually return a complete
+		MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+		//if complete, mark the desire as no longer an intention, make the current intention plan the one we had waiting;
 		if (status == COMPLETE)
 		{
 			mCurrentIntentionPlan.mDesire->mIsIntention = false;

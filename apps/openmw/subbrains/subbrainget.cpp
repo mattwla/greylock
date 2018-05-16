@@ -62,6 +62,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 				MWBase::GOAPStatus statusinput(MWBase::AWARE_OF_OBJECT_WITH_STATUS, status.mExtraData, 1);
 				MWBase::GOAPStatus statusoutput(MWBase::HAS_OBJECT_STATUS_IN_INVENTORY, status.mExtraData, 1);
 				std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mGetFromWorldBO, it->first, 1, "get from world" + it->second.mSEInstance->getRefId() ));
+				node->mCost = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - it->second.mLastPosition.asVec3()).length2();
 				result.push_back(node);
 			}
 		}
@@ -80,6 +81,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainGet::getMatc
 		}	
 
 	}
+	std::sort(result.begin(), result.end(), [](const std::shared_ptr<GOAPNodeData> d1, std::shared_ptr<GOAPNodeData> d2) -> bool {return d1->mCost < d2->mCost; });
 	return result;
 }
 
