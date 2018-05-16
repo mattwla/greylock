@@ -9,6 +9,8 @@
 #include <map>
 #include <list>
 
+
+#include "../subbrains/subbrain.hpp"
 #include <components/esm/loadpgrd.hpp>
 #include "../mwmechanics/pathgrid.hpp"
 #include "../mwworld/timestamp.hpp"
@@ -19,7 +21,7 @@
 #include "../mwbase/aischedulemanager.hpp"
 #include "../mwtasks/life.hpp"
 #include "../mwbase/awarenessreactionsmanager.hpp"
-#include "../subbrains/subbrain.hpp"
+//#include "../subbrains/subbrain.hpp"
 #include "../gllifemanager/goap.hpp"
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/journey.hpp"

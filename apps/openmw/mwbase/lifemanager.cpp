@@ -2,7 +2,8 @@
 #include <iostream>
 #include "../mwworld/cellstore.hpp"
 #include "../mwworld/cells.hpp" 
-#include "../subbrains/subbrain.hpp"
+
+#include "../subbrains/subbrain.cpp"
 #include "../subbrains/subbrainhunger.hpp"
 #include "../subbrains/subbrainget.hpp"
 #include "../subbrains/subbraininventory.hpp"
@@ -190,7 +191,8 @@ namespace MWBase
 			int step = mCurrentIntentionPlan.mCurrentStep;
 			MWBase::GOAPNodeData * currentnode = mCurrentIntentionPlan.mGOAPNodeDataList[step].get();
 			std::cout << "trying to:..." + currentnode->mId << std::endl;
-			mCurrentIntentionPlan.mCurrentBehaviorObject = currentnode->mBehaviorObject->Clone(this, currentnode->mRefNum);
+			mCurrentIntentionPlan.mCurrentBehaviorObject = currentnode->getNewBehaviorObject(this, currentnode->mRefNum);
+				//currentnode->mBehaviorObjectTemplate ->Clone(this, currentnode->mRefNum);
 			mCurrentIntentionPlan.mCurrentBehaviorObject->start();
 		}
 		else //need to continue an intention plan BO
@@ -219,7 +221,7 @@ namespace MWBase
 				delete bo;
 				mHasIntention = false;
 				mCurrentIntentionPlan.mDesire->mIsIntention = false;
-				mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
+				//mCurrentIntentionPlan.mDesire->mIntentionPlan = false;
 			}
 		}
 	}

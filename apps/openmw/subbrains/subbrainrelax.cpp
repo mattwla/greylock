@@ -21,7 +21,7 @@ MWBase::SubBrainRelax::SubBrainRelax(MWBase::Life * life)
 void MWBase::SubBrainRelax::calculate(MWBase::Awareness * awareness)
 {
 
-	mWorldState.clear();
+	//mWorldState.clear();
 }
 
 std::string MWBase::SubBrainRelax::getID()

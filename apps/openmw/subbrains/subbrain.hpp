@@ -36,13 +36,13 @@ namespace MWBase {
 
 	struct GOAPStatus
 	{
-	
+		//Broad category of status.
 		StatusType mStatusType;
-
+		//Specific data relative to status type
 		std::string mExtraData;
-
+		//amount of status if applicable
 		int mAmount;
-
+		//Allows checking if two status are functionally equivalent. 
 		bool operator==(GOAPStatus status);
 
 		GOAPStatus::GOAPStatus()
@@ -56,28 +56,40 @@ namespace MWBase {
 			mExtraData = extradata;
 			mAmount = amount;
 		};
-
-
 	};
 
+	//Many behavior objects will need a few statuses to be true, or will output a few different effects. So we will be working with GOAPStatus vectors a lot.
 	typedef std::vector<GOAPStatus> statusstack;
 
+	//When a BehaviorObject updates, returns one of these.
 	enum BOReturn {
 		IN_PROGRESS = 0,
 		COMPLETE = 1,
 		FAILED = 2
 	};
 
-	//serves a a node for NPC planning
+	//serves a a node for NPC planning.
 	struct GOAPNodeData
 	{
-		statusstack mInputs; //AND or OR. Logic inside this to determine that.
+		//statuses that need to be true for this BO to work
+		statusstack mInputs;
+		
+		//Results of completing this Bo
 		statusstack mOutputs;
-		MWBase::BehaviorObject * mBehaviorObject;
-		std::string mId; // for debugging.
+		
+		//If we end up deciding to use a plan that utlized this node, this is a link to create a new BehaviorObject from it
+		MWBase::BehaviorObject * mBehaviorObjectTemplate;
+		
+		// for debugging.
+		std::string mId; 
+		
+		//a copy of the refnum if this node references a behavior object embedded in a smart entity.
 		ESM::RefNum mRefNum;
-		//SmartEntityInstance * mSEI; //for the object the action will act upon. Like getting a BREAD or using an OVEN or talking to an NPC.
+	
+		//The cost of choosing this node
 		int mCost = 0;
+		
+		//Request a behavior object from this node
 		MWBase::BehaviorObject * getNewBehaviorObject(MWBase::Life * ownerlife, ESM::RefNum seirefnum);
 
 		//constructor for objects with single input and output
@@ -91,7 +103,7 @@ namespace MWBase {
 			outputs.push_back(output);
 			mOutputs = outputs;
 
-			mBehaviorObject = behaviorobject;
+			mBehaviorObjectTemplate = behaviorobject;
 
 			mRefNum = refnum;
 
@@ -108,7 +120,7 @@ namespace MWBase {
 
 			mOutputs = output;
 
-			mBehaviorObject = behaviorobject;
+			mBehaviorObjectTemplate = behaviorobject;
 
 			mRefNum = refnum;
 
@@ -122,22 +134,32 @@ namespace MWBase {
 	class BehaviorObject
 	{
 	protected:
+		//ID used for debugging
 		std::string mID;
-		BehaviorObject * mSubBehavior; //maybe should instead be a GOAPDESIRE? or GOAPSTATUS?
+
+		//Sometimes a behavior object needs to call on a sub behavior object, like a useSEI getting a BO from the SEI.
+		BehaviorObject * mSubBehavior;
+
+		//Keeps track of whether or not an NPC is getting behavior controlle by this BO or a subBO belonging to this BO
 		bool mUsingSubBehavior = false;
-		MWWorld::Ptr mOwnerPtr;
-		ESM::RefNum mOwnerRefNum;
+
+		//if this bo targets something we store its refnum for sensorystore lookup
 		ESM::RefNum mTargetRefNum;
+
+		//owner life pointer, useful
 		MWBase::Life * mOwnerLife;
-		//std::shared_ptr<GOAPNodeData> mGOAPNodeData;
+	
 		SmartEntityInstance * mSEITarget;
-		bool mInJourney = false;
-		bool mStopRequested = false;
-		//MWBase::SensoryLinkStore * mOwnerSensoryStore;
 		
+		//most bos require npc to go somewhere, this is for when npc is travelling
+		bool mInJourney = false;
+		
+		//has the bo ben requested by ownerlife to stop?
+		bool mStopRequested = false;
 
 	public:
 		 
+		//To get a BO, a template BO is cloned. Template BOs are instantiated by their owner subbrains or SEIs.
 		virtual BehaviorObject* Clone(MWBase::Life * life, ESM::RefNum refnum) = 0;
 
 		virtual void getDebugInfo() = 0;
@@ -151,13 +173,11 @@ namespace MWBase {
 
 		};
 
-		//std::shared_ptr<GOAPNodeData> getGOAPNode() {
-		//	//return mGOAPNodeData;
-		//}
-
 	
+		//Called when a life wants to first begin a BO
 		virtual BOReturn start() = 0;
 
+		//Called when a life has started a BO and wants to continue doing it
 		virtual BOReturn update(float time, MWWorld::Ptr ownerptr) = 0;
 
 		void setTarget(SmartEntityInstance * sei)
@@ -165,29 +185,31 @@ namespace MWBase {
 			mSEITarget = sei;
 		}
 
-			//start
-			//pause
-			//run
-
+		//Called when a life wants to cancel the BO
 		virtual bool stop() = 0;
 		
 	};
 		
 	
-
+	//A desire is a GOAPStatus with extra info: valence and intention (how much NPC wants to make the status happen, and has the NPC decided to act on this desire)
 	struct GOAPDesire
 	{
-
+		//What an NPC wants to change/do
 		MWBase::GOAPStatus mStatus;
+		
+		//How badly it wants to change it
 		int mValence;
-		BehaviorObject * mIntentionPlan; //mwx fix me even needed?
+
+		//When a desire is selected to be acted upon, it is considered an intention
 		bool mIsIntention;
+
 		std::string debugInfo = "desire template";
+		
+		
 		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)
 		{
 			mStatus = stat;
 			mValence = val;
-			mIntentionPlan = 0;
 			mIsIntention = false;
 		};
 
@@ -196,6 +218,7 @@ namespace MWBase {
 
 		};
 
+		//Used for organizing desires from strongest to least strong
 		bool operator> (const GOAPDesire& gd2) {
 			return mValence > gd2.mValence;
 		}
@@ -215,36 +238,19 @@ namespace MWBase {
 
 		MWBase::Life * mOwnerLife;
 
-		//Beliefs
-		std::vector<GOAPStatus> mBeliefs;
-		
-		//Desire
-		//std::vector<GOAPDesire> mGOAPDesires;
-
-		//std::vector<std::shared_ptr<GOAPNodeData>> mGOAPNodes;
-
-		std::vector<WorldstateAtom> mWorldState;
-
-		MetaBrain * mMetaBrain;
-
 	public:
 		
 		virtual ~SubBrain() {
 
 		};
 		
+		//Subbrain takes in the NPCs awareness, and from that calculates the NPCs desires
 		virtual void calculate(MWBase::Awareness * awareness) = 0;
 
+		//Used for debugging
 		virtual std::string getID() = 0;
 
-		//virtual std::vector<std::shared_ptr<GOAPDesire>> getGOAPDesires() = 0;
-	
-		std::vector<WorldstateAtom> getWorldstate()
-		{
-			return mWorldState;
-		}
-
-		//Return BOs that have matching output, for now only BOs that totally meet needs
+		//Takes in a desired status, returns a node linked to a BO that if accomplished will cause desired status change.
 		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;

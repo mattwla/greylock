@@ -32,5 +32,5 @@ bool MWBase::GOAPStatus::operator==(GOAPStatus status)
 
 MWBase::BehaviorObject * MWBase::GOAPNodeData::getNewBehaviorObject(MWBase::Life * ownerlife, ESM::RefNum seirefnum)
 {
-	return mBehaviorObject->Clone(ownerlife, seirefnum);
+	return mBehaviorObjectTemplate->Clone(ownerlife, seirefnum);
 }
