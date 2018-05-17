@@ -25,7 +25,18 @@ MWBase::SubBrainCircadianRhythm::SubBrainCircadianRhythm(MWBase::Life * life)
 
 void MWBase::SubBrainCircadianRhythm::calculate(MWBase::Awareness * awareness)
 {
-	mSleepDesire->mValence = mOwnerLife->mVitals.mSleepiness;
+	float hour = MWBase::Environment::get().getWorld()->getTimeStamp().getHour();
+	if (hour > 18.0 || hour < 7.0)
+	{
+		mSleepDesire->mValence = 500;
+	}
+	else
+	{
+		mSleepDesire->mValence = 0;
+	}
+
+
+	
 }
 
 std::string MWBase::SubBrainCircadianRhythm::getID()
