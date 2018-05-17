@@ -85,6 +85,11 @@ namespace MWBase
 
 	void Life::update(float duration)
 	{
+
+		MWWorld::TimeStamp currenttime = MWBase::Environment::get().getWorld()->getTimeStamp();
+		double timepassed = currenttime - mTimeOfLastUpdate;
+	//	std::cout << timepassed << std::endl;
+
 		//If you were talking, and are now done talking, destroy the speech object
 		if (mCurrentSpeech && mCurrentSpeech->mDone)
 		{
@@ -111,6 +116,8 @@ namespace MWBase
 			runSwapIntentionPlan(duration);
 		else if (mHasIntention)
 			runTopIntentionPlan(duration);
+
+		mTimeOfLastUpdate = currenttime;
 	}
 
 	void Life::submitDesirePtr(std::shared_ptr<MWBase::GOAPDesire> desire)
@@ -121,7 +128,7 @@ namespace MWBase
 	void Life::metabolize(float duration)
 	{
 		//mVitals.mHunger += duration / 150.0f;
-		mVitals.mHunger += duration / 50.0f;
+		mVitals.mHunger += duration; /// 500.0f;
 		if (mVitals.mHunger > 1000.0f)
 		{
 			std::cout << "npc starving" << std::endl;
@@ -130,8 +137,10 @@ namespace MWBase
 			health.setCurrent(health.getCurrent() - 100.0f);
 			stats.setHealth(health);
 		}
-		mVitals.mSleepiness += duration / 500.0f;
+		mVitals.mSleepiness += duration / 1000.0f;
 		//mVitals.mSleepiness += duration / 400.f;
+
+	
 	}
 
 	void Life::prioritizeDesires()
@@ -206,10 +215,7 @@ namespace MWBase
 		{
 			BehaviorObject * bo = mCurrentIntentionPlan.mCurrentBehaviorObject;
 			MWBase::BOReturn status = bo->update(duration, mPtr);
-			if (status == BOReturn::IN_PROGRESS)
-			{
-			}
-			else if (status == BOReturn::COMPLETE)
+			if (status == BOReturn::COMPLETE)
 			{
 				delete bo;
 				mCurrentIntentionPlan.mCurrentBehaviorObject = 0;
@@ -239,7 +245,8 @@ namespace MWBase
 		if(!mSuccsessfulStopRequest)
 			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop(); //request current intention plan to srop
 		
-		//stop will eventually return a complete
+		//stop will eventually return a complete 
+
 		MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
 		//if complete, mark the desire as no longer an intention, make the current intention plan the one we had waiting;
 		if (status == COMPLETE)

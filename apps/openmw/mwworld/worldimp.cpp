@@ -916,14 +916,14 @@ namespace MWWorld
         hours += mGameHour->getFloat();
 
         setHour (hours);
-
+		
         int days = static_cast<int>(hours / 24);
 
         if (days>0)
             mDaysPassed->setInteger (
                 days + mDaysPassed->getInteger());
 		//std::cout << hours << std::endl;
-		MWBase::Environment::get().getLifeManager()->update(hours, incremental);
+		//MWBase::Environment::get().getLifeManager()->update(hours, incremental);
 			//getTasksManager()->update(hours, incremental); //mwx
     }
 

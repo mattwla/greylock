@@ -25,6 +25,7 @@
 #include "../gllifemanager/goap.hpp"
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/journey.hpp"
+#include "../mwworld/timestamp.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -207,6 +208,8 @@ namespace MWBase
 		MWBase::SmartEntityInstance * getSEIWithStatusFromInventory(std::string status);
 
 		void say(std::string speech);
+
+		MWWorld::TimeStamp mTimeOfLastUpdate;
 
 		
 
