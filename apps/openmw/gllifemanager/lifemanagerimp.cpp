@@ -37,6 +37,11 @@ void GLLifeManager::LifeManager::update(float duration, bool paused)
 			//currentLife->mAwareness->refresh();
 			//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
 		}
+		else
+		{
+		//	currentLife->update(duration);
+			//currentLife->inactiveUpdate();
+		}
 		itx++;
 	}
 }

@@ -228,6 +228,12 @@ namespace MWBase
 			return false;
 		}
 			
+
+		virtual MWBase::SubBrain * getSubBrain(MWBase::Life * life)
+		{
+			std::cout << "ERROR SUBBRAIN REQUESTED FROM SEI WHICH DOES NOT HAVE ONE TO GIVE" << std::endl;
+			return nullptr;
+		}
 		
 
 	};

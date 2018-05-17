@@ -17,25 +17,41 @@ public:
 
 };
 
-class ZoneBrain
-{
+
 	class HomeSubBrain : public MWBase::SubBrain
 	{
-		ZoneBrain * mParentBrain;
+		//ZoneBrain * mParentBrain;
+		MWBase::SmartEntityInstance * mHomeSEI;
+		bool mWasInHomeLastUpdate = true;
 	
 		public:
 		
-			MWBase::SubBrain * getSubBrain()
+			HomeSubBrain(MWBase::Life * life, MWBase::SmartEntityInstance * home)
 			{
-				new HomeSubBrain();
+				mOwnerLife = life;
+				mHomeSEI = home;
 			}
-
+	
 			virtual void calculate(MWBase::Awareness * awareness) {
+				//std::cout << "home sub brain calculating" << std::endl;
+				if (mHomeSEI->containsPtr(mOwnerLife->mPtr))
+				{
+					if(!mOwnerLife->mCurrentSpeech && !mWasInHomeLastUpdate)
+						mOwnerLife->say("Good to be home");
+					
+					mWasInHomeLastUpdate = true;
+				}
+				else
+				{
+					mWasInHomeLastUpdate = false;
+				}
+				
+
 			};
 
 			virtual std::string getID()
 			{
-				return "home subbrain";
+				return "Home SubBrain";
 			};
 
 			virtual void getDebugInfo()
@@ -45,21 +61,14 @@ class ZoneBrain
 
 			virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status) 
 			{
-				mParentBrain->getMatchingBehaviorObjects(status);
-	
+				std::vector<std::shared_ptr<MWBase::GOAPNodeData>> blank;
+				return blank;
 			};
 
 	};
 
-	public:
 	
-		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status) {
-		
 
-
-	};
-
-};
 
 
 class SmartZoneHomeInstance : public MWBase::SmartEntityInstance {
@@ -82,6 +91,11 @@ public:
 	virtual void buildBoundingBox();
 
 	virtual bool containsPtr(MWWorld::Ptr ptr);
+
+	virtual MWBase::SubBrain * getSubBrain(MWBase::Life * life)
+	{
+		return new HomeSubBrain(life, this);
+	}
 
 
 };

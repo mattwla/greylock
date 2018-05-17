@@ -152,6 +152,11 @@ namespace MWBase
 		//serializes all info in the sub brain manager, used for recording a savestate
 		std::vector<std::string> getSaveStates();
 
+		void addSubBrain(SubBrain * sb)
+		{
+			mSubBrains.push_back(sb);
+		}
+
 		void loadStates();
 
 

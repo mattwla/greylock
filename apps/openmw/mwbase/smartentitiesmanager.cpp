@@ -164,6 +164,7 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 			if ((*zit)->containsPtr((*itl)->mPtr))
 			{
 				(*zit)->addAllowedNPC((*itl)->mPtr);
+				(*itl)->mSubBrainsManager->addSubBrain((*zit)->getSubBrain((*itl)));
 			}
 		}
 
