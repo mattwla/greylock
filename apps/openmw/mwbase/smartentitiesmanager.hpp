@@ -245,10 +245,10 @@ namespace MWBase
 
 		std::string getStringID();
 		
-		//will return an existing SEI, or create a new one
+		//will return a new SEI
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
 		
-		//will reutrn an existing SEI, or create a new one
+		//will reutrn a new SEI
 		virtual SmartEntityInstance * getInstance(std::string id, ESM::RefNum refnum) = 0;
 		
 		//WIll create a new SEI and initialize it with data from serialized string
@@ -257,38 +257,49 @@ namespace MWBase
 
 	class SmartEntitiesManager
 	{
-		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; //allows an item to lookup if it should have smartentity functions by it's own ID
+		//map of refid to smartentityconstructor
+		typedef std::map<std::string, SmartEntityTemplate*> SmartTemplateMap; 
 		
+		//allows lookup of refid to see if it should have a smart template
 		SmartTemplateMap mSmartTemplateMap;
 		
+		//allows lookup of refnum to SEI
 		SmartInstanceMap mSmartInstanceMap;
 		
+		//list of all SEIs in active cells
 		SmartInstanceMap mSmartInstancesInScene;
 		
+		//On new game, gets smartentity constructors loaded and builds smarttemplatemap
 		void gatherSmartEntityTemplates();
 
+		//creates and inits an SEI with serialized data
 		void loadSmartEntityInstance(std::string type, int contentnum, int index, std::string savestate);
 
-		//void loadSmartEntityInstance(std::string type, int contentnum, int index, int pings);
-		
+		//for debugging
 		int mRuntimeRefNumTicker;
 	
 	public:
 		
 		SmartEntitiesManager::SmartEntitiesManager();
 
+		//Makes a smart instance from livecellref, or returns an already existing one
 		MWBase::SmartEntityInstance * initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref);
 
+		//returns an SEI, or makes a new one
 		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
+		//returns an SEI, or makes a new one
 		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
 
+		//unused for now, will let an SEI remember the cell it originated from
 		void registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell);
 
+		//lets SEM know that a SEI has been added to scene
 		void addSmartInstanceToScene(const MWWorld::Ptr &ptr);
 
 		void removeSmartInstanceFromScene(const MWWorld::Ptr &ptr);
 
+		//given a cell, SEM removes all instances that are in the cell from activeSEIS
 		void removeSmartInstancesFromSceneViaCell(MWWorld::CellStore *cellStore);
 
 		bool isInstanceInScene(const MWWorld::Ptr &ptr);
@@ -309,8 +320,10 @@ namespace MWBase
 
 		void saveGame(boost::filesystem::path path);
 
+		//takes the active cell, inits all smartzones, inits all refids w/ templates, and makes sure all SEIS have updated pointers.
 		void initializeActiveCell();
 
+		//given an SEI and an SEIZone, lets each know about eachother
 		bool linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone);
 		
 		
