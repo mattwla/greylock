@@ -247,12 +247,4 @@ MWBase::BOGetFromWorld::BOGetFromWorld()
 {
 	mInJourney = false;
 	std::cout << "made GetFromWorld BO" << std::endl;
-	/*MWBase::GOAPStatus statusinput(GOAPStatus::AWARE_OF_OBJECT_WITH_STATUS, "", 1);
-	std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
-	mGOAPNodeData = gd;
-	mGOAPNodeData->mInputs.push_back(statusinput);
-	MWBase::GOAPStatus statusoutput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "", 1);
-	mGOAPNodeData->mOutputs.push_back(statusoutput);
-	mGOAPNodeData->mBehaviorObject = this;
-	mGOAPNodeData->mId = "BO GET FROM WORLD";*/
 }

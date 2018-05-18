@@ -51,53 +51,51 @@ namespace MWBase
 {
 	typedef std::map<ESM::RefNum, SmartEntityInstance*> SmartInstanceMap; //should be unordered?
 	
-	
 	class SmartEntityInstance
 	{
 	
 	protected:
-		
-		int mPingCount;
-		
+	
 		std::string mRefId;
 		
-		MWWorld::Ptr mPtr; //will be problem.
+		MWWorld::Ptr mPtr;
 		
-		MWWorld::LiveCellRefBase * mLiveCellRef;
-		
-		std::string mHomeCellName;
-		
-		bool mHomeCellIsExterior;
-		
-		int mHomeCellX;
-		
-		int mHomeCellY;
-
 		std::vector<std::string> mStatusList;
-
-		//std::vector<MWBase::GOAPStatus> mGOAPList;
 
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> mGOAPNodeData;
 
-		osg::BoundingBox mBoundingBox;
+		//====== FOR SEIS MANAGED BY SMARTZONES========
 
-		bool mIsSmartZone = false;
-		
 		bool mIsManagedBySmartzone = false;
 
 		SmartEntityInstance * mMySmartZone;
 
-		std::vector<SmartEntityInstance*> mMyManagedEntities;
+		//====FOR SMART ZONES========
 
+		bool mIsSmartZone = false;
+
+		osg::BoundingBox mBoundingBox;
+
+		std::vector<SmartEntityInstance*> mMyManagedEntities;
 	
 		std::vector<std::string> mAllowedNPCIds;
 
+		//========things not sure if needed================
+
+		std::string mHomeCellName;
+
+		bool mHomeCellIsExterior;
+
+		int mHomeCellX;
+
+		int mHomeCellY;
+
+		MWWorld::LiveCellRefBase * mLiveCellRef;
 		
+		int mPingCount;
 
 	public :
 		
-
-
 		virtual float getActivationDistance() {
 			return 1000.0f;
 			//default
@@ -107,56 +105,67 @@ namespace MWBase
 
 		};
 		
+		//for debugging
 		void ping();
 		
+		//for debugging
 		void debugInfo();
 
+		//returns true if SEI has a given string status, likely a temp solution 
 		bool hasStatus(std::string status);
 		
+		//for debugging
 		int getPings();
 		
+		//amount of lifes currently using SEI
 		int mCurrentUserCount = 0;
 		
+		//returns the string refid of sei
 		std::string getRefId();
 
+		//returns the refnum of SEI
 		ESM::RefNum getRefNum();
 		
+		//returns the ptr of SEI
 		MWWorld::Ptr & getPtr();
 		
+		//let SEI know if its new ptr
 		void updatePtr(MWWorld::Ptr ptr);
 		
+		//the cellstore of the SEIS original reference
 		void registerHomeCell(const ESM::Cell * cell);
 
+		//get serial data
 		virtual std::string getSaveString() = 0;
 
+		//Currently for when NPC wants to use an object in inventory. Maybe this is more like consume? Probably a temp implementation
 		virtual bool use(MWBase::Life * user) {
 
 			std::cout << "invalid use " << std::endl;
 			return false;
 		}
 
+		//Can it be used?
 		virtual bool isAvailableForUse()
 		{
 			//default behavior, true
 			return true;
 		}
 
+		//For using an SEI that lives in the world.
 		virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user)
 		{
 			std::cout << "not able to be used in world" << std::endl;
 			return NULL;
 		}
 
-		virtual bool meetsInputNeed(MWBase::GOAPStatus status)
-		{
-			return true;
-		}
-
+		//Change so works much more like subbrain. 
 		virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getGOAPNodeData()
 		{
 			return mGOAPNodeData;
 		};
 
+		//Get bounding box of item, used for smartzones
 		virtual void buildBoundingBox()
 		{
 			std::cout << "Something that is not a smartzone had a request to build a bounding box" << std::endl;
@@ -167,12 +176,14 @@ namespace MWBase
 			return mIsSmartZone;
 		}
 
+		//Is the given ptr in this smartzones bounding box?
 		virtual bool containsPtr(MWWorld::Ptr ptr)
 		{
 			std::cout << "warning: asked not a smartzone if it contained something" << std::endl;
 			return false;
 		}
 
+		//Temporary and hacky, adds a ptr to the list of npcs allowed to use items in the smartzone. Lame for now.
 		virtual void addAllowedNPC(MWWorld::Ptr ptr)
 		{
 			if (!mIsSmartZone)
@@ -181,12 +192,14 @@ namespace MWBase
 				mAllowedNPCIds.push_back(ptr.getCellRef().getRefId());
 		}
 
+		//Temporary and hacky, lets an SEI know which smartzone it belongs to and flags it as managed by a smartzone
 		virtual void assignZone(SmartEntityInstance * zone)
 		{
 			mMySmartZone = zone;
 			mIsManagedBySmartzone = true;
 		}
 
+		//temp and hacky, adds an instance to the smartzone for management
 		virtual void giveEntityToManage(SmartEntityInstance * instance)
 		{
 
@@ -203,30 +216,9 @@ namespace MWBase
 			return mMySmartZone;
 		}
 
-		virtual bool isAllowedTerritory(MWBase::Life * life)
-		{
-			if (!mIsSmartZone)
-			{
-				std::cout << "ERROR: SEI that is not a zone asked if it is allowed territory" << std::endl;
-				return false;
-			}
-			else
-			{
-				
-				unsigned int itx = 0;
-				while (itx < mAllowedNPCIds.size())
-				{
-					if (mAllowedNPCIds[itx] == life->mPtr.getCellRef().getRefId())
-						return true;
-					
-					itx += 1;
-				}
-			
+		//hacky and temporary, returns true if given life is allowed to use smart zone.
+		virtual bool isAllowedTerritory(MWBase::Life * life);
 
-
-			}
-			return false;
-		}
 			
 
 		virtual MWBase::SubBrain * getSubBrain(MWBase::Life * life)
@@ -242,10 +234,7 @@ namespace MWBase
 	{
 		
 	protected: 
-		
-
-		//all possible BehaviorObjects (some can be enabled or disabled depending)
-
+		//Should be vector in future, in runtime refids are checked against this to see which refs get smartentity data.
 		std::string mIngameID;
 	
 	public:
@@ -256,21 +245,15 @@ namespace MWBase
 
 		std::string getStringID();
 		
+		//will return an existing SEI, or create a new one
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
 		
+		//will reutrn an existing SEI, or create a new one
 		virtual SmartEntityInstance * getInstance(std::string id, ESM::RefNum refnum) = 0;
 		
+		//WIll create a new SEI and initialize it with data from serialized string
 		virtual SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate) = 0;
 	};
-
-
-	class SmartZoneTemplate : public SmartEntityTemplate
-	{
-
-		std::vector<SmartEntityInstance> mOwnedSEIList;
-
-	};
-
 
 	class SmartEntitiesManager
 	{

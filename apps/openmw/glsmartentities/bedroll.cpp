@@ -132,6 +132,10 @@ MWBase::BOReturn BOBedrollSleep::update(float time, MWWorld::Ptr ownerptr)
 	
 	seq.clear();
 	MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npc, "lay", 0, 1);
+	if (!mOwnerLife->mCurrentSpeech)
+	{
+		mOwnerLife->say("ZZZZZ....");
+	}
 	
 	
 	

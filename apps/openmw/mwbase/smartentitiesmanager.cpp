@@ -503,3 +503,30 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 	mHomeCellX = cell->getGridX();
 	mHomeCellY = cell->getGridY();
 }
+
+bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)
+{
+	
+		if (!mIsSmartZone)
+		{
+			std::cout << "ERROR: SEI that is not a zone asked if it is allowed territory" << std::endl;
+			return false;
+		}
+		else
+		{
+
+			unsigned int itx = 0;
+			while (itx < mAllowedNPCIds.size())
+			{
+				if (mAllowedNPCIds[itx] == life->mPtr.getCellRef().getRefId())
+					return true;
+
+				itx += 1;
+			}
+
+
+
+		}
+		return false;
+	
+}

@@ -14,7 +14,6 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 
 	mOwnerLife = life;
 	mEatBO = new BOEat(1);
-	//mGOAPNodes.push_back(mEatBO->getGOAPNode());
 	GOAPStatus desirestatus(MWBase::VITALS, "hunger", -1);
 	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 1);
 	mHungerDesire = pDesire;
@@ -69,18 +68,8 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainHunger::
 
 MWBase::BOEat::BOEat(int valence) //input urge strength
 {
-	
-	//again a mess mwx fix me
-	std::cout << "made eat BO" << std::endl;
-	//MWBase::GOAPStatus statusinput(GOAPStatus::HAS_OBJECT_STATUS_IN_INVENTORY, "edible", 1);
-	//std::shared_ptr<GOAPNodeData> gd(new GOAPNodeData());
-	//mGOAPNodeData = gd;
-	//mGOAPNodeData->mInputs.push_back(statusinput);
-	//MWBase::GOAPStatus statusoutput(GOAPStatus::VITALS, "hunger", -1);
-	//mGOAPNodeData->mOutputs.push_back(statusoutput);
-	//mGOAPNodeData->mBehaviorObject = this;
-	//mGOAPNodeData->mId = "BO EAT";
 
+	std::cout << "made eat BO" << std::endl;
 }
 
 void MWBase::BOEat::getDebugInfo()
