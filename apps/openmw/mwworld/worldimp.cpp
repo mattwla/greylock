@@ -305,6 +305,9 @@ namespace MWWorld
 		
 
 		//getPlayerPtr().getClass().getAutoMove();
+		MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getPlayerPtr());
+		MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(getPlayerPtr());
+
 
 		mInitializingWorld = false;
     }
@@ -2477,6 +2480,7 @@ namespace MWWorld
 		
         mRendering->setupPlayer(ptr);
 		//mRendering->resetCamera();
+		
     }
 
     void World::renderPlayer()

@@ -300,7 +300,7 @@ namespace MWBase
 		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
 
 		//returns an SEI, or makes a new one
-		MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
+		//MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
 
 		//unused for now, will let an SEI remember the cell it originated from
 		void registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell);
@@ -319,7 +319,7 @@ namespace MWBase
 
 		bool hasSmartInstance(ESM::RefNum refnum);
 
-		bool hasSmartTemplate(std::string id);
+		bool hasSmartTemplate(MWWorld::LiveCellRefBase * lifecellref);
 
 		SmartInstanceMap& getLiveSmartInstances();
 

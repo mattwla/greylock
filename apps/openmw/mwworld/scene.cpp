@@ -88,7 +88,7 @@ namespace
 
 		MWBase::SmartEntitiesManager* sem = MWBase::Environment::get().getSmartEntitiesManager();
 
-		bool hasSmartTemplate = sem->hasSmartTemplate(ptr.getCellRef().getRefId());
+		bool hasSmartTemplate = sem->hasSmartTemplate(ptr.getBase());
 
 		if (hasSmartTemplate)
 		{
@@ -668,7 +668,7 @@ namespace MWWorld
 
     void Scene::removeObjectFromScene (const Ptr& ptr)
     {
-		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartTemplate(ptr.getCellRef().getRefId()))
+		if (MWBase::Environment::get().getSmartEntitiesManager()->hasSmartTemplate(ptr.getBase()))
 			MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstanceFromScene(ptr);
 		
 

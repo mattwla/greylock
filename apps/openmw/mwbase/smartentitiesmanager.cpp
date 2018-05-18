@@ -198,32 +198,40 @@ bool MWBase::SmartEntitiesManager::linkSEtoZone(SmartEntityInstance * entity, Sm
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
 {
+	bool ishuman = ptr.getClass().isNpc() || ptr.getCellRef().getRefId() == "player";
 	//check if it already has one
 	if (hasSmartInstance(ptr))
 		return mSmartInstanceMap[ptr.getCellRef().getRefNum()];
 	std::string id = ptr.getCellRef().getRefId();
 	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
-	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
+	if (!hasSmartTemplate(ptr.getBase())) //Is there a template for this object? if not return nothing
 		return nullptr;
-	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(ptr);
+	
+	SmartEntityInstance * newInstance;
+		if (ishuman)
+		{
+			newInstance = mSmartTemplateMap["human_life"]->getInstance(ptr);
+		}
+		else
+		newInstance = mSmartTemplateMap[id]->getInstance(ptr);
 	mSmartInstanceMap[refnum] = newInstance;
 	return newInstance;
 }
 
-MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, ESM::RefNum refNum)
-{
-	//check if it already has one
-	if (hasSmartInstance(refNum))
-		return mSmartInstanceMap[refNum];
-	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
-	{
-		//std::cout << "returned null" << std::endl;
-		return nullptr;
-	}
-	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
-	mSmartInstanceMap[refNum] = newInstance;
-	return newInstance;
-}
+//MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, ESM::RefNum refNum)
+//{
+//	//check if it already has one
+//	if (hasSmartInstance(refNum))
+//		return mSmartInstanceMap[refNum];
+//	if (!hasSmartTemplate(livecellref)) //Is there a template for this object? if not return nothing
+//	{
+//		//std::cout << "returned null" << std::endl;
+//		return nullptr;
+//	}
+//	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
+//	mSmartInstanceMap[refNum] = newInstance;
+//	return newInstance;
+//}
 
 void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell)
 {
@@ -237,11 +245,11 @@ void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref)
 {
 
-	bool isHumanLife = livecellref->mClass->isNpc();
+	bool isHumanLife = livecellref->mClass->isNpc() || livecellref->mRef.getRefId() == "player";
 	std::string id = livecellref->mRef.getRefId();
 	if (id == "")
 		return nullptr;
-	if (!hasSmartTemplate(id) && !isHumanLife) //Is there a template for this object? if not return nothing. Human template works different though
+	if (!hasSmartTemplate(livecellref) && !isHumanLife) //Is there a template for this object? if not return nothing. Human template works different though
 	{
 		//std::cout << "returned null" << std::endl;
 		return nullptr;
@@ -355,8 +363,11 @@ bool MWBase::SmartEntitiesManager::hasSmartInstance(ESM::RefNum refnum)
 		return true;
 }
 
-bool MWBase::SmartEntitiesManager::hasSmartTemplate(std::string id)
+bool MWBase::SmartEntitiesManager::hasSmartTemplate(MWWorld::LiveCellRefBase * livecellref)
 {
+	if (livecellref->mClass->isNpc() || livecellref->mRef.getRefId() == "player")
+		return true;
+	std::string id = livecellref->mRef.getRefId();
 	if (!mSmartTemplateMap.count(id)) //Is there a template for this object? if not return nothing
 		return false;
 	else
@@ -476,7 +487,8 @@ MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 
 void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr ptr)
 {
-	std::cout << "updated ptr" << std::endl;
+	//MWX fix me this happens way too much for moving npcs.
+	//std::cout << "updated ptr" << std::endl;
 	mPtr = ptr;
 }
 
