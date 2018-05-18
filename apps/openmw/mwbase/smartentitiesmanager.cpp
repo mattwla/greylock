@@ -39,7 +39,6 @@ void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int
 	refnum.mContentFile = contentnum;
 	SmartEntityInstance * foundInstance = mSmartTemplateMap[type]->loadInstance(type, refnum, savestate); //template should contain save and load logic.
 	mSmartInstanceMap[refnum] = foundInstance;
-	//type and refnum are generic, but "pings" should instead of "statestring"
 }
 
 void MWBase::SmartEntitiesManager::loadGame(boost::filesystem::path path)
@@ -128,9 +127,13 @@ void MWBase::SmartEntitiesManager::saveGame(boost::filesystem::path path)
 
 void MWBase::SmartEntitiesManager::initializeActiveCell()
 {
+	//get all SEIs in scene
 	std::map<ESM::RefNum, MWBase::SmartEntityInstance*>::iterator it = mSmartInstancesInScene.begin();
+	
+	//prepare of vector to hold smartzones we find
 	std::vector<MWBase::SmartEntityInstance*> smartzonelist;
 
+	//for every smart zone we find, have it build its bounding box and add it to our list of smartzones
 	while (it != mSmartInstancesInScene.end())
 	{
 		if (it->second->isSmartZone())
@@ -141,8 +144,10 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 		it++;
 	}
 
+	//get a list of all life in game
 	std::vector<Life*> lifelist = MWBase::Environment::get().getLifeManager()->mLifeList;
 
+	//for each smart zone, check if any SEIs are in their territory, if so link them together.
 	for (std::vector<MWBase::SmartEntityInstance*>::iterator zit = smartzonelist.begin(); zit != smartzonelist.end(); zit++)
 	{
 		
@@ -158,7 +163,8 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 			}
 			it++;
 		}
-
+	
+	//for each life, check if the life is in the current zone, if so give the life a subbrain from this zone (assume life in a zone on new game owns zone)
 		for (std::vector<Life*>::iterator itl = lifelist.begin(); itl != lifelist.end(); itl++)
 		{
 			if ((*zit)->containsPtr((*itl)->mPtr))
@@ -167,16 +173,7 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 				(*itl)->mSubBrainsManager->addSubBrain((*zit)->getSubBrain((*itl)));
 			}
 		}
-
-
-
 	}
-
-	
-	
-
-
-
 }
 
 bool MWBase::SmartEntitiesManager::linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone)
@@ -196,18 +193,8 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	//check if it already has one
 	if (hasSmartInstance(ptr))
 		return mSmartInstanceMap[ptr.getCellRef().getRefNum()];
-
-
-
-
-
 	std::string id = ptr.getCellRef().getRefId();
 	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
-
-
-
-
-
 	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 		return nullptr;
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(ptr);
@@ -217,8 +204,6 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(std::string id, ESM::RefNum refNum)
 {
-	//std::cout << ">>>> checking... " + id << std::endl;
-	
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
@@ -234,34 +219,23 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 
 void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref, const ESM::Cell * cell)
 {
-
 	ESM::RefNum refnum = cellref.mRefNum;
-
 	if (!hasSmartInstance(refnum))
 		return;
-
 	SmartEntityInstance * instance = mSmartInstanceMap[refnum];
 	instance->registerHomeCell(cell);
-	//instance->
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref)
 {
-
-
-
 	std::string id = livecellref->mRef.getRefId();
 	if (id == "")
 		return nullptr;
-	
 	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
 	{
 		//std::cout << "returned null" << std::endl;
 		return nullptr;
 	}
-
-	
-	
 	ESM::RefNum refNum = livecellref->mRef.getRefNum();
 	int contentNum = livecellref->mRef.getRefNum().mContentFile;
 	if (contentNum == -1 && refNum.mIndex == 0) //dynamically generated, give it a valid refnum
@@ -269,23 +243,13 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 		livecellref->mRef.setRefNum(mRuntimeRefNumTicker++);
 		refNum = livecellref->mRef.getRefNum();
 	}
-
-	//std::cout << ">>>> checking... " + id << std::endl;
-
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
-
-	
 	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
 	mSmartInstanceMap[refNum] = newInstance;
 	return newInstance;
 }
-
-
-
-
-
 
 void MWBase::SmartEntitiesManager::addSmartInstanceToScene(const MWWorld::Ptr & ptr)
 {
@@ -506,7 +470,6 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 
 bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)
 {
-	
 		if (!mIsSmartZone)
 		{
 			std::cout << "ERROR: SEI that is not a zone asked if it is allowed territory" << std::endl;
@@ -514,7 +477,6 @@ bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)
 		}
 		else
 		{
-
 			unsigned int itx = 0;
 			while (itx < mAllowedNPCIds.size())
 			{
@@ -523,10 +485,6 @@ bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)
 
 				itx += 1;
 			}
-
-
-
 		}
 		return false;
-	
 }

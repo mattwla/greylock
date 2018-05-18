@@ -2,7 +2,6 @@
 
 class SmartEntityBedrollTemplate : public MWBase::SmartEntityTemplate {
 
-
 	public:
 		SmartEntityBedrollTemplate::SmartEntityBedrollTemplate();
 
@@ -16,15 +15,9 @@ class SmartEntityBedrollTemplate : public MWBase::SmartEntityTemplate {
 
 		virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate);
 
-		//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings);
-
-		//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings);
-
 };
 
 class SmartEntityBedrollInstance : public MWBase::SmartEntityInstance {
-
-
 	public:
 
 		virtual float getActivationDistance()
@@ -45,22 +38,13 @@ class SmartEntityBedrollInstance : public MWBase::SmartEntityInstance {
 		virtual bool isAvailableForUse();
 	
 		virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user);
-
-
-
-	
-
-		
 };
 
 class BOBedrollSleep : public MWBase::BehaviorObject
 {
 
-
 public:
 
-	//BOBedrollSit::BOBedrollSit();
-	
 	BOBedrollSleep* Clone(MWBase::Life * life, ESM::RefNum refnum)
 	{
 
@@ -70,10 +54,7 @@ public:
 		return newbo;
 	};
 
-
 	BOBedrollSleep::BOBedrollSleep(int valence);
-
-	//void getDebugInfo();
 
 	virtual void getDebugInfo();
 

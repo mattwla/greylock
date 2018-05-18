@@ -38,7 +38,6 @@ MWBase::SmartEntityInstance * SmartEntityBedrollTemplate::loadInstance(std::stri
 
 SmartEntityBedrollInstance::SmartEntityBedrollInstance(const MWWorld::Ptr &ptr)
 {
-	
 	mLiveCellRef = ptr.getBase();
 	std::cout << "made SmartBedroll" << std::endl;
 	mCurrentUserCount = 0;
@@ -48,17 +47,9 @@ SmartEntityBedrollInstance::SmartEntityBedrollInstance(const MWWorld::Ptr &ptr)
 	mStatusList.push_back("comfortable");
 	MWBase::GOAPStatus output(MWBase::VITALS, "sleepiness", -1);
 	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
-
-
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, mPtr.getCellRef().getRefNum(), 1, "cusion node"));
-	
-
 	mGOAPNodeData.push_back(node);
-
-
-	
 }
-
 
 SmartEntityBedrollInstance::SmartEntityBedrollInstance(std::string refid, ESM::RefNum refnum, int pings)
 {
@@ -66,13 +57,9 @@ SmartEntityBedrollInstance::SmartEntityBedrollInstance(std::string refid, ESM::R
 	mPingCount = pings;
 	mRefId = refid;
 	mStatusList.push_back("comfortable");
-
-
 	MWBase::GOAPStatus output(MWBase::VITALS, "sleepiness", -1);
 	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, refnum, 1, "bedroll node"));
-
-
 	mGOAPNodeData.push_back(node);
 }
 
@@ -96,8 +83,6 @@ MWBase::BehaviorObject * SmartEntityBedrollInstance::useWorldInstance(MWBase::Li
 	MWBase::BehaviorObject * bo = new BOBedrollSleep(1);
 	bo->setOwner(user);
 	bo->setTarget(this);
-	//new BOBedrollSit(user);
-	
 	return bo;
 }
 
@@ -119,34 +104,22 @@ MWBase::BOReturn BOBedrollSleep::update(float time, MWWorld::Ptr ownerptr)
 		mSEITarget->mCurrentUserCount = 0; //direct hack not good mwx fix me
 		return MWBase::COMPLETE;
 	}
-
-
 	MWWorld::Ptr marker = mSEITarget->getPtr(); //what if I don't have ptr... btw I don't think I do. until I am on scene... so ok for now?
 	MWWorld::Ptr npc = mOwnerLife->mPtr;
 	ESM::Position markerPos = marker.getRefData().getPosition();
 	MWBase::Environment::get().getWorld()->rotateObject(npc, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-
 	auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
-
-
-	
 	seq.clear();
 	MWBase::Environment::get().getMechanicsManager()->playAnimationGroup(npc, "lay", 0, 1);
 	if (!mOwnerLife->mCurrentSpeech)
 	{
 		mOwnerLife->say("ZZZZZ....");
 	}
-	
-	
-	
-	
 	return MWBase::IN_PROGRESS;
 }
 
 MWBase::BOReturn BOBedrollSleep::start()
 {
-	
-
 	return MWBase::BOReturn();
 }
 
@@ -155,7 +128,6 @@ bool BOBedrollSleep::stop()
 	std::cout << "stop requested function call in Bedrollsleepbo" << std::endl;
 	mStopRequested = true;
 	//flag it is time to get up.
-
 
 	//let Bedroll SEI know we are no longer in use.
 

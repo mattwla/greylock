@@ -340,9 +340,6 @@ MWWorld::ContainerStoreIterator MWWorld::ContainerStore::add (const Ptr& itemPtr
 	MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item.getCellRef().getRefId(), item.getCellRef().getRefNum());
 	if (sei)
 	{
-		//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item.getCellRef().getRefId(), item.getCellRef().getRefNum());
-		//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget());
-		//std::cout << "updated ptr" << std::endl;
 		sei->updatePtr(item);
 	}
    

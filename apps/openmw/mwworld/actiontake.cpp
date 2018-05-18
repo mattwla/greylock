@@ -18,10 +18,7 @@ namespace MWWorld
         MWBase::Environment::get().getMechanicsManager()->itemTaken(
                     actor, getTarget(), MWWorld::Ptr(), getTarget().getRefData().getCount());
         MWWorld::Ptr newitem = *actor.getClass().getContainerStore (actor).add (getTarget(), getTarget().getRefData().getCount(), actor);
-		//alert SEManager... mwx
 		MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget().getCellRef().getRefId(), getTarget().getCellRef().getRefNum());
-			//MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget());
-		//std::cout << "updated ptr" << std::endl;
 		sei->updatePtr(newitem);
         MWBase::Environment::get().getWorld()->deleteObject (getTarget());
         setTarget(newitem);

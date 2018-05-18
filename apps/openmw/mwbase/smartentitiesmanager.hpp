@@ -80,6 +80,12 @@ namespace MWBase
 	
 		std::vector<std::string> mAllowedNPCIds;
 
+		//=====FOR LIFE=========
+
+		bool mIsLife = false;
+
+		MWBase::Life * mLife;
+
 		//========things not sure if needed================
 
 		std::string mHomeCellName;

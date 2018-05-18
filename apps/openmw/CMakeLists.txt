@@ -123,11 +123,11 @@ lifemanagerimp goap astargoap
 )
 
 add_openmw_dir (glsmartentities
-smartentitiesmanagerimp bread cushion zonehome bedroll
+smartentitiesmanagerimp bread cushion zonehome bedroll humanlife
 )
 
 add_openmw_dir (subbrains
-subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrelax subbriancircadianrhythm
+subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrelax subbraincircadianrhythm
 
 )
 
