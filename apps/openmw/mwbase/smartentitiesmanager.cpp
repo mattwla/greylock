@@ -3,6 +3,7 @@
 #include "../glsmartentities/cushion.hpp"
 #include "../glsmartentities/zonehome.hpp"
 #include "../glsmartentities/bedroll.hpp"
+#include "../glsmartentities/humanlife.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
 #include <iostream>
@@ -15,6 +16,8 @@
 #include "../mwworld/cellvisitors.hpp"
 #include "../mwworld/livecellref.hpp"
 #include <components/esm/loadcell.hpp>
+#include "../mwworld/class.hpp"
+
 
 
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
@@ -29,6 +32,9 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	mSmartTemplateMap[it->getStringID()] = it;
 
 	it = new SmartEntityBedrollTemplate();
+	mSmartTemplateMap[it->getStringID()] = it;
+
+	it = new SmartEntityHumanTemplate();
 	mSmartTemplateMap[it->getStringID()] = it;
 }
 
@@ -165,8 +171,10 @@ void MWBase::SmartEntitiesManager::initializeActiveCell()
 		}
 	
 	//for each life, check if the life is in the current zone, if so give the life a subbrain from this zone (assume life in a zone on new game owns zone)
+		//also let humanlifesei know lifepointer
 		for (std::vector<Life*>::iterator itl = lifelist.begin(); itl != lifelist.end(); itl++)
 		{
+			getSmartEntityInstance((*itl)->mPtr)->setLife((*itl));
 			if ((*zit)->containsPtr((*itl)->mPtr))
 			{
 				(*zit)->addAllowedNPC((*itl)->mPtr);
@@ -228,10 +236,12 @@ void MWBase::SmartEntitiesManager::registerHomeCell(const ESM::CellRef & cellref
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref)
 {
+
+	bool isHumanLife = livecellref->mClass->isNpc();
 	std::string id = livecellref->mRef.getRefId();
 	if (id == "")
 		return nullptr;
-	if (!hasSmartTemplate(id)) //Is there a template for this object? if not return nothing
+	if (!hasSmartTemplate(id) && !isHumanLife) //Is there a template for this object? if not return nothing. Human template works different though
 	{
 		//std::cout << "returned null" << std::endl;
 		return nullptr;
@@ -246,7 +256,17 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 	//check if it already has one
 	if (hasSmartInstance(refNum))
 		return mSmartInstanceMap[refNum];
-	SmartEntityInstance * newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
+
+	SmartEntityInstance * newInstance;
+
+	if (isHumanLife)
+	{
+		newInstance = mSmartTemplateMap["human_life"]->getInstance(id, refNum);
+	}
+	else
+	{
+		newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
+	}
 	mSmartInstanceMap[refNum] = newInstance;
 	return newInstance;
 }

@@ -232,6 +232,11 @@ namespace MWBase
 			std::cout << "ERROR SUBBRAIN REQUESTED FROM SEI WHICH DOES NOT HAVE ONE TO GIVE" << std::endl;
 			return nullptr;
 		}
+
+		virtual void setLife(MWBase::Life * life)
+		{
+			mLife = life;
+		}
 		
 
 	};
