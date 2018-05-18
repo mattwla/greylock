@@ -38,12 +38,14 @@ SmartEntityHumanInstance::SmartEntityHumanInstance(const MWWorld::Ptr & ptr)
 	mRefId = ptr.getCellRef().getRefId();
 	mPtr = ptr;
 	mPingCount = 0;
+	mIsLife = true;
 }
 
 SmartEntityHumanInstance::SmartEntityHumanInstance(std::string refid, ESM::RefNum refnum, int pings)
 {
 	mRefId = refid;
 	mPingCount = 0;
+	mIsLife = true;
 }
 
 std::string SmartEntityHumanInstance::getSaveString()

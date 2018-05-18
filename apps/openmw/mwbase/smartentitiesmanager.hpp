@@ -84,7 +84,7 @@ namespace MWBase
 
 		bool mIsLife = false;
 
-		MWBase::Life * mLife;
+		MWBase::Life * mLife = 0;
 
 		//========things not sure if needed================
 
@@ -182,6 +182,11 @@ namespace MWBase
 			return mIsSmartZone;
 		}
 
+		virtual bool isHumanLife()
+		{
+			return mIsLife;
+		}
+
 		//Is the given ptr in this smartzones bounding box?
 		virtual bool containsPtr(MWWorld::Ptr ptr)
 		{
@@ -236,6 +241,20 @@ namespace MWBase
 		virtual void setLife(MWBase::Life * life)
 		{
 			mLife = life;
+		}
+
+		virtual MWBase::Life* getLife()
+		{
+			if (!mLife)
+			{
+				std::cout << "ERROR TRIED TO GET LIFE FROM NOT LIFE SEI" << std::endl;
+				return nullptr;
+			}
+			else
+			{
+				return mLife;
+			}
+
 		}
 		
 

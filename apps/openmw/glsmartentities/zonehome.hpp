@@ -33,6 +33,39 @@ public:
 			}
 	
 			virtual void calculate(MWBase::Awareness * awareness) {
+			
+
+				typedef std::unordered_map<ESM::RefNum, MWBase::SensoryLink> linklist;
+
+				//search memory for items that match status, create a node for each and cost dependant on distance to npc.
+
+				MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
+				linklist currentlinks = sensorystore->mSensoryLinks;
+				//std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
+
+
+
+				for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
+				{
+					if (mHomeSEI->containsPtr(it->second.mSEInstance->getPtr()))
+					{
+						if (it->second.mSEInstance->isHumanLife())
+						{
+							bool allowed = mHomeSEI->isAllowedTerritory(it->second.mSEInstance->getLife());
+							if (!allowed)
+							{
+								if (!mOwnerLife->mCurrentSpeech)
+									mOwnerLife->say("GET OUTTA MY HOUSE!!!!");
+							}
+
+						}
+					}
+				}
+
+
+
+
+
 				//std::cout << "home sub brain calculating" << std::endl;
 				if (mHomeSEI->containsPtr(mOwnerLife->mPtr))
 				{

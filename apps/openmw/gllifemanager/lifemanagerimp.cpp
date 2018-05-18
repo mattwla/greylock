@@ -72,6 +72,8 @@ void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... intere
 
 bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 {
+	if (MWBase::Environment::get().getWorld()->getPlayerPtr() == npc)
+		return false;
 	bool inProcessingRange = false;
 	//mwx fix me some bad redundency here against actors.cpp
 	const float aiProcessingDistance = 7168;
