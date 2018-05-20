@@ -1715,7 +1715,22 @@ namespace MWWorld
         }
     }
 
-    bool World::toggleCollisionMode()
+	const bool World::hasClearLOS(const MWWorld::Ptr & observer, const MWWorld::Ptr & target)
+	{
+		osg::Vec3f origin = observer.getRefData().getPosition().asVec3();
+		osg::Vec3f dest = target.getRefData().getPosition().asVec3();
+		//MWRender::RenderingManager::RayResult result2 = mRendering->castRay(origin, dest, false, false);
+
+		int collisionTypes = MWPhysics::CollisionType_World | MWPhysics::CollisionType_HeightMap | MWPhysics::CollisionType_Door;
+		collisionTypes |= MWPhysics::CollisionType_Water;
+		
+		MWPhysics::PhysicsSystem::RayResult result = mPhysics->castRay(origin, dest, MWWorld::Ptr(), std::vector<MWWorld::Ptr>(), collisionTypes);
+
+
+		return result.mHitObject == target;
+	}
+
+	bool World::toggleCollisionMode()
     {
         return mPhysics->toggleCollisionMode();
     }
@@ -2784,6 +2799,7 @@ namespace MWWorld
             collisionTypes |= MWPhysics::CollisionType_Water;
         }
         MWPhysics::PhysicsSystem::RayResult result = mPhysics->castRay(from, to, MWWorld::Ptr(), std::vector<MWWorld::Ptr>(), collisionTypes);
+	
 
         if (!result.mHit)
             return maxDist;
@@ -3059,6 +3075,7 @@ namespace MWWorld
         MWPhysics::PhysicsSystem::RayResult result1 = mPhysics->castRay(origin, dest, actor, targetActors, MWPhysics::CollisionType_Actor);
 
         MWRender::RenderingManager::RayResult result2 = mRendering->castRay(origin, dest, true, true);
+		
 
         float dist1 = std::numeric_limits<float>::max();
         float dist2 = std::numeric_limits<float>::max();

@@ -132,6 +132,17 @@ namespace MWAwarenessReactions
 
 		osg::Vec3f vec = pos1 - pos2;
 
+	/*	if (!MWBase::Environment::get().getWorld()->getLOS(observer, ptr))
+		{
+			return false;
+		}
+*/
+
+	
+		
+		
+		
+
 		if (observer.getRefData().getBaseNode())
 
 		{
@@ -147,8 +158,20 @@ namespace MWAwarenessReactions
 				return false;
 
 			else
+			{
+				/*if (MWBase::Environment::get().getWorld()->hasClearLOS(observer, ptr))
+					return true;
+				else
+					return false;*/
 
+				if (MWBase::Environment::get().getWorld()->getPlayerPtr() == ptr)
+				{
+					if (!MWBase::Environment::get().getWorld()->getLOS(observer, ptr))
+						return false;
+				}
 				return true;
+					
+			}
 
 		}
 

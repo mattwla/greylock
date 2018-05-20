@@ -414,6 +414,8 @@ namespace MWWorld
             bool castRay (float x1, float y1, float z1, float x2, float y2, float z2) override;
             ///< cast a Ray and return true if there is an object in the ray path.
 
+			const bool hasClearLOS(const MWWorld::Ptr & observer, const MWWorld::Ptr & target) override;
+
             bool toggleCollisionMode() override;
             ///< Toggle collision mode for player. If disabled player object should ignore
             /// collisions and gravity.

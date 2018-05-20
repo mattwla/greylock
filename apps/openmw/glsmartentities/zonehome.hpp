@@ -39,8 +39,8 @@ public:
 
 				//search memory for items that match status, create a node for each and cost dependant on distance to npc.
 
-				MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
-				linklist currentlinks = sensorystore->mSensoryLinks;
+				///MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
+				linklist currentlinks = awareness->getSensoryLinksThisFrame()->mSensoryLinks;
 				//std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
 
 

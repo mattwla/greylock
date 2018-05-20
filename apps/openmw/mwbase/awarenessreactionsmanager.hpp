@@ -86,6 +86,7 @@ namespace MWBase
 		//std::vector<SensoryLink> mCurrentSensoryLinks;
 
 		std::unordered_map<ESM::RefNum, SensoryLink>mSensoryLinks;
+		
 
 			
 			//refnum? Need to plan for the situation of an SE being consumed but npc not knowing about it. Sensory link? Needs quick lookup.
@@ -107,6 +108,8 @@ namespace MWBase
 		MWWorld::Ptr mPtr;
 		
 		SensoryLinkStore* mSensoryLinkStore;
+
+		SensoryLinkStore* mSensoryLinksThisFrame;
 	
 	public:
 		
@@ -119,6 +122,8 @@ namespace MWBase
 		Awareness::Awareness(MWWorld::Ptr ptr);
 		
 		SensoryLinkStore * getSensoryLinkStore();
+
+		SensoryLinkStore * getSensoryLinksThisFrame();
 	};
 	
 	class AwarenessReactionsManager

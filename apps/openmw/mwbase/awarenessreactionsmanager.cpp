@@ -6,7 +6,8 @@ void MWBase::Awareness::refresh()
 {
 	MWBase::SmartInstanceMap instances = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
 	MWBase::SmartInstanceMap::iterator it = instances.begin();
-	SensoryLinkStore * newStore = mSensoryLinkStore;
+	delete mSensoryLinksThisFrame;
+	mSensoryLinksThisFrame = new SensoryLinkStore;
 		
 	//	new SensoryLinkStore; //mwx fix me, better to maintain one.
 
@@ -18,7 +19,8 @@ void MWBase::Awareness::refresh()
 		if (isaware)
 		{
 			ESM::RefNum refnum = it->second->getPtr().getCellRef().getRefNum();
-			newStore->addSensoryLink(refnum, MWBase::SensoryLink(it->second->getPtr(), it->second));
+			mSensoryLinkStore->addSensoryLink(refnum, MWBase::SensoryLink(it->second->getPtr(), it->second));
+			mSensoryLinksThisFrame->addSensoryLink(refnum, MWBase::SensoryLink(it->second->getPtr(), it->second));
 		}
 		it++;
 	}
@@ -66,11 +68,17 @@ MWBase::Awareness::Awareness(MWWorld::Ptr ptr)
 {
 	mPtr = ptr;
 	mSensoryLinkStore = new SensoryLinkStore;
+	mSensoryLinksThisFrame = new SensoryLinkStore;
 }
 
 MWBase::SensoryLinkStore * MWBase::Awareness::getSensoryLinkStore()
 {
 	return mSensoryLinkStore;
+}
+
+MWBase::SensoryLinkStore * MWBase::Awareness::getSensoryLinksThisFrame()
+{
+	return mSensoryLinksThisFrame;
 }
 
 bool MWBase::SensoryLinkStore::hasLinkWithStatus(std::string status)
