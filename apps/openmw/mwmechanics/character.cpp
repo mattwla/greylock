@@ -645,6 +645,10 @@ MWWorld::ContainerStoreIterator getActiveWeapon(CreatureStats &stats, MWWorld::I
                         break;
                 }
             }
+			else
+			{
+				*weaptype = WeapType_TwoHand;
+			}
         }
 
         return weapon;
