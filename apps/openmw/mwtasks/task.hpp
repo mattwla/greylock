@@ -57,7 +57,7 @@ namespace MWTasks
 
 		Task* mLifeTask = nullptr; //keep track of the life task this task is attached too.
 
-		int valence = 4; //default low priority
+		int intensity = 4; //default low priority
 		//0 life threatening
 		//1 highly desirable
 		//2 Noteworhty

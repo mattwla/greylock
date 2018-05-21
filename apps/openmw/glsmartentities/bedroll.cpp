@@ -86,7 +86,7 @@ MWBase::BehaviorObject * SmartEntityBedrollInstance::useWorldInstance(MWBase::Li
 	return bo;
 }
 
-BOBedrollSleep::BOBedrollSleep(int valence)
+BOBedrollSleep::BOBedrollSleep(int intensity)
 {
 
 }

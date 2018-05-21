@@ -86,6 +86,38 @@ namespace MWBase
 		int mNeuroticism;
 	};
 
+	enum AffectType
+	{
+		AFFECT_TYPE_NEUTRAL = 0,
+		AFFECT_TYPE_ANGER = 1,
+		AFFECT_TYPE_FEAR = 2
+	};
+
+	
+	struct Affect
+	{
+		//from -5 to 5
+		int mMood = 0;
+
+		int mAnger = 5;
+		int mFear = 0;
+		int mShame = 0;
+		int mJoy = 0;
+
+
+		AffectType getDominantAffect();
+
+		//sources?
+
+		//get dominant emotion
+
+		//appraisal object? Also used for social interactions?
+
+		//A hash to check if a given object has changed since last encounter?
+
+		//Current general affect vs affect towards specific things
+	};
+
 	struct Vitals 
 	{
 		float mHunger = 0.0f;
@@ -216,6 +248,8 @@ namespace MWBase
 
 		MWWorld::TimeStamp mTimeOfLastUpdate;
 
+		MWBase::Affect mAffect;
+
 		
 
 
@@ -232,6 +266,7 @@ namespace MWBase
 			mSubBrainsManager = new MWBase::SubBrainsManager(this);
 			mJourneyManager = new MWBase::JourneyManager(this);
 			mFSMState = FSM_THINKING;
+			mAffect;
 		}
 
 		std::vector<std::shared_ptr<MWBase::GOAPDesire>> mDesireList;

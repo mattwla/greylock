@@ -35,14 +35,6 @@ namespace MWBase {
 
 		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status);
 
-		//virtual std::vector<std::shared_ptr<GOAPDesire>> getGOAPDesires();
-
-
-
-	//	virtual std::vector<MWBase::BehaviorObject> getDesires();
-
-		//virtual std::vector<BehaviorObject> getDesires();
-
 
 	};
 
@@ -63,7 +55,7 @@ namespace MWBase {
 		};
 
 
-		BOEat::BOEat(int valence);
+		BOEat::BOEat(int intensity);
 
 		//void getDebugInfo();
 

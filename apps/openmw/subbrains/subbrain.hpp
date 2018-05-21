@@ -14,6 +14,7 @@ namespace MWBase {
 	struct GOAPNodeData;
 	class BehaviorObject;
 	struct IntentionPlan;
+	class SubBrain;
 };
 
 namespace MWWorld {
@@ -31,7 +32,9 @@ namespace MWBase {
 		VITALS = 1,
 		HAS_OBJECT_STATUS_IN_INVENTORY = 2,
 		AWARE_OF_OBJECT_WITH_STATUS = 3,
-		STATUS_VOID = 4
+		STATUS_VOID = 4,
+		REMOVE_PERSON_FROM_ZONE = 5
+		
 	};
 
 	struct GOAPStatus
@@ -42,6 +45,9 @@ namespace MWBase {
 		std::string mExtraData;
 		//amount of status if applicable
 		int mAmount;
+
+		//Inflict status on who/what?
+		MWBase::SmartEntityInstance * mTarget;
 		//Allows checking if two status are functionally equivalent. 
 		bool operator==(GOAPStatus status);
 
@@ -56,6 +62,14 @@ namespace MWBase {
 			mExtraData = extradata;
 			mAmount = amount;
 		};
+
+		GOAPStatus::GOAPStatus(StatusType type, std::string extradata, int amount, MWBase::SmartEntityInstance * target)
+		{
+			mStatusType = type;
+			mExtraData = extradata;
+			mAmount = amount;
+			mTarget = target;
+		}
 	};
 
 	//Many behavior objects will need a few statuses to be true, or will output a few different effects. So we will be working with GOAPStatus vectors a lot.
@@ -159,6 +173,8 @@ namespace MWBase {
 		//has the bo ben requested by ownerlife to stop?
 		bool mStopRequested = false;
 
+		MWBase::SubBrain * mParentSubBrain;
+
 	public:
 		 
 		//To get a BO, a template BO is cloned. Template BOs are instantiated by their owner subbrains or SEIs.
@@ -189,18 +205,25 @@ namespace MWBase {
 
 		//Called when a life wants to cancel the BO
 		virtual bool stop() = 0;
+
+		virtual void setParentSubBrain(MWBase::SubBrain * sb)
+		{
+			mParentSubBrain = sb;
+		}
+
+		
 		
 	};
 		
 	
-	//A desire is a GOAPStatus with extra info: valence and intention (how much NPC wants to make the status happen, and has the NPC decided to act on this desire)
+	//A desire is a GOAPStatus with extra info: intensity and intention (how much NPC wants to make the status happen, and has the NPC decided to act on this desire)
 	struct GOAPDesire
 	{
 		//What an NPC wants to change/do
 		MWBase::GOAPStatus mStatus;
 		
 		//How badly it wants to change it
-		int mValence;
+		int mIntensity;
 
 		//When a desire is selected to be acted upon, it is considered an intention
 		bool mIsIntention;
@@ -211,7 +234,7 @@ namespace MWBase {
 		GOAPDesire::GOAPDesire(MWBase::GOAPStatus stat, int val)
 		{
 			mStatus = stat;
-			mValence = val;
+			mIntensity = val;
 			mIsIntention = false;
 		};
 
@@ -222,7 +245,7 @@ namespace MWBase {
 
 		//Used for organizing desires from strongest to least strong
 		bool operator> (const GOAPDesire& gd2) {
-			return mValence > gd2.mValence;
+			return mIntensity > gd2.mIntensity;
 		}
 
 	};
@@ -249,6 +272,8 @@ namespace MWBase {
 		//Subbrain takes in the NPCs awareness, and from that calculates the NPCs desires
 		virtual void calculate(MWBase::Awareness * awareness) = 0;
 
+
+
 		//Used for debugging
 		virtual std::string getID() = 0;
 
@@ -256,6 +281,11 @@ namespace MWBase {
 		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		virtual void getDebugInfo() = 0;
+
+		virtual void clearDesires()
+		{
+
+		}
 
 	};
 

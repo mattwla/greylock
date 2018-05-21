@@ -54,7 +54,7 @@ public:
 		return newbo;
 	};
 
-	BOBedrollSleep::BOBedrollSleep(int valence);
+	BOBedrollSleep::BOBedrollSleep(int intensity);
 
 	virtual void getDebugInfo();
 

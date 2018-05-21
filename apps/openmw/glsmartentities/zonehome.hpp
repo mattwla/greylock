@@ -17,93 +17,6 @@ public:
 
 };
 
-
-	class HomeSubBrain : public MWBase::SubBrain
-	{
-		//ZoneBrain * mParentBrain;
-		MWBase::SmartEntityInstance * mHomeSEI;
-		bool mWasInHomeLastUpdate = true;
-	
-		public:
-		
-			HomeSubBrain(MWBase::Life * life, MWBase::SmartEntityInstance * home)
-			{
-				mOwnerLife = life;
-				mHomeSEI = home;
-			}
-	
-			virtual void calculate(MWBase::Awareness * awareness) {
-			
-
-				typedef std::unordered_map<ESM::RefNum, MWBase::SensoryLink> linklist;
-
-				//search memory for items that match status, create a node for each and cost dependant on distance to npc.
-
-				///MWBase::SensoryLinkStore * sensorystore = mOwnerLife->mAwareness->getSensoryLinkStore();
-				linklist currentlinks = awareness->getSensoryLinksThisFrame()->mSensoryLinks;
-				//std::vector<SensoryLink> currentlinks = sensorystore->mCurrentSensoryLinks;
-
-
-
-				for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
-				{
-					if (mHomeSEI->containsPtr(it->second.mSEInstance->getPtr()))
-					{
-						if (it->second.mSEInstance->isHumanLife())
-						{
-							bool allowed = mHomeSEI->isAllowedTerritory(it->second.mSEInstance->getLife());
-							if (!allowed)
-							{
-								if (!mOwnerLife->mCurrentSpeech)
-									mOwnerLife->say("GET OUTTA MY HOUSE!!!!");
-							}
-
-						}
-					}
-				}
-
-
-
-
-
-				//std::cout << "home sub brain calculating" << std::endl;
-				if (mHomeSEI->containsPtr(mOwnerLife->mPtr))
-				{
-					if(!mOwnerLife->mCurrentSpeech && !mWasInHomeLastUpdate)
-						mOwnerLife->say("Good to be home");
-					
-					mWasInHomeLastUpdate = true;
-				}
-				else
-				{
-					mWasInHomeLastUpdate = false;
-				}
-				
-
-			};
-
-			virtual std::string getID()
-			{
-				return "Home SubBrain";
-			};
-
-			virtual void getDebugInfo()
-			{
-
-			};
-
-			virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status) 
-			{
-				std::vector<std::shared_ptr<MWBase::GOAPNodeData>> blank;
-				return blank;
-			};
-
-	};
-
-	
-
-
-
 class SmartZoneHomeInstance : public MWBase::SmartEntityInstance {
 	virtual ~SmartZoneHomeInstance() {
 
@@ -125,10 +38,97 @@ public:
 
 	virtual bool containsPtr(MWWorld::Ptr ptr);
 
-	virtual MWBase::SubBrain * getSubBrain(MWBase::Life * life)
-	{
-		return new HomeSubBrain(life, this);
-	}
+	virtual MWBase::SubBrain * getSubBrain(MWBase::Life * life);
 
 
 };
+
+
+
+	class HomeSubBrain : public MWBase::SubBrain
+	{
+		//ZoneBrain * mParentBrain;
+		MWBase::SmartEntityInstance * mHomeSEI;
+		MWBase::BehaviorObject * mConfrontTrespasserBO;
+		std::shared_ptr<MWBase::GOAPDesire> mRemovePersonDesire = 0;
+		bool mWasInHomeLastUpdate = true;
+	
+		public:
+		
+			HomeSubBrain(MWBase::Life * life, MWBase::SmartEntityInstance * home);
+		
+			virtual void calculate(MWBase::Awareness * awareness);
+
+			virtual std::string getID()
+			{
+				return "Home SubBrain";
+			};
+
+			virtual void getDebugInfo()
+			{
+
+			};
+
+			virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus status);
+
+			virtual void clearDesires()
+			{
+				mRemovePersonDesire->mIntensity = 0;
+				mRemovePersonDesire = 0;
+				
+			}
+
+
+	};
+
+
+	class BOConfrontHomeTrespasser : public MWBase::BehaviorObject
+	{
+
+	public:
+
+		MWBase::SmartEntityInstance * mOwnerZone;
+
+		BOConfrontHomeTrespasser* Clone(MWBase::Life * life, ESM::RefNum refnum)
+		{
+			BOConfrontHomeTrespasser * newbo = new BOConfrontHomeTrespasser(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			return newbo;
+		};
+
+		int mWarningStage = 0;
+
+		BOConfrontHomeTrespasser::BOConfrontHomeTrespasser(int intensity);
+
+		virtual void getDebugInfo();
+
+		virtual MWBase::BOReturn update(float time, MWWorld::Ptr ownerptr);
+
+		virtual MWBase::BOReturn start();
+
+		virtual ~BOConfrontHomeTrespasser() {
+
+		};
+
+		virtual bool stop()
+		{
+			mStopRequested = true;
+			//by default no stop logic;
+			std::cout << "BO with no stop logic recieved stop request - BOEAT" << std::endl;
+			return true;
+		};
+
+
+	private:
+
+		BOConfrontHomeTrespasser(BOConfrontHomeTrespasser const &instance)
+		{
+			mOwnerZone = instance.mOwnerZone;
+			mParentSubBrain = instance.mParentSubBrain;
+
+		};
+
+
+	};
+	

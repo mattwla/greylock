@@ -71,7 +71,7 @@ public:
 	};
 
 
-	BOCushionSit::BOCushionSit(int valence);
+	BOCushionSit::BOCushionSit(int intensity);
 
 	//void getDebugInfo();
 

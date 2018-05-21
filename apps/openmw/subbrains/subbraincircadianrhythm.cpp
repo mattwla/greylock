@@ -28,11 +28,11 @@ void MWBase::SubBrainCircadianRhythm::calculate(MWBase::Awareness * awareness)
 	float hour = MWBase::Environment::get().getWorld()->getTimeStamp().getHour();
 	if (hour > 18.0 || hour < 7.0)
 	{
-		mSleepDesire->mValence = 500;
+		mSleepDesire->mIntensity = 500;
 	}
 	else
 	{
-		mSleepDesire->mValence = 0;
+		mSleepDesire->mIntensity = 0;
 	}
 
 
@@ -79,7 +79,7 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainCircadia
 
 
 
-MWBase::BOSleepOnGround::BOSleepOnGround(int valence) //input urge strength
+MWBase::BOSleepOnGround::BOSleepOnGround(int intensity) //input urge strength
 {
 	std::cout << "made sleep on ground BO" << std::endl;
 }

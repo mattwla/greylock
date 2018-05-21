@@ -100,7 +100,7 @@ MWBase::BehaviorObject * SmartEntityCushionInstance::useWorldInstance(MWBase::Li
 	return bo;
 }
 
-BOCushionSit::BOCushionSit(int valence)
+BOCushionSit::BOCushionSit(int intensity)
 {
 
 }

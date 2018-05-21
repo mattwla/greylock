@@ -63,7 +63,7 @@ namespace MWBase {
 		};
 
 
-		BOSleepOnGround::BOSleepOnGround(int valence);
+		BOSleepOnGround::BOSleepOnGround(int intensity);
 
 		//void getDebugInfo();
 

@@ -62,7 +62,7 @@ namespace MWBase
 		while (ditx < mDesireList.size())
 		{
 			std::cout << mDesireList[ditx]->debugInfo << std::endl;
-			std::cout << mDesireList[ditx]->mValence << std::endl;
+			std::cout << mDesireList[ditx]->mIntensity << std::endl;
 			ditx += 1;
 		}
 		if (mHasIntention)
@@ -145,7 +145,7 @@ namespace MWBase
 
 	void Life::prioritizeDesires()
 	{
-		std::sort(mDesireList.begin(), mDesireList.end(), [](const std::shared_ptr<GOAPDesire> d1, std::shared_ptr<GOAPDesire> d2) -> bool {return d1->mValence > d2->mValence; });
+		std::sort(mDesireList.begin(), mDesireList.end(), [](const std::shared_ptr<GOAPDesire> d1, std::shared_ptr<GOAPDesire> d2) -> bool {return d1->mIntensity > d2->mIntensity; });
 	}
 
 	void Life::determineIntention()
@@ -366,6 +366,25 @@ namespace MWBase
 		//Return if BO said it was possible
 		bool possible = mCurrentBehaviorObject->stop();
 		return possible;
+	}
+
+
+
+
+
+
+
+	//=======================AFFECT OBJECT====================================================
+
+
+	AffectType Affect::getDominantAffect()
+	{
+		if (mAnger > mFear)
+			return AFFECT_TYPE_ANGER;
+		else if (mFear > mAnger)
+			return AFFECT_TYPE_FEAR;
+		else
+			return AFFECT_TYPE_NEUTRAL;
 	}
 }
 

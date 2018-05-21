@@ -23,7 +23,7 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 {
-	mHungerDesire->mValence = mOwnerLife->mVitals.mHunger;
+	mHungerDesire->mIntensity = mOwnerLife->mVitals.mHunger;
 }
 
 std::string MWBase::SubBrainHunger::getID()
@@ -66,7 +66,7 @@ std::vector < std::shared_ptr < MWBase::GOAPNodeData >> MWBase::SubBrainHunger::
 
 
 
-MWBase::BOEat::BOEat(int valence) //input urge strength
+MWBase::BOEat::BOEat(int intensity) //input urge strength
 {
 
 	std::cout << "made eat BO" << std::endl;
