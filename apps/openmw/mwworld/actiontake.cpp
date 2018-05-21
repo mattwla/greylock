@@ -19,8 +19,8 @@ namespace MWWorld
                     actor, getTarget(), MWWorld::Ptr(), getTarget().getRefData().getCount());
         MWWorld::Ptr newitem = *actor.getClass().getContainerStore (actor).add (getTarget(), getTarget().getRefData().getCount(), actor);
 		MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget().getBase());
-		
-		sei->updatePtr(newitem);
+		if (sei)
+			sei->updatePtr(newitem);
         MWBase::Environment::get().getWorld()->deleteObject (getTarget());
         setTarget(newitem);
     }

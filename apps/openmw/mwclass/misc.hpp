@@ -38,6 +38,8 @@ namespace MWClass
 
             static void registerSelf();
 
+			virtual std::pair<std::vector<int>, bool> getEquipmentSlots(const MWWorld::ConstPtr& ptr) const;
+
             virtual std::string getUpSoundId (const MWWorld::ConstPtr& ptr) const;
             ///< Return the pick up sound Id
 
@@ -46,6 +48,10 @@ namespace MWClass
 
             virtual std::string getInventoryIcon (const MWWorld::ConstPtr& ptr) const;
             ///< Return name of inventory icon.
+
+			virtual std::pair<int, std::string> canBeEquipped(const MWWorld::ConstPtr &ptr, const MWWorld::Ptr &npc) const;
+			///< Return 0 if player cannot equip item. 1 if can equip. 2 if it's twohanded weapon. 3 if twohanded weapon conflicts with that.
+			///  Second item in the pair specifies the error message
 
             virtual std::string getModel(const MWWorld::ConstPtr &ptr) const;
 

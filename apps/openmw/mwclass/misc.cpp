@@ -1,10 +1,11 @@
 #include "misc.hpp"
-
+#include "../mwworld/actionequip.hpp"
 #include <components/esm/loadmisc.hpp>
 
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/windowmanager.hpp"
+#include "../mwworld/inventorystore.hpp"
 
 #include "../mwworld/actiontake.hpp"
 #include "../mwworld/cellstore.hpp"
@@ -97,6 +98,17 @@ namespace MWClass
         registerClass (typeid (ESM::Miscellaneous).name(), instance);
     }
 
+	std::pair<std::vector<int>, bool> Miscellaneous::getEquipmentSlots(const MWWorld::ConstPtr & ptr) const
+	{
+
+		std::vector<int> slots_;
+		bool stack = false;
+
+		slots_.push_back(int(MWWorld::InventoryStore::Slot_CarriedRight));
+
+		return std::make_pair(slots_, stack);
+	}
+
     std::string Miscellaneous::getUpSoundId (const MWWorld::ConstPtr& ptr) const
     {
         if (isGold(ptr))
@@ -117,6 +129,11 @@ namespace MWClass
 
         return ref->mBase->mIcon;
     }
+
+	std::pair<int, std::string> Miscellaneous::canBeEquipped(const MWWorld::ConstPtr & ptr, const MWWorld::Ptr & npc) const
+	{
+		return std::make_pair(2, "");
+	}
 
     bool Miscellaneous::hasToolTip (const MWWorld::ConstPtr& ptr) const
     {
@@ -210,10 +227,18 @@ namespace MWClass
 
     std::shared_ptr<MWWorld::Action> Miscellaneous::use (const MWWorld::Ptr& ptr) const
     {
-        if (ptr.getCellRef().getSoul().empty())
+       /* if (ptr.getCellRef().getSoul().empty())
             return std::shared_ptr<MWWorld::Action>(new MWWorld::NullAction());
         else
             return std::shared_ptr<MWWorld::Action>(new MWWorld::ActionSoulgem(ptr));
+
+*/
+
+		std::shared_ptr<MWWorld::Action> action(new MWWorld::ActionEquip(ptr));
+
+		action->setSound(getUpSoundId(ptr));
+
+		return action;
     }
 
     bool Miscellaneous::canSell (const MWWorld::ConstPtr& item, int npcServices) const

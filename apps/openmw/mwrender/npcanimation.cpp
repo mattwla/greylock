@@ -929,6 +929,8 @@ void NpcAnimation::addControllers()
 
 void NpcAnimation::showWeapons(bool showWeapon)
 {
+
+
     mShowWeapons = showWeapon;
     mAmmunition.reset();
     if(showWeapon)
