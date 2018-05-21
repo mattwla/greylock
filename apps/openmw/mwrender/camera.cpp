@@ -213,6 +213,8 @@ namespace MWRender
 
     bool Camera::toggleVanityMode(bool enable)
     {
+
+		return false;
         // Changing the view will stop all playing animations, so if we are playing
         // anything important, queue the view change for later
         if (mFirstPersonView && !mAnimation->upperBodyReady())
@@ -247,6 +249,8 @@ namespace MWRender
 
     void Camera::togglePreviewMode(bool enable)
     {
+		return;
+
         if (mFirstPersonView && !mAnimation->upperBodyReady())
             return;
 
