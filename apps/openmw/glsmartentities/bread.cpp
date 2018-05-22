@@ -6,7 +6,7 @@
 
 SmartEntityBreadTemplate::SmartEntityBreadTemplate()
 {
-	mIngameID = "god_loaf";
+	mIngameIDs.push_back("god_loaf");
 }
 
 MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(const MWWorld::Ptr &ptr)

@@ -9,7 +9,8 @@
 
 SmartEntityCushionTemplate::SmartEntityCushionTemplate()
 {
-	mIngameID = "furn_de_cushion_square_01";
+	mIngameIDs.push_back("furn_de_cushion_square_01");
+	mIngameIDs.push_back("gl_sitting_stump");
 }
 
 MWBase::SmartEntityInstance * SmartEntityCushionTemplate::getInstance(const MWWorld::Ptr &ptr)

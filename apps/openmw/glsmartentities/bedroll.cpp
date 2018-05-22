@@ -9,7 +9,7 @@
 
 SmartEntityBedrollTemplate::SmartEntityBedrollTemplate()
 {
-	mIngameID = "se_bedroll";
+	mIngameIDs.push_back("se_bedroll");
 }
 
 MWBase::SmartEntityInstance * SmartEntityBedrollTemplate::getInstance(const MWWorld::Ptr &ptr)

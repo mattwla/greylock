@@ -250,6 +250,7 @@ namespace MWWorld
             mGlobalVariables["chargenstate"].setInteger (-1);
 		MWBase::Environment::get().getLifeManager()->initialize();
 		preloadAll();
+		mInitializingWorld = false;
         if (bypass && !mStartCell.empty())
         {
             ESM::Position pos;
@@ -309,7 +310,7 @@ namespace MWWorld
 		MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(getPlayerPtr());
 
 
-		mInitializingWorld = false;
+		
     }
 
     void World::clear()
@@ -3697,12 +3698,12 @@ namespace MWWorld
     void World::activate(const Ptr &object, const Ptr &actor)
     {
         breakInvisibility(actor);
-
         if (object.getRefData().activate())
         {
             std::shared_ptr<MWWorld::Action> action = (object.getClass().activate(object, actor));
             action->execute (actor);
         }
+	
     }
 
 	void World::debugSE(const Ptr &object)
@@ -3716,9 +3717,6 @@ namespace MWWorld
 			life->mAwareness->getDebugInfo();
 			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
 			std::cout << "ActorID: " + std::to_string(object.getClass().getCreatureStats(object).getActorId()) << std::endl;
-
-			
-
 			return;
 		}
 

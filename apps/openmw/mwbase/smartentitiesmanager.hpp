@@ -103,7 +103,7 @@ namespace MWBase
 	public :
 		
 		virtual float getActivationDistance() {
-			return 1000.0f;
+			return 3000.0f;
 			//default
 		}
 
@@ -265,7 +265,7 @@ namespace MWBase
 		
 	protected: 
 		//Should be vector in future, in runtime refids are checked against this to see which refs get smartentity data.
-		std::string mIngameID;
+		std::vector<std::string> mIngameIDs;
 	
 	public:
 		
@@ -273,7 +273,7 @@ namespace MWBase
 
 		};
 
-		std::string getStringID();
+		std::vector<std::string> getStringID();
 		
 		//will return a new SEI
 		virtual SmartEntityInstance * getInstance(const MWWorld::Ptr &ptr) = 0;
@@ -301,6 +301,8 @@ namespace MWBase
 		
 		//On new game, gets smartentity constructors loaded and builds smarttemplatemap
 		void gatherSmartEntityTemplates();
+
+		void addTemplateToMap(SmartEntityTemplate * set);
 
 		//creates and inits an SEI with serialized data
 		void loadSmartEntityInstance(std::string type, int contentnum, int index, std::string savestate);

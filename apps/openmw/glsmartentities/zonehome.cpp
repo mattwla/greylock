@@ -8,7 +8,8 @@
 #include <components/sceneutil/positionattitudetransform.hpp>
 SmartZoneHomeTemplate::SmartZoneHomeTemplate()
 {
-	mIngameID = "cargo_container";
+	mIngameIDs.push_back("cargo_container");
+	//mIngameIDs.push_back("z_cave");
 }
 
 MWBase::SmartEntityInstance * SmartZoneHomeTemplate::getInstance(const MWWorld::Ptr & ptr)
@@ -174,6 +175,10 @@ std::vector<std::shared_ptr<MWBase::GOAPNodeData>> HomeSubBrain::getMatchingBeha
 			std::cout << "made confront node" << std::endl;
 			//return confrontation node
 		}
+
+
+
+		//if affect fear, find guard or just be meek?
 	}
 
 

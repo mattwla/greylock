@@ -23,19 +23,31 @@
 void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 {
 	SmartEntityTemplate * it = new SmartEntityBreadTemplate();
-	mSmartTemplateMap[it->getStringID()] = it;
+	addTemplateToMap(it);
 
 	it = new SmartEntityCushionTemplate();
-	mSmartTemplateMap[it->getStringID()] = it;
+	addTemplateToMap(it);
 
 	it = new SmartZoneHomeTemplate();
-	mSmartTemplateMap[it->getStringID()] = it;
+	addTemplateToMap(it);
 
 	it = new SmartEntityBedrollTemplate();
-	mSmartTemplateMap[it->getStringID()] = it;
+	addTemplateToMap(it);
 
 	it = new SmartEntityHumanTemplate();
-	mSmartTemplateMap[it->getStringID()] = it;
+	addTemplateToMap(it);
+}
+
+void MWBase::SmartEntitiesManager::addTemplateToMap(SmartEntityTemplate * set)
+{
+	typedef std::vector<std::string> idlist;
+
+	idlist list = set->getStringID();
+	for (idlist::iterator it = list.begin(); it != list.end(); it++)
+	{
+		mSmartTemplateMap[(*it)] = set;
+	}
+
 }
 
 void MWBase::SmartEntitiesManager::loadSmartEntityInstance(std::string type, int contentnum, int index, std::string savestate)
@@ -410,9 +422,9 @@ void MWBase::SmartEntitiesManager::clear()
 	mSmartInstancesInScene.clear();
 }
 
-std::string MWBase::SmartEntityTemplate::getStringID()
+std::vector<std::string> MWBase::SmartEntityTemplate::getStringID()
 {
-	return mIngameID;
+	return mIngameIDs;
 }
 
 void MWBase::SmartEntityInstance::ping()

@@ -65,6 +65,7 @@ namespace MWClass
         const MWWorld::Ptr& actor) const
     {
         return defaultItemActivate(ptr, actor);
+		//return use(ptr);
     }
 
     std::string Miscellaneous::getScript (const MWWorld::ConstPtr& ptr) const

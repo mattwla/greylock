@@ -29,7 +29,7 @@ class SmartEntityCushionInstance : public MWBase::SmartEntityInstance {
 
 		virtual float getActivationDistance()
 		{
-			return 1600.0f;
+			return 5600.0f;
 		}
 
 		SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr);

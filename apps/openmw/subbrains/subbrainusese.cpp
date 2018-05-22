@@ -65,6 +65,7 @@ std::vector <std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainUseSE::getMa
 
 
 
+
 		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 		{
 			typedef std::vector<std::shared_ptr<MWBase::GOAPNodeData>> GOAPNodeDatalist;

@@ -10,7 +10,7 @@
 
 SmartEntityHumanTemplate::SmartEntityHumanTemplate()
 {
-	mIngameID = "human_life";
+	mIngameIDs.push_back("human_life");
 	//special case, humans can have all sorts of ids
 }
 
