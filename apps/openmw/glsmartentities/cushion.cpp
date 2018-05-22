@@ -120,12 +120,12 @@ MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 		return MWBase::COMPLETE;
 	}
 
-
+	
 	MWWorld::Ptr marker = mSEITarget->getPtr(); //what if I don't have ptr... btw I don't think I do. until I am on scene... so ok for now?
 	MWWorld::Ptr npc = mOwnerLife->mPtr;
 	ESM::Position markerPos = marker.getRefData().getPosition();
 	MWBase::Environment::get().getWorld()->rotateObject(npc, 0, 0, markerPos.rot[2]); //face direction of zoneslot
-
+	
 	auto seq = npc.getClass().getCreatureStats(npc).getAiSequence();
 
 
@@ -141,9 +141,15 @@ MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 
 MWBase::BOReturn BOCushionSit::start()
 {
+	std::cout << "start was called " << std::endl;
+	float zoffset = 100.0;
+	MWWorld::Ptr marker = mSEITarget->getPtr();
+	MWWorld::Ptr npc = mOwnerLife->mPtr;
+	ESM::Position markerPos = marker.getRefData().getPosition();
+	MWBase::Environment::get().getWorld()->moveObject(npc, markerPos.pos[0], markerPos.pos[1], markerPos.pos[2] + zoffset);
 	
 
-	return MWBase::BOReturn();
+	return MWBase::IN_PROGRESS;
 }
 
 bool BOCushionSit::stop()

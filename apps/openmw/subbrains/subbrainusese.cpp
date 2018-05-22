@@ -212,7 +212,7 @@ void MWBase::BOUseSEInWorld::useSE()
 	mSubBehavior = mSEITarget->useWorldInstance(mOwnerLife);
 	if (mSubBehavior)
 	{
-		
+		mSubBehavior->start();
 		mUsingSubBehavior = true;
 	}
 	else
