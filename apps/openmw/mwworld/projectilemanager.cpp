@@ -522,8 +522,17 @@ namespace MWWorld
                 if (underwater)
                     mRendering->emitWaterRipple(newPos);
 
-                mParent->removeChild(it->mNode);
-                it = mProjectiles.erase(it);
+    
+				osg::Vec3f hitPos = result.mHitPos;
+				ESM::Position position = ESM::Position();
+				position.pos[0] = hitPos.x();
+				position.pos[1] = hitPos.y();
+				position.pos[2] = hitPos.z();
+				MWBase::Environment::get().getWorld()->placeObject(projectileRef.getPtr(), caster.getCell(), position);
+
+				mParent->removeChild(it->mNode);
+				it = mProjectiles.erase(it);
+
                 continue;
             }
 
