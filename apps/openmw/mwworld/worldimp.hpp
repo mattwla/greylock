@@ -487,10 +487,13 @@ namespace MWWorld
             /// @param number of objects to place
 
             MWWorld::Ptr dropObjectOnGround (const MWWorld::Ptr& actor, const MWWorld::ConstPtr& object, int amount) override;
+			
             ///< copy and place an object into the gameworld at the given actor's position
             /// @param actor giving the dropped object position
             /// @param object
             /// @param number of objects to place
+
+			MWWorld::Ptr throwItem(const MWWorld::Ptr & actor, const MWWorld::ConstPtr & object, int amount) override;
 
             bool canPlaceObject(float cursorX, float cursorY) override;
             ///< @return true if it is possible to place on object at specified cursor location

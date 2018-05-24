@@ -2281,6 +2281,34 @@ namespace MWWorld
         return dropped;
     }
 
+	MWWorld::Ptr World::throwItem(const MWWorld::Ptr& actor, const MWWorld::ConstPtr& object, int amount)
+	{
+		MWWorld::CellStore* cell = actor.getCell();
+
+		ESM::Position pos =
+			actor.getRefData().getPosition();
+		// We want only the Z part of the actor's rotation
+		pos.rot[0] = 0;
+		pos.rot[1] = 0;
+
+		osg::Vec3f orig = pos.asVec3();
+		orig.z() += 20;
+		osg::Vec3f dir(0, 0, -1);
+
+		float len = 1000000.0;
+
+		MWRender::RenderingManager::RayResult result = mRendering->castRay(orig, orig + dir*len, true, true);
+		if (result.mHit)
+			pos.pos[2] = result.mHitPointWorld.z();
+
+		// copy the object and set its count
+		Ptr dropped = copyObjectToCell(object, cell, pos, amount, true);
+
+		if (actor == mPlayer->getPlayer()) // Only call if dropped by player
+			PCDropped(dropped);
+		return dropped;
+	}
+
     void World::processChangedSettings(const Settings::CategorySettingVector& settings)
     {
         mRendering->processChangedSettings(settings);
