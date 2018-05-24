@@ -127,6 +127,8 @@ namespace MWRender
         toggleVanityMode(false);
         if (!mFirstPersonView)
             toggleViewMode();
+
+		processViewChange();
     }
 
     void Camera::rotateCamera(float pitch, float yaw, bool adjust)
