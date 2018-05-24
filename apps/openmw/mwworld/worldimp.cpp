@@ -2326,11 +2326,11 @@ namespace MWWorld
 
 			float fThrownWeaponMinSpeed = gmst.find("fThrownWeaponMinSpeed")->getFloat();
 			float fThrownWeaponMaxSpeed = gmst.find("fThrownWeaponMaxSpeed")->getFloat();
-			float speed = fThrownWeaponMinSpeed;
+			float speed = fThrownWeaponMinSpeed * 3;
 			float attackStrength = 100.0f;
 			MWWorld::Ptr ptr;
 			launchPos = actor.getRefData().getPosition().asVec3();
-			launchPos.z() += 50.0f;
+			launchPos.z() += 100.0f;
 			MWBase::Environment::get().getWorld()->launchProjectile(actor, object, launchPos, orient, object, speed, attackStrength);
 
 			return object;
