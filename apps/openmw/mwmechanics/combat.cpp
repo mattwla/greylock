@@ -168,6 +168,9 @@ namespace MWMechanics
     void projectileHit(const MWWorld::Ptr& attacker, const MWWorld::Ptr& victim, MWWorld::Ptr weapon, const MWWorld::Ptr& projectile,
                        const osg::Vec3f& hitPosition, float attackStrength)
     {
+
+		std::cout << "hit" << std::endl;
+
         MWBase::World *world = MWBase::Environment::get().getWorld();
         const MWWorld::Store<ESM::GameSetting> &gmst = world->getStore().get<ESM::GameSetting>();
 
