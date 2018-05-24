@@ -1226,6 +1226,8 @@ namespace MWMechanics
     void MechanicsManager::itemTaken(const MWWorld::Ptr &ptr, const MWWorld::Ptr &item, const MWWorld::Ptr& container,
                                      int count, bool alarm)
     {
+
+		//mwx good place to flag item taken in ai system
         if (ptr != getPlayer())
             return;
 

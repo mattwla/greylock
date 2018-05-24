@@ -1,5 +1,6 @@
 #include "misc.hpp"
 #include "../mwworld/actionequip.hpp"
+#include "../mwworld/actiontake.hpp"
 #include <components/esm/loadmisc.hpp>
 
 #include "../mwbase/environment.hpp"
@@ -64,6 +65,13 @@ namespace MWClass
     std::shared_ptr<MWWorld::Action> Miscellaneous::activate (const MWWorld::Ptr& ptr,
         const MWWorld::Ptr& actor) const
     {
+
+
+		std::shared_ptr<MWWorld::Action> action(new MWWorld::ActionHold(ptr));
+		action->setSound(getUpSoundId(ptr));
+
+		return action;
+
         return defaultItemActivate(ptr, actor);
 		//return use(ptr);
     }

@@ -14,6 +14,15 @@ namespace MWWorld
 
             ActionTake (const MWWorld::Ptr& object);
     };
+
+	class ActionHold : public Action
+	{
+		virtual void executeImp(const Ptr& actor);
+
+	public:
+
+		ActionHold(const MWWorld::Ptr& object);
+	};
 }
 
 #endif
