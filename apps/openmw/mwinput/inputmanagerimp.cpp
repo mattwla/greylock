@@ -1244,6 +1244,8 @@ namespace MWInput
 
 	void InputManager::throwItem()
 	{
+		if (MWBase::Environment::get().getWindowManager()->isGuiMode()) return;
+
 		if (mControlSwitch["playercontrols"])
 			mPlayer->throwItem();
 	}
