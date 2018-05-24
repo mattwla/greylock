@@ -287,6 +287,8 @@ namespace MWWorld
 		std::cout << "throwing item" << std::endl;
 		MWWorld::Ptr dropped = world->throwItem(world->getPlayerPtr(), item.getBase(), 1);
 		invStore.remove(item, 1, player);
+
+
 	
 	}
 

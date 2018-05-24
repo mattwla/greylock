@@ -493,7 +493,7 @@ namespace MWWorld
             /// @param object
             /// @param number of objects to place
 
-			MWWorld::Ptr throwItem(const MWWorld::Ptr & actor, const MWWorld::ConstPtr & object, int amount) override;
+			MWWorld::Ptr throwItem(const MWWorld::Ptr & actor, const MWWorld::Ptr & object, int amount) override;
 
             bool canPlaceObject(float cursorX, float cursorY) override;
             ///< @return true if it is possible to place on object at specified cursor location

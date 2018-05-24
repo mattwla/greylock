@@ -323,7 +323,8 @@ namespace MWWorld
         state.mIdArrow = projectile.getCellRef().getRefId();
         state.mCasterHandle = actor;
         state.mAttackStrength = attackStrength;
-        state.mThrown = projectile.get<ESM::Weapon>()->mBase->mData.mType == ESM::Weapon::MarksmanThrown;
+		state.mThrown = true;
+			//projectile.get<ESM::Weapon>()->mBase->mData.mType == ESM::Weapon::MarksmanThrown;
 
         MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), projectile.getCellRef().getRefId());
         MWWorld::Ptr ptr = ref.getPtr();

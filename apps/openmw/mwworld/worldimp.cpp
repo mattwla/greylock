@@ -2281,7 +2281,7 @@ namespace MWWorld
         return dropped;
     }
 
-	MWWorld::Ptr World::throwItem(const MWWorld::Ptr& actor, const MWWorld::ConstPtr& object, int amount)
+	MWWorld::Ptr World::throwItem(const MWWorld::Ptr& actor, const MWWorld::Ptr& object, int amount)
 	{
 		MWWorld::CellStore* cell = actor.getCell();
 
@@ -2302,11 +2302,40 @@ namespace MWWorld
 			pos.pos[2] = result.mHitPointWorld.z();
 
 		// copy the object and set its count
-		Ptr dropped = copyObjectToCell(object, cell, pos, amount, true);
+		//Ptr dropped = copyObjectToCell(object, cell, pos, amount, true);
 
-		if (actor == mPlayer->getPlayer()) // Only call if dropped by player
-			PCDropped(dropped);
-		return dropped;
+		//if (actor == mPlayer->getPlayer()) // Only call if dropped by player
+		//	PCDropped(dropped);
+
+
+
+
+
+		osg::Quat orient = osg::Quat(actor.getRefData().getPosition().rot[0], osg::Vec3f(-1, 0, 0))
+			* osg::Quat(actor.getRefData().getPosition().rot[2], osg::Vec3f(0, 0, -1));
+
+		const MWWorld::Store<ESM::GameSetting> &gmst =
+			MWBase::Environment::get().getWorld()->getStore().get<ESM::GameSetting>();
+
+	
+
+		
+			// Thrown weapons get detached now
+		
+			osg::Vec3f launchPos;
+
+			float fThrownWeaponMinSpeed = gmst.find("fThrownWeaponMinSpeed")->getFloat();
+			float fThrownWeaponMaxSpeed = gmst.find("fThrownWeaponMaxSpeed")->getFloat();
+			float speed = fThrownWeaponMinSpeed;
+			float attackStrength = 100.0f;
+			MWWorld::Ptr ptr;
+			launchPos = actor.getRefData().getPosition().asVec3();
+			launchPos.z() += 50.0f;
+			MWBase::Environment::get().getWorld()->launchProjectile(actor, object, launchPos, orient, object, speed, attackStrength);
+
+			return object;
+
+
 	}
 
     void World::processChangedSettings(const Settings::CategorySettingVector& settings)
