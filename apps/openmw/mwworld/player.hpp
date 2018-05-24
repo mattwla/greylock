@@ -87,6 +87,8 @@ namespace MWWorld
 
 		void debugSE();
 
+		void throwItem();
+
         bool getAutoMove() const;
         void setAutoMove (bool enable);
 

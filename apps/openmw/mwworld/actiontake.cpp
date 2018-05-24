@@ -116,7 +116,8 @@ namespace MWWorld
 					invStore.equip(*slot, it, actor);
 			}
 		}
-
+		//MWBase::Environment::get().getWorld()->getPlayer().setDrawState(MWMechanics::DrawState_Nothing);
+		MWBase::Environment::get().getWorld()->getPlayer().setDrawState(MWMechanics::DrawState_Weapon);
 
 	}
 

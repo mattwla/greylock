@@ -17,6 +17,7 @@
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
+#include "../mwworld/inventorystore.hpp"
 
 #include "../mwmechanics/movement.hpp"
 #include "../mwmechanics/npcstats.hpp"
@@ -271,6 +272,24 @@ namespace MWWorld
 			MWBase::Environment::get().getWorld()->debugSE(toDebug);
 		}
 	}
+
+	void Player::throwItem()
+	{
+		int slot = 16;
+		MWWorld::Ptr player = getPlayer();
+		auto world = MWBase::Environment::get().getWorld();
+		MWWorld::InventoryStore& invStore = player.getClass().getInventoryStore(player);
+		MWWorld::Ptr item;
+		if (invStore.getSlot(slot) != invStore.end())
+		{
+			 item = *invStore.getSlot(slot);
+		}
+		std::cout << "throwing item" << std::endl;
+		MWWorld::Ptr dropped = world->dropObjectOnGround(world->getPlayerPtr(), item.getBase(), 1);
+		invStore.remove(item, 1, player);
+	
+	}
+
 
     bool Player::wasTeleported() const
     {

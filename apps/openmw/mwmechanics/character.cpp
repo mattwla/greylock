@@ -1193,6 +1193,8 @@ bool CharacterController::updateWeaponState()
     bool isStillWeapon = weaptype > WeapType_HandToHand && weaptype < WeapType_Spell &&
                             mWeaponType > WeapType_HandToHand && mWeaponType < WeapType_Spell;
 
+	//isStillWeapon = false;
+
     if(weaptype != mWeaponType && !isKnockedOut() &&
         !isKnockedDown() && !isRecovery())
     {

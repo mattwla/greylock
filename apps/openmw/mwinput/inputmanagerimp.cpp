@@ -289,6 +289,9 @@ namespace MWInput
 			case A_DebugSE:
 				debugSE();
 				break;
+			case A_Throw:
+				throwItem();
+				break;
             case A_MoveLeft:
             case A_MoveRight:
             case A_MoveForward:
@@ -1239,6 +1242,12 @@ namespace MWInput
 		//
 	}
 
+	void InputManager::throwItem()
+	{
+		if (mControlSwitch["playercontrols"])
+			mPlayer->throwItem();
+	}
+
     void InputManager::toggleAutoMove()
     {
         if (MWBase::Environment::get().getWindowManager()->isGuiMode()) return;
@@ -1336,11 +1345,12 @@ namespace MWInput
         defaultKeyBindings[A_AlwaysRun] = SDL_SCANCODE_CAPSLOCK;
         defaultKeyBindings[A_QuickSave] = SDL_SCANCODE_F5;
         defaultKeyBindings[A_QuickLoad] = SDL_SCANCODE_F9;
-
+		defaultKeyBindings[A_Inventory] = SDL_SCANCODE_I;
 		defaultKeyBindings[A_DebugSE] = SDL_SCANCODE_L;
 
         std::map<int, int> defaultMouseButtonBindings;
-        defaultMouseButtonBindings[A_Inventory] = SDL_BUTTON_RIGHT;
+        //defaultMouseButtonBindings[A_Inventory] = SDL_BUTTON_RIGHT;
+		defaultMouseButtonBindings[A_Throw] = SDL_BUTTON_RIGHT;
         defaultMouseButtonBindings[A_Use] = SDL_BUTTON_LEFT;
 
         for (int i = 0; i < A_Last; ++i)
@@ -1641,6 +1651,7 @@ namespace MWInput
         ret.push_back(A_QuickKey9);
         ret.push_back(A_QuickKey10);
 		ret.push_back(A_DebugSE);
+		ret.push_back(A_Throw);
 
         return ret;
     }
