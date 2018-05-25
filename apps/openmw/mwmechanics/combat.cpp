@@ -186,7 +186,7 @@ namespace MWMechanics
             if (!weapon.isEmpty())
                 weaponSkill = weapon.getClass().getEquipmentSkill(weapon);
 
-            int skillValue = attacker.getClass().getSkill(attacker, weapon.getClass().getEquipmentSkill(weapon));
+			int skillValue = 100;//attacker.getClass().getSkill(attacker, weapon.getClass().getEquipmentSkill(weapon));
 
             if (Misc::Rng::roll0to99() >= getHitChance(attacker, victim, skillValue))
             {
@@ -195,24 +195,26 @@ namespace MWMechanics
                 return;
             }
 
-            const unsigned char* attack = weapon.get<ESM::Weapon>()->mBase->mData.mChop;
-            damage = attack[0] + ((attack[1] - attack[0]) * attackStrength); // Bow/crossbow damage
+            //const unsigned char* attack = weapon.get<ESM::Weapon>()->mBase->mData.mChop;
+            //damage = attack[0] + ((attack[1] - attack[0]) * attackStrength); // Bow/crossbow damage
 
-            // Arrow/bolt damage
-            // NB in case of thrown weapons, we are applying the damage twice since projectile == weapon
-            attack = projectile.get<ESM::Weapon>()->mBase->mData.mChop;
-            damage += attack[0] + ((attack[1] - attack[0]) * attackStrength);
+            //// Arrow/bolt damage
+            //// NB in case of thrown weapons, we are applying the damage twice since projectile == weapon
+            //attack = projectile.get<ESM::Weapon>()->mBase->mData.mChop;
+            //damage += attack[0] + ((attack[1] - attack[0]) * attackStrength);
+
+			damage = 100.0;
 
             adjustWeaponDamage(damage, weapon, attacker);
 
-            if(attacker == getPlayer())
-                attacker.getClass().skillUsageSucceeded(attacker, weaponSkill, 0);
+            /*if(attacker == getPlayer())
+                attacker.getClass().skillUsageSucceeded(attacker, weaponSkill, 0);*/
 
             if (victim.getClass().getCreatureStats(victim).getKnockedDown())
                 damage *= gmst.find("fCombatKODamageMult")->getFloat();
         }
 
-        reduceWeaponCondition(damage, validVictim, weapon, attacker);
+       // reduceWeaponCondition(damage, validVictim, weapon, attacker);
 
         // Apply "On hit" effect of the weapon & projectile
         bool appliedEnchantment = applyOnStrikeEnchantment(attacker, victim, weapon, hitPosition, true);

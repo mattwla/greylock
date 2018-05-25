@@ -720,8 +720,8 @@ namespace MWClass
             stats.setLastHitObject(object.getCellRef().getRefId());
 
 
-        if (damage > 0.0f && !object.isEmpty())
-            MWMechanics::resistNormalWeapon(ptr, attacker, object, damage);
+       /* if (damage > 0.0f && !object.isEmpty())
+            MWMechanics::resistNormalWeapon(ptr, attacker, object, damage);*/
 
         if (damage < 0.001f)
             damage = 0;
