@@ -441,8 +441,19 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 	//give all active smart ents gravity
 	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
 	{
-		if(!it->second->getPtr().getClass().isNpc())
-			world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 0.f));
+		if (!it->second->getPtr().getClass().isNpc())
+		{
+			osg::Vec3f pos = it->second->getPtr().getRefData().getPosition().asVec3();
+			osg::Vec3f dir(0, 0, -1);
+
+			float len = 1000000.0;
+			float result = world->getDistToNearestRayHit(pos, dir, len, false);
+			//std::cout << result << std::endl;
+			if (result > 10.0f && result != 1000000.0)
+			{
+				world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 0.f));
+			}
+		}
 	}
 
 }
