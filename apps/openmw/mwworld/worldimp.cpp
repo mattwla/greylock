@@ -2345,6 +2345,9 @@ namespace MWWorld
 
     bool World::isFlying(const MWWorld::Ptr &ptr) const
     {
+		if (!ptr.getClass().isActor())
+			return false;
+
         const MWMechanics::CreatureStats &stats = ptr.getClass().getCreatureStats(ptr);
 
 		if (MWBase::Environment::get().getMechanicsManager()->isActorClimbing(ptr))
@@ -2579,6 +2582,13 @@ namespace MWWorld
         mPhysics->remove(getPlayerPtr());
         mPhysics->addActor(getPlayerPtr(), model);
     }
+
+	void World::addPhysicsActor(MWWorld::Ptr ptr)
+	{
+		std::string model = ptr.getClass().getModel(ptr);
+		mPhysics->remove(ptr);
+		mPhysics->addActor(ptr, model);
+	}
 
     int World::canRest ()
     {

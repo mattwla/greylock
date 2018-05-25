@@ -4,6 +4,7 @@
 #include "../glsmartentities/zonehome.hpp"
 #include "../glsmartentities/bedroll.hpp"
 #include "../glsmartentities/humanlife.hpp"
+#include "../glsmartentities/generic.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
 #include <iostream>
@@ -208,8 +209,9 @@ bool MWBase::SmartEntitiesManager::linkSEtoZone(SmartEntityInstance * entity, Sm
 	return true;
 }
 
-MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr)
+MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr, bool allowgeneric)
 {
+	bool makegeneric = false;
 	bool ishuman = ptr.getClass().isNpc() || ptr.getCellRef().getRefId() == "player";
 	//check if it already has one
 	if (hasSmartInstance(ptr))
@@ -217,7 +219,20 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 	std::string id = ptr.getCellRef().getRefId();
 	ESM::RefNum refnum = ptr.getCellRef().getRefNum();
 	if (!hasSmartTemplate(ptr.getBase())) //Is there a template for this object? if not return nothing
-		return nullptr;
+	{
+		if (!allowgeneric)
+			return nullptr;
+		else
+			makegeneric = true;
+	}
+
+	//ESM::RefNum refNum = ptr.getCellRef().getRefNum();
+	//int contentNum = ptr.getCellRef().getRefNum().mContentFile;
+	//if (contentNum == -1 && refNum.mIndex == 0) //dynamically generated, give it a valid refnum
+	//{
+	//	ptr.getCellRef().setRefNum(mRuntimeRefNumTicker++);
+	//	refNum = ptr.getCellRef().getRefNum();
+	//}
 	
 	SmartEntityInstance * newInstance;
 		if (ishuman)
@@ -225,7 +240,16 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 			newInstance = mSmartTemplateMap["human_life"]->getInstance(ptr);
 		}
 		else
-		newInstance = mSmartTemplateMap[id]->getInstance(ptr);
+		{
+			if (makegeneric)
+			{
+				newInstance = new SmartEntityGenericInstance(ptr);
+			}
+			else
+			{
+				newInstance = mSmartTemplateMap[id]->getInstance(ptr);
+			}
+		}
 	mSmartInstanceMap[refnum] = newInstance;
 	return newInstance;
 }
@@ -408,6 +432,19 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 	std::cout << "=====>Built SEManager<======" << std::endl;
 	std::cout << "Initializing templates" << std::endl;
 	gatherSmartEntityTemplates();
+}
+
+void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
+{
+	//std::cout << "updating" << std::endl;
+	auto world = MWBase::Environment::get().getWorld();
+	//give all active smart ents gravity
+	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
+	{
+		if(!it->second->getPtr().getClass().isNpc())
+			world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 0.f));
+	}
+
 }
 
 void MWBase::SmartEntitiesManager::clear()

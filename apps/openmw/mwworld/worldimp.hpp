@@ -547,6 +547,8 @@ namespace MWWorld
             void setupPlayer() override;
             void renderPlayer() override;
 
+			void addPhysicsActor(MWWorld::Ptr ptr) override;
+
             /// open or close a non-teleport door (depending on current state)
             void activateDoor(const MWWorld::Ptr& door) override;
 

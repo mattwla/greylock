@@ -348,10 +348,11 @@ namespace MWPhysics
             }
 
             // dead actors underwater will float to the surface, if the CharacterController tells us to do so
-            if (movement.z() > 0 && ptr.getClass().getCreatureStats(ptr).isDead() && position.z() < swimlevel)
+            if (movement.z() > 0 && ptr.getClass().isActor() && ptr.getClass().getCreatureStats(ptr).isDead() && position.z() < swimlevel)
                 velocity = osg::Vec3f(0,0,1) * 25;
 
-            ptr.getClass().getMovementSettings(ptr).mPosition[2] = 0;
+			if (ptr.getClass().isActor())
+			  ptr.getClass().getMovementSettings(ptr).mPosition[2] = 0;
 
             // Now that we have the effective movement vector, apply wind forces to it
             if (MWBase::Environment::get().getWorld()->isInStorm())
@@ -429,7 +430,7 @@ namespace MWPhysics
                     // NOTE: stepMove does not allow stepping over, modifies newPosition if successful
                     result = stepper.step(newPosition, velocity*remainingTime, remainingTime);
                 }
-                if (result)
+                if (result && ptr.getClass().isActor())
                 {
                     // don't let pure water creatures move out of water after stepMove
                     if (ptr.getClass().isPureWaterCreature(ptr)
@@ -1497,11 +1498,12 @@ namespace MWPhysics
             const MWWorld::CellStore *cell = iter->first.getCell();
             if(cell->getCell()->hasWater())
                 waterlevel = cell->getWaterLevel();
-
-            const MWMechanics::MagicEffects& effects = iter->first.getClass().getCreatureStats(iter->first).getMagicEffects();
+			
+			//if (iter->first.getClass().isActor())
+			//const MWMechanics::MagicEffects& effects(iter->first.getClass().getCreatureStats(iter->first).getMagicEffects());
 
             bool waterCollision = false;
-            if (cell->getCell()->hasWater() && effects.get(ESM::MagicEffect::WaterWalking).getMagnitude())
+          /*  if (cell->getCell()->hasWater() && effects.get(ESM::MagicEffect::WaterWalking).getMagnitude())
             {
                 if (!world->isUnderwater(iter->first.getCell(), osg::Vec3f(iter->first.getRefData().getPosition().asVec3())))
                     waterCollision = true;
@@ -1511,12 +1513,12 @@ namespace MWPhysics
                     physicActor->setPosition(osg::Vec3f(actorPosition.x(), actorPosition.y(), waterlevel));
                     waterCollision = true;
                 }
-            }
+            }*/
             physicActor->setCanWaterWalk(waterCollision);
 
             // Slow fall reduces fall speed by a factor of (effect magnitude / 200)
 			//MWX GRAVITY
-            float slowFall = 1.f - std::max(0.f, std::min(1.f, effects.get(ESM::MagicEffect::SlowFall).getMagnitude() * 0.005f));
+			float slowFall = 1.f; /*- std::max(0.f, std::min(1.f, effects.get(ESM::MagicEffect::SlowFall).getMagnitude() * 0.005f));*/
 
             bool flying = world->isFlying(iter->first);
 			//if (flying)
@@ -1542,12 +1544,14 @@ namespace MWPhysics
             osg::Vec3f interpolated = position * interpolationFactor + physicActor->getPreviousPosition() * (1.f - interpolationFactor);
 
             float heightDiff = position.z() - oldHeight;
-
-            MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);
-            if ((wasOnGround && physicActor->getOnGround()) || flying || world->isSwimming(iter->first) || slowFall < 1)
-                stats.land();
-            else if (heightDiff < 0 )
-                stats.addToFallHeight(-heightDiff);
+			if(iter->first.getClass().isActor())
+			{
+				MWMechanics::CreatureStats& stats = iter->first.getClass().getCreatureStats(iter->first);
+				if ((wasOnGround && physicActor->getOnGround()) || flying || world->isSwimming(iter->first) || slowFall < 1)
+					stats.land();
+				else if (heightDiff < 0)
+					stats.addToFallHeight(-heightDiff);
+			}
 
             mMovementResults.push_back(std::make_pair(iter->first, interpolated));
         }

@@ -41,6 +41,8 @@
 
 #include "../mwphysics/physicssystem.hpp"
 
+#include "../mwbase/smartentitiesmanager.hpp"
+
 namespace
 {
     ESM::EffectList getMagicBoltData(std::vector<std::string>& projectileIDs, std::vector<std::string>& sounds, float& speed, std::string& texture, std::string& sourceName, const std::string& id)
@@ -529,7 +531,12 @@ namespace MWWorld
 				position.pos[0] = hitPos.x();
 				position.pos[1] = hitPos.y();
 				position.pos[2] = hitPos.z();
-				MWBase::Environment::get().getWorld()->placeObject(projectileRef.getPtr(), caster.getCell(), position);
+				MWWorld::Ptr newobject = MWBase::Environment::get().getWorld()->placeObject(projectileRef.getPtr(), caster.getCell(), position);
+
+				//get SE so gravity works.... should likely do this earlier.
+				MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
+				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(newobject);
+				MWBase::Environment::get().getWorld()->addPhysicsActor(newobject);
 
 				mParent->removeChild(it->mNode);
 				it = mProjectiles.erase(it);

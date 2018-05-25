@@ -19,6 +19,7 @@
 #include "../mwbase/world.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/dialoguemanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "aicombat.hpp"
 #include "aipursue.hpp"
@@ -426,6 +427,7 @@ namespace MWMechanics
 
         mActors.update(duration, paused);
         mObjects.update(duration, paused);
+		MWBase::Environment::get().getSmartEntitiesManager()->onFrameUpdate(duration);
 		mLifeManager = MWBase::Environment::get().getLifeManager();
 		mLifeManager->update(duration, paused);
     }

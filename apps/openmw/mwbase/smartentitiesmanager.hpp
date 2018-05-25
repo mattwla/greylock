@@ -314,11 +314,13 @@ namespace MWBase
 		
 		SmartEntitiesManager::SmartEntitiesManager();
 
+		void onFrameUpdate(float duration);
+
 		//Makes a smart instance from livecellref, or returns an already existing one
 		MWBase::SmartEntityInstance * initializeInstFromLiveCellRef(MWWorld::LiveCellRefBase * livecellref);
 
 		//returns an SEI, or makes a new one
-		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr);
+		MWBase::SmartEntityInstance * getSmartEntityInstance(const MWWorld::Ptr &ptr, bool allowgeneric = false);
 
 		//returns an SEI, or makes a new one
 		//MWBase::SmartEntityInstance * getSmartEntityInstance(std::string id, ESM::RefNum refNum);
