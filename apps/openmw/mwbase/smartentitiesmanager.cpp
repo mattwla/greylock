@@ -438,7 +438,7 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 {
 	//std::cout << "updating" << std::endl;
 	auto world = MWBase::Environment::get().getWorld();
-	//give all active smart ents gravity
+	//give all active smart ents that dont have objects below them gravity
 	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
 	{
 		if (!it->second->getPtr().getClass().isNpc())

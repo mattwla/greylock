@@ -36,12 +36,14 @@
 #include "../mwrender/vismask.hpp"
 #include "../mwrender/renderingmanager.hpp"
 #include "../mwrender/util.hpp"
+#include <components/sceneutil/positionattitudetransform.hpp> 
 
 #include "../mwsound/sound.hpp"
 
 #include "../mwphysics/physicssystem.hpp"
 
 #include "../mwbase/smartentitiesmanager.hpp"
+#include <components/settings/settings.hpp> 
 
 namespace
 {
@@ -537,6 +539,21 @@ namespace MWWorld
 				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
 				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(sei->getPtr());
 				MWBase::Environment::get().getWorld()->addPhysicsActor(sei->getPtr());
+
+				osg::Quat throwOrient;
+				throwOrient.set(
+					osg::Matrixd::rotate(osg::PI, osg::Vec3f(0, 0, 1)) *
+					osg::Matrixd::rotate(osg::PI / 2.0, osg::Vec3f(0, 1, 0)) *
+					osg::Matrixd::rotate(-1 * osg::PI / 2.0, osg::Vec3f(1, 0, 0)) *
+					osg::Matrixd::inverse(
+						osg::Matrixd::lookAt(
+							osg::Vec3f(0, 0, 0),
+							it->mVelocity,
+							osg::Vec3f(0, 0, 1))
+						)
+					);
+
+				sei->getPtr().getRefData().getBaseNode()->setAttitude(throwOrient);
 
 				mParent->removeChild(it->mNode);
 				it = mProjectiles.erase(it);
