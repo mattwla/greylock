@@ -226,13 +226,13 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 			makegeneric = true;
 	}
 
-	//ESM::RefNum refNum = ptr.getCellRef().getRefNum();
-	//int contentNum = ptr.getCellRef().getRefNum().mContentFile;
-	//if (contentNum == -1 && refNum.mIndex == 0) //dynamically generated, give it a valid refnum
-	//{
-	//	ptr.getCellRef().setRefNum(mRuntimeRefNumTicker++);
-	//	refNum = ptr.getCellRef().getRefNum();
-	//}
+	ESM::RefNum refNum = ptr.getCellRef().getRefNum();
+	int contentNum = ptr.getCellRef().getRefNum().mContentFile;
+	if (contentNum == -1 && refNum.mIndex == 0) //dynamically generated, give it a valid refnum
+	{
+		ptr.getCellRef().setRefNum(mRuntimeRefNumTicker++);
+		refNum = ptr.getCellRef().getRefNum();
+	}
 	
 	SmartEntityInstance * newInstance;
 		if (ishuman)
@@ -250,7 +250,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 				newInstance = mSmartTemplateMap[id]->getInstance(ptr);
 			}
 		}
-	mSmartInstanceMap[refnum] = newInstance;
+	mSmartInstanceMap[ptr.getCellRef().getRefNum()] = newInstance;
 	return newInstance;
 }
 

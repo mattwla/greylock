@@ -534,9 +534,9 @@ namespace MWWorld
 				MWWorld::Ptr newobject = MWBase::Environment::get().getWorld()->placeObject(projectileRef.getPtr(), caster.getCell(), position);
 
 				//get SE so gravity works.... should likely do this earlier.
-				MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
-				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(newobject);
-				MWBase::Environment::get().getWorld()->addPhysicsActor(newobject);
+				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
+				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(sei->getPtr());
+				MWBase::Environment::get().getWorld()->addPhysicsActor(sei->getPtr());
 
 				mParent->removeChild(it->mNode);
 				it = mProjectiles.erase(it);
