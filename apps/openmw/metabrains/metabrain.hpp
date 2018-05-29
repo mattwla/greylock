@@ -12,6 +12,7 @@ namespace MWBase
 {
 
 	struct GOAPNodeData;
+	struct GOAPStatus;
 
 	class MetaBrain
 	{
@@ -20,6 +21,8 @@ namespace MWBase
 		virtual void update(float duration) = 0;
 
 		virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> requestDesire(MWBase::Life * life) = 0;
+
+		virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBO(MWBase::GOAPStatus status, MWBase::Life * life) = 0;
 
 	};
 

@@ -183,6 +183,7 @@ namespace MWBase {
 	public:
 		 
 		//To get a BO, a template BO is cloned. Template BOs are instantiated by their owner subbrains or SEIs.
+		//MWX oh god change this.
 		virtual BehaviorObject* Clone(MWBase::Life * life, ESM::RefNum refnum) = 0;
 
 		virtual void getDebugInfo() = 0;
