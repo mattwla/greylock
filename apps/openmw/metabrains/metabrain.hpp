@@ -5,14 +5,21 @@
 #include <vector>
 #include <memory>
 #include "../mwworld/ptr.hpp"
+#include "../subbrains/subbrain.hpp"
 
 namespace MWBase
+
 {
+
+	struct GOAPNodeData;
+
 	class MetaBrain
 	{
 
 	public:
 		virtual void update(float duration) = 0;
+
+		virtual std::vector<std::shared_ptr<MWBase::GOAPNodeData>> requestDesire(MWBase::Life * life) = 0;
 
 	};
 

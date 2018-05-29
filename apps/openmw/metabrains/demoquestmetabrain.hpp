@@ -18,6 +18,8 @@ namespace MWBase {
 		DemoQuestMetaBrain();
 
 		virtual void update(float duration);
+
+		virtual std::vector<std::shared_ptr<GOAPNodeData>> requestDesire(MWBase::Life * life);
 	};
 
 	class SubBrainDemoQuest : public MWBase::SubBrain

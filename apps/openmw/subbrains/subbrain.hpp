@@ -6,6 +6,7 @@
 #include <memory>
 #include "../mwworld/ptr.hpp"
 #include "../gllifemanager/goap.hpp"
+#include "../metabrains/metabrain.hpp"
 
 namespace MWBase {
 	class Life;
@@ -15,6 +16,7 @@ namespace MWBase {
 	class BehaviorObject;
 	struct IntentionPlan;
 	class SubBrain;
+	class MetaBrain;
 };
 
 namespace MWWorld {
@@ -176,6 +178,8 @@ namespace MWBase {
 
 		MWBase::SubBrain * mParentSubBrain;
 
+		
+
 	public:
 		 
 		//To get a BO, a template BO is cloned. Template BOs are instantiated by their owner subbrains or SEIs.
@@ -259,6 +263,8 @@ namespace MWBase {
 
 		MWBase::Life * mOwnerLife;
 
+		MWBase::MetaBrain * mMetaBrain;
+
 	public:
 		
 		virtual ~SubBrain() {
@@ -281,6 +287,11 @@ namespace MWBase {
 		virtual void clearDesires()
 		{
 
+		}
+
+		virtual void setMetaBrain(MWBase::MetaBrain * mb)
+		{
+			mMetaBrain = mb;
 		}
 
 	};
