@@ -132,7 +132,7 @@ subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrela
 )
 
 add_openmw_dir (metabrains
-metabrain
+metabrain demoquestmetabrain
 )
 
 # Main executable

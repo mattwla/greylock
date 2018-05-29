@@ -1,5 +1,5 @@
-#ifndef GAME_GLMETABRAINS_METARAIN_H
-#define GAME_GLSMETABRAINS_METABRAIN_H
+#ifndef GAME_GLMETABRAINS_METABRAIN_H
+#define GAME_GLMETABRAINS_METABRAIN_H
 #include <components/esm/defs.hpp>
 #include <string>
 #include <vector>
@@ -15,6 +15,12 @@ namespace MWBase
 		virtual void update(float duration) = 0;
 
 	};
+
+
+
+
+
+
 
 	class MetaBrainManager
 	{

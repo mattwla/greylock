@@ -323,6 +323,8 @@ namespace MWBase
 
 		float mTimeAccumulator;
 
+		Life * getLifeFromID(std::string id);
+
 		void loadGame(boost::filesystem::path path);
 
 		void saveGame(boost::filesystem::path path);

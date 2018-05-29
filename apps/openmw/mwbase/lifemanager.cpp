@@ -328,6 +328,18 @@ namespace MWBase
 
 
 
+	Life * LifeManager::getLifeFromID(std::string id)
+	{
+		typedef std::vector<Life*> lifelist;
+		for (lifelist::iterator itx = mLifeList.begin(); itx != mLifeList.end(); itx++)
+		{
+			if (id == (*itx)->mId)
+				return (*itx);
+		}
+		
+		return nullptr;
+	}
+
 	void LifeManager::loadGame(boost::filesystem::path path)
 	{
 
