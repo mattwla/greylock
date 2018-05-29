@@ -260,6 +260,74 @@ namespace MWBase
 
 	//===================LIFE MANAGER ================================
 
+
+	void LifeManager::initialize()
+	{
+		mLifeList.clear();
+		mLifeList.shrink_to_fit();
+		buildLifeList();
+		std::cout << "init life list" << std::endl;
+		newGame();
+	}
+
+
+	void LifeManager::buildLifeList() //starts on new game.... interesting. 
+	{
+		std::string list = "schedules/npclist.csv";
+		std::ifstream in(list.c_str());
+		if (!in.is_open())
+			std::cout << "Not open" << std::endl;
+		else
+			std::cout << "Open " << list << std::endl;
+		std::string lifeid;
+		while (getline(in, lifeid))
+		{
+			MWBase::Life* newlife = new MWBase::Life(lifeid);
+			mLifeList.push_back(newlife);
+		}
+	}
+
+
+
+	void MWBase::LifeManager::newGame()
+	{
+		if (mMetaBrainManager == 0)
+			mMetaBrainManager = new MWBase::MetaBrainManager();
+		else
+			mMetaBrainManager->clear();
+
+		mMetaBrainManager->newGame();
+	}
+
+	void MWBase::LifeManager::update(float duration, bool paused)
+	{
+		mMetaBrainManager->update(duration);
+
+		unsigned int itx = 0;
+		while (itx < mLifeList.size())
+		{
+			MWBase::Life * currentLife = mLifeList[itx];
+			if (inActiveRange(currentLife->mPtr))
+			{
+				currentLife->update(duration);
+				//currentLife->mAwareness->refresh();
+				//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
+			}
+			else
+			{
+				//	currentLife->update(duration);
+				//currentLife->inactiveUpdate();
+			}
+			itx++;
+		}
+	}
+
+
+
+
+
+
+
 	void LifeManager::loadGame(boost::filesystem::path path)
 	{
 

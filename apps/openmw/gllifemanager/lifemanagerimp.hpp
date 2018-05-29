@@ -26,13 +26,13 @@ namespace GLLifeManager
 	public:
 		LifeManager();
 
-		virtual void newGame();
+		/*virtual void newGame();
 
-		virtual void update(float duration, bool paused);
+		virtual void update(float duration, bool paused);*/
 
-		virtual void initialize();
+		//virtual void initialize();
 
-		void buildLifeList();
+		//void buildLifeList();
 
 		virtual bool inActiveRange(MWWorld::Ptr npc);
 	};

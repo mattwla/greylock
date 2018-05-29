@@ -131,6 +131,10 @@ subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrela
 
 )
 
+add_openmw_dir (metabrains
+metabrain
+)
+
 # Main executable
 
 if (NOT ANDROID)

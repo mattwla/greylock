@@ -251,11 +251,6 @@ namespace MWBase {
 	};
 		
 
-	class MetaBrain //manages subbrains for group behavior or behavior determined by logic embedded in environment
-	{
-
-	};
-
 	class SubBrain //used by NPCs to make decisions and solve problems
 	{
 

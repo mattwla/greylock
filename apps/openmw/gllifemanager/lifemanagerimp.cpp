@@ -20,55 +20,11 @@ GLLifeManager::LifeManager::LifeManager()
 {
 }
 
-void GLLifeManager::LifeManager::newGame()
-{
-	
-}
 
-void GLLifeManager::LifeManager::update(float duration, bool paused)
-{
-	unsigned int itx = 0;
-	while (itx < mLifeList.size())
-	{
-		MWBase::Life * currentLife = mLifeList[itx];
-		if (inActiveRange(currentLife->mPtr))
-		{
-			currentLife->update(duration);
-			//currentLife->mAwareness->refresh();
-			//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
-		}
-		else
-		{
-		//	currentLife->update(duration);
-			//currentLife->inactiveUpdate();
-		}
-		itx++;
-	}
-}
 
-void GLLifeManager::LifeManager::initialize()
-{
-	mLifeList.clear();
-	mLifeList.shrink_to_fit();
-	buildLifeList();
-	std::cout << "init life list" << std::endl;
-}
 
-void GLLifeManager::LifeManager::buildLifeList() //starts on new game.... interesting. 
-{
-	std::string list = "schedules/npclist.csv";
-	std::ifstream in(list.c_str());
-	if (!in.is_open())
-		std::cout << "Not open" << std::endl;
-	else
-		std::cout << "Open " << list << std::endl;
-	std::string lifeid;
-	while (getline(in, lifeid))
-	{
-		MWBase::Life* newlife = new MWBase::Life(lifeid);
-		mLifeList.push_back(newlife);														
-	}
-}
+
+
 
 bool GLLifeManager::LifeManager::inActiveRange(MWWorld::Ptr npc)
 {

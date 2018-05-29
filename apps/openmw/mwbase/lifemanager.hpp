@@ -26,6 +26,7 @@
 #include "../mwtasks/task.hpp"
 #include "../mwtasks/journey.hpp"
 #include "../mwworld/timestamp.hpp"
+#include "../metabrains/metabrain.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
@@ -297,14 +298,18 @@ namespace MWBase
 
 	class LifeManager
 	{
+
+		MWBase::MetaBrainManager * mMetaBrainManager = 0;
 		
 	public:
 
-		virtual void newGame() = 0;
+		void newGame();
 		
-		virtual void update(float duration, bool paused) = 0;
+		void update(float duration, bool paused);
 
-		virtual void initialize() = 0;
+		void buildLifeList();
+
+		void initialize();
 
 		virtual ~LifeManager() {}
 
