@@ -101,7 +101,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 			//mStage += 1;
 		}
 
-		if (isArx && dist < 10000.0)
+		if (isArx && dist < 20000.0)
 			mStage += 1;
 	}
 	else if (mStage == 1)
@@ -185,7 +185,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("People in the village use them as decorations. I think they look ugly, but whatever.");
+			life->say("People in the village use them as decorations. They have horrible taste.");
 			mStage += 1;
 		}
 	}
@@ -198,7 +198,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("You'll have to 'acquire' them from the village.");
+			life->say("You'll have to 'acquire' them from houses in the village.");
 			mStage += 1;
 		}
 	}
@@ -224,7 +224,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("Give the bounce shroom a good punch, and it'll launch you in the air. Activate your glider and glide to the village.");
+			life->say("Give the bounce shroom a good punch, and it'll launch you in the air. Use the height to glide to the village.");
 			mStage += 1;
 		}
 	}
@@ -237,15 +237,41 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("Oh, and I left some fire shrooms by our campfire, they might help.");
+			life->say("Oh, and I left some fire shrooms by our campfire, they might help with burning anything that gets in your way.");
 			mStage += 1;
 		}
-		mArxDesire->mIntensity = 0;
-		mNadiaDesire->mIntensity = 0;
+		/*mArxDesire->mIntensity = 0;
+		mNadiaDesire->mIntensity = 0;*/
 		/*mArxDesire = 0;
 		mNadiaDesire = 0;*/
 
 	}
+	else if (mStage == 18)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 19)
+	{
+		if (isArx)
+		{
+			life->say("Good luck!");
+			mStage += 1;
+		}
+		
+		/*mArxDesire = 0;
+		mNadiaDesire = 0;*/
+
+	}
+	else if (mStage == 20)
+	{
+		if (isArx && life->mCurrentSpeech == 0)
+		{
+			mArxDesire->mIntensity = 0;
+			mNadiaDesire->mIntensity = 0;
+		}
+	}
+
 
 
 
