@@ -1007,9 +1007,33 @@ namespace MWGui
 
 		bool isaware = MWBase::Environment::get().getAwarenessReactionsManager()->awarenessCheck(speaker, MWMechanics::getPlayer());
 		if (isaware)
-			setCoord(bounds.x()*screenwidth, bounds.y()*screenheight, textSize.width + padding.left, textSize.height + padding.top);
+		{
+			float y = bounds.y();
+			float x = bounds.x();
+			if (y < 0.0)
+			{
+				y = .2;
+			}
+		/*	if (x < .2)
+			{
+				x = .5;
+			}*/
+			//y = (bounds.y() + bounds.z()) / 2.0;
+			x = (bounds.x() + bounds.z()) / 2.0;
+
+			if (x > .8 || x < .2)
+				x = .5;
+
+			
+
+			std::cout << x << std::endl;
+
+			setCoord(x*screenwidth, y*screenheight, textSize.width + padding.left, textSize.height + padding.top);
+		}
+			
 		else
 			setCoord(0, 0, textSize.width + padding.left, textSize.height + padding.top);
+		
 		
 		
 		captionSize += MyGUI::IntSize(imageSize, 0); // adjust for image

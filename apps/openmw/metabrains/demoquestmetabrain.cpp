@@ -108,10 +108,21 @@ MWBase::ArxDemoQuestBO::ArxDemoQuestBO()
 
 MWBase::BOReturn MWBase::ArxDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
+	float dist = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
 
-	if (!mOwnerLife->mCurrentSpeech)
+	if (dist > 20000.0f)
 	{
-		mOwnerLife->say("GET OVER HERE FOR YOUR QUEST");
+		if (!mOwnerLife->mCurrentSpeech)
+		{
+			mOwnerLife->say("GET OVER HERE FOR YOUR QUEST");
+		}
+	}
+	else
+	{
+		if (!mOwnerLife->mCurrentSpeech)
+		{
+			mOwnerLife->say("GET ME SOME ARTIFACTS");
+		}
 	}
 
 	return MWBase::IN_PROGRESS;
