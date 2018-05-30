@@ -12,6 +12,7 @@ namespace MWBase {
 		MWBase::Life * mArxLife = 0;
 		MWBase::Life * mNadiaLife = 0;
 		MWBase::BehaviorObject * mArxBO = 0;
+		MWBase::BehaviorObject * mNadiaBO = 0;
 
 
 
@@ -24,6 +25,8 @@ namespace MWBase {
 
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBO(MWBase::GOAPStatus status, MWBase::Life * life);
 	};
+
+
 
 	class SubBrainDemoQuest : public MWBase::SubBrain
 	{
@@ -46,6 +49,8 @@ namespace MWBase {
 	};
 
 
+
+
 	class ArxDemoQuestBO : public MWBase::BehaviorObject
 	{
 	public:
@@ -65,6 +70,38 @@ namespace MWBase {
 
 		virtual void getDebugInfo();
 
+		virtual BOReturn start();
+
+		virtual bool stop()
+		{
+			return true;
+		};
+
+		virtual ~ArxDemoQuestBO()
+		{
+
+		};
+
+	};
+
+	class NadiaDemoQuestBO : public MWBase::BehaviorObject
+	{
+	public:
+
+		NadiaDemoQuestBO();
+
+		NadiaDemoQuestBO* Clone(MWBase::Life * life, ESM::RefNum refnum)
+		{
+			NadiaDemoQuestBO * newbo = new NadiaDemoQuestBO(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			return newbo;
+		}
+
+
+		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
+
+		virtual void getDebugInfo();
 
 		virtual BOReturn start();
 
@@ -73,12 +110,10 @@ namespace MWBase {
 			return true;
 		};
 
-
-		virtual ~ArxDemoQuestBO()
+		virtual ~NadiaDemoQuestBO()
 		{
 
 		};
-
 
 	};
 
