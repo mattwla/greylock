@@ -14,6 +14,9 @@ namespace MWBase {
 		MWBase::BehaviorObject * mArxBO = 0;
 		MWBase::BehaviorObject * mNadiaBO = 0;
 		int mStage = 0;
+		std::shared_ptr<MWBase::GOAPDesire> mArxDesire = 0;
+		std::shared_ptr<MWBase::GOAPDesire> mNadiaDesire = 0;
+
 
 
 	public:
@@ -77,6 +80,7 @@ namespace MWBase {
 
 		virtual bool stop()
 		{
+			mStopRequested = true;
 			return true;
 		};
 
@@ -110,6 +114,7 @@ namespace MWBase {
 
 		virtual bool stop()
 		{
+			mStopRequested = true;
 			return true;
 		};
 

@@ -25,13 +25,14 @@ MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 	
 	
 	GOAPStatus desirestatus(MWBase::RUNNING_BEHAVIOR_OBJECT, "arxdemoquest", 1);
-	std::shared_ptr<GOAPDesire> pDesire = std::make_shared<GOAPDesire>(desirestatus, 999);
-	mArxLife->submitDesirePtr(pDesire);
+	mArxDesire = std::make_shared<GOAPDesire>(desirestatus, 999);
+	mArxLife->submitDesirePtr(mArxDesire);
 	
 	
 	GOAPStatus desirestatusn(MWBase::RUNNING_BEHAVIOR_OBJECT, "nadiademoquest", 1);
-	pDesire = std::make_shared<GOAPDesire>(desirestatusn, 999);
-	mNadiaLife->submitDesirePtr(pDesire);
+	mNadiaDesire = std::make_shared<GOAPDesire>(desirestatusn, 999);
+	mNadiaLife->submitDesirePtr(mNadiaDesire);
+
 
 	mArxBO = new ArxDemoQuestBO;
 	mNadiaBO = new NadiaDemoQuestBO;
@@ -239,7 +240,14 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 			life->say("Oh, and I left some fire shrooms by our campfire, they might help.");
 			mStage += 1;
 		}
+		mArxDesire->mIntensity = 0;
+		mNadiaDesire->mIntensity = 0;
+		/*mArxDesire = 0;
+		mNadiaDesire = 0;*/
+
 	}
+
+
 
 
 
@@ -302,7 +310,8 @@ MWBase::ArxDemoQuestBO::ArxDemoQuestBO()
 
 MWBase::BOReturn MWBase::ArxDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
-
+	if (mStopRequested)
+		return MWBase::COMPLETE;
 	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
 
 	//request from metabrain
@@ -345,6 +354,9 @@ MWBase::NadiaDemoQuestBO::NadiaDemoQuestBO()
 
 MWBase::BOReturn MWBase::NadiaDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
+
+	if (mStopRequested)
+		return MWBase::COMPLETE;
 
 	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
 
