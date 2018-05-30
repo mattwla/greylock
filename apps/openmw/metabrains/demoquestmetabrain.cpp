@@ -6,10 +6,6 @@
 
 MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 {
-
-	
-	//MWWorld::Ptr arxptr = MWBase::Environment::get().getWorld()->searchPtr("arx", false);
-	//MWWorld::Ptr nadiaptr = MWBase::Environment::get().getWorld()->searchPtr("nadia", false);
 	mArxLife = MWBase::Environment::get().getLifeManager()->getLifeFromID("arx");
 	mNadiaLife = MWBase::Environment::get().getLifeManager()->getLifeFromID("nadia");
 
@@ -33,6 +29,8 @@ MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 
 	mArxBO = new ArxDemoQuestBO;
 	mNadiaBO = new NadiaDemoQuestBO;
+	mArxBO->setParentSubBrain(arxsb);
+	mNadiaBO->setParentSubBrain(nadiasb);
 
 	//Give Arx and Nadia subbrains which ping me for stuff.
 	
@@ -79,6 +77,49 @@ std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::DemoQuestMetaBrain::g
 	return result;
 }
 
+void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
+{
+	float dist = (life->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
+	bool isArx = life == mArxLife;
+	bool isNadia = life == mNadiaLife;
+	
+	if (mStage == 0)
+	{
+		if (isArx && life->mCurrentSpeech == 0)
+		{
+			life->say("Come over here for your quest!");
+			//mStage += 1;
+		}
+
+		if (isArx && dist < 5000.0)
+			mStage += 1;
+	}
+	else if (mStage == 1)
+	{
+		if (isArx)
+		{
+			life->say("I need you to get me 5 ancient artifacts");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 2)
+	{
+		if (isArx && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+
+	else if (mStage == 3)
+	{
+		if (isNadia)
+		{
+			life->say("And by get he means steal");
+			mStage += 1;
+		}
+	}
+
+
+}
+
 MWBase::SubBrainDemoQuest::SubBrainDemoQuest(MWBase::Life * life)
 {
 }
@@ -89,7 +130,7 @@ void MWBase::SubBrainDemoQuest::calculate(MWBase::Awareness * awareness)
 
 std::string MWBase::SubBrainDemoQuest::getID()
 {
-	return "sub brian demo quest";
+	return "sub brain demo quest";
 }
 
 void MWBase::SubBrainDemoQuest::getDebugInfo()
@@ -101,9 +142,6 @@ std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::SubBrainDemoQuest::ge
 {
 
 	std::vector<std::shared_ptr<GOAPNodeData>> result = mMetaBrain->getMatchingBO(status, mOwnerLife);
-
-	
-
 	return result;
 }
 
@@ -117,22 +155,27 @@ MWBase::ArxDemoQuestBO::ArxDemoQuestBO()
 
 MWBase::BOReturn MWBase::ArxDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
-	float dist = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
 
-	if (dist > 20000.0f)
-	{
-		if (!mOwnerLife->mCurrentSpeech)
-		{
-			mOwnerLife->say("GET OVER HERE FOR YOUR QUEST");
-		}
-	}
-	else
-	{
-		if (!mOwnerLife->mCurrentSpeech)
-		{
-			mOwnerLife->say("GET ME SOME ARTIFACTS");
-		}
-	}
+	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
+
+	//request from metabrain
+
+	//float dist = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
+
+	//if (dist > 20000.0f)
+	//{
+	//	if (!mOwnerLife->mCurrentSpeech)
+	//	{
+	//		mOwnerLife->say("GET OVER HERE FOR YOUR QUEST");
+	//	}
+	//}
+	//else
+	//{
+	//	if (!mOwnerLife->mCurrentSpeech)
+	//	{
+	//		mOwnerLife->say("GET ME SOME ARTIFACTS");
+	//	}
+	//}
 
 	return MWBase::IN_PROGRESS;
 }
@@ -149,31 +192,33 @@ MWBase::BOReturn MWBase::ArxDemoQuestBO::start()
 
 //=============NADIA QUEST BO====================
 
-
-
 MWBase::NadiaDemoQuestBO::NadiaDemoQuestBO()
 {
 }
 
 MWBase::BOReturn MWBase::NadiaDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
-	float dist = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
 
-	if (dist > 20000.0f)
-	{
-		if (!mOwnerLife->mCurrentSpeech)
-		{
-			mOwnerLife->say("HEY YO");
-		}
-	}
-	else
-	{
-		if (!mOwnerLife->mCurrentSpeech)
-		{
-			mOwnerLife->say("DO THIS THING");
-		}
-	}
+	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
 
+
+
+	//float dist = (mOwnerLife->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
+
+	//if (dist > 20000.0f)
+	//{
+	//	if (!mOwnerLife->mCurrentSpeech)
+	//	{
+	//		mOwnerLife->say("HEY YO");
+	//	}
+	//}
+	//else
+	//{
+	//	if (!mOwnerLife->mCurrentSpeech)
+	//	{
+	//		mOwnerLife->say("DO THIS THING");
+	//	}
+	//}
 	return MWBase::IN_PROGRESS;
 }
 

@@ -13,7 +13,7 @@ namespace MWBase {
 		MWBase::Life * mNadiaLife = 0;
 		MWBase::BehaviorObject * mArxBO = 0;
 		MWBase::BehaviorObject * mNadiaBO = 0;
-
+		int mStage = 0;
 
 
 	public:
@@ -24,6 +24,8 @@ namespace MWBase {
 		virtual std::vector<std::shared_ptr<GOAPNodeData>> requestDesire(MWBase::Life * life);
 
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBO(MWBase::GOAPStatus status, MWBase::Life * life);
+
+		virtual void behaviorUpdate(MWBase::Life * life);
 	};
 
 

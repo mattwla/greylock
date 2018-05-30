@@ -295,6 +295,11 @@ namespace MWBase {
 			mMetaBrain = mb;
 		}
 
+		MWBase::MetaBrain * getMetaBrain()
+		{
+			return mMetaBrain;
+		}
+
 	};
 
 	
