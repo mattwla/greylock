@@ -26,6 +26,7 @@ namespace MWBase {
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> getMatchingBO(MWBase::GOAPStatus status, MWBase::Life * life);
 
 		virtual void behaviorUpdate(MWBase::Life * life);
+		bool turnTo(MWWorld::Ptr actor, MWWorld::Ptr target);
 	};
 
 

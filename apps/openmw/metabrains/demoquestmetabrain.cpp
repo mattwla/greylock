@@ -2,7 +2,13 @@
 #include "../mwbase/lifemanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/environment.hpp"
-
+#include "../mwmechanics/steering.hpp"
+#include "../mwworld/class.hpp"
+#include "../mwworld/inventorystore.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
+#include "../mwmechanics/creaturestats.hpp"
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/drawstate.hpp"
 
 MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 {
@@ -57,6 +63,7 @@ std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::DemoQuestMetaBrain::g
 			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 1);
 			MWBase::GOAPStatus statusoutput(MWBase::RUNNING_BEHAVIOR_OBJECT, "arxdemoquest", 1);
 			ESM::RefNum refnum;
+			refnum.unset();
 			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mArxBO, refnum, 1, "arx node"));
 			node->mCost = 0;
 			result.push_back(node);
@@ -67,6 +74,7 @@ std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::DemoQuestMetaBrain::g
 			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 1);
 			MWBase::GOAPStatus statusoutput(MWBase::RUNNING_BEHAVIOR_OBJECT, "nadiaemoquest", 1);
 			ESM::RefNum refnum;
+			refnum.unset();
 			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mNadiaBO, refnum, 1, "nadia node"));
 			node->mCost = 0;
 			result.push_back(node);
@@ -82,6 +90,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	float dist = (life->mPtr.getRefData().getPosition().asVec3() - MWBase::Environment::get().getWorld()->getPlayerPtr().getRefData().getPosition().asVec3()).length2();
 	bool isArx = life == mArxLife;
 	bool isNadia = life == mNadiaLife;
+	turnTo(life->mPtr, MWBase::Environment::get().getWorld()->getPlayerPtr());
 	
 	if (mStage == 0)
 	{
@@ -91,14 +100,14 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 			//mStage += 1;
 		}
 
-		if (isArx && dist < 5000.0)
+		if (isArx && dist < 10000.0)
 			mStage += 1;
 	}
 	else if (mStage == 1)
 	{
 		if (isArx)
 		{
-			life->say("I need you to get me 5 ancient artifacts");
+			life->say("I need you to acquire for me 3 ancient artifacts");
 			mStage += 1;
 		}
 	}
@@ -112,13 +121,151 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("And by get he means steal");
+			life->say("And by acquire he means steal");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 4)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 5)
+	{
+		if (isArx)
+		{
+			life->say("Yes. That is probably true. But in the name of SCIENCE!");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 6)
+	{
+		if (isArx && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 7)
+	{
+		
+
+
+		if (isArx)
+		{
+			MWWorld::InventoryStore &inventoryStore = life->mPtr.getClass().getInventoryStore(life->mPtr);
+			MWWorld::ContainerStoreIterator battery = inventoryStore.end();
+			for (MWWorld::ContainerStoreIterator it = inventoryStore.begin(); it != inventoryStore.end(); ++it)
+			{
+				if (it->getCellRef().getRefId() == "battery1_pack")
+				{
+					std::cout << "found battery" << std::endl;
+					battery = it;
+					break;
+				}
+			}
+
+			
+			inventoryStore.equip(16, battery, life->mPtr);
+			life->mPtr.getClass().getCreatureStats(life->mPtr).setDrawState(MWMechanics::DrawState_Weapon);
+			
+			//MWBase::Environment::get().getWorld()->getPlayer().setDrawState(MWMechanics::DrawState_Weapon);
+
+
+
+
+			life->say("See this thing? I need you to get me 3 more.");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 8)
+	{
+		if (isArx && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 9)
+	{
+		if (isNadia)
+		{
+			life->say("People in the village use them as decorations. I think they look ugly, but whatever.");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 10)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 11)
+	{
+		if (isNadia)
+		{
+			life->say("You'll have to 'acquire' them from the village.");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 12)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 13)
+	{
+		if (isNadia)
+		{
+			life->say("To get there I would hop off this cliff, and glide down to the bounce shroom. (tap control while in air to glide).");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 14)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 15)
+	{
+		if (isNadia)
+		{
+			life->say("Give the bounce shroom a good punch, and it'll launch you in the air. Activate your glider and glide to the village.");
+			mStage += 1;
+		}
+	}
+	else if (mStage == 16)
+	{
+		if (isNadia && life->mCurrentSpeech == 0)
+			mStage += 1;
+	}
+	else if (mStage == 17)
+	{
+		if (isNadia)
+		{
+			life->say("Oh, and I left some fire shrooms by our campfire, they might help.");
 			mStage += 1;
 		}
 	}
 
 
+
 }
+
+bool MWBase::DemoQuestMetaBrain::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target) {
+	
+		osg::Vec3f targetPos(target.getRefData().getPosition().asVec3());
+		osg::Vec3f actorPos(actor.getRefData().getPosition().asVec3());
+
+		osg::Vec3f dir = targetPos - actorPos;
+
+		float faceAngleRadians = std::atan2(dir.x(), dir.y());
+
+		if (true)
+		{
+			if (MWMechanics::zTurn(actor, faceAngleRadians))
+				bool rotate = false;
+			else
+				return false;
+		}
+		
+	
+}
+
+
 
 MWBase::SubBrainDemoQuest::SubBrainDemoQuest(MWBase::Life * life)
 {

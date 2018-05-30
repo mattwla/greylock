@@ -1026,7 +1026,7 @@ namespace MWGui
 
 			
 
-			std::cout << x << std::endl;
+		//	std::cout << x << std::endl;
 
 			setCoord(x*screenwidth, y*screenheight, textSize.width + padding.left, textSize.height + padding.top);
 		}
