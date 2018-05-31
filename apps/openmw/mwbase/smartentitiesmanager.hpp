@@ -151,10 +151,8 @@ namespace MWBase
 			return false;
 		}
 
-		virtual void onImpact(MWWorld::Ptr impactwith = nullptr)
-		{
-			std::cout << "default impact for all SEIS" << std::endl;
-		}
+		virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
+
 
 		//Can it be used?
 		virtual bool isAvailableForUse()

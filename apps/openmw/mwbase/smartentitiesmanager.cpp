@@ -8,6 +8,7 @@
 #include "../glsmartentities/bounceshroom.hpp"
 #include "../glsmartentities/fireshroom.hpp"
 #include "../glsmartentities/floatshroom.hpp"
+#include "../mwbase/statusmanager.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
 #include <iostream>
@@ -465,6 +466,12 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 			{
 				world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 0.f));
 			}
+			
+		}
+		if (MWBase::Environment::get().getStatusManager()->hasStatus(it->second->getPtr(), MWBase::FloatShroomPowdered))
+		{
+			std::cout << "giving flying boost" << std::endl;
+			world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 600.f));
 		}
 	}
 
@@ -570,6 +577,19 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 	mHomeCellName = cell->mName;
 	mHomeCellX = cell->getGridX();
 	mHomeCellY = cell->getGridY();
+}
+
+void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
+{
+	std::cout << "default impact for all SEIS" << std::endl;
+	if (impactwith)
+	{
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith);
+		if (sei && sei->mIsLife)
+		{
+			sei->getLife()->say("Ow.");
+		}
+	}
 }
 
 bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)

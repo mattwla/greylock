@@ -365,12 +365,7 @@ namespace MWPhysics
             }
 
             Stepper stepper(collisionWorld, colobj);
-			if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered))
-			{
-				//physicActor->setInertialForce(osg::Vec3f(0.f, 0.f, 0.f));
-				velocity = osg::Vec3f(0, 0, 1) * 25;
-				
-			}
+	
 
             osg::Vec3f origVelocity = velocity;
             osg::Vec3f newPosition = position;
@@ -510,7 +505,7 @@ namespace MWPhysics
                 }
             }
 
-            if((isOnGround && !isOnSlope) || newPosition.z() < swimlevel || isFlying || MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered)) //mwx huge swimming and flying and wow. 
+            if((isOnGround && !isOnSlope) || newPosition.z() < swimlevel || isFlying) //mwx huge swimming and flying and wow. 
                 physicActor->setInertialForce(osg::Vec3f(0.f, 0.f, 0.f));
             else
             {

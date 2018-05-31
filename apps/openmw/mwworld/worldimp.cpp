@@ -2346,11 +2346,18 @@ namespace MWWorld
     bool World::isFlying(const MWWorld::Ptr &ptr) const
     {
 		if (!ptr.getClass().isActor())
-			return false;
+		{
+
+			return (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered));
+		}
+			//return false;
 
         const MWMechanics::CreatureStats &stats = ptr.getClass().getCreatureStats(ptr);
 
 		if (MWBase::Environment::get().getMechanicsManager()->isActorClimbing(ptr))
+			return true;
+
+		if ((MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered)))
 			return true;
 
 		//if (MWBase::Environment::get().getMechanicsManager()->isActorWallJumping(ptr))
