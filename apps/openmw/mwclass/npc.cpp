@@ -43,6 +43,7 @@
 #include "../mwbase/lifemanager.hpp"
 
 #include "../mwgui/tooltips.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 namespace
 {
@@ -582,8 +583,20 @@ namespace MWClass
             return;
 
         const MWWorld::Class &othercls = victim.getClass();
-        if(!othercls.isActor()) // Can't hit non-actors
-            return;
+		if (!othercls.isActor()) // Can't hit non-actors
+		{
+			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(victim);
+			if (sei)
+			{
+				sei->onImpact();
+			}
+			
+
+			
+			
+			//see if smartent
+			return;
+		}
         MWMechanics::CreatureStats &otherstats = othercls.getCreatureStats(victim);
         if(otherstats.isDead()) // Can't hit dead actors
             return;

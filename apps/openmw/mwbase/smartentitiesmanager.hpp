@@ -151,6 +151,11 @@ namespace MWBase
 			return false;
 		}
 
+		virtual void onImpact()
+		{
+			std::cout << "default impact for all SEIS" << std::endl;
+		}
+
 		//Can it be used?
 		virtual bool isAvailableForUse()
 		{

@@ -108,7 +108,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isArx)
 		{
-			life->say("I need you to acquire for me 3 ancient artifacts");
+			life->say("I need you to acquire 3 ancient artifacts for me.");
 			mStage += 1;
 		}
 	}
@@ -122,7 +122,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("And by acquire he means steal");
+			life->say("And by acquire he means steal.");
 			mStage += 1;
 		}
 	}

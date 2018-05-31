@@ -555,6 +555,8 @@ namespace MWWorld
 
 				sei->getPtr().getRefData().getBaseNode()->setAttitude(throwOrient);
 
+				sei->onImpact();
+
 				mParent->removeChild(it->mNode);
 				it = mProjectiles.erase(it);
 

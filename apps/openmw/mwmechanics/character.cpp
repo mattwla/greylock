@@ -1823,6 +1823,12 @@ void CharacterController::update(float duration)
         {
             // Started a jump.
             float z = cls.getJump(mPtr);
+			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::BounceShroomLaunch))
+			{
+				z = 6000.0f;
+				MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::BounceShroomLaunch);
+				mPtr.getClass().getCreatureStats(mPtr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, false);
+			}
             if (z > 0)
             {
                 if(vec.x() == 0 && vec.y() == 0)

@@ -123,7 +123,7 @@ lifemanagerimp goap astargoap
 )
 
 add_openmw_dir (glsmartentities
-smartentitiesmanagerimp bread cushion zonehome bedroll humanlife generic
+smartentitiesmanagerimp bread cushion zonehome bedroll humanlife generic bounceshroom
 )
 
 add_openmw_dir (subbrains

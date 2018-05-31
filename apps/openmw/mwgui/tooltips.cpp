@@ -311,6 +311,11 @@ namespace MWGui
                 mDynamicToolTipBox->setVisible(true);
             }
         }
+
+		if (mFocusObject && mFocusObject.getClass().isNpc())
+		{
+			mDynamicToolTipBox->setVisible(false);
+		}
     }
 
     void ToolTips::position(MyGUI::IntPoint& position, MyGUI::IntSize size, MyGUI::IntSize viewportSize)
@@ -345,14 +350,15 @@ namespace MWGui
 			{
 				return "";
 			}
-			return "E) talk";
+			//return "E) talk";
+			return "";
 		}
 		else if(type == typeid(ESM::Weapon).name())
 		{
-			return "E) take";
+			return "";
 		}
 		
-		return "E) activate";
+		return "";
 
 	}
 
@@ -1010,29 +1016,36 @@ namespace MWGui
 		{
 			float y = bounds.y();
 			float x = bounds.x();
-			if (y < 0.0)
+			/*if (y < 0.0)
 			{
 				y = .2;
-			}
-		/*	if (x < .2)
-			{
-				x = .5;
 			}*/
-			//y = (bounds.y() + bounds.z()) / 2.0;
 			x = (bounds.x() + bounds.z()) / 2.0;
 
-			if (x > .8 || x < .2)
-				x = .5;
+			/*if (x > .8 || x < .2)
+				x = .5;*/
 
 			
 
 		//	std::cout << x << std::endl;
-
-			setCoord(x*screenwidth, y*screenheight, textSize.width + padding.left, textSize.height + padding.top);
+			//int(mFocusToolTipY*viewSize.height - tooltipSize.height))
+			std::cout << bounds.x() << std::endl;
+			setCoord(std::max(0, int((x*screenwidth)-(textSize.width/2))), std::max(0, int(y*screenheight - textSize.height)), textSize.width + padding.left, textSize.height + padding.top);
 		}
 			
 		else
-			setCoord(0, 0, textSize.width + padding.left, textSize.height + padding.top);
+		{
+			std::cout << bounds.x() << std::endl;
+			int leftright;
+			int xpos;
+			if (bounds.x() > 0)
+				xpos = 0;
+			else
+				xpos = screenwidth - textSize.width;
+			
+			setCoord(xpos, screenheight/2, textSize.width + padding.left, textSize.height + padding.top);
+
+		}
 		
 		
 		
@@ -1174,121 +1187,6 @@ namespace MWGui
 		}
 		mSpeechList = updatedspeechlist;
 
-
-
-
-		//// start by hiding everything
-		//for (unsigned int i = 0; i < mMainWidget->getChildCount(); ++i)
-		//{
-		//	mMainWidget->getChildAt(i)->setVisible(false);
-		//}
-
-		//const MyGUI::IntSize &viewSize = MyGUI::RenderManager::getInstance().getViewSize();
-
-		//if (!mEnabled)
-		//{
-		//	return;
-		//}
-
-		//bool guiMode = MWBase::Environment::get().getWindowManager()->isGuiMode();
-
-		//if (guiMode)
-		//{
-		//	if (!MWBase::Environment::get().getWindowManager()->getCursorVisible())
-		//		return;
-		//	const MyGUI::IntPoint& mousePos = MyGUI::InputManager::getInstance().getMousePosition();
-
-		//	if (MWBase::Environment::get().getWindowManager()->getWorldMouseOver() && ((MWBase::Environment::get().getWindowManager()->getMode() == GM_Console)
-		//		|| (MWBase::Environment::get().getWindowManager()->getMode() == GM_Container)
-		//		|| (MWBase::Environment::get().getWindowManager()->getMode() == GM_Inventory)))
-		//	{
-		//		if (mFocusObject.isEmpty()) //object of focus.... very different in my case.
-		//			return;
-
-		//		const MWWorld::Class& objectclass = mFocusObject.getClass();
-
-		//		MyGUI::IntSize tooltipSize;
-		//		if ((!objectclass.hasToolTip(mFocusObject)) && (MWBase::Environment::get().getWindowManager()->getMode() == GM_Console))
-		//		{
-		//			setCoord(0, 0, 300, 300);
-		//			mAmbientDialogueBox->setVisible(true);
-		//			ToolTipInfo info;
-		//			info.caption = mFocusObject.getClass().getName(mFocusObject);
-		//			if (info.caption.empty())
-		//				info.caption = mFocusObject.getCellRef().getRefId();
-		//			info.icon = "";
-		//			//tooltipSize = createAmbientDialogue(info, checkOwned());
-		//		}
-		//		else
-		//			tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), true);
-
-		//		MyGUI::IntPoint tooltipPosition = MyGUI::InputManager::getInstance().getMousePosition(); //position, big.
-		//		position(tooltipPosition, tooltipSize, viewSize);
-
-		//		setCoord(tooltipPosition.left, tooltipPosition.top, tooltipSize.width, tooltipSize.height);
-		//	}
-
-		//	else
-		//	{
-		//		if (mousePos.left == mLastMouseX && mousePos.top == mLastMouseY)
-		//		{
-		//			mRemainingDelay -= frameDuration;
-		//		}
-		//		else
-		//		{
-		//			mHorizontalScrollIndex = 0;
-		//			mRemainingDelay = mDelay;
-		//		}
-		//		mLastMouseX = mousePos.left;
-		//		mLastMouseY = mousePos.top;
-
-
-		//		if (mRemainingDelay > 0)
-		//			return;
-
-		//		MyGUI::Widget* focus = MyGUI::InputManager::getInstance().getMouseFocusWidget();
-		//		if (focus == 0)
-		//			return;
-
-		//		MyGUI::IntSize tooltipSize;
-
-		//		// try to go 1 level up until there is a widget that has tooltip'
-		//		// this is necessary because some skin elements are actually separate widgets
-		//		int i = 0;
-		//		while (!focus->isUserString("ToolTipType"))
-		//		{
-		//			focus = focus->getParent();
-		//			if (!focus)
-		//				return;
-		//			++i;
-		//		}
-
-		//
-		//		mFocusObject = *focus->getUserData<MWWorld::Ptr>();
-		//		tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), false, checkOwned());
-		//		
-		//		
-		//		MyGUI::IntPoint tooltipPosition = MyGUI::InputManager::getInstance().getMousePosition();
-
-		//		position(tooltipPosition, tooltipSize, viewSize);
-
-		//		setCoord(tooltipPosition.left, tooltipPosition.top, tooltipSize.width, tooltipSize.height);
-		//	}
-		//}
-		//else
-		//{
-		//	if (!mFocusObject.isEmpty())
-		//	{
-		//		MyGUI::IntSize tooltipSize = getToolTipViaPtr(mFocusObject.getRefData().getCount(), true, checkOwned());
-
-		//		setCoord(viewSize.width / 2 - tooltipSize.width / 2,
-		//			std::max(0, int(mFocusToolTipY*viewSize.height - tooltipSize.height)),
-		//			tooltipSize.width,
-		//			tooltipSize.height);
-
-		//		mAmbientDialogueBox->setVisible(true);
-		//	}
-		//}
 
 
 	}

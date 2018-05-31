@@ -62,7 +62,8 @@ namespace MWBase
 		InWallJump = 7,
 		InClimb = 8,
 		InGlide = 9,
-		InGlideDescent = 10
+		InGlideDescent = 10,
+		BounceShroomLaunch = 11
 
 	};
 
