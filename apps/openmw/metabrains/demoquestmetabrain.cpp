@@ -37,7 +37,8 @@ MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 	mArxBO = new ArxDemoQuestBO;
 	mNadiaBO = new NadiaDemoQuestBO;
 	mArxBO->setParentSubBrain(arxsb);
-	mNadiaBO->setParentSubBrain(nadiasb);
+	mNadiaBO->setParentSubBrain(nadiasb); 
+
 
 	//Give Arx and Nadia subbrains which ping me for stuff.
 	
@@ -102,7 +103,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 		}
 
 		if (isArx && dist < 20000.0)
-			mStage += 1;
+			mStage = 7;
 	}
 	else if (mStage == 1)
 	{
@@ -237,7 +238,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("Oh, and I left some fire shrooms by our campfire, they might help with burning anything that gets in your way.");
+			life->say("Oh, and I left some fire shrooms and float shrooms by our campfire, they might be of use.");
 			mStage += 1;
 		}
 		/*mArxDesire->mIntensity = 0;
