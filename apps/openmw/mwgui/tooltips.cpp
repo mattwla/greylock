@@ -1029,13 +1029,13 @@ namespace MWGui
 
 		//	std::cout << x << std::endl;
 			//int(mFocusToolTipY*viewSize.height - tooltipSize.height))
-			std::cout << bounds.x() << std::endl;
+			//std::cout << bounds.x() << std::endl;
 			setCoord(std::max(0, int((x*screenwidth)-(textSize.width/2))), std::max(0, int(y*screenheight - textSize.height)), textSize.width + padding.left, textSize.height + padding.top);
 		}
 			
 		else
 		{
-			std::cout << bounds.x() << std::endl;
+			//std::cout << bounds.x() << std::endl;
 			int leftright;
 			int xpos;
 			if (bounds.x() > 0)

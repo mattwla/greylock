@@ -3681,6 +3681,69 @@ namespace MWWorld
         mRendering->spawnEffect(model, textureOverride, worldPos);
     }
 
+	void World::createFireExplosion(const osg::Vec3f& origin, int area)
+	{
+		std::map<MWWorld::Ptr, std::vector<ESM::ENAMstruct> > toApply;
+	
+			const ESM::MagicEffect* effect = getStore().get<ESM::MagicEffect>().find(ESM::MagicEffect::FireDamage);
+						  // Spawn the explosion orb effect
+			const ESM::Static* areaStatic;
+			if (!effect->mArea.empty())
+				areaStatic = getStore().get<ESM::Static>().find(effect->mArea);
+			else
+				areaStatic = getStore().get<ESM::Static>().find("VFX_DefaultArea");
+
+			std::string texture = effect->mParticle;
+
+		
+				mRendering->spawnEffect("meshes\\" + areaStatic->mModel, texture, origin, static_cast<float>(area * 2));
+
+			// Play explosion sound (make sure to use NoTrack, since we will delete the projectile now)
+			static const std::string schools[] = {
+				"alteration", "conjuration", "destruction", "illusion", "mysticism", "restoration"
+			};
+			{
+				MWBase::SoundManager *sndMgr = MWBase::Environment::get().getSoundManager();
+				if (!effect->mAreaSound.empty())
+					sndMgr->playSound3D(origin, effect->mAreaSound, 1.0f, 1.0f);
+				else
+					sndMgr->playSound3D(origin, schools[effect->mData.mSchool] + " area", 1.0f, 1.0f);
+			}
+			// Get the actors in range of the effect
+			std::vector<MWWorld::Ptr> objects;
+			MWBase::Environment::get().getMechanicsManager()->getObjectsInRange(
+				origin, feetToGameUnits(static_cast<float>(area)), objects);
+			/*for (std::vector<MWWorld::Ptr>::iterator affected = objects.begin(); affected != objects.end(); ++affected)
+				toApply[*affected].push_back(effect);*/
+		
+
+		// Now apply the appropriate effects to each actor in range
+		//for (std::map<MWWorld::Ptr, std::vector<ESM::ENAMstruct> >::iterator apply = toApply.begin(); apply != toApply.end(); ++apply)
+		//{
+		//	MWWorld::Ptr source = caster;
+		//	// Vanilla-compatible behaviour of never applying the spell to the caster
+		//	// (could be changed by mods later)
+		//	if (apply->first == caster)
+		//		continue;
+
+		//	if (apply->first == ignore)
+		//		continue;
+
+		//	if (source.isEmpty())
+		//		source = apply->first;
+
+		//	MWMechanics::CastSpell cast(source, apply->first);
+		//	cast.mHitPosition = origin;
+		//	cast.mId = id;
+		//	cast.mSourceName = sourceName;
+		//	cast.mStack = false;
+		//	ESM::EffectList effectsToApply;
+		//	effectsToApply.mList = apply->second;
+		//	cast.inflict(apply->first, caster, effectsToApply, rangeType, false, true);
+		//}
+
+	}
+
     void World::explodeSpell(const osg::Vec3f& origin, const ESM::EffectList& effects, const Ptr& caster, const Ptr& ignore, ESM::RangeType rangeType,
                              const std::string& id, const std::string& sourceName, const bool fromProjectile)
     {

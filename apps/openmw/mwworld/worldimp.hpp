@@ -687,6 +687,8 @@ namespace MWWorld
 
             void spawnEffect (const std::string& model, const std::string& textureOverride, const osg::Vec3f& worldPos) override;
 
+			void createFireExplosion(const osg::Vec3f & origin, int area) override;
+
             void explodeSpell(const osg::Vec3f& origin, const ESM::EffectList& effects, const MWWorld::Ptr& caster, const MWWorld::Ptr& ignore,
                                       ESM::RangeType rangeType, const std::string& id, const std::string& sourceName,
                                       const bool fromProjectile=false) override;

@@ -463,6 +463,8 @@ namespace MWBase
 
             virtual float getDistToNearestRayHit(const osg::Vec3f& from, const osg::Vec3f& dir, float maxDist, bool includeWater = false) = 0;
 
+			virtual void createFireExplosion(const osg::Vec3f & origin, int area) = 0;
+
             virtual void enableActorCollision(const MWWorld::Ptr& actor, bool enable) = 0;
 
             virtual int canRest() = 0;
