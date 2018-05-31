@@ -63,7 +63,8 @@ namespace MWBase
 		InClimb = 8,
 		InGlide = 9,
 		InGlideDescent = 10,
-		BounceShroomLaunch = 11
+		BounceShroomLaunch = 11,
+		FloatShroomPowdered = 12
 
 	};
 

@@ -39,5 +39,5 @@ public:
 
 	virtual MWBase::BehaviorObject * useWorldInstance(MWBase::Life * user);
 
-	virtual void onImpact();
+	virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
 };

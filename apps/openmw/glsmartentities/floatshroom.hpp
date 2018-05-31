@@ -1,11 +1,11 @@
 #include "../mwbase/smartentitiesmanager.hpp"
 
-class SmartEntityBounceShroomTemplate : public MWBase::SmartEntityTemplate {
+class SmartEntityFloatShroomTemplate : public MWBase::SmartEntityTemplate {
 
 public:
-	SmartEntityBounceShroomTemplate::SmartEntityBounceShroomTemplate();
+	SmartEntityFloatShroomTemplate::SmartEntityFloatShroomTemplate();
 
-	virtual ~SmartEntityBounceShroomTemplate() {
+	virtual ~SmartEntityFloatShroomTemplate() {
 
 	};
 
@@ -17,7 +17,7 @@ public:
 
 };
 
-class SmartEntityBounceShroomInstance : public MWBase::SmartEntityInstance {
+class SmartEntityFloatShroomInstance : public MWBase::SmartEntityInstance {
 public:
 
 	virtual float getActivationDistance()
@@ -25,11 +25,11 @@ public:
 		return 1600.0f;
 	}
 
-	SmartEntityBounceShroomInstance::SmartEntityBounceShroomInstance(const MWWorld::Ptr &ptr);
+	SmartEntityFloatShroomInstance::SmartEntityFloatShroomInstance(const MWWorld::Ptr &ptr);
 
-	SmartEntityBounceShroomInstance::SmartEntityBounceShroomInstance(std::string refid, ESM::RefNum refnum, int pings);
+	SmartEntityFloatShroomInstance::SmartEntityFloatShroomInstance(std::string refid, ESM::RefNum refnum, int pings);
 
-	virtual ~SmartEntityBounceShroomInstance() {
+	virtual ~SmartEntityFloatShroomInstance() {
 
 	};
 

@@ -67,7 +67,7 @@ MWBase::BehaviorObject * SmartEntityFireShroomInstance::useWorldInstance(MWBase:
 	return nullptr;
 }
 
-void SmartEntityFireShroomInstance::onImpact()
+void SmartEntityFireShroomInstance::onImpact(MWWorld::Ptr impactwith)
 {
 
 	MWBase::Environment::get().getWorld()->createFireExplosion(mPtr.getCellRef().getPosition().asVec3(), 30);

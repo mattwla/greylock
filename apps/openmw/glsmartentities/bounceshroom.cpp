@@ -67,7 +67,7 @@ MWBase::BehaviorObject * SmartEntityBounceShroomInstance::useWorldInstance(MWBas
 	return nullptr;
 }
 
-void SmartEntityBounceShroomInstance::onImpact()
+void SmartEntityBounceShroomInstance::onImpact(MWWorld::Ptr impactwith)
 {
 
 	auto playerptr = MWBase::Environment::get().getWorld()->getPlayerPtr();
