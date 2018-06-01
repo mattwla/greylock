@@ -449,6 +449,7 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 	std::cout << "=====>Built SEManager<======" << std::endl;
 	std::cout << "Initializing templates" << std::endl;
 	gatherSmartEntityTemplates();
+	MWStatus::StatusManager::buildConstructorList();
 }
 
 void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)

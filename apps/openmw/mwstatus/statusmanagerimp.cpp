@@ -29,16 +29,33 @@
 #include "../mwmechanics/aiwave.hpp"
 #include "../mwmechanics/aitravel.hpp"
 #include "../mwmechanics/pathgrid.hpp"
+#include "../mwstatus/statusobjects.hpp"
+
+#include "../mwstatus/statusobjects.hpp"
 
 #include <boost/tokenizer.hpp>
 #include <iterator>
 #include <algorithm>
 
 
+std::unordered_map<MWBase::Status, MWBase::StatusObjectConstructor*, MWStatus::EnumClassHash> MWStatus::StatusManager::mStatusToConstructor;
+
 namespace MWStatus
 {
+	void StatusManager::buildConstructorList()
+	{
+
+
+		auto c = MWBase::FloatStatusObject::getConstuctor();
+
+		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()];
+	}
+
+
 	StatusManager::StatusManager(MWBase::SmartEntityInstance * sei)
 	{
+
+
 		mSEI = sei;
 	}
 

@@ -115,7 +115,7 @@ awarenessreactionsmanagerimp
 )
 
 add_openmw_dir (mwstatus
-statusmanagerimp
+statusmanagerimp statusobjects
 )
 
 add_openmw_dir (gllifemanager

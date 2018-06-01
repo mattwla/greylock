@@ -69,6 +69,7 @@ namespace MWBase
 		BounceShroomLaunch = 11,
 		FloatShroomPowdered = 12
 
+
 	};
 
 
@@ -80,8 +81,11 @@ namespace MWBase
 		StatusManager& operator= (const StatusManager&);
 		///< not implemented*/
 
+
+
 	public:
 		
+	
 	
 		//virtual StatusManager(MWBase::Life * life) = 0;
 

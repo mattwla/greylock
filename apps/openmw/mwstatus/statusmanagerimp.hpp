@@ -4,6 +4,10 @@
 #include "../mwbase/statusmanager.hpp"
 #include "../mwbase/lifemanager.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
+#include "../mwstatus/statusobjects.hpp"
+#include <memory>
+#include <map>
+#include <unordered_map>
 
 #include "../mwworld/ptr.hpp"
 
@@ -17,13 +21,33 @@ namespace MWWorld
 
 namespace MWStatus
 {
+
+
+
+	struct EnumClassHash
+	{
+		template <typename T>
+		std::size_t operator()(T t) const
+		{
+			return static_cast<std::size_t>(t);
+		}
+	};
+
+
 	class StatusManager : public MWBase::StatusManager
 	{
+
+		
 
 		MWBase::SmartEntityInstance * mSEI;
 
 
 	public:
+
+		static std::unordered_map<MWBase::Status, MWBase::StatusObjectConstructor*, EnumClassHash> mStatusToConstructor;
+
+		static void buildConstructorList();
+
 		StatusManager(MWBase::SmartEntityInstance * sei);
 		
 		virtual void initNpcStatus(std::string npcid);
