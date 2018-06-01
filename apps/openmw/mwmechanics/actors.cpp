@@ -42,6 +42,8 @@
 #include "combat.hpp"
 #include "actorutil.hpp"
 
+#include "../mwbase/smartentitiesmanager.hpp"
+
 namespace
 {
 
@@ -846,9 +848,15 @@ namespace MWMechanics
 
 	bool Actors::isWallJumping(const MWWorld::Ptr& ptr)
 	{
-		return MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold);
+		//return MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold);
 
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+		if (sei)
+		{
+			return sei->getStatusManager()->hasStatus(MWBase::InWallHold);
+		}
 
+		return false;
 		//PtrActorMap::iterator it = mActors.find(ptr);
 		//if (it == mActors.end())
 		//	return false;

@@ -10,6 +10,8 @@
 #include <list>
 #include "../mwbase/lifemanager.hpp"
 #include "../subbrains/subbrain.hpp"
+#include "../mwbase/statusmanager.hpp"
+#include "../mwstatus/statusmanagerimp.hpp"
 #include <components/esm/loadpgrd.hpp>
 #include "../mwmechanics/pathgrid.hpp"
 #include "../mwworld/timestamp.hpp"
@@ -62,6 +64,8 @@ namespace MWBase
 		
 		std::vector<std::string> mStatusList;
 
+		MWBase::StatusManager * mStatusManager = 0;
+
 		std::vector<std::shared_ptr<MWBase::GOAPNodeData>> mGOAPNodeData;
 
 		//====== FOR SEIS MANAGED BY SMARTZONES========
@@ -110,6 +114,13 @@ namespace MWBase
 		virtual ~SmartEntityInstance() {
 
 		};
+
+		virtual MWBase::StatusManager * getStatusManager()
+		{
+			return mStatusManager;
+		}
+
+		virtual void ensureStatusManager();
 		
 		//for debugging
 		void ping();

@@ -47,6 +47,7 @@
 #include "actorutil.hpp"
 #include "spellcasting.hpp"
 #include "../mwphysics/physicssystem.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 namespace
 {
 
@@ -907,9 +908,12 @@ void CharacterController::handleTextKey(const std::string &groupname, const std:
             MWBase::SoundManager *sndMgr = MWBase::Environment::get().getSoundManager();
             if(evt.compare(10, evt.size()-10, "left") == 0 || evt.compare(10, evt.size()-10, "right") == 0 || evt.compare(10, evt.size()-10, "land") == 0)
             {
+
+				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+				
                 // Don't make foot sounds local for the player, it makes sense to keep them
                 // positioned on the ground.
-				if (!MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold))
+				if (!sei || !sei->getStatusManager()->hasStatus(MWBase::InWallHold))
 				{
 					sndMgr->playSound3D(mPtr, sound, volume, pitch, MWSound::Type::Foot,
 						MWSound::PlayMode::NoPlayerLocal);
@@ -1658,6 +1662,9 @@ void CharacterController::updateAnimQueue()
 
 void CharacterController::update(float duration)
 {
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+
+
     MWBase::World *world = MWBase::Environment::get().getWorld();
     const MWWorld::Class &cls = mPtr.getClass();
     osg::Vec3f movement(0.f, 0.f, 0.f);
@@ -1823,10 +1830,10 @@ void CharacterController::update(float duration)
         {
             // Started a jump.
             float z = cls.getJump(mPtr);
-			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::BounceShroomLaunch))
+			if (sei->getStatusManager()->hasStatus(MWBase::BounceShroomLaunch))
 			{
 				z = 6000.0f;
-				MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::BounceShroomLaunch);
+				sei->getStatusManager()->removeStatus(MWBase::BounceShroomLaunch);
 				mPtr.getClass().getCreatureStats(mPtr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, false);
 			}
             if (z > 0)
@@ -1870,10 +1877,10 @@ void CharacterController::update(float duration)
             float height = cls.getCreatureStats(mPtr).land();
             float healthLost = getFallDamage(mPtr, height);
 
-			if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold) || MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
+			if (sei->getStatusManager()->hasStatus(MWBase::InWallHold) || sei->getStatusManager()->hasStatus(MWBase::InGlide))
 			{
 				healthLost = 0;
-				MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
+				sei->getStatusManager()->removeStatus(MWBase::InGlide);
 			}
 
             if (healthLost > 0.0f)
@@ -1909,7 +1916,7 @@ void CharacterController::update(float duration)
         else
         {
             jumpstate = mAnimation->isPlaying(mCurrentJump) ? JumpState_Landing : JumpState_None;
-			MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
+			sei->getStatusManager()->removeStatus(MWBase::InGlide);
             vec.z() = 0.0f;
 
             inJump = false;
@@ -1996,7 +2003,7 @@ void CharacterController::update(float duration)
             mAnimation->adjustSpeedMult(mCurrentMovement, speedmult);
         }
 
-        if (!mSkipAnim && !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
+        if (!mSkipAnim && !sei->getStatusManager()->hasStatus(MWBase::InGlide))
         {
             if(!isKnockedDown() && !isKnockedOut())
             {
@@ -2323,7 +2330,9 @@ ClimbData CharacterController::checkCanClimb()
 
 bool CharacterController::checkActions() //checks if wall jumpable or climbable, also reads input and triggers actions.
 {
-	bool canGlide = !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide) && !MWBase::Environment::get().getWorld()->isOnGround(mPtr);
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+
+	bool canGlide = !sei->getStatusManager()->hasStatus(MWBase::InGlide) && !MWBase::Environment::get().getWorld()->isOnGround(mPtr);
 		//true;
 	//if has glider equipped true
 	bool canClimb = false;
@@ -2991,14 +3000,16 @@ Climb::Climb(MWWorld::Ptr ptr, float targetZ)
 	mTargetZ = currentpos.pos[2] + targetZ;
 	mRotateStage = 0;
 	mTimer = 0.0f;
-	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InClimb);
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+	sei->getStatusManager()->giveStatus(MWBase::InClimb);
 	//targetZ;
 }
 
 
 Climb::~Climb()
 {
-	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InClimb);
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+	sei->getStatusManager()->removeStatus(MWBase::InClimb);
 }
 
 
@@ -3007,7 +3018,8 @@ Glide::Glide(MWWorld::Ptr ptr)
 	mDone = false;
 	std::cout << "started glide" << std::endl;
 	mPtr = ptr;
-	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlide);
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+	sei->getStatusManager()->giveStatus(MWBase::InGlide);
 	mTiltState = RANDOM_DRIFT_RETURN;
 	mDriftTimer = 10.0;
 	mPitchCounter = 0.0;
@@ -3017,11 +3029,13 @@ Glide::Glide(MWWorld::Ptr ptr)
 
 Glide::~Glide()
 {
-	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlide);
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+	sei->getStatusManager()->removeStatus(MWBase::InGlide);
 }
 
 bool Glide::update(float duration)
 {
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
 	float forwardstrength = 0.0f;
@@ -3032,7 +3046,7 @@ bool Glide::update(float duration)
 		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
 	MWMechanics::Movement movement = mPtr.getClass().getMovementSettings(mPtr);
 	movement.mWallGrabClimb;
-	if (!movement.mAttemptSneak || !MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InGlide))
+	if (!movement.mAttemptSneak || !sei->getStatusManager()->hasStatus(MWBase::InGlide))
 	{
 		std::cout << "attempt to deactivate" << std::endl;
 		mDone = true;
@@ -3051,7 +3065,7 @@ bool Glide::update(float duration)
 		mLastDescentSpeed = forwardstrength;
 		std::cout << forwardstrength << std::endl;
 		
-		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InGlideDescent);
+		sei->getStatusManager()->giveStatus(MWBase::InGlideDescent);
 		inDescent = true;
 		if (mLastFrameWasDescending)
 			continuingDescent = true;
@@ -3065,7 +3079,7 @@ bool Glide::update(float duration)
 	}
 	else
 	{
-		MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InGlideDescent);
+		sei->getStatusManager()->removeStatus(MWBase::InGlideDescent);
 		mLastFrameWasDescending = false;
 	}
 	if (movement.mWallGrabSlide > 0)
@@ -3254,14 +3268,14 @@ ActionState Glide::getType()
 
 WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch)
 {
-
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
 	std::cout << "building wallhold" << std::endl;
 	mPtr = ptr;
 	mTimer = 0.0f;
 	mWallHoldIdx = 0;
 	mOriginalVelocity = originalvelocity;
 	mDone = false;
-	MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::Status::InWallHold);
+	sei->getStatusManager()->giveStatus(MWBase::Status::InWallHold);
 	mCamSwitch = camswitch;
 	mRotateStage = false;
 	
@@ -3270,13 +3284,15 @@ WallHold::WallHold(MWWorld::Ptr ptr, osg::Vec3f originalvelocity, bool camswitch
 
 WallHold::~WallHold()
 {
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	std::cout << "deleting wallhold" << std::endl;
-	MWBase::Environment::get().getStatusManager()->removeStatus(mPtr, MWBase::InWallHold);
+	sei->getStatusManager()->removeStatus(MWBase::InWallHold);
 }
 
 bool MWMechanics::WallHold::update(float duration)
 {
-	if (!MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::InWallHold)) //something knocked us out of our wall hold, cancel.
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+	if (!sei->getStatusManager()->hasStatus(MWBase::InWallHold)) //something knocked us out of our wall hold, cancel.
 	{
 		mDone = true;
 		return false;
@@ -3370,7 +3386,7 @@ bool MWMechanics::WallHold::update(float duration)
 		}
 
 		mWallHoldIdx = 3;
-		MWBase::Environment::get().getStatusManager()->giveStatus(mPtr, MWBase::InWallJump);
+		sei->getStatusManager()->giveStatus(MWBase::InWallJump);
 	}
 	if (mWallHoldIdx == 3)
 	{

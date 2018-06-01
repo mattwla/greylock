@@ -80,5 +80,7 @@ void SmartEntityBounceShroomInstance::onImpact(MWWorld::Ptr impactwith)
 	playerptr.getClass().getMovementSettings(playerptr).mPosition[2] = 1.0;
 	playerptr.getClass().getCreatureStats(playerptr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, true);
 	
-	MWBase::Environment::get().getStatusManager()->giveStatus(MWBase::Environment::get().getWorld()->getPlayerPtr(), MWBase::BounceShroomLaunch);
+	//MWBase::Environment::get().getStatusManager()->giveStatus(MWBase::Environment::get().getWorld()->getPlayerPtr(), MWBase::BounceShroomLaunch);
+
+	MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(playerptr)->getStatusManager()->giveStatus(MWBase::BounceShroomLaunch);
 }

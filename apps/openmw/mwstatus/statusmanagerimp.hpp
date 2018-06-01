@@ -2,6 +2,8 @@
 #define GAME_MWMECHANICS_STATUSMANAGERIMP_H
 
 #include "../mwbase/statusmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 #include "../mwworld/ptr.hpp"
 
@@ -18,8 +20,11 @@ namespace MWStatus
 	class StatusManager : public MWBase::StatusManager
 	{
 
+		MWBase::SmartEntityInstance * mSEI;
+
+
 	public:
-		StatusManager();
+		StatusManager(MWBase::SmartEntityInstance * sei);
 		
 		virtual void initNpcStatus(std::string npcid);
 
@@ -27,13 +32,13 @@ namespace MWStatus
 
 		MWBase::Status stringToStatus(std::string statusstring);
 
-		virtual bool hasStatus(MWWorld::Ptr ptr, MWBase::Status status);
+		virtual bool hasStatus(MWBase::Status status);
 
-		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr);
+		//virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr);
 
-		virtual void giveStatus(MWWorld::Ptr ptr, MWBase::Status status);
+		virtual void giveStatus(MWBase::Status status);
 
-		virtual void removeStatus(MWWorld::Ptr ptr, MWBase::Status status);
+		virtual void removeStatus(MWBase::Status status);
 
 	};
 	

@@ -153,11 +153,11 @@ namespace MWDialogue
                         // TODO play sound
                     }
 					//greeting MWX
-					if (MWBase::Environment::get().getStatusManager()->hasStatus(actor, MWBase::ConfrontingTrespasser))
-					{
-						return true;/*mChoices.clear();
-									onTopicActivated("confront trespasser");*/
-					}
+					//if (MWBase::Environment::get().getStatusManager()->hasStatus(actor, MWBase::ConfrontingTrespasser))
+					//{
+					//	return true;/*mChoices.clear();
+					//				onTopicActivated("confront trespasser");*/
+					//}
 
                     MWScript::InterpreterContext interpreterContext(&mActor.getRefData().getLocals(),mActor);
                     callback->addResponse("", Interpreter::fixDefinesDialog(info->mResponse, interpreterContext));

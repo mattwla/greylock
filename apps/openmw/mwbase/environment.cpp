@@ -200,11 +200,11 @@ MWBase::SmartEntitiesManager *MWBase::Environment::getSmartEntitiesManager() con
 	return(mSmartEntitiesManager);
 }
 
-MWBase::StatusManager * MWBase::Environment::getStatusManager() const
-{
-	assert(mStatusManager);
-	return(mStatusManager);
-}
+//MWBase::StatusManager * MWBase::Environment::getStatusManager() const
+//{
+//	assert(mStatusManager);
+//	return(mStatusManager);
+//}
 
 MWBase::TravelNodesManager *MWBase::Environment::getTravelNodesManager() const
 {

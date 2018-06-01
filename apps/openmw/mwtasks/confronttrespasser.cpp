@@ -57,8 +57,8 @@ namespace MWTasks
 		mStep = 0;
 		mDone = false;
 		mTarget = target;
-		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
-		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
+//		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
+		//MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
 		std::cout << "made confronttrespasser task" << std::endl;
 		mTalkedTo = false;
 		mChasing = false;
@@ -72,8 +72,8 @@ namespace MWTasks
 			delete mSubTask;
 		}
 		
-		MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
-		MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::Fighting);
+		//MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::ConfrontingTrespasser);
+		//MWBase::Environment::get().getStatusManager()->removeStatus(mNpcPtr, MWBase::Fighting);
 
 	}
 

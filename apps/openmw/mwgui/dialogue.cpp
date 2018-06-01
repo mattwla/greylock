@@ -643,11 +643,11 @@ namespace MWGui
         updateDisposition();
         restock();
 		/*addResponse(response.first, response.second, false);*/
-		if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::ConfrontingTrespasser))
+		/*if (MWBase::Environment::get().getStatusManager()->hasStatus(mPtr, MWBase::ConfrontingTrespasser))
 		{
 			mChoices.clear();
 			onTopicActivated("confront trespasser");
-		}
+		}*/
 
     }
 

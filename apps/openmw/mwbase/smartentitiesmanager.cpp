@@ -22,6 +22,7 @@
 #include "../mwworld/livecellref.hpp"
 #include <components/esm/loadcell.hpp>
 #include "../mwworld/class.hpp"
+#include "../mwstatus/statusmanagerimp.hpp"
 
 
 
@@ -264,6 +265,7 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 			}
 		}
 	mSmartInstanceMap[ptr.getCellRef().getRefNum()] = newInstance;
+	newInstance->ensureStatusManager();
 	return newInstance;
 }
 
@@ -325,6 +327,8 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::initializeInstFromLi
 		newInstance = mSmartTemplateMap[id]->getInstance(id, refNum);
 	}
 	mSmartInstanceMap[refNum] = newInstance;
+	
+	newInstance->ensureStatusManager();
 	return newInstance;
 }
 
@@ -468,7 +472,7 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 			}
 			
 		}
-		if (MWBase::Environment::get().getStatusManager()->hasStatus(it->second->getPtr(), MWBase::FloatShroomPowdered))
+		if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
 		{
 			std::cout << "giving flying boost" << std::endl;
 			world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 600.f));
@@ -492,6 +496,14 @@ void MWBase::SmartEntitiesManager::clear()
 std::vector<std::string> MWBase::SmartEntityTemplate::getStringID()
 {
 	return mIngameIDs;
+}
+
+void MWBase::SmartEntityInstance::ensureStatusManager()
+{
+	if (!mStatusManager)
+	{
+		mStatusManager = new MWStatus::StatusManager(this);
+	}
 }
 
 void MWBase::SmartEntityInstance::ping()

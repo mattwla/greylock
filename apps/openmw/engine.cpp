@@ -568,8 +568,8 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
 
 
 	//Create status manager
-	MWStatus::StatusManager* status = new MWStatus::StatusManager;
-	mEnvironment.setStatusManager(status);
+	//MWStatus::StatusManager* status = new MWStatus::StatusManager;
+	//mEnvironment.setStatusManager(status);
 
 	//Create Tasks Manager
 	MWTasks::TasksManager* tasksmanager = new MWTasks::TasksManager;

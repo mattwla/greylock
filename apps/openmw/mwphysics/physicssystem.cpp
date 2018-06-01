@@ -52,6 +52,7 @@
 #include "actor.hpp"
 #include "convert.hpp"
 #include "trace.h"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 namespace MWPhysics
 {
@@ -323,22 +324,42 @@ namespace MWPhysics
             //}
             //else
 			//mwx flying altered so jump will make flying entity go up on Z axis.
-            {
+           
+			bool inWallJump = false;
+			bool inWallHold = false;
+			bool inClimb = false;
+			bool inGlide = false;
+			bool inGlideDescent = false;
+			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+			if (sei)
+			{
+				inWallJump = sei->getStatusManager()->hasStatus(MWBase::InWallJump);
+				inWallHold = sei->getStatusManager()->hasStatus(MWBase::InWallHold);
+				inClimb = sei->getStatusManager()->hasStatus(MWBase::InClimb);
+				inGlide = sei->getStatusManager()->hasStatus(MWBase::InGlide);
+				inGlideDescent = sei->getStatusManager()->hasStatus(MWBase::InGlideDescent);
+			}
+
+			
+			
+			{
                 velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * movement;
 				//if(velocity.z() > 0.f)
-                
-				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallJump))
+			
+
+
+				if (inWallJump)
 				{
 					inertia = velocity;
 					isFlying = false;
-					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallHold);
-					MWBase::Environment::get().getStatusManager()->removeStatus(ptr, MWBase::InWallJump);
+					sei->getStatusManager()->removeStatus(MWBase::InWallHold);
+					sei->getStatusManager()->removeStatus(MWBase::InWallJump);
 				}
 				else if (velocity.z() > 0.f && physicActor->getOnGround())
 					inertia = velocity;
-				else if ((!physicActor->getOnGround() || physicActor->getOnSlope()) && !MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InWallHold))
+				else if ((!physicActor->getOnGround() || physicActor->getOnSlope()) && !inWallHold)
 				{
-					if(!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InClimb) && !physicActor->getOnSlope())
+					if(!inClimb && !physicActor->getOnSlope())
 						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 5);
 					else if (physicActor->getOnSlope())
 						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 2);
@@ -516,9 +537,9 @@ namespace MWPhysics
 				{
 					slowFall = .98;
 				}
-				if (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlide))
+				if (inGlide)
 				{
-					if (!MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::InGlideDescent))
+					if (!inGlideDescent)
 					{
 						if (inertia.z() < -200.0f)
 							inertia.z() += time * 1400.7; //-627.2f; //gravity?

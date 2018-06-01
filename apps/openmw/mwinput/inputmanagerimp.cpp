@@ -33,6 +33,7 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/actorutil.hpp"
 //#include "../mwrender/renderingmanager.cpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 namespace MWInput
 {
@@ -920,14 +921,18 @@ namespace MWInput
 			//mRot[0] = -y;
 			//mRot[1] = 0.0f;
 			//mRot[2] = -x;
-		
-			if (mAlwaysRunActive || MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) || MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
+			
+			bool inGlide = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(MWMechanics::getPlayer())->getStatusManager()->hasStatus(MWBase::InGlide);
+
+
+
+			if (mAlwaysRunActive || MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) || inGlide)
 			{
 				MWBase::Environment::get().getWorld()->rotateCamera(rot[0], rot[1], rot[2]); //MWX
 			}
 
             // Only actually turn player when we're not in vanity mode mwx, not in running mode, or not climbing
-            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && !MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) && !MWBase::Environment::get().getStatusManager()->hasStatus(MWMechanics::getPlayer(), MWBase::InGlide))
+            if(!MWBase::Environment::get().getWorld()->vanityRotateCamera(rot) && !mAlwaysRunActive && !MWBase::Environment::get().getMechanicsManager()->isActorClimbing(MWMechanics::getPlayer()) && !inGlide)
             {
                 mPlayer->yaw(x);
                 mPlayer->pitch(y);

@@ -51,6 +51,9 @@ namespace Loading
 
 namespace MWBase
 {
+
+	struct Life;
+
 	enum Status {
 		Shaman = 0,
 		Elder = 1,
@@ -80,20 +83,22 @@ namespace MWBase
 	public:
 		
 	
+		//virtual StatusManager(MWBase::Life * life) = 0;
+
 
 		virtual ~StatusManager() {}
 
-		std::map<MWWorld::Ptr, std::vector<Status>> mStatusMap;
+		std::vector<Status> mStatusMap;
 
 		virtual void initNpcStatus(std::string npcid) = 0;
 
-		virtual bool hasStatus(MWWorld::Ptr ptr, MWBase::Status status) = 0;
+		virtual bool hasStatus(MWBase::Status status) = 0;
 
-		virtual void giveStatus(MWWorld::Ptr, MWBase::Status status) = 0;
+		virtual void giveStatus(MWBase::Status status) = 0;
 
-		virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr) = 0;
+		//virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr) = 0;
 
-		virtual void removeStatus(MWWorld::Ptr ptr, MWBase::Status status) = 0;
+		virtual void removeStatus(MWBase::Status status) = 0;
 
 
 	};

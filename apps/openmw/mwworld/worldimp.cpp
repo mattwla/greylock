@@ -2345,10 +2345,21 @@ namespace MWWorld
 
     bool World::isFlying(const MWWorld::Ptr &ptr) const
     {
+
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+		if (sei)
+		{
+			if (sei->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
+				return true;
+
+		}
+
+
 		if (!ptr.getClass().isActor())
 		{
+			return false;
 
-			return (MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered));
+			//return MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered);
 		}
 			//return false;
 
@@ -2357,8 +2368,8 @@ namespace MWWorld
 		if (MWBase::Environment::get().getMechanicsManager()->isActorClimbing(ptr))
 			return true;
 
-		if ((MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered)))
-			return true;
+		//if ((MWBase::Environment::get().getStatusManager()->hasStatus(ptr, MWBase::FloatShroomPowdered)))
+		//	return true;
 
 		//if (MWBase::Environment::get().getMechanicsManager()->isActorWallJumping(ptr))
 		//	return true;

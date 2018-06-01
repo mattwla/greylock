@@ -126,7 +126,7 @@ namespace MWBase
 
 			SmartEntitiesManager *getSmartEntitiesManager() const;
 
-			StatusManager *getStatusManager() const;
+		//	StatusManager *getStatusManager() const;
 
             Journal *getJournal() const;
 

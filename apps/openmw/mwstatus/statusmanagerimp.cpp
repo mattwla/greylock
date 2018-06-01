@@ -37,10 +37,12 @@
 
 namespace MWStatus
 {
-	StatusManager::StatusManager()
+	StatusManager::StatusManager(MWBase::SmartEntityInstance * sei)
 	{
-
+		mSEI = sei;
 	}
+
+
 
 	void StatusManager::initNpcStatus(std::string npcid)
 	{
@@ -74,7 +76,7 @@ namespace MWStatus
 		}
 		
 		//if(statusvec.size() > 0)
-			mStatusMap[MWBase::Environment::get().getWorld()->searchPtr(npcid, false)] = statusvec;
+//			mStatusMap[MWBase::Environment::get().getWorld()->searchPtr(npcid, false)] = statusvec;
 	}
 	
 
@@ -99,9 +101,9 @@ namespace MWStatus
 
 	}
 
-	bool StatusManager::hasStatus(MWWorld::Ptr ptr, MWBase::Status status)
+	bool StatusManager::hasStatus(MWBase::Status status)
 	{
-		auto vec = mStatusMap[ptr];
+		auto vec = mStatusMap;
 		unsigned int idx = 0;
 		while (idx < vec.size())
 		{
@@ -114,18 +116,18 @@ namespace MWStatus
 
 	}
 
-	void StatusManager::updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr)
-	{
-		auto vechold = mStatusMap[old];
-		
-		mStatusMap[newptr] = vechold;
+	//void StatusManager::updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr)
+	//{
+	//	auto vechold = mStatusMap[old];
+	//	
+	//	mStatusMap[newptr] = vechold;
 
-		mStatusMap.erase(old);
-	}
+	//	mStatusMap.erase(old);
+	//}
 
-	void StatusManager::giveStatus(MWWorld::Ptr ptr, MWBase::Status status)
+	void StatusManager::giveStatus( MWBase::Status status)
 	{
-		auto vec = mStatusMap[ptr];
+		auto vec = mStatusMap;
 		unsigned int idx = 0;
 		while (idx < vec.size())
 		{
@@ -133,24 +135,24 @@ namespace MWStatus
 				return;
 			idx += 1;
 		}
-		mStatusMap[ptr].push_back(status);
+		mStatusMap.push_back(status);
 		//return false;
 	}
 
-	void StatusManager::removeStatus(MWWorld::Ptr ptr, MWBase::Status status)
+	void StatusManager::removeStatus(MWBase::Status status)
 	{
-		auto vec = mStatusMap[ptr];
+		auto vec = mStatusMap;
 		unsigned int idx = 0;
 		while (idx < vec.size())
 		{
 			if (vec[idx] == status)
 			{
-				mStatusMap[ptr].erase(mStatusMap[ptr].begin()+idx);
+				mStatusMap.erase(mStatusMap.begin()+idx);
 				return;
 			}
 			idx += 1;
 		}
-		//mStatusMap[ptr].push_back(status);
+		
 	}
 
 }

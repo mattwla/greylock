@@ -71,7 +71,12 @@ void SmartEntityFloatShroomInstance::onImpact(MWWorld::Ptr impactwith)
 {
 	if (impactwith)
 	{
-		MWBase::Environment::get().getStatusManager()->giveStatus(impactwith, MWBase::FloatShroomPowdered);
+		//MWBase::Environment::get().getStatusManager()->giveStatus(impactwith, MWBase::FloatShroomPowdered);
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith);
+		if (sei)
+		{
+			sei->getStatusManager()->giveStatus(MWBase::FloatShroomPowdered);
+		}
 		std::cout << "gave float status" << std::endl;
 	}
 }

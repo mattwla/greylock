@@ -55,7 +55,7 @@ namespace MWTasks
 		mStep = 0;
 		mDone = false;
 		mTarget = target;
-		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
+//		MWBase::Environment::get().getStatusManager()->giveStatus(mNpcPtr, MWBase::Fighting);
 	}
 
 	Fight::~Fight()
