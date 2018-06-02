@@ -13,13 +13,14 @@ void MWBase::FloatStatusObject::update(float duration)
 		return;
 	}
 
-	MWBase::Environment::get().getWorld()->queueMovement(mSEI->getPtr(), osg::Vec3f(0.f, 0.f, 600.f));
+	MWBase::Environment::get().getWorld()->queueMovement(mSEI->getPtr(), osg::Vec3f(100.f, 0.f, 600.f));
 	//std::cout << "updating float" << std::endl;
 
 }
 
 void MWBase::FloatStatusObject::init()
 {
+	MWBase::Environment::get().getWorld()->addPhysicsActor(mSEI->getPtr());
 	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::FloatShroomPowdered);
 }
 

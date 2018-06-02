@@ -283,6 +283,10 @@ namespace MWPhysics
                                   bool isFlying, float waterlevel, float slowFall, const btCollisionWorld* collisionWorld,
                                std::map<MWWorld::Ptr, MWWorld::Ptr>& standingCollisionTracker)
         {
+			if (ptr.getCellRef().getRefId() == "battery1_pack")
+			{
+				std::cout << "physics for battery" << std::endl;
+			}
             const ESM::Position& refpos = ptr.getRefData().getPosition();
             // Early-out for totally static creatures
             // (Not sure if gravity should still apply?)
@@ -768,7 +772,7 @@ namespace MWPhysics
 
         // Don't update AABBs of all objects every frame. Most objects in MW are static, so we don't need this.
         // Should a "static" object ever be moved, we have to update its AABB manually using DynamicsWorld::updateSingleAabb.
-        mCollisionWorld->setForceUpdateAllAabbs(false);
+        mCollisionWorld->setForceUpdateAllAabbs(true);
 
         // Check if a user decided to override a physics system FPS
         const char* env = getenv("OPENMW_PHYSICS_FPS");

@@ -461,7 +461,7 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 	//give all active smart ents that dont have objects below them gravity
 	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
 	{
-		it->second->getStatusManager()->update(duration);
+		
 
 		if (!it->second->getPtr().getClass().isNpc())
 		{
@@ -477,6 +477,8 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 			}
 			
 		}
+
+		it->second->getStatusManager()->update(duration);
 		/*if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
 		{
 			std::cout << "giving flying boost" << std::endl;
