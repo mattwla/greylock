@@ -139,6 +139,8 @@ namespace MWBase
             virtual MWWorld::Player& getPlayer() = 0;
             virtual MWWorld::Ptr getPlayerPtr() = 0;
 
+			virtual void updatePosition(MWWorld::Ptr ptr) = 0;
+
             virtual const MWWorld::ESMStore& getStore() const = 0;
 
             virtual std::vector<ESM::ESMReader>& getEsmReader() = 0;

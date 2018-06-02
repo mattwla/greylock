@@ -479,6 +479,7 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 		}
 
 		it->second->getStatusManager()->update(duration);
+		//world->updatePosition(it->second->getPtr());
 		/*if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
 		{
 			std::cout << "giving flying boost" << std::endl;

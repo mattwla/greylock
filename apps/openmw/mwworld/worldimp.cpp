@@ -2608,6 +2608,11 @@ namespace MWWorld
 		mPhysics->addActor(ptr, model);
 	}
 
+	void World::updatePosition(MWWorld::Ptr ptr)
+	{
+		mPhysics->updatePosition(ptr);
+	}
+
     int World::canRest ()
     {
         CellStore *currentCell = mWorldScene->getCurrentCell();
