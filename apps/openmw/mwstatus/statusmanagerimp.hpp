@@ -40,6 +40,7 @@ namespace MWStatus
 		
 
 		MWBase::SmartEntityInstance * mSEI;
+		std::vector<MWBase::StatusObject*> mStatusObjects;
 
 
 	public:
@@ -63,6 +64,8 @@ namespace MWStatus
 		virtual void giveStatus(MWBase::Status status);
 
 		virtual void removeStatus(MWBase::Status status);
+
+		virtual void update(float duration);
 
 	};
 	

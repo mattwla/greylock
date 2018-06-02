@@ -48,7 +48,7 @@ namespace MWStatus
 
 		auto c = MWBase::FloatStatusObject::getConstuctor();
 
-		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()];
+		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()] = c;
 	}
 
 
@@ -144,6 +144,7 @@ namespace MWStatus
 
 	void StatusManager::giveStatus( MWBase::Status status)
 	{
+		//Do we already? have this status?
 		auto vec = mStatusMap;
 		unsigned int idx = 0;
 		while (idx < vec.size())
@@ -152,8 +153,23 @@ namespace MWStatus
 				return;
 			idx += 1;
 		}
-		mStatusMap.push_back(status);
-		//return false;
+
+		//If we are here, we do not already have this status.
+
+		//Do we have a special constructor for this statys?
+		//If so, get a status object and let that take over. Else add the status to our statuslist.
+		
+		if (MWStatus::StatusManager::mStatusToConstructor.count(status))
+		{
+			auto constructor = mStatusToConstructor[status];
+			auto object = constructor->getObject(mSEI);
+			object->init();
+			mStatusObjects.push_back(object);
+		}
+		else
+		{
+			mStatusMap.push_back(status);
+		}
 	}
 
 	void StatusManager::removeStatus(MWBase::Status status)
@@ -170,6 +186,27 @@ namespace MWStatus
 			idx += 1;
 		}
 		
+	}
+
+	void StatusManager::update(float duration)
+	{
+		typedef std::vector<MWBase::StatusObject*> objectlist;
+		objectlist newlist;
+
+		for (objectlist::iterator it = mStatusObjects.begin(); it != mStatusObjects.end(); it++)
+		{
+			(*it)->update(duration);
+			if (!(*it)->isDone())
+			{
+				newlist.push_back((*it));
+			}
+
+		}
+
+		mStatusObjects = newlist;
+
+
+
 	}
 
 }

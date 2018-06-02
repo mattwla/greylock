@@ -81,6 +81,8 @@ namespace MWBase
 		StatusManager& operator= (const StatusManager&);
 		///< not implemented*/
 
+		
+
 
 
 	public:
@@ -103,6 +105,8 @@ namespace MWBase
 		//virtual void updatePtr(MWWorld::Ptr old, MWWorld::Ptr newptr) = 0;
 
 		virtual void removeStatus(MWBase::Status status) = 0;
+
+		virtual void update(float duration) = 0;
 
 
 	};

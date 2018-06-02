@@ -10,22 +10,33 @@ namespace MWBase
 
 	class StatusObject
 	{
-
 	protected:
 
+		MWBase::SmartEntityInstance * mSEI;
 
-
+		bool mDone = false;
 
 	public:
 
 		virtual MWBase::Status getStatusEnum() = 0;
 
+		virtual void update(float duration) = 0;
 
+		virtual void init() = 0;
+
+		virtual void end() = 0;
+
+		virtual bool isDone()
+		{
+			return mDone;
+		}
 	};
 
 
 	class StatusObjectConstructor
 	{
+
+
 
 	public:
 
@@ -36,23 +47,32 @@ namespace MWBase
 
 
 
+	//FLOAT STATUS OBJECT
+
+
 	class FloatStatusObject : public StatusObject
 	{
 
+		float mTotalTime = 0.0f;
+
 
 	public:
+
+		FloatStatusObject(MWBase::SmartEntityInstance * sei)
+		{
+			mSEI = sei;
+		}
 
 		static StatusObjectConstructor * getConstuctor()
 		{
 			class FloatStatusConstructor : public StatusObjectConstructor
 			{
-
 			public:
 
 				virtual StatusObject * getObject(MWBase::SmartEntityInstance * sei)
 				{
 					
-					return new FloatStatusObject();
+					return new FloatStatusObject(sei);
 				}
 
 				virtual MWBase::Status getStatusEnum()
@@ -60,8 +80,6 @@ namespace MWBase
 					return MWBase::FloatShroomPowdered;
 				}
 			};
-
-			
 
 			std::cout << "===========================returning float status constructor===================" << std::endl;
 			return new FloatStatusConstructor();
@@ -72,8 +90,16 @@ namespace MWBase
 			return MWBase::FloatShroomPowdered;
 		}
 
+		virtual void update(float duration);
 
+		virtual void init();
+
+		virtual void end();
 	};
+
+
+
+	//ON FIRE STATUS OBJECT
 
 
 

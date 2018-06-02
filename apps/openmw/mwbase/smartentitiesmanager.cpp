@@ -454,11 +454,15 @@ MWBase::SmartEntitiesManager::SmartEntitiesManager() :
 
 void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 {
+	
+
 	//std::cout << "updating" << std::endl;
 	auto world = MWBase::Environment::get().getWorld();
 	//give all active smart ents that dont have objects below them gravity
 	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
 	{
+		it->second->getStatusManager()->update(duration);
+
 		if (!it->second->getPtr().getClass().isNpc())
 		{
 			osg::Vec3f pos = it->second->getPtr().getRefData().getPosition().asVec3();
@@ -473,11 +477,11 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 			}
 			
 		}
-		if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
+		/*if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
 		{
 			std::cout << "giving flying boost" << std::endl;
 			world->queueMovement(it->second->getPtr(), osg::Vec3f(0.f, 0.f, 600.f));
-		}
+		}*/
 	}
 
 }
