@@ -101,6 +101,53 @@ namespace MWBase
 
 	//ON FIRE STATUS OBJECT
 
+	class OnFireStatusObject : public StatusObject
+	{
+
+		float mTotalTime = 0.0f;
+		MWWorld::Ptr fireptr;
+
+
+	public:
+
+		OnFireStatusObject(MWBase::SmartEntityInstance * sei)
+		{
+			mSEI = sei;
+		}
+
+		static StatusObjectConstructor * getConstuctor()
+		{
+			class OnFireStatusConstructor : public StatusObjectConstructor
+			{
+			public:
+
+				virtual StatusObject * getObject(MWBase::SmartEntityInstance * sei)
+				{
+
+					return new OnFireStatusObject(sei);
+				}
+
+				virtual MWBase::Status getStatusEnum()
+				{
+					return MWBase::OnFire;
+				}
+			};
+
+			std::cout << "===========================returning float status constructor===================" << std::endl;
+			return new OnFireStatusConstructor();
+		}
+
+		virtual MWBase::Status getStatusEnum()
+		{
+			return MWBase::OnFire;
+		}
+
+		virtual void update(float duration);
+
+		virtual void init();
+
+		virtual void end();
+	};
 
 
 }

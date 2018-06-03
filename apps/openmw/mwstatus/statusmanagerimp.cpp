@@ -49,6 +49,10 @@ namespace MWStatus
 		auto c = MWBase::FloatStatusObject::getConstuctor();
 
 		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()] = c;
+
+		c = MWBase::OnFireStatusObject::getConstuctor();
+
+		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()] = c;
 	}
 
 

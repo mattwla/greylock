@@ -3738,32 +3738,51 @@ namespace MWWorld
 				origin, feetToGameUnits(static_cast<float>(area)), objects);
 			/*for (std::vector<MWWorld::Ptr>::iterator affected = objects.begin(); affected != objects.end(); ++affected)
 				toApply[*affected].push_back(effect);*/
-		
+			for (std::vector<MWWorld::Ptr>::iterator it = objects.begin(); it != objects.end(); it++)
+			{
+				std::cout << "attempting to burn..." + it->getCellRef().getRefId() << std::endl;
+
+				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance((*it), true);
+				if (sei)
+				{
+					std::cout << "now on fire: " + sei->getPtr().getCellRef().getRefId() << std::endl;
+					sei->getStatusManager()->giveStatus(MWBase::OnFire);
+				}
+
+			}
 
 		// Now apply the appropriate effects to each actor in range
-		//for (std::map<MWWorld::Ptr, std::vector<ESM::ENAMstruct> >::iterator apply = toApply.begin(); apply != toApply.end(); ++apply)
-		//{
-		//	MWWorld::Ptr source = caster;
-		//	// Vanilla-compatible behaviour of never applying the spell to the caster
-		//	// (could be changed by mods later)
-		//	if (apply->first == caster)
-		//		continue;
+		for (std::map<MWWorld::Ptr, std::vector<ESM::ENAMstruct> >::iterator apply = toApply.begin(); apply != toApply.end(); ++apply)
+		{
+			std::cout << "running through on fire objects" << std::endl;
+			//MWWorld::Ptr source = caster;
+			//// Vanilla-compatible behaviour of never applying the spell to the caster
+			//// (could be changed by mods later)
+			//if (apply->first == caster)
+			//	continue;
 
-		//	if (apply->first == ignore)
-		//		continue;
+			//if (apply->first == ignore)
+			//	continue;
 
-		//	if (source.isEmpty())
-		//		source = apply->first;
+			//if (source.isEmpty())
+			//	source = apply->first;
 
-		//	MWMechanics::CastSpell cast(source, apply->first);
-		//	cast.mHitPosition = origin;
-		//	cast.mId = id;
-		//	cast.mSourceName = sourceName;
-		//	cast.mStack = false;
-		//	ESM::EffectList effectsToApply;
-		//	effectsToApply.mList = apply->second;
-		//	cast.inflict(apply->first, caster, effectsToApply, rangeType, false, true);
-		//}
+			//MWMechanics::CastSpell cast(source, apply->first);
+			//cast.mHitPosition = origin;
+			//cast.mId = id;
+			//cast.mSourceName = sourceName;
+			//cast.mStack = false;
+			//ESM::EffectList effectsToApply;
+			//effectsToApply.mList = apply->second;
+			//cast.inflict(apply->first, caster, effectsToApply, rangeType, false, true);
+			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(apply->first, true);
+			if (sei)
+			{
+				sei->getStatusManager()->giveStatus(MWBase::OnFire);
+			}
+			
+			
+		}
 
 	}
 

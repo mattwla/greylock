@@ -1291,8 +1291,11 @@ namespace MWPhysics
     void PhysicsSystem::addObject (const MWWorld::Ptr& ptr, const std::string& mesh, int collisionType)
     {
         osg::ref_ptr<Resource::BulletShapeInstance> shapeInstance = mShapeManager->getInstance(mesh);
-        if (!shapeInstance || !shapeInstance->getCollisionShape())
-            return;
+		if (!shapeInstance || !shapeInstance->getCollisionShape())
+		{
+			std::cout <<"===WARNING failed in add object to objects list: " << ptr.getCellRef().getRefId() << std::endl;
+			return;
+		}
 
         Object *obj = new Object(ptr, shapeInstance);
         mObjects.insert(std::make_pair(ptr, obj));

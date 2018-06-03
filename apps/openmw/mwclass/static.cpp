@@ -5,6 +5,8 @@
 #include "../mwworld/ptr.hpp"
 #include "../mwphysics/physicssystem.hpp"
 #include "../mwworld/cellstore.hpp"
+#include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/environment.hpp"
 
 #include "../mwrender/objects.hpp"
 #include "../mwrender/renderinginterface.hpp"
@@ -21,8 +23,12 @@ namespace MWClass
 
     void Static::insertObject(const MWWorld::Ptr& ptr, const std::string& model, MWPhysics::PhysicsSystem& physics) const
     {
-        if(!model.empty())
-            physics.addObject(ptr, model);
+		if (!model.empty())
+		{
+			physics.addObject(ptr, model);
+			MWBase::Environment::get().getMechanicsManager()->add(ptr);
+		}
+		
     }
 
     std::string Static::getModel(const MWWorld::ConstPtr &ptr) const

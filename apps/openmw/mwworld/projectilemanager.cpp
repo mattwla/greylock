@@ -538,7 +538,7 @@ namespace MWWorld
 				//get SE so gravity works.... should likely do this earlier.
 				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
 				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(sei->getPtr());
-				MWBase::Environment::get().getWorld()->addPhysicsActor(sei->getPtr());
+				//MWBase::Environment::get().getWorld()->addPhysicsActor(sei->getPtr());
 
 				osg::Quat throwOrient;
 				throwOrient.set(

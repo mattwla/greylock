@@ -21,6 +21,8 @@
 #include "../mwrender/objects.hpp"
 #include "../mwrender/renderinginterface.hpp"
 
+#include "../mwbase/mechanicsmanager.hpp"
+
 namespace MWClass
 {
     bool Miscellaneous::isGold (const MWWorld::ConstPtr& ptr) const
@@ -41,6 +43,13 @@ namespace MWClass
 
     void Miscellaneous::insertObject(const MWWorld::Ptr& ptr, const std::string& model, MWPhysics::PhysicsSystem& physics) const
     {
+		if (!model.empty())
+		{
+			physics.addObject(ptr, model);
+			MWBase::Environment::get().getMechanicsManager()->add(ptr);
+		}
+
+	
         // TODO: add option somewhere to enable collision for placeable objects
     }
 

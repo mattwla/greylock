@@ -70,7 +70,7 @@ MWBase::BehaviorObject * SmartEntityFireShroomInstance::useWorldInstance(MWBase:
 void SmartEntityFireShroomInstance::onImpact(MWWorld::Ptr impactwith)
 {
 
-	MWBase::Environment::get().getWorld()->createFireExplosion(mPtr.getCellRef().getPosition().asVec3(), 30);
+	MWBase::Environment::get().getWorld()->createFireExplosion(mPtr.getCellRef().getPosition().asVec3(), 10);
 
 	/*auto playerptr = MWBase::Environment::get().getWorld()->getPlayerPtr();
 	std::cout << "SMART SHROOM IMPACT" << std::endl;

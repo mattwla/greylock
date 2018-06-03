@@ -265,7 +265,9 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstan
 			}
 		}
 	mSmartInstanceMap[ptr.getCellRef().getRefNum()] = newInstance;
+	
 	newInstance->ensureStatusManager();
+	addSmartInstanceToScene(ptr);
 	return newInstance;
 }
 
