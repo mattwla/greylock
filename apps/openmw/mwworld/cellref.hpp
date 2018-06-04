@@ -32,6 +32,8 @@ namespace MWWorld
 
 		void setRefNum(int num);
 
+		void setWholeRefNum(ESM::RefNum refnum);
+
         /// Does the RefNum have a content file?
         bool hasContentFile() const;
 

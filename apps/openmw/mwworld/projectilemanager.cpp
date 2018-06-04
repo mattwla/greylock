@@ -328,6 +328,7 @@ namespace MWWorld
         state.mCasterHandle = actor;
         state.mAttackStrength = attackStrength;
 		state.mThrown = true;
+		state.mRefNum = projectile.getCellRef().getRefNum();
 			//projectile.get<ESM::Weapon>()->mBase->mData.mType == ESM::Weapon::MarksmanThrown;
 
         MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), projectile.getCellRef().getRefId());
@@ -534,9 +535,10 @@ namespace MWWorld
 				position.pos[1] = hitPos.y();
 				position.pos[2] = hitPos.z();
 				MWWorld::Ptr newobject = MWBase::Environment::get().getWorld()->placeObject(projectileRef.getPtr(), caster.getCell(), position);
-
+				newobject.getCellRef().setWholeRefNum(it->mRefNum);
 				//get SE so gravity works.... should likely do this earlier.
 				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(newobject, true);
+				sei->updatePtr(newobject);
 				MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(sei->getPtr());
 				//MWBase::Environment::get().getWorld()->addPhysicsActor(sei->getPtr());
 

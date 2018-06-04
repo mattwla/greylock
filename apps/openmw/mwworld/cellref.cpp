@@ -26,6 +26,11 @@ namespace MWWorld
 		mCellRef.mRefNum.mIndex = num;
 	}
 
+	void CellRef::setWholeRefNum(ESM::RefNum refnum)
+	{
+		mCellRef.mRefNum = refnum;
+	}
+
     std::string CellRef::getRefId() const
     {
         return mCellRef.mRefID;
