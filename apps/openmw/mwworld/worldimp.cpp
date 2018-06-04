@@ -3743,7 +3743,7 @@ namespace MWWorld
 				std::cout << "attempting to burn..." + it->getCellRef().getRefId() << std::endl;
 
 				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance((*it), true);
-				if (sei)
+				if (sei && sei->getStatusManager()->hasStatus(MWBase::IsFlammable))
 				{
 					std::cout << "now on fire: " + sei->getPtr().getCellRef().getRefId() << std::endl;
 					sei->getStatusManager()->giveStatus(MWBase::OnFire);

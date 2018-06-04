@@ -18,6 +18,8 @@ public:
 
 	virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate);
 
+	static void giveGenericStatus(MWBase::SmartEntityInstance * sei);
+
 	//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, int pings);
 
 	//virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, int refnum, int pings);

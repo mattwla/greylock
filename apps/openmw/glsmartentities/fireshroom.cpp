@@ -69,10 +69,12 @@ MWBase::BehaviorObject * SmartEntityFireShroomInstance::useWorldInstance(MWBase:
 
 void SmartEntityFireShroomInstance::onImpact(MWWorld::Ptr impactwith)
 {
-	
-	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith, true);
-	if (sei)
-		sei->getStatusManager()->giveStatus(MWBase::OnFire);
+	if (impactwith)
+	{
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith, true);
+		if (sei && sei->getStatusManager()->hasStatus(MWBase::IsFlammable))
+			sei->getStatusManager()->giveStatus(MWBase::OnFire);
+	}
 	
 		
 	MWBase::Environment::get().getWorld()->createFireExplosion(mPtr.getCellRef().getPosition().asVec3(), 5);

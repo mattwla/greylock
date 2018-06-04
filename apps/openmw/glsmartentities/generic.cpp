@@ -13,17 +13,49 @@ SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::getInstance(const MWWorld::Ptr & ptr)
 {
-	return new SmartEntityGenericInstance(ptr);
+	auto sei = new SmartEntityGenericInstance(ptr);
+	giveGenericStatus(sei);
+	return sei;
 }
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::getInstance(std::string id, ESM::RefNum refNum)
 {
-	return new SmartEntityGenericInstance(id, refNum, 0);
+	auto sei = new SmartEntityGenericInstance(id, refNum, 0);
+	giveGenericStatus(sei);
+	return sei;
 }
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate)
 {
 	return nullptr;
+}
+
+void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance * sei)
+{
+	std::cout << "checking for generic status" << std::endl;
+	typedef std::map<std::string, std::vector<MWBase::Status>> idtostatusmap;
+	typedef std::vector<MWBase::Status> statusvec;
+	
+	idtostatusmap themap;
+
+	themap["in_velothismall_ndoor_01"] = { MWBase::IsFlammable };
+	themap["gl_sitting_stump"] = { MWBase::IsFlammable };
+
+	if (!themap.count(sei->getRefId()))
+		return;
+
+	std::cout << "found something in the map" << std::endl;
+
+	statusvec stati = themap[sei->getRefId()];
+	sei->ensureStatusManager();
+
+	for (statusvec::iterator it = stati.begin(); it != stati.end(); it++)
+	{
+		sei->getStatusManager()->giveStatus((*it));
+	}
+
+	return;
+
 }
 
 SmartEntityGenericInstance::SmartEntityGenericInstance(const MWWorld::Ptr & ptr)
@@ -33,6 +65,7 @@ SmartEntityGenericInstance::SmartEntityGenericInstance(const MWWorld::Ptr & ptr)
 	mPingCount = 0;
 	mRefId = ptr.getCellRef().getRefId();
 	mPtr = ptr;
+	SmartEntityGenericTemplate::giveGenericStatus(this);
 }
 
 SmartEntityGenericInstance::SmartEntityGenericInstance(std::string refid, ESM::RefNum refnum, int pings)
@@ -40,6 +73,7 @@ SmartEntityGenericInstance::SmartEntityGenericInstance(std::string refid, ESM::R
 	std::cout << "new generic" << std::endl;
 	mPingCount = pings;
 	mRefId = refid;
+	SmartEntityGenericTemplate::giveGenericStatus(this);
 }
 
 std::string SmartEntityGenericInstance::getSaveString()

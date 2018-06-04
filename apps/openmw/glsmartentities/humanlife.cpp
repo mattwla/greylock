@@ -5,6 +5,7 @@
 #include "../subbrains/subbrain.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 #include <iostream>
 
 
@@ -39,6 +40,8 @@ SmartEntityHumanInstance::SmartEntityHumanInstance(const MWWorld::Ptr & ptr)
 	mPtr = ptr;
 	mPingCount = 0;
 	mIsLife = true;
+	mStatusManager = new MWStatus::StatusManager(this);
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 }
 
 SmartEntityHumanInstance::SmartEntityHumanInstance(std::string refid, ESM::RefNum refnum, int pings)
@@ -46,6 +49,8 @@ SmartEntityHumanInstance::SmartEntityHumanInstance(std::string refid, ESM::RefNu
 	mRefId = refid;
 	mPingCount = 0;
 	mIsLife = true;
+	mStatusManager = new MWStatus::StatusManager(this);
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 }
 
 std::string SmartEntityHumanInstance::getSaveString()
