@@ -79,6 +79,8 @@ void SmartEntityFireShroomInstance::onImpact(MWWorld::Ptr impactwith)
 		
 	MWBase::Environment::get().getWorld()->createFireExplosion(mPtr.getCellRef().getPosition().asVec3(), 5);
 
+	disable();
+
 	/*auto playerptr = MWBase::Environment::get().getWorld()->getPlayerPtr();
 	std::cout << "SMART SHROOM IMPACT" << std::endl;
 	bool standingon = MWBase::Environment::get().getWorld()->getPlayerStandingOn(mPtr);

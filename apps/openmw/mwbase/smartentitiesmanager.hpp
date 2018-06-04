@@ -120,6 +120,12 @@ namespace MWBase
 			return mStatusManager;
 		}
 
+
+		void disable()
+		{
+			MWBase::Environment::get().getWorld()->disable(mPtr);
+		}
+
 		virtual void ensureStatusManager();
 		
 		//for debugging

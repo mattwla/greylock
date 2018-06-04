@@ -51,11 +51,14 @@ void MWBase::OnFireStatusObject::update(float duration)
 			MWMechanics::DynamicStat<float> health(mPtr.getClass().getCreatureStats(mPtr).getHealth());
 			health.setCurrent(health.getCurrent() - 100.0f);
 			stats.setHealth(health);
+			end();
 		}
 		else
 		{
 
-			MWBase::Environment::get().getWorld()->disable(mSEI->getPtr());
+			//MWBase::Environment::get().getWorld()->disable(mSEI->getPtr());
+			mSEI->disable();
+			end();
 		}
 	}
 	//MWBase::Environment::get().getWorld()->obje
@@ -74,6 +77,7 @@ void MWBase::OnFireStatusObject::init()
 
 void MWBase::OnFireStatusObject::end()
 {
+	MWBase::Environment::get().getWorld()->disable(fireptr);
 	mSEI->getStatusManager()->removeStatus(MWBase::OnFire);
 	mDone = true;
 }

@@ -463,7 +463,8 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 	//give all active smart ents that dont have objects below them gravity
 	for (MWBase::SmartInstanceMap::iterator it = mSmartInstancesInScene.begin(); it != mSmartInstancesInScene.end(); it++)
 	{
-		
+		if (!it->second->getPtr().getRefData().isEnabled())
+			continue;
 
 		if (!it->second->getPtr().getClass().isNpc())
 		{
