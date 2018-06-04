@@ -100,6 +100,7 @@ namespace
 		{
 			ptr.getBase()->mSmartEntityInstance = 0;
 		}
+
     }
 
     void updateObjectRotation (const MWWorld::Ptr& ptr, MWPhysics::PhysicsSystem& physics,

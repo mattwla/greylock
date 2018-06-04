@@ -7,6 +7,7 @@
 #include "../mwworld/class.hpp"
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwclass/npc.hpp"
+#include "../mwrender/animation.hpp"
 
 
 void MWBase::FloatStatusObject::update(float duration)
@@ -46,7 +47,15 @@ void MWBase::OnFireStatusObject::update(float duration)
 	{
 		if (mSEI->isHumanLife())
 		{
+
+			
+
 			auto mPtr = mSEI->getPtr();
+
+
+
+
+
 			MWMechanics::CreatureStats& stats = mPtr.getClass().getCreatureStats(mPtr);
 			MWMechanics::DynamicStat<float> health(mPtr.getClass().getCreatureStats(mPtr).getHealth());
 			health.setCurrent(health.getCurrent() - 100.0f);
@@ -68,6 +77,22 @@ void MWBase::OnFireStatusObject::update(float duration)
 
 void MWBase::OnFireStatusObject::init()
 {
+	bool burnglow = true;
+
+	if (burnglow)
+	{
+		
+			MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mSEI->getPtr());
+
+		const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+		int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+		const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+		
+
+		animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
+
+	}
+
 	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::OnFire);
 	MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), "light_fire_300", 1);
 	auto actor = mSEI->getPtr();

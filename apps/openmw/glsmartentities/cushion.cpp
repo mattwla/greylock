@@ -5,6 +5,7 @@
 #include "../subbrains/subbrain.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 #include <iostream>
 
 SmartEntityCushionTemplate::SmartEntityCushionTemplate()
@@ -54,6 +55,8 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(const MWWorld::Ptr &ptr)
 	
 
 	mGOAPNodeData.push_back(node);
+	ensureStatusManager();
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 
 
 	
@@ -74,6 +77,9 @@ SmartEntityCushionInstance::SmartEntityCushionInstance(std::string refid, ESM::R
 
 
 	mGOAPNodeData.push_back(node);
+
+	ensureStatusManager();
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 }
 
 std::string SmartEntityCushionInstance::getSaveString()

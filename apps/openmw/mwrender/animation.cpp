@@ -1264,8 +1264,8 @@ namespace MWRender
     {
         osg::Vec4f glowColor(1,1,1,1);
         glowColor.x() = effect->mData.mRed / 255.f;
-        glowColor.y() = effect->mData.mGreen / 255.f;
-        glowColor.z() = effect->mData.mBlue / 255.f;
+		glowColor.y() = 0;//effect->mData.mGreen / 255.f;
+		glowColor.z() = 0;// effect->mData.mBlue / 255.f;
 
         if (!mGlowUpdater || (mGlowUpdater->isDone() || (mGlowUpdater->isPermanentGlowUpdater() == true)))
         {

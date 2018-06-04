@@ -68,6 +68,7 @@ void Objects::insertBegin(const MWWorld::Ptr& ptr)
     insert->setScale(scaleVec);
 
     ptr.getRefData().setBaseNode(insert);
+
 }
 
 void Objects::insertModel(const MWWorld::Ptr &ptr, const std::string &mesh, bool animated, bool allowLight)
