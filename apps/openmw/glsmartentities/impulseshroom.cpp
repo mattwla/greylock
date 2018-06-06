@@ -83,6 +83,8 @@ void SmartEntityImpulseShroomInstance::startCharge(MWBase::Life * user)
 void SmartEntityImpulseShroomInstance::releaseCharge(MWBase::Life * user)
 {
 	std::cout << "impulse shroom release charge" << std::endl;
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
+	sei->getStatusManager()->removeStatus(MWBase::ChargingImpulseShroom);
 }
 
 	//MWBase::Environment::get().getWorld()->hurtCollidingActors

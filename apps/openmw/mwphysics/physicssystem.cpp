@@ -334,6 +334,7 @@ namespace MWPhysics
 			bool inClimb = false;
 			bool inGlide = false;
 			bool inGlideDescent = false;
+			bool chargingImpulseShroom = false;
 			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
 			if (sei)
 			{
@@ -342,6 +343,8 @@ namespace MWPhysics
 				inClimb = sei->getStatusManager()->hasStatus(MWBase::InClimb);
 				inGlide = sei->getStatusManager()->hasStatus(MWBase::InGlide);
 				inGlideDescent = sei->getStatusManager()->hasStatus(MWBase::InGlideDescent);
+				chargingImpulseShroom = sei->getStatusManager()->hasStatus(MWBase::ChargingImpulseShroom);
+
 			}
 
 			
@@ -570,6 +573,13 @@ namespace MWPhysics
                     inertia.x() *= slowFall;
                     inertia.y() *= slowFall;
                 }
+
+				if (chargingImpulseShroom)
+				{
+					inertia.x() = 0.0;
+					inertia.y() = 0.0;
+					inertia.z() = 0.0;
+				}
                 physicActor->setInertialForce(inertia);
             }
             physicActor->setOnGround(isOnGround);
