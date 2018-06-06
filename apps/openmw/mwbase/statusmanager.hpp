@@ -111,6 +111,10 @@ namespace MWBase
 
 		virtual void update(float duration) = 0;
 
+		virtual void setStoredImpulse(float value) = 0;
+
+		virtual float getStoredImpulse() = 0;
+
 
 	};
 

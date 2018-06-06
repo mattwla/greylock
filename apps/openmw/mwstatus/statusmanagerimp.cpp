@@ -213,4 +213,14 @@ namespace MWStatus
 
 	}
 
+	void StatusManager::setStoredImpulse(float value)
+	{
+		mStoredImpulse = value;
+	}
+
+	float StatusManager::getStoredImpulse()
+	{
+		return mStoredImpulse;
+	}
+
 }

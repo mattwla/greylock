@@ -283,10 +283,10 @@ namespace MWPhysics
                                   bool isFlying, float waterlevel, float slowFall, const btCollisionWorld* collisionWorld,
                                std::map<MWWorld::Ptr, MWWorld::Ptr>& standingCollisionTracker)
         {
-			if (ptr.getCellRef().getRefId() == "battery1_pack")
+			/*if (ptr.getCellRef().getRefId() == "battery1_pack")
 			{
 				std::cout << "physics for battery" << std::endl;
-			}
+			}*/
             const ESM::Position& refpos = ptr.getRefData().getPosition();
             // Early-out for totally static creatures
             // (Not sure if gravity should still apply?)
@@ -335,6 +335,7 @@ namespace MWPhysics
 			bool inGlide = false;
 			bool inGlideDescent = false;
 			bool chargingImpulseShroom = false;
+			bool releasingImpulseShroom = false;
 			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
 			if (sei)
 			{
@@ -344,6 +345,7 @@ namespace MWPhysics
 				inGlide = sei->getStatusManager()->hasStatus(MWBase::InGlide);
 				inGlideDescent = sei->getStatusManager()->hasStatus(MWBase::InGlideDescent);
 				chargingImpulseShroom = sei->getStatusManager()->hasStatus(MWBase::ChargingImpulseShroom);
+				releasingImpulseShroom = sei->getStatusManager()->hasStatus(MWBase::ReleasedImpulseShroom);
 
 			}
 
@@ -370,10 +372,26 @@ namespace MWPhysics
 						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 5);
 					else if (physicActor->getOnSlope())
 						velocity = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * (movement / 2);
-					
+					//mwx air control
+					if (chargingImpulseShroom)
+						velocity = (osg::Vec3f(0, 0, 0));
+
 					velocity = velocity + physicActor->getInertialForce();
 				}
             }
+
+			if (releasingImpulseShroom)
+			{
+				std::cout << "released" << std::endl;
+				float energy = sei->getStatusManager()->getStoredImpulse() / 2.0;
+				sei->getStatusManager()->setStoredImpulse(0.f);
+				osg::Vec3f newinertia(0, energy, 0);
+				inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * newinertia;
+				std::cout << energy << std::endl;
+				//physicActor->setInertialForce(newinertia);
+				sei->getStatusManager()->removeStatus(MWBase::ReleasedImpulseShroom);
+			}
+			
 
             // dead actors underwater will float to the surface, if the CharacterController tells us to do so
             if (movement.z() > 0 && ptr.getClass().isActor() && ptr.getClass().getCreatureStats(ptr).isDead() && position.z() < swimlevel)
@@ -544,45 +562,51 @@ namespace MWPhysics
 				{
 					slowFall = .98;
 				}
-				if (inGlide)
-				{
-					if (!inGlideDescent)
-					{
-						if (inertia.z() < -200.0f)
-							inertia.z() += time * 1400.7; //-627.2f; //gravity?
-						else if (inertia.z() > -210.0f)
-							inertia.z() += time * -980.7;
-					}
-					else
-					{
-						if (inertia.z() < -800.0f)
-							inertia.z() += time * 1200.7; //-627.2f; //gravity?
-						else if (inertia.z() > -1010.0f)
-							inertia.z() += time * -580.7;
-					}
-					inertia.x() = 0.0f;
-					inertia.y() = 0.0f;
-						
-					
-				}
-				else
-					inertia.z() += time * -980.7; //-627.2f; //gravity?
-                if (inertia.z() < 0)
-                    inertia.z() *= slowFall;
-                if (slowFall < 1.f) {
-                    inertia.x() *= slowFall;
-                    inertia.y() *= slowFall;
-                }
-
+				//if (inGlide)
+				//{
+				//	if (!inGlideDescent)
+				//	{
+				//		if (inertia.z() < -200.0f)
+				//			inertia.z() += time * 1400.7; //-627.2f; //gravity?
+				//		else if (inertia.z() > -210.0f)
+				//			inertia.z() += time * -980.7;
+				//	}
+				//	else
+				//	{
+				//		if (inertia.z() < -800.0f)
+				//			inertia.z() += time * 1200.7; //-627.2f; //gravity?
+				//		else if (inertia.z() > -1010.0f)
+				//			inertia.z() += time * -580.7;
+				//	}
+				//	inertia.x() = 0.0f;
+				//	inertia.y() = 0.0f;
+				//		
+				//	
+				//}
+				
 				if (chargingImpulseShroom)
 				{
+					sei->getStatusManager()->setStoredImpulse(sei->getStatusManager()->getStoredImpulse() + std::abs(inertia.x()) + std::abs(inertia.y()) + std::abs(inertia.z()));
+					std::cout << sei->getStatusManager()->getStoredImpulse() << std::endl;
 					inertia.x() = 0.0;
 					inertia.y() = 0.0;
 					inertia.z() = 0.0;
 				}
+				else
+					inertia.z() += time * -980.7; //-627.2f; //gravity?
+				if (inertia.z() < 0)
+					inertia.z() *= slowFall;
+				if (slowFall < 1.f) {
+					inertia.x() *= slowFall;
+					inertia.y() *= slowFall;
+				}
+
+
+
+
                 physicActor->setInertialForce(inertia);
             }
-            physicActor->setOnGround(isOnGround);
+			physicActor->setOnGround(isOnGround);
             physicActor->setOnSlope(isOnSlope);
 
             newPosition.z() -= halfExtents.z(); // remove what was added at the beginning

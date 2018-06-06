@@ -41,6 +41,7 @@ namespace MWStatus
 
 		MWBase::SmartEntityInstance * mSEI;
 		std::vector<MWBase::StatusObject*> mStatusObjects;
+		float mStoredImpulse = 0.0f;
 
 
 	public:
@@ -66,6 +67,10 @@ namespace MWStatus
 		virtual void removeStatus(MWBase::Status status);
 
 		virtual void update(float duration);
+
+		virtual void setStoredImpulse(float value);
+
+		virtual float getStoredImpulse();
 
 	};
 	
