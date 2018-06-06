@@ -223,6 +223,14 @@ bool MWBase::SmartEntitiesManager::linkSEtoZone(SmartEntityInstance * entity, Sm
 	return true;
 }
 
+MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::refnumFetch(ESM::RefNum refnum)
+{
+	if (mSmartInstanceMap.count(refnum))
+		return mSmartInstanceMap[refnum];
+	else
+		return nullptr;
+}
+
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr, bool allowgeneric)
 {
 	bool makegeneric = false;

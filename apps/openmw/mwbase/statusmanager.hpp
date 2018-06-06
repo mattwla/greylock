@@ -70,9 +70,9 @@ namespace MWBase
 		FloatShroomPowdered = 12,
 		OnFire = 13,
 		IsFlammable = 14,
-		NotClimbable = 15
-
-
+		NotClimbable = 15,
+		ChargingImpulseShroom = 16,
+		ReleasedImpulseShroom = 17
 	};
 
 

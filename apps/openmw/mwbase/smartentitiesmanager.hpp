@@ -168,6 +168,12 @@ namespace MWBase
 			return false;
 		}
 
+		virtual void startCharge(MWBase::Life * user)
+		{
+			std::cout << "template SEI charge logic" << std::endl;
+			//generic charge logic;
+		}
+
 		virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
 
 
@@ -379,6 +385,8 @@ namespace MWBase
 
 		//given an SEI and an SEIZone, lets each know about eachother
 		bool linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone);
+
+		MWBase::SmartEntityInstance * refnumFetch(ESM::RefNum refnum);
 		
 		
 	};

@@ -1,4 +1,4 @@
-#include "statusobjects.hpp"'
+#include "statusobjects.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwworld/manualref.hpp"

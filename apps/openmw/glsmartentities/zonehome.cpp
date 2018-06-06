@@ -222,6 +222,7 @@ MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr owner
 		{
 			seq.clear();
 			seq.stack(MWMechanics::AiCombat(sei->getPtr()), mOwnerLife->mPtr);
+			//More like request fight or flight BO
 			mWarningStage += 1;
 		}
 	

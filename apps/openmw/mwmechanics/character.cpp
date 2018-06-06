@@ -1299,7 +1299,7 @@ bool CharacterController::updateWeaponState()
     if(mAttackingOrSpell)
     {
         MWWorld::Ptr player = getPlayer();
-
+		//std::cout << "attacking or spell" << std::endl;
         // We should reset player's idle animation in the first-person mode.
         if (mPtr == player && MWBase::Environment::get().getWorld()->isFirstPerson())
             mIdleState = CharState_None;
@@ -1310,6 +1310,7 @@ bool CharacterController::updateWeaponState()
 
         if(mUpperBodyState == UpperCharState_WeapEquiped && (mHitState == CharState_None || mHitState == CharState_Block))
         {
+			std::cout << "attacking or spell" << std::endl;
             MWBase::Environment::get().getWorld()->breakInvisibility(mPtr);
             mAttackStrength = 0;
             if(mWeaponType == WeapType_Spell)
@@ -1419,6 +1420,7 @@ bool CharacterController::updateWeaponState()
                     {
                         if (isWeapon)
                         {
+							
                             if (Settings::Manager::getBool("best attack", "Game"))        
                             {
                                 MWWorld::ConstContainerStoreIterator weapon = mPtr.getClass().getInventoryStore(mPtr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
@@ -1431,6 +1433,20 @@ bool CharacterController::updateWeaponState()
                             setAttackTypeRandomly(mAttackType);                       
                     }
                     // else if (mPtr != getPlayer()) use mAttackType set by AiCombat
+					//std::cout << "da place" << std::endl;
+					MWWorld::ConstContainerStoreIterator equipped = mPtr.getClass().getInventoryStore(mPtr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+					
+					if (equipped != mPtr.getClass().getInventoryStore(mPtr).end())
+					{
+						ESM::RefNum refnum = (*equipped).getCellRef().getRefNum();
+
+						auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+						if (sei)
+						{
+							sei->startCharge(MWBase::Environment::get().getLifeManager()->getLifeFromID(mPtr.getCellRef().getRefId()));
+							//std::cout << "charging sei" << std::endl;
+						}
+					}
                 }
 
                 mAnimation->play(mCurrentWeapon, priorityWeapon,
@@ -1447,9 +1463,11 @@ bool CharacterController::updateWeaponState()
     }
     else
     {
+		
         animPlaying = mAnimation->getInfo(mCurrentWeapon, &complete);
         if(mUpperBodyState == UpperCharState_MinAttackToMaxAttack && !isKnockedDown())
         {
+			//std::cout << "in the else" << std::endl;
             float attackStrength = complete;
             if (!mPtr.getClass().isNpc())
             {
@@ -3041,9 +3059,6 @@ bool Glide::update(float duration)
 	float forwardstrength = 0.0f;
 	bool inDescent = false;
 	bool continuingDescent = false;
-	
-		
-		//MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
 	MWMechanics::Movement movement = mPtr.getClass().getMovementSettings(mPtr);
 	movement.mWallGrabClimb;
 	if (!movement.mAttemptSneak || !sei->getStatusManager()->hasStatus(MWBase::InGlide))
@@ -3054,7 +3069,6 @@ bool Glide::update(float duration)
 	}
 	if (movement.mWallGrabClimb)
 	{
-		//forwardstrength *= 2.0;
 		if (mLastFrameWasDescending && mLastDescentSpeed < 20000.0f / (.25 / duration)) //accelerating
 			forwardstrength = mLastDescentSpeed + 20.f / (.25 / duration);
 		else if (!mLastFrameWasDescending)
@@ -3087,24 +3101,13 @@ bool Glide::update(float duration)
 		mTiltState = PLAYER_CONTROLLED;
 		if (MWBase::Environment::get().getWorld()->getCameraRoll() < .3)
 			MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
-	
-			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, rotatestrength, true);//turn
-			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch(), getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll/10.0f);
-		
-		//std::cout << "attempt turn right" << std::endl;
 	}
 	else if (movement.mWallGrabSlide < 0)
 	{
 		mTiltState = PLAYER_CONTROLLED;
 		if (MWBase::Environment::get().getWorld()->getCameraRoll() > -.3)
-			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
-		
-			//turn
-			//MWBase::Environment::get().getWorld()->rotateObject(mPtr, 0, 0, -rotatestrength, true);//turn
-		
-		//std::cout << "attempt turn left" << std::endl;
+			MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);	
 	}
-
 	else
 	{
 		if (mTiltState == PLAYER_CONTROLLED) // player just released
@@ -3115,7 +3118,6 @@ bool Glide::update(float duration)
 			else
 				mTiltState = INITIAL_RETURN_FROM_LEFT;
 		}
-		
 		if (mTiltState == INITIAL_RETURN_FROM_LEFT || mTiltState == INITIAL_RETURN_FROM_RIGHT)
 		{
 			//std::cout << "at initial return" << std::endl;
@@ -3131,12 +3133,6 @@ bool Glide::update(float duration)
 				
 			if (abs(camroll) < .01f)
 			{
-				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
-			/*	if (mTiltState == INITIAL_RETURN_FROM_LEFT)
-					mTargetRoll = .1;
-				else
-					mTargetRoll = -.1;*/
-
 				mTargetRoll = -.1 / (.3 / mTiltOnRelease);
 
 				mTiltState = OVER_RETURN;
@@ -3145,23 +3141,18 @@ bool Glide::update(float duration)
 		}
 		if (mTiltState == OVER_RETURN)
 		{
-			//std::cout << camroll << std::endl;
-			//std::cout << "at over return" << std::endl;
 			if (camroll > mTargetRoll)
 				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength, true);
 			if (camroll < mTargetRoll)
 				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength, true);
 			if (abs(mTargetRoll - camroll) < .01f)
 			{
-				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
 				mTiltState = CORRECTIVE_RETURN;
 				return true;
 			}
 		}
 		if (mTiltState == CORRECTIVE_RETURN)
 		{
-			//std::cout << camroll << std::endl;
-			//std::cout << "at corrective return" << std::endl;
 			if (camroll > 0)
 				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength/2, true);
 			if (camroll < 0)
@@ -3175,7 +3166,6 @@ bool Glide::update(float duration)
 				bool negative = rand() % 2;
 				if (negative)
 					mTargetRoll = -mTargetRoll;
-				//std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
 				return true;
 			}
 		}
@@ -3187,12 +3177,9 @@ bool Glide::update(float duration)
 				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength/4, true);
 			if (abs(mTargetRoll - camroll) < .01f)
 			{
-				//MWBase::Environment::get().getWorld()->rollCamera(0, false);
 				mTiltState = RANDOM_DRIFT_RETURN;
 				return true;
 			}
-
-
 		}
 		if (mTiltState == RANDOM_DRIFT_RETURN)
 		{
@@ -3205,7 +3192,6 @@ bool Glide::update(float duration)
 				if (mDriftTimer > 0.0f)
 				{
 					mDriftTimer -= duration;
-					
 				}
 				else
 				{
@@ -3216,12 +3202,10 @@ bool Glide::update(float duration)
 					bool negative = rand() % 2;
 					if (negative)
 						mTargetRoll = -mTargetRoll;
-					//std::cout << "random num = " + std::to_string(mTargetRoll) << std::endl;
 					return true;
 				}
 			}
 		}
-		
 	}
 	osg::Vec3f direction;
 	mCameraPitch = -MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch();
@@ -3231,7 +3215,6 @@ bool Glide::update(float duration)
 		float pitchshift = .1 / (.2 / duration);
 		if (mPitchCounter > 0.0 && !mPitchReturn)
 		{
-			//std::cout << "pitch down" << std::endl;
 			mCameraPitch += pitchshift;
 			mPitchCounter -= pitchshift;
 		}
@@ -3240,22 +3223,13 @@ bool Glide::update(float duration)
 			mPitchReturn = true;
 			if (mPitchCounter < .1)
 			{
-				//std::cout << "pitch up" << std::endl;
 				mCameraPitch -= pitchshift;
 				mPitchCounter += pitchshift;
 			}
 		}
-		/*if (mCameraPitch < 1.08)
-			mCameraPitch += .001 / duration;*/
 	}
-
-	/*else if (mCameraPitch > .2)
-		mCameraPitch -= .001 / duration;*/
-		
-		
 	MWBase::Environment::get().getWorld()->rotateObject(mPtr, mCameraPitch, getPlayer().getRefData().getPosition().rot[1], getPlayer().getRefData().getPosition().rot[2] + camroll / 10.0f);
 	MWBase::Environment::get().getWorld()->queueMovement(mPtr, direction);
-	//std::cout << mCameraPitch << std::endl;
 	return true;
 }
 
