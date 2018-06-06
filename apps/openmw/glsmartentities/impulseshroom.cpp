@@ -80,6 +80,11 @@ void SmartEntityImpulseShroomInstance::startCharge(MWBase::Life * user)
 	sei->getStatusManager()->giveStatus(MWBase::ChargingImpulseShroom);
 }
 
+void SmartEntityImpulseShroomInstance::releaseCharge(MWBase::Life * user)
+{
+	std::cout << "impulse shroom release charge" << std::endl;
+}
+
 	//MWBase::Environment::get().getWorld()->hurtCollidingActors
 	//MWBase::Environment::get().getWorld()->createImpulseExplosion(mPtr.getCellRef().getPosition().asVec3(), 30);
 

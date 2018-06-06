@@ -174,6 +174,11 @@ namespace MWBase
 			//generic charge logic;
 		}
 
+		virtual void releaseCharge(MWBase::Life * user)
+		{
+			std::cout << "template SEI release charge" << std::endl;
+		}
+
 		virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
 
 

@@ -1467,6 +1467,23 @@ bool CharacterController::updateWeaponState()
         animPlaying = mAnimation->getInfo(mCurrentWeapon, &complete);
         if(mUpperBodyState == UpperCharState_MinAttackToMaxAttack && !isKnockedDown())
         {
+			MWWorld::ConstContainerStoreIterator equipped = mPtr.getClass().getInventoryStore(mPtr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+
+			if (equipped != mPtr.getClass().getInventoryStore(mPtr).end())
+			{
+				ESM::RefNum refnum = (*equipped).getCellRef().getRefNum();
+
+				auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+				if (sei)
+				{
+					sei->releaseCharge(MWBase::Environment::get().getLifeManager()->getLifeFromID(mPtr.getCellRef().getRefId()));
+					//std::cout << "charging sei" << std::endl;
+				}
+			}
+
+
+
+
 			//std::cout << "in the else" << std::endl;
             float attackStrength = complete;
             if (!mPtr.getClass().isNpc())

@@ -42,4 +42,6 @@ public:
 	virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
 
 	virtual void startCharge(MWBase::Life * user);
+
+	virtual void releaseCharge(MWBase::Life * user);
 };
