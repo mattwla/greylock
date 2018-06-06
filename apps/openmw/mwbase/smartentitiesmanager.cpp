@@ -8,6 +8,7 @@
 #include "../glsmartentities/bounceshroom.hpp"
 #include "../glsmartentities/fireshroom.hpp"
 #include "../glsmartentities/floatshroom.hpp"
+#include "../glsmartentities/impulseshroom.hpp"
 #include "../mwbase/statusmanager.hpp"
 //#include "../mwworld/worldimp.cpp"
 #include "../mwbase/world.hpp"
@@ -50,6 +51,9 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 	addTemplateToMap(it);
 
 	it = new SmartEntityFloatShroomTemplate();
+	addTemplateToMap(it);
+
+	it = new SmartEntityImpulseShroomTemplate();
 	addTemplateToMap(it);
 }
 
