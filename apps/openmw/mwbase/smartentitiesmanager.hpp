@@ -179,6 +179,18 @@ namespace MWBase
 			std::cout << "template SEI release charge" << std::endl;
 		}
 
+		virtual void unequip(MWBase::Life * user)
+		{
+			std::cout << "template unequip" << std::endl;
+		}
+
+
+		virtual void activateDuringCharge(MWBase::Life * user)
+		{
+			std::cout << "activate during charge template" << std::endl;
+		}
+
+
 		virtual void onImpact(MWWorld::Ptr impactwith = nullptr);
 
 
@@ -288,6 +300,20 @@ namespace MWBase
 
 		}
 		
+		virtual void update(float duration)
+		{
+			std::cout << "sei template update" << std::endl;
+		}
+
+		virtual void onEquip(MWBase::Life * life)
+		{
+			std::cout << "se template equip" << std::endl;
+		}
+
+		virtual bool getCanSwing()
+		{
+			return true;
+		}
 
 	};
 
@@ -392,6 +418,8 @@ namespace MWBase
 		bool linkSEtoZone(SmartEntityInstance * entity, SmartEntityInstance * zone);
 
 		MWBase::SmartEntityInstance * refnumFetch(ESM::RefNum refnum);
+
+		SmartEntityInstance * getSEIInHand(MWWorld::Ptr ptr);
 		
 		
 	};

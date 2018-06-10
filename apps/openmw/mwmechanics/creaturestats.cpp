@@ -393,6 +393,11 @@ namespace MWMechanics
         return height;
     }
 
+	float CreatureStats::getFallHeight()
+	{
+		return mFallHeight;
+	}
+
     bool CreatureStats::needToRecalcDynamicStats()
     {
          if (mRecalcMagicka)

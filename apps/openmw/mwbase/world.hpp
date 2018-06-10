@@ -598,6 +598,8 @@ namespace MWBase
             /// Resets all actors in the current active cells to their original location within that cell.
             virtual void resetActors() = 0;
 
+			virtual MWWorld::Ptr getStandingOn(MWWorld::Ptr ptr) = 0;
+
             virtual bool isWalkingOnWater (const MWWorld::ConstPtr& actor) const = 0;
 
             /// Return a vector aiming the actor's weapon towards a target.

@@ -412,7 +412,11 @@ namespace MWWorld
             /// doPhysics.
 
             bool castRay (float x1, float y1, float z1, float x2, float y2, float z2) override;
-            ///< cast a Ray and return true if there is an object in the ray path.
+			///< cast a Ray and return true if there is an object in the ray path.
+
+
+			MWWorld::Ptr getStandingOn(MWWorld::Ptr ptr) override;
+          
 
 			const bool hasClearLOS(const MWWorld::Ptr & observer, const MWWorld::Ptr & target) override;
 

@@ -22,6 +22,8 @@
 #include "../mwrender/renderinginterface.hpp"
 
 #include "../mwbase/mechanicsmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
 
 namespace MWClass
 {
@@ -253,6 +255,9 @@ namespace MWClass
 */
 
 		std::shared_ptr<MWWorld::Action> action(new MWWorld::ActionEquip(ptr));
+		//auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
+		//if (sei)
+		//	sei->onEquip();
 
 		action->setSound(getUpSoundId(ptr));
 

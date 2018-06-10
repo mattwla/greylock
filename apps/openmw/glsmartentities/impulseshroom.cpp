@@ -6,6 +6,12 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwworld/class.hpp"
+#include "../mwmechanics/drawstate.hpp"
+#include "../mwworld/player.hpp"
+#include "../mwworld/esmstore.hpp"
+#include "../mwrender/animation.hpp"
+
+
 
 
 
@@ -75,17 +81,94 @@ void SmartEntityImpulseShroomInstance::onImpact(MWWorld::Ptr impactwith)
 
 void SmartEntityImpulseShroomInstance::startCharge(MWBase::Life * user)
 {
+	//user->mPtr.getClass().getCreatureStats(user->mPtr).land();
 	std::cout << "impulse shroom start charge" << std::endl;
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
 	sei->getStatusManager()->giveStatus(MWBase::ChargingImpulseShroom);
+
+
+	//MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(user->mPtr);
+
+	//const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+	//int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+	//const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+
+
+	//animation->addSpellCastGlow(effect, 5);
+
+
 }
 
 void SmartEntityImpulseShroomInstance::releaseCharge(MWBase::Life * user)
 {
+	user->mPtr.getClass().getCreatureStats(user->mPtr).land();
 	std::cout << "impulse shroom release charge" << std::endl;
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
 	sei->getStatusManager()->removeStatus(MWBase::ChargingImpulseShroom);
 	sei->getStatusManager()->giveStatus(MWBase::ReleasedImpulseShroom);
+}
+
+void SmartEntityImpulseShroomInstance::unequip(MWBase::Life * user)
+{
+	user->mPtr.getClass().getCreatureStats(user->mPtr).land();
+	std::cout << "impulse shroom release charge" << std::endl;
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
+	sei->getStatusManager()->removeStatus(MWBase::ChargingImpulseShroom);
+	sei->getStatusManager()->setStoredImpulse(0.0f);
+	MWBase::Environment::get().getSmartEntitiesManager()->removeSmartInstanceFromScene(mPtr);
+	this->getStatusManager()->removeStatus(MWBase::RequiresUpdate);
+}
+
+void SmartEntityImpulseShroomInstance::onEquip(MWBase::Life * user)
+{
+	mUserLife = user;
+	std::cout << "impulse shroom requested update" << std::endl;
+	MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(mPtr);
+	this->getStatusManager()->giveStatus(MWBase::RequiresUpdate);
+}
+
+void SmartEntityImpulseShroomInstance::activateDuringCharge(MWBase::Life * user)
+{
+	user->mPtr.getClass().getCreatureStats(user->mPtr).land();
+	std::cout << "impulse shroom nullify charge" << std::endl;
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
+	sei->getStatusManager()->removeStatus(MWBase::ChargingImpulseShroom);
+	sei->getStatusManager()->setStoredImpulse(0.0f);
+	MWBase::Environment::get().getWorld()->getPlayer().setDrawState(MWMechanics::DrawState_Nothing);
+}
+
+void SmartEntityImpulseShroomInstance::update(float duration)
+{
+	float distance = mUserLife->mPtr.getClass().getCreatureStats(mUserLife->mPtr).getFallHeight();
+	
+	if (distance > 100.0)
+	{
+		MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mUserLife->mPtr);
+
+		const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+		int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+		const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+
+		animation->addSpellCastGlow(effect, duration);
+		isReady = true;
+	}
+	else
+	{
+		isReady = false;
+		MWBase::Environment::get().getWorld()->getPlayer().setAttackingOrSpell(false);
+		
+	}
+
+	
+	std::cout << distance << std::endl;
+}
+
+bool SmartEntityImpulseShroomInstance::getCanSwing()
+{
+	if(MWBase::Environment::get().getWorld()->isOnGround(mUserLife->mPtr))
+		return true;
+
+	return isReady;
 }
 
 	//MWBase::Environment::get().getWorld()->hurtCollidingActors

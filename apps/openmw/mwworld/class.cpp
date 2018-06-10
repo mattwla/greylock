@@ -442,12 +442,12 @@ namespace MWWorld
         throw std::runtime_error("class does not support gore");
     }
 
-	MWBase::Life * Class::getLife(const MWWorld::Ptr& ptr) const
+	/*MWBase::Life * Class::getLife(const MWWorld::Ptr& ptr) const
 	{
 		std::cout << "Not life" << std::endl;
 		throw std::runtime_error("class does not support Life");
 	}
-
+*/
     void Class::readAdditionalState (const MWWorld::Ptr& ptr, const ESM::ObjectState& state) const {}
 
     void Class::writeAdditionalState (const MWWorld::ConstPtr& ptr, ESM::ObjectState& state) const {}

@@ -382,13 +382,17 @@ namespace MWPhysics
 
 			if (releasingImpulseShroom)
 			{
-				std::cout << "released" << std::endl;
-				float energy = sei->getStatusManager()->getStoredImpulse() / 2.0;
+				float pitch = MWBase::Environment::get().getWorld()->getFirstPersonCameraPitch();
+				float energy = sei->getStatusManager()->getStoredImpulse();
 				sei->getStatusManager()->setStoredImpulse(0.f);
-				osg::Vec3f newinertia(0, energy, 0);
+				
+				float zratio = pitch / 1.7;
+				float zforce = zratio * energy;
+				energy -= std::abs(zforce);
+				osg::Vec3f newinertia(0, energy, zforce);
 				inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * newinertia;
-				std::cout << energy << std::endl;
-				//physicActor->setInertialForce(newinertia);
+				std::cout << pitch << std::endl;
+			
 				sei->getStatusManager()->removeStatus(MWBase::ReleasedImpulseShroom);
 			}
 			
@@ -403,6 +407,7 @@ namespace MWPhysics
             // Now that we have the effective movement vector, apply wind forces to it
             if (MWBase::Environment::get().getWorld()->isInStorm())
             {
+			
                 osg::Vec3f stormDirection = MWBase::Environment::get().getWorld()->getStormDirection();
                 float angleDegrees = osg::RadiansToDegrees(std::acos(stormDirection * velocity / (stormDirection.length() * velocity.length())));
                 static const float fStromWalkMult = MWBase::Environment::get().getWorld()->getStore().get<ESM::GameSetting>()
@@ -586,19 +591,92 @@ namespace MWPhysics
 				
 				if (chargingImpulseShroom)
 				{
-					sei->getStatusManager()->setStoredImpulse(sei->getStatusManager()->getStoredImpulse() + std::abs(inertia.x()) + std::abs(inertia.y()) + std::abs(inertia.z()));
-					std::cout << sei->getStatusManager()->getStoredImpulse() << std::endl;
-					inertia.x() = 0.0;
+
+					//let gravity sap some energy before the shroom can.
+					if (inertia.z() > 0.0f)
+					{
+						inertia.z() += time * -980.7; //-627.2f; //gravity?
+					}
+
+
+
+					float storedinertia = 0.f;
+
+					if (inertia.z() > 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.z() += time * -2980.7;
+						
+
+					}
+					if (inertia.z() < 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.z() += time * 2980.7;
+					}
+					if (inertia.x() > 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.x() += time * -2980.7;
+					}
+					if (inertia.x() < 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.x() -= time * -2980.7;
+					}
+					if (inertia.y() > 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.y() += time * -2980.7;
+					}
+					if (inertia.y() < 0)
+					{
+						storedinertia += std::abs(time * -2980.7);
+						inertia.y() -= time * -2980.7;
+					}
+
+
+					if (std::abs(inertia.z()) - std::abs(time * -2980.7) < 0)
+					{
+						inertia.z() = 0;
+					}
+					if (std::abs(inertia.x()) - std::abs(time * -2980.7) < 0)
+					{
+						inertia.x() = 0;
+					}
+					if (std::abs(inertia.y()) - std::abs(time * -2980.7) < 0)
+					{
+						inertia.y() = 0;
+					}
+
+
+
+
+					std::cout << storedinertia;
+					std::cout << inertia.y();
+					std::cout << std::endl;
+
+					if (sei->getStatusManager()->getStoredImpulse() == 0.0f)
+					{
+						sei->getStatusManager()->setStoredImpulse(std::abs(inertia.x()) + std::abs(inertia.y()) + std::abs(inertia.z()));
+					}
+
+
+					//sei->getStatusManager()->setStoredImpulse(sei->getStatusManager()->getStoredImpulse() + storedinertia);
+				//	std::cout << sei->getStatusManager()->getStoredImpulse() << std::endl;
+					/*inertia.x() = 0.0;
 					inertia.y() = 0.0;
-					inertia.z() = 0.0;
+					inertia.z() = 0.0;*/
 				}
 				else
+				{
 					inertia.z() += time * -980.7; //-627.2f; //gravity?
-				if (inertia.z() < 0)
-					inertia.z() *= slowFall;
-				if (slowFall < 1.f) {
-					inertia.x() *= slowFall;
-					inertia.y() *= slowFall;
+					if (inertia.z() < 0)
+						inertia.z() *= slowFall;
+					if (slowFall < 1.f) {
+						inertia.x() *= slowFall;
+						inertia.y() *= slowFall;
+					}
 				}
 
 

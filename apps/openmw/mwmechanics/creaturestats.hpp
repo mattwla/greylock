@@ -97,6 +97,8 @@ namespace MWMechanics
         /// @return total fall height
         float land();
 
+		float getFallHeight();
+
         const AttributeValue & getAttribute(int index) const;
 
         const DynamicStat<float> & getHealth() const;

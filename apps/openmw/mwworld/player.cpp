@@ -128,6 +128,30 @@ namespace MWWorld
     {
          MWWorld::Ptr ptr = getPlayer();
          ptr.getClass().getNpcStats(ptr).setDrawState (state);
+
+		 if (state == MWMechanics::DrawState_Nothing)
+		 {
+			 MWWorld::ConstContainerStoreIterator equipped = ptr.getClass().getInventoryStore(ptr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+
+			 if (equipped != ptr.getClass().getInventoryStore(ptr).end())
+			 {
+				 ESM::RefNum refnum = (*equipped).getCellRef().getRefNum();
+
+				 auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+				 if (sei)
+				 {
+					 sei->unequip(MWBase::Environment::get().getLifeManager()->getLifeFromID(ptr.getCellRef().getRefId()));
+					 //std::cout << "charging sei" << std::endl;
+				 }
+			 }
+		 }
+		 else
+		 {
+			 auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSEIInHand(ptr);
+			 if (sei)
+				 sei->onEquip(MWBase::Environment::get().getLifeManager()->getLifeFromID(ptr.getCellRef().getRefId()));
+		 }
+
     }
 
     bool Player::getAutoMove() const
@@ -235,6 +259,7 @@ namespace MWWorld
     {
          MWWorld::Ptr ptr = getPlayer();
          return ptr.getClass().getNpcStats(ptr).getDrawState();
+
     }
 
     void Player::activate()
@@ -249,7 +274,28 @@ namespace MWWorld
 
         MWWorld::Ptr toActivate = MWBase::Environment::get().getWorld()->getFacedObject();
 
-        if (toActivate.isEmpty())
+		MWWorld::ConstContainerStoreIterator equipped = player.getClass().getInventoryStore(player).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+
+		if (equipped != player.getClass().getInventoryStore(player).end())
+		{
+			ESM::RefNum refnum = (*equipped).getCellRef().getRefNum();
+
+			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+			if (sei)
+			{
+				if (MWBase::Environment::get().getMechanicsManager()->isAttackPrepairing(player))
+					sei->unequip(MWBase::Environment::get().getLifeManager()->getLifeFromID(player.getCellRef().getRefId()));
+				//std::cout << "charging sei" << std::endl;
+			}
+		}
+
+	
+			//std::cout << "hit activate during charge" << std::endl;
+
+        
+		
+		
+		if (toActivate.isEmpty())
             return;
 
         if (!toActivate.getClass().canBeActivated(toActivate))
@@ -309,6 +355,16 @@ namespace MWWorld
 
     void Player::setAttackingOrSpell(bool attackingOrSpell)
     {
+
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSEIInHand(MWBase::Environment::get().getWorld()->getPlayerPtr());
+		if (sei)
+		{
+			if (!sei->getCanSwing())
+			{
+				attackingOrSpell = false;
+				return;
+			}
+		}
         mAttackingOrSpell = attackingOrSpell;
     }
 

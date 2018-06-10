@@ -18,6 +18,10 @@ public:
 };
 
 class SmartEntityImpulseShroomInstance : public MWBase::SmartEntityInstance {
+
+	bool isReady = false;
+
+
 public:
 
 	virtual float getActivationDistance()
@@ -44,4 +48,17 @@ public:
 	virtual void startCharge(MWBase::Life * user);
 
 	virtual void releaseCharge(MWBase::Life * user);
+
+	virtual void unequip(MWBase::Life * user);
+
+	virtual void onEquip(MWBase::Life * user);
+
+	virtual void activateDuringCharge(MWBase::Life * user);
+
+	virtual void update(float duration);
+
+	MWBase::Life * mUserLife;
+
+	virtual bool getCanSwing();
+
 };

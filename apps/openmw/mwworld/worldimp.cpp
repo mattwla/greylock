@@ -1655,6 +1655,12 @@ namespace MWWorld
         return result.mHit;
     }
 
+	MWWorld::Ptr World::getStandingOn(MWWorld::Ptr ptr)
+	{
+		return MWWorld::Ptr();
+
+	}
+
     void World::processDoors(float duration)
     {
         std::map<MWWorld::Ptr, int>::iterator it = mDoorStates.begin();
@@ -2692,6 +2698,8 @@ namespace MWWorld
         mPhysics->getActorsStandingOn(object, actors);
         return !actors.empty();
     }
+
+	
 
     bool World::getPlayerCollidingWith (const MWWorld::ConstPtr& object)
     {
@@ -3884,9 +3892,9 @@ namespace MWWorld
 		if (object.getClass().isNpc())
 		{
 
-			MWBase::Life * life = object.getClass().getLife(object);
-			life->getDebugInfo();
-			life->mAwareness->getDebugInfo();
+//			MWBase::Life * life = object.getClass().getLife(object);
+		//	life->getDebugInfo();
+		//	life->mAwareness->getDebugInfo();
 			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
 			std::cout << "ActorID: " + std::to_string(object.getClass().getCreatureStats(object).getActorId()) << std::endl;
 			return;

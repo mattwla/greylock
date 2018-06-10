@@ -72,7 +72,9 @@ namespace MWBase
 		IsFlammable = 14,
 		NotClimbable = 15,
 		ChargingImpulseShroom = 16,
-		ReleasedImpulseShroom = 17
+		ReleasedImpulseShroom = 17,
+		RequiresUpdate = 18,
+		EquippedImpulseShroom = 19
 	};
 
 

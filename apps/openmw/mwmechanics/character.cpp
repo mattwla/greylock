@@ -1920,6 +1920,26 @@ void CharacterController::update(float duration)
 
             if (healthLost > 0.0f)
             {
+				//did we land on bounce shroom?
+				//MWBase::Environment::get().getWorld()->castRay();
+				//MWBase::Environment::get().getWorld()->checkSlopeBelow();
+
+				auto below = getRayResult(0.0, 100.0f, mPtr.getRefData().getPosition().asVec3(), MWMechanics::CharacterController::down);
+				if (below.mHitObject)
+				{
+					std::cout << "hit an object" << std::endl;
+					auto landedsei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(below.mHitObject);
+					if (landedsei)
+					{
+						landedsei->onImpact(mPtr);
+						healthLost = 0;
+					}
+				}
+				else
+					std::cout << "did not hit an object" << std::endl;
+
+
+
                 const float fatigueTerm = cls.getCreatureStats(mPtr).getFatigueTerm();
 
                 // inflict fall damages mwx

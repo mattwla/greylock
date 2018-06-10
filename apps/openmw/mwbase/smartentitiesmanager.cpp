@@ -24,6 +24,9 @@
 #include <components/esm/loadcell.hpp>
 #include "../mwworld/class.hpp"
 #include "../mwstatus/statusmanagerimp.hpp"
+#include "../mwworld/class.hpp"
+#include "../mwworld/inventorystore.hpp"
+#include "../mwworld/esmstore.hpp"
 
 
 
@@ -233,6 +236,25 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::refnumFetch(ESM::Ref
 		return mSmartInstanceMap[refnum];
 	else
 		return nullptr;
+}
+
+MWBase:: SmartEntityInstance * MWBase::SmartEntitiesManager::getSEIInHand(MWWorld::Ptr ptr)
+{
+
+	MWWorld::ConstContainerStoreIterator equipped = ptr.getClass().getInventoryStore(ptr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+
+	if (equipped != ptr.getClass().getInventoryStore(ptr).end())
+	{
+		ESM::RefNum refnum = (*equipped).getCellRef().getRefNum();
+
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+		if (sei)
+		{
+			return sei;
+		}
+	}
+
+	return nullptr;
 }
 
 MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::getSmartEntityInstance(const MWWorld::Ptr &ptr, bool allowgeneric)
@@ -494,6 +516,10 @@ void MWBase::SmartEntitiesManager::onFrameUpdate(float duration)
 		}
 
 		it->second->getStatusManager()->update(duration);
+		if (it->second->getStatusManager()->hasStatus(MWBase::RequiresUpdate))
+			it->second->update(duration);
+
+
 		//world->updatePosition(it->second->getPtr());
 		/*if (it->second->getStatusManager()->hasStatus(MWBase::FloatShroomPowdered))
 		{

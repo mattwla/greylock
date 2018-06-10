@@ -22,6 +22,8 @@
 
 #include "esmstore.hpp"
 #include "class.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
+#include "../mwbase/lifemanager.hpp"
 
 void MWWorld::InventoryStore::copySlots (const InventoryStore& store)
 {
@@ -177,6 +179,10 @@ void MWWorld::InventoryStore::equip (int slot, const ContainerStoreIterator& ite
     }
 
     mSlots[slot] = iterator;
+
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance((*iterator));
+	if (sei)
+		sei->onEquip(MWBase::Environment::get().getLifeManager()->getLifeFromID(actor.getCellRef().getRefId()));
 
     flagAsModified();
 
@@ -753,6 +759,11 @@ MWWorld::ContainerStoreIterator MWWorld::InventoryStore::unequipSlot(int slot, c
 
         // empty this slot
         mSlots[slot] = end();
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance((*it));
+		if (sei)
+		{
+			sei->unequip(MWBase::Environment::get().getLifeManager()->getLifeFromID(actor.getCellRef().getRefId()));
+		}
 
         if (it->getRefData().getCount())
         {

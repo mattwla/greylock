@@ -216,6 +216,10 @@ namespace MWStatus
 	void StatusManager::setStoredImpulse(float value)
 	{
 		mStoredImpulse = value;
+		if (mStoredImpulse > 2000.0)
+		{
+			mStoredImpulse = 2000.0f;
+		}
 	}
 
 	float StatusManager::getStoredImpulse()
