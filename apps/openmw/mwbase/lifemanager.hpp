@@ -136,13 +136,20 @@ namespace MWBase
 		BehaviorObject * mCurrentBehaviorObject = 0;
 		std::shared_ptr<MWBase::GOAPDesire> mDesire;
 		bool stop();
+		bool checkDesire();
+		MWBase::BOReturn progress(float duration);
+		MWBase::Life * mOwnerLife;
 
-		IntentionPlan(std::shared_ptr<MWBase::GOAPDesire> desire) : mDesire(desire)
+		IntentionPlan(std::shared_ptr<MWBase::GOAPDesire> desire, MWBase::Life * ownerlife) : mDesire(desire), mOwnerLife(ownerlife)
 		{
+			mCurrentStep = 0;
+			mCurrentBehaviorObject = 0;
 		}
 
 		IntentionPlan()
 		{
+			mCurrentStep = 0;
+			mCurrentBehaviorObject = 0;
 		}
 	};
 

@@ -221,9 +221,16 @@ MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr owner
 		else if (mWarningStage == 2)
 		{
 			seq.clear();
-			seq.stack(MWMechanics::AiCombat(sei->getPtr()), mOwnerLife->mPtr);
+			//seq.stack(MWMechanics::AiCombat(sei->getPtr()), mOwnerLife->mPtr);
 			//More like request fight or flight BO
 			mWarningStage += 1;
+
+			MWBase::GOAPStatus desirestatus(MWBase::FIGHT, "", 1, sei);
+			std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 900);
+			mOwnerLife->mSubBrainsManager->createIntention(pDesire, ownerptr);
+
+			//Need an mSubPlan for BOs, BO can request a plan to accomplish something.
+			//Evidence for abstracting the running of a plan into a plan object
 		}
 	
 	

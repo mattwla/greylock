@@ -115,8 +115,13 @@ namespace MWBase
 		if (mHasQueuedIntention)
 			runSwapIntentionPlan(duration);
 		else if (mHasIntention)
-			runTopIntentionPlan(duration);
+		{
+			//runTopIntentionPlan(duration);
+			auto status = mCurrentIntentionPlan.progress(duration);
+			if (status != BOReturn::IN_PROGRESS)
+				mHasIntention = false;
 
+		}
 		mTimeOfLastUpdate = currenttime;
 	}
 
@@ -192,10 +197,11 @@ namespace MWBase
 		IntentionPlan newplan = mSubBrainsManager->createIntention(desire, mPtr);
 		if (newplan.mPlanComplete) //were we able to find a plan that works?
 		{
+			std::reverse(newplan.mGOAPNodeDataList.begin(), newplan.mGOAPNodeDataList.end());
 			//lets do it, let the desire know it is now an intention
 			desire->mIsIntention = true;
 			// set at last step, we go backwards
-			newplan.mCurrentStep = newplan.mGOAPNodeDataList.size() - 1; 
+			//newplan.mCurrentStep = newplan.mGOAPNodeDataList.size() - 1; 
 		}
 		return newplan;
 	}
@@ -247,15 +253,16 @@ namespace MWBase
 		
 		//stop will eventually return a complete 
 
-		MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+		//MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+		mCurrentIntentionPlan.checkDesire();
 		//if complete, mark the desire as no longer an intention, make the current intention plan the one we had waiting;
-		if (status == COMPLETE)
-		{
+		//if (status == COMPLETE)
+		//{
 			mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			mCurrentIntentionPlan = mQueuedIntentionPlan;
 			mHasQueuedIntention = false;
 			mSuccsessfulStopRequest = false;
-		}
+		//}
 	}
 
 	//===================LIFE MANAGER ================================
@@ -442,10 +449,57 @@ namespace MWBase
 
 	bool IntentionPlan::stop()
 	{
+		if (!mCurrentBehaviorObject)
+			return true;
+
 		//request current BO to stop;
 		//Return if BO said it was possible
 		bool possible = mCurrentBehaviorObject->stop();
 		return possible;
+	}
+
+	bool IntentionPlan::checkDesire()
+	{
+		return false;
+	}
+
+	MWBase::BOReturn IntentionPlan::progress(float duration)
+	{
+		if (checkDesire())
+			return BOReturn::COMPLETE;
+
+		if (mCurrentBehaviorObject == 0)
+		{
+			if (mCurrentStep >= mGOAPNodeDataList.size())
+				return MWBase::FAILED;
+
+			//get a BO from our current node
+			mCurrentBehaviorObject = mGOAPNodeDataList[mCurrentStep]->getNewBehaviorObject(mOwnerLife, mGOAPNodeDataList[mCurrentStep]->mRefNum);
+			mCurrentBehaviorObject->start();
+		}
+		else
+		{
+			auto status = mCurrentBehaviorObject->update(duration, mOwnerLife->mPtr);
+			if (status == BOReturn::COMPLETE)
+			{
+				delete mCurrentBehaviorObject;
+				mCurrentBehaviorObject = 0;
+				mCurrentStep += 1;
+			}
+			else if (status == BOReturn::FAILED)
+			{
+				delete mCurrentBehaviorObject;
+				mCurrentBehaviorObject = 0;
+				return status;
+			}
+			else
+			{
+				return status;
+			}
+
+		}
+
+		return BOReturn::IN_PROGRESS;
 	}
 
 
@@ -536,8 +590,8 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(std::shared_ptr<
 	nodechain nc = querySubBrainsForGOAPMatches(desire->mStatus);
 	for (nodechain::iterator itnc = nc.begin(); itnc != nc.end(); itnc++)
 	{
-		IntentionPlan plan;
-		plan.mDesire = desire;
+		IntentionPlan plan(desire, mLife);
+		//plan.mDesire = desire;
 		plan.mGOAPNodeDataList.push_back(*itnc);
 		possibleplans.push_back(plan);
 	}
@@ -576,7 +630,7 @@ MWBase::IntentionPlan MWBase::SubBrainsManager::createIntention(std::shared_ptr<
 	{
 		//used if we can't come up with a plan to meet this desire
 		GOAPDesire emptydesire;
-		IntentionPlan emptyplan(0);
+		IntentionPlan emptyplan;
 		emptyplan.mPlanComplete = false;
 		return emptyplan;
 	}

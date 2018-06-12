@@ -282,8 +282,8 @@ void MWBase::Environment::cleanup()
 	delete mAwarenessReactionsManager;
 	mAwarenessReactionsManager = 0;
 
-	delete mStatusManager;
-	mStatusManager = 0;
+	//delete mStatusManager;
+	//mStatusManager = 0;
 
 	delete mSmartEntitiesManager;
 	mSmartEntitiesManager = 0;
