@@ -567,27 +567,27 @@ namespace MWPhysics
 				{
 					slowFall = .98;
 				}
-				//if (inGlide)
-				//{
-				//	if (!inGlideDescent)
-				//	{
-				//		if (inertia.z() < -200.0f)
-				//			inertia.z() += time * 1400.7; //-627.2f; //gravity?
-				//		else if (inertia.z() > -210.0f)
-				//			inertia.z() += time * -980.7;
-				//	}
-				//	else
-				//	{
-				//		if (inertia.z() < -800.0f)
-				//			inertia.z() += time * 1200.7; //-627.2f; //gravity?
-				//		else if (inertia.z() > -1010.0f)
-				//			inertia.z() += time * -580.7;
-				//	}
-				//	inertia.x() = 0.0f;
-				//	inertia.y() = 0.0f;
-				//		
-				//	
-				//}
+				if (inGlide)
+				{
+					if (!inGlideDescent)
+					{
+						if (inertia.z() < -200.0f)
+							inertia.z() += time * 1400.7; //-627.2f; //gravity?
+						else if (inertia.z() > -210.0f)
+							inertia.z() += time * -980.7;
+					}
+					else
+					{
+						if (inertia.z() < -800.0f)
+							inertia.z() += time * 1200.7; //-627.2f; //gravity?
+						else if (inertia.z() > -1010.0f)
+							inertia.z() += time * -580.7;
+					}
+					inertia.x() = 0.0f;
+					inertia.y() = 0.0f;
+						
+					
+				}
 				
 				if (chargingImpulseShroom)
 				{

@@ -248,21 +248,23 @@ namespace MWBase
 	void Life::runSwapIntentionPlan(float duration)
 	{
 		//this condition doesn't really do anything
-		if(!mSuccsessfulStopRequest)
+		if (!mSuccsessfulStopRequest)
+		{
 			mSuccsessfulStopRequest = mCurrentIntentionPlan.stop(); //request current intention plan to srop
-		
+			//mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+		}
 		//stop will eventually return a complete 
 
-		//MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
-		mCurrentIntentionPlan.checkDesire();
+		MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
+		//mCurrentIntentionPlan.checkDesire();
 		//if complete, mark the desire as no longer an intention, make the current intention plan the one we had waiting;
-		//if (status == COMPLETE)
-		//{
+		if (status == COMPLETE)
+		{
 			mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			mCurrentIntentionPlan = mQueuedIntentionPlan;
 			mHasQueuedIntention = false;
 			mSuccsessfulStopRequest = false;
-		//}
+		}
 	}
 
 	//===================LIFE MANAGER ================================
@@ -449,8 +451,8 @@ namespace MWBase
 
 	bool IntentionPlan::stop()
 	{
-		if (!mCurrentBehaviorObject)
-			return true;
+		//if (!mCurrentBehaviorObject)
+		//	return true;
 
 		//request current BO to stop;
 		//Return if BO said it was possible
@@ -490,6 +492,7 @@ namespace MWBase
 			{
 				delete mCurrentBehaviorObject;
 				mCurrentBehaviorObject = 0;
+				mDesire->mIsIntention = false;
 				return status;
 			}
 			else
@@ -497,6 +500,7 @@ namespace MWBase
 				return status;
 			}
 
+			return status;
 		}
 
 		return BOReturn::IN_PROGRESS;

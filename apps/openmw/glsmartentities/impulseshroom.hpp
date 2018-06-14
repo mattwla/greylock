@@ -15,12 +15,15 @@ public:
 
 	virtual MWBase::SmartEntityInstance * loadInstance(std::string refid, ESM::RefNum refnum, std::string savestate);
 
+
+
 };
 
 class SmartEntityImpulseShroomInstance : public MWBase::SmartEntityInstance {
 
 	bool isReady = false;
 
+	float mAirTimer;
 
 public:
 

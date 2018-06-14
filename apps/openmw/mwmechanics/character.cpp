@@ -3090,6 +3090,8 @@ Glide::~Glide()
 
 bool Glide::update(float duration)
 {
+	mPtr.getClass().getCreatureStats(mPtr).land();
+	//cls.getCreatureStats(mPtr).land();
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
@@ -3107,11 +3109,12 @@ bool Glide::update(float duration)
 	if (movement.mWallGrabClimb)
 	{
 		if (mLastFrameWasDescending && mLastDescentSpeed < 20000.0f / (.25 / duration)) //accelerating
-			forwardstrength = mLastDescentSpeed + 20.f / (.25 / duration);
+			forwardstrength = mLastDescentSpeed + 30.f / (.25 / duration);
 		else if (!mLastFrameWasDescending)
-			forwardstrength = 2000.0f / (.25 / duration); // just starting
+			forwardstrength = 5000.0f / (.25 / duration); // just starting
 		else
 			forwardstrength = mLastDescentSpeed;
+		
 		
 		mLastDescentSpeed = forwardstrength;
 		std::cout << forwardstrength << std::endl;

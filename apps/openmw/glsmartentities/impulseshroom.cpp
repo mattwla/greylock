@@ -101,6 +101,7 @@ void SmartEntityImpulseShroomInstance::startCharge(MWBase::Life * user)
 
 void SmartEntityImpulseShroomInstance::releaseCharge(MWBase::Life * user)
 {
+	mAirTimer = 0.f;
 	user->mPtr.getClass().getCreatureStats(user->mPtr).land();
 	std::cout << "impulse shroom release charge" << std::endl;
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(user->mPtr);
@@ -139,9 +140,16 @@ void SmartEntityImpulseShroomInstance::activateDuringCharge(MWBase::Life * user)
 
 void SmartEntityImpulseShroomInstance::update(float duration)
 {
+	if (!MWBase::Environment::get().getWorld()->isOnGround(mUserLife->mPtr))
+	{
+		mAirTimer += duration;
+	}
+	else
+		mAirTimer = 0.f;
+
 	float distance = mUserLife->mPtr.getClass().getCreatureStats(mUserLife->mPtr).getFallHeight();
 	
-	if (distance > 100.0)
+	if (mAirTimer > 2.0)
 	{
 		MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mUserLife->mPtr);
 
