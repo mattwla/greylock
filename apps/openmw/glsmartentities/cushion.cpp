@@ -123,7 +123,7 @@ MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 	{
 		std::cout << "stop requested condition entered in sit BO" << std::endl;
 		mSEITarget->mCurrentUserCount = 0; //direct hack not good mwx fix me
-		return MWBase::COMPLETE;
+		return MWBase::STOPPED;
 	}
 
 	

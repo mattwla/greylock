@@ -258,7 +258,7 @@ namespace MWBase
 		MWBase::BOReturn status = mCurrentIntentionPlan.mCurrentBehaviorObject->update(duration, mPtr);
 		//mCurrentIntentionPlan.checkDesire();
 		//if complete, mark the desire as no longer an intention, make the current intention plan the one we had waiting;
-		if (status == COMPLETE)
+		if (status == STOPPED)
 		{
 			mCurrentIntentionPlan.mDesire->mIsIntention = false;
 			mCurrentIntentionPlan = mQueuedIntentionPlan;
@@ -487,6 +487,8 @@ namespace MWBase
 				delete mCurrentBehaviorObject;
 				mCurrentBehaviorObject = 0;
 				mCurrentStep += 1;
+				if (mCurrentStep == mGOAPNodeDataList.size())
+					return MWBase::COMPLETE;
 			}
 			else if (status == BOReturn::FAILED)
 			{
@@ -500,7 +502,7 @@ namespace MWBase
 				return status;
 			}
 
-			return status;
+			//return status;
 		}
 
 		return BOReturn::IN_PROGRESS;

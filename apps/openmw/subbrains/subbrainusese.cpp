@@ -134,7 +134,7 @@ MWBase::BOReturn MWBase::BOUseSEInWorld::update(float time, MWWorld::Ptr ownerpt
 	else if (mStopRequested)
 	{
 		journeymanager->cancelJourney(10);
-		return COMPLETE;
+		return STOPPED;
 		//mwx hack fix me not actually complete
 	}
 
