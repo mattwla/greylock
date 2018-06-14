@@ -129,6 +129,7 @@ public:
 
 		};
 
+		MWBase::IntentionPlan mSubPlan;
 
 	};
 	

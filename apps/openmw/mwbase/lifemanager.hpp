@@ -286,6 +286,8 @@ namespace MWBase
 
 		void submitDesirePtr(std::shared_ptr<MWBase::GOAPDesire> desire);
 
+		IntentionPlan selectIntentionPlan(std::shared_ptr<GOAPDesire> desire);
+
 	private:
 
 		void metabolize(float duration);
@@ -294,7 +296,7 @@ namespace MWBase
 
 		void determineIntention();
 
-		IntentionPlan selectIntentionPlan(std::shared_ptr<GOAPDesire> desire);
+		
 
 		void runTopIntentionPlan(float duration);
 
