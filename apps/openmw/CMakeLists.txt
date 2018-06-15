@@ -127,7 +127,7 @@ smartentitiesmanagerimp bread cushion zonehome bedroll humanlife generic bounces
 )
 
 add_openmw_dir (subbrains
-subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrelax subbraincircadianrhythm
+subbrain subbrainhunger subbrainget subbraininventory subbrainusese subbrainrelax subbraincircadianrhythm subbrainfightorflight
 
 )
 

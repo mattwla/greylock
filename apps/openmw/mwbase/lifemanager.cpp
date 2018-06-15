@@ -10,6 +10,7 @@
 #include "../subbrains/subbrainusese.hpp"
 #include "../subbrains/subbrainrelax.hpp"
 #include "../subbrains/subbraincircadianrhythm.hpp"
+#include "../subbrains/subbrainfightorflight.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwworld/inventorystore.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
@@ -718,6 +719,8 @@ MWBase::SubBrainsManager::SubBrainsManager(MWBase::Life * life)
 	sb = new SubBrainUseSE(life);
 	mSubBrains.push_back(sb);
 	sb = new SubBrainCircadianRhythm(life);
+	mSubBrains.push_back(sb);
+	sb = new SubBrainFightOrFlight(life);
 	mSubBrains.push_back(sb);
 }
 
