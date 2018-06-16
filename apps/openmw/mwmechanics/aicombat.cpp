@@ -22,6 +22,8 @@
 #include "combat.hpp"
 #include "coordinateconverter.hpp"
 #include "actorutil.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
+#include "../mwbase/statusmanager.hpp"
 
 namespace
 {
@@ -229,7 +231,8 @@ namespace MWMechanics
             currentCell = actor.getCell();
         }
 
-        bool forceFlee = false;
+        bool forceFlee = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(actor)->getStatusManager()->hasStatus(MWBase::Fleeing);
+
         if (!canFight(actor, target))
         {
             storage.stopAttack();

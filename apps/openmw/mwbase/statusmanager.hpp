@@ -74,7 +74,8 @@ namespace MWBase
 		ChargingImpulseShroom = 16,
 		ReleasedImpulseShroom = 17,
 		RequiresUpdate = 18,
-		EquippedImpulseShroom = 19
+		EquippedImpulseShroom = 19,
+		Fleeing = 20
 	};
 
 

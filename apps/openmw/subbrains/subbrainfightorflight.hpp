@@ -8,6 +8,7 @@ namespace MWBase {
 
 	class Awareness;
 	class BOFight;
+	class BOFlee;
 }
 
 
@@ -37,11 +38,12 @@ namespace MWBase {
 
 		BOFight * mFightBO;
 
+		BOFlee * mFleeBO;
+
 
 	};
 
 	class BOFight : public MWBase::BehaviorObject {
-
 
 
 	public:
@@ -80,6 +82,51 @@ namespace MWBase {
 		BOFight(BOFight const &instance)
 		{
 			std::cout << "cloned get BO" << std::endl;
+		};
+
+	};
+
+
+	class BOFlee : public MWBase::BehaviorObject {
+
+
+	public:
+
+
+		BOFlee();
+
+		BOFlee* Clone(MWBase::Life * life, ESM::RefNum refnum)
+		{
+			BOFlee * newbo = new BOFlee(*this);
+			newbo->mOwnerLife = life;
+			newbo->mTargetRefNum = refnum;
+			return newbo;
+		}
+
+
+		virtual BOReturn update(float time, MWWorld::Ptr ownerptr);
+
+		virtual void getDebugInfo()
+		{};
+
+		ESM::Position mExpectedPosition;
+
+		virtual BOReturn start();
+
+
+		virtual ~BOFlee()
+		{
+
+		};
+
+		virtual bool stop();
+
+	private:
+
+
+		BOFlee(BOFight const &instance)
+		{
+			std::cout << "cloned flee BO" << std::endl;
 		};
 
 	};

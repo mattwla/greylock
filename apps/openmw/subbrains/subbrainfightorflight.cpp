@@ -12,6 +12,7 @@ namespace MWBase {
 	{
 		mOwnerLife = life;
 		mFightBO = new BOFight();
+		mFleeBO = new BOFlee();
 	}
 
 	void MWBase::SubBrainFightOrFlight::calculate(MWBase::Awareness * awareness)
@@ -38,9 +39,8 @@ namespace MWBase {
 
 			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 0);
 			MWBase::GOAPStatus statusoutput(status.mStatusType, status.mExtraData, status.mAmount);
-			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFightBO, status.mTarget->getRefNum(), 1, "Fight"));
+			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFleeBO, status.mTarget->getRefNum(), 1, "Fight"));
 			node->mCost = 1;
-
 			nodes.push_back(node);
 		}
 
@@ -84,6 +84,44 @@ namespace MWBase {
 	}
 
 	bool BOFight::stop()
+	{
+		auto ownerPtr = mOwnerLife->mPtr;
+		MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+		seq.clear();
+		mStopRequested = true;
+		return true;
+	}
+
+	BOFlee::BOFlee()
+	{
+	}
+
+	BOReturn BOFlee::update(float time, MWWorld::Ptr ownerptr)
+	{
+		std::cout << "fleeing" << std::endl;
+
+		if(mStopRequested)
+			return STOPPED;
+
+		//std::cout << "startin a fight" << std::endl;
+		return IN_PROGRESS;
+	}
+
+	BOReturn BOFlee::start()
+	{
+
+		MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mOwnerLife->mPtr)->getStatusManager()->giveStatus(MWBase::Fleeing);
+		auto ownerPtr = mOwnerLife->mPtr;
+		MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+		seq.clear();
+		seq.stack(MWMechanics::AiCombat(mSEITarget->getPtr()), mOwnerLife->mPtr);
+		std::cout << "startin a flee" << std::endl;
+		return IN_PROGRESS;
+
+		//return BOReturn();
+	}
+
+	bool BOFlee::stop()
 	{
 		auto ownerPtr = mOwnerLife->mPtr;
 		MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
