@@ -313,7 +313,8 @@ namespace MWMechanics
         // and any actor currently being followed or escorted by actor1
         std::set<MWWorld::Ptr> allies1;
 
-        getActorsSidingWith(actor1, allies1, cachedAllies);
+       // getActorsSidingWith(actor1, allies1, cachedAllies);
+		//mwx stopped followers from fighting with, will be done with custom AI code.
 
         // If an ally of actor1 has been attacked by actor2 or has attacked actor2, start combat between actor1 and actor2
         for (std::set<MWWorld::Ptr>::const_iterator it = allies1.begin(); it != allies1.end(); ++it)

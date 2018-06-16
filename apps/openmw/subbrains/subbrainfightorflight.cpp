@@ -1,10 +1,17 @@
 #include "subbrainfightorflight.hpp"
 #include "../mwbase/lifemanager.hpp"
+#include "../mwbase/smartentitiesmanager.hpp"
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/aifollow.hpp"
+#include "../mwmechanics/aicombat.hpp"
+#include "../mwworld/class.hpp"
 
 namespace MWBase {
 
 	SubBrainFightOrFlight::SubBrainFightOrFlight(MWBase::Life * life)
 	{
+		mOwnerLife = life;
+		mFightBO = new BOFight();
 	}
 
 	void MWBase::SubBrainFightOrFlight::calculate(MWBase::Awareness * awareness)
@@ -13,30 +20,53 @@ namespace MWBase {
 
 	std::string MWBase::SubBrainFightOrFlight::getID()
 	{
-		return std::string();
+		return "fight or flight sb";
 	}
 
 	void MWBase::SubBrainFightOrFlight::getDebugInfo()
 	{
+
 	}
 
-	std::vector<std::shared_ptr<GOAPNodeData>> MWBase::SubBrainFightOrFlight::getMatchingBehaviorObjects(MWBase::GOAPStatus)
+	std::vector<std::shared_ptr<GOAPNodeData>> MWBase::SubBrainFightOrFlight::getMatchingBehaviorObjects(MWBase::GOAPStatus status)
 	{
-		return std::vector<std::shared_ptr<GOAPNodeData>>();
+		std::vector<std::shared_ptr<GOAPNodeData>> nodes;
+		
+		if (status.mStatusType == VITALS && status.mExtraData == "health" && status.mAmount == -1)
+		{
+			status.mTarget;
+
+			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 0);
+			MWBase::GOAPStatus statusoutput(status.mStatusType, status.mExtraData, status.mAmount);
+			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFightBO, status.mTarget->getRefNum(), 1, "Fight"));
+			node->mCost = 1;
+
+			nodes.push_back(node);
+		}
+
+
+
+
+		return nodes;
 	}
 
 	int SubBrainFightOrFlight::getCost(SmartEntityInstance * sei)
 	{
-		return 0;
+		return 1;
 	}
 
 	BOFight::BOFight()
 	{
+		
 	}
 
 	BOReturn MWBase::BOFight::update(float time, MWWorld::Ptr ownerptr)
 	{
-		return BOReturn();
+		if (mStopRequested)
+			return STOPPED;
+
+		//std::cout << "startin a fight" << std::endl;
+		return IN_PROGRESS;
 	}
 
 	void MWBase::BOFight::getDebugInfo()
@@ -45,7 +75,21 @@ namespace MWBase {
 
 	BOReturn MWBase::BOFight::start()
 	{
-		return BOReturn();
+		auto ownerPtr = mOwnerLife->mPtr;
+		MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+		seq.clear();
+		seq.stack(MWMechanics::AiCombat(mSEITarget->getPtr()), mOwnerLife->mPtr);
+		std::cout << "startin a fight" << std::endl;
+		return IN_PROGRESS;
+	}
+
+	bool BOFight::stop()
+	{
+		auto ownerPtr = mOwnerLife->mPtr;
+		MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
+		seq.clear();
+		mStopRequested = true;
+		return true;
 	}
 
 }

@@ -478,6 +478,11 @@ namespace MWBase
 
 			//get a BO from our current node
 			mCurrentBehaviorObject = mGOAPNodeDataList[mCurrentStep]->getNewBehaviorObject(mOwnerLife, mGOAPNodeDataList[mCurrentStep]->mRefNum);
+			mCurrentBehaviorObject->setOwner(mOwnerLife);
+
+			auto refnum = mGOAPNodeDataList[mCurrentStep]->mRefNum;
+			auto target = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
+			mCurrentBehaviorObject->setTarget(target);
 			mCurrentBehaviorObject->start();
 		}
 		else

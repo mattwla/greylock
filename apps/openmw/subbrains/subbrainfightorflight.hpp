@@ -7,6 +7,7 @@
 namespace MWBase {
 
 	class Awareness;
+	class BOFight;
 }
 
 
@@ -33,6 +34,8 @@ namespace MWBase {
 		virtual std::vector<std::shared_ptr<GOAPNodeData>> getMatchingBehaviorObjects(MWBase::GOAPStatus);
 
 		int getCost(SmartEntityInstance * sei); //what of for a different BO?
+
+		BOFight * mFightBO;
 
 
 	};
@@ -69,15 +72,10 @@ namespace MWBase {
 
 		};
 
-		virtual bool stop()
-		{
-			//by default no stop logic;
-			mStopRequested = true;
-			std::cout << "BO with no stop logic recieved stop request.... FIGHT" << std::endl;
-			return true;
-		};
+		virtual bool stop();
 
 	private:
+
 
 		BOFight(BOFight const &instance)
 		{
