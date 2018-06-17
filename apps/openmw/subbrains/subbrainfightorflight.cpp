@@ -17,6 +17,28 @@ namespace MWBase {
 
 	void MWBase::SubBrainFightOrFlight::calculate(MWBase::Awareness * awareness)
 	{
+		typedef std::unordered_map<ESM::RefNum, MWBase::SensoryLink> linklist;
+		auto list = awareness->getSensoryLinksThisFrame()->mSensoryLinks;
+		for (linklist::iterator it = list.begin(); it != list.end(); it++)
+		{
+			if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::OnFire))
+			{
+				MWBase::GOAPStatus status(MWBase::RUNNING_BEHAVIOR_OBJECT, "flee", 1);
+				std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
+				mOwnerLife->submitDesirePtr(desire);
+			}
+		}
+	
+
+
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mOwnerLife->mPtr);
+		bool onfire = sei->getStatusManager()->hasStatus(MWBase::OnFire);
+		if (onfire)
+		{
+			MWBase::GOAPStatus status(MWBase::RUNNING_BEHAVIOR_OBJECT, "flee", 1);
+			std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
+			mOwnerLife->submitDesirePtr(desire);
+		}
 	}
 
 	std::string MWBase::SubBrainFightOrFlight::getID()
@@ -39,7 +61,15 @@ namespace MWBase {
 
 			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 0);
 			MWBase::GOAPStatus statusoutput(status.mStatusType, status.mExtraData, status.mAmount);
-			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFleeBO, status.mTarget->getRefNum(), 1, "Fight"));
+			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFightBO, status.mTarget->getRefNum(), 1, "Fight"));
+			node->mCost = 1;
+			nodes.push_back(node);
+		}
+		else if (status.mStatusType == RUNNING_BEHAVIOR_OBJECT && status.mExtraData == "flee")
+		{
+			MWBase::GOAPStatus statusinput(MWBase::STATUS_VOID, "", 0);
+			MWBase::GOAPStatus statusoutput(status.mStatusType, status.mExtraData, status.mAmount);
+			std::shared_ptr<GOAPNodeData> node(new GOAPNodeData(statusinput, statusoutput, mFleeBO, mOwnerLife->mPtr.getCellRef().getRefNum(), 1, "Flee"));
 			node->mCost = 1;
 			nodes.push_back(node);
 		}
@@ -98,7 +128,10 @@ namespace MWBase {
 
 	BOReturn BOFlee::update(float time, MWWorld::Ptr ownerptr)
 	{
-		std::cout << "fleeing" << std::endl;
+		//std::cout << "fleeing" << std::endl;
+
+		if (!mOwnerLife->mCurrentSpeech)
+			mOwnerLife->say("AHHHHHHHHHHHHH!");
 
 		if(mStopRequested)
 			return STOPPED;

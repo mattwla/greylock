@@ -49,6 +49,9 @@ namespace MWBase
 
 	void Life::say(std::string speech)
 	{
+		bool dead = mPtr.getClass().getNpcStats(mPtr).isDead();
+		if (dead)
+			return;
 		std::shared_ptr<Speech> speechobject = std::make_shared<Speech>(mPtr, speech);
 		MWBase::Environment::get().getWindowManager()->createSpeech(speechobject);
 		mCurrentSpeech = speechobject;

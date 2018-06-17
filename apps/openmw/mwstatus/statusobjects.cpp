@@ -60,9 +60,9 @@ void MWBase::OnFireStatusObject::update(float duration)
 			MWMechanics::DynamicStat<float> health(mPtr.getClass().getCreatureStats(mPtr).getHealth());
 			health.setCurrent(health.getCurrent() - 100.0f);
 			stats.setHealth(health);
-			end();
+			//end();
 		}
-		else
+		else if (mSEI->getPtr().getClass().isDoor())
 		{
 
 			//MWBase::Environment::get().getWorld()->disable(mSEI->getPtr());
