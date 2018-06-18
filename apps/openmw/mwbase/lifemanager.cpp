@@ -293,6 +293,7 @@ namespace MWBase
 		else
 			std::cout << "Open " << list << std::endl;
 		std::string lifeid;
+		std::cout << lifeid << std::endl;
 		while (getline(in, lifeid))
 		{
 			MWBase::Life* newlife = new MWBase::Life(lifeid);

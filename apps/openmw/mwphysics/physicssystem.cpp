@@ -1405,7 +1405,7 @@ namespace MWPhysics
         osg::ref_ptr<Resource::BulletShapeInstance> shapeInstance = mShapeManager->getInstance(mesh);
 		if (!shapeInstance || !shapeInstance->getCollisionShape())
 		{
-			std::cout <<"===WARNING failed in add object to objects list: " << ptr.getCellRef().getRefId() << std::endl;
+			//std::cout <<"===WARNING failed in add object to objects list: " << ptr.getCellRef().getRefId() << std::endl;
 			return;
 		}
 

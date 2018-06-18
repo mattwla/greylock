@@ -268,6 +268,7 @@ namespace MWBase
 		{
 			mPtr = MWBase::Environment::get().getWorld()->searchPtr(id, false);
 			mId = id;
+			std::cout << "====+++++++" + id << std::endl;
 			mRefNum = mPtr.getCellRef().getRefNum();
 			//mOwnerCell = mPtr.getCell();
 			mPtr.getBase()->mLife = this;

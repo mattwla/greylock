@@ -122,7 +122,7 @@ void HomeSubBrain::calculate(MWBase::Awareness * awareness)
 					if (!allowed && !mRemovePersonDesire)
 					{
 						MWBase::GOAPStatus desirestatus(MWBase::REMOVE_PERSON_FROM_ZONE, "", 1, it->second.mSEInstance);
-						std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 900);
+						std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 500);
 						mOwnerLife->submitDesirePtr(pDesire);
 						mRemovePersonDesire = pDesire;
 						/*if (!mOwnerLife->mCurrentSpeech)
@@ -210,7 +210,7 @@ MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr owner
 		if (mWarningStage == 0)
 		{
 			mOwnerLife->say("GET OUT!");
-			seq.stack(MWMechanics::AiFollow("player"), ownerPtr);
+			seq.stack(MWMechanics::AiFollow(sei->getPtr().getCellRef().getRefId()), ownerPtr);
 			mWarningStage += 1;
 		}
 		else if (mWarningStage == 1)
@@ -226,7 +226,7 @@ MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr owner
 			mWarningStage += 1;
 			
 			MWBase::GOAPStatus desirestatus(MWBase::VITALS, "health", -1, sei);
-			std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 900);
+			std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 80);
 			mSubPlan = mOwnerLife->selectIntentionPlan(pDesire);
 			//mWarningStage += 1;
 			

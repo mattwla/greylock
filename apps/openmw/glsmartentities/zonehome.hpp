@@ -73,9 +73,12 @@ public:
 
 			virtual void clearDesires()
 			{
-				mRemovePersonDesire->mIntensity = 0;
-				mRemovePersonDesire = 0;
-				
+				//mwx fix me memory leak
+				if (mRemovePersonDesire)
+				{
+					mRemovePersonDesire->mIntensity = 0;
+					mRemovePersonDesire = 0;
+				}
 			}
 
 

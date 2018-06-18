@@ -231,7 +231,7 @@ namespace MWMechanics
             currentCell = actor.getCell();
         }
 
-        bool forceFlee = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(actor)->getStatusManager()->hasStatus(MWBase::Fleeing);
+        bool forceFlee = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(actor)->getStatusManager()->hasStatus(MWBase::Fleeing) || MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(actor)->getStatusManager()->hasStatus(MWBase::OnFire);
 
         if (!canFight(actor, target))
         {
@@ -498,14 +498,14 @@ namespace MWMechanics
         MWWorld::Ptr targetWeapon = MWWorld::Ptr();
         const MWWorld::Class& targetClass = target.getClass();
 
-        if (targetClass.hasInventoryStore(target))
+      /*  if (targetClass.hasInventoryStore(target))
         {
             MWMechanics::WeaponType weapType = WeapType_None;
             MWWorld::ContainerStoreIterator weaponSlot =
                 MWMechanics::getActiveWeapon(targetClass.getCreatureStats(target), targetClass.getInventoryStore(target), &weapType);
             if (weapType != WeapType_PickProbe && weapType != WeapType_Spell && weapType != WeapType_None && weapType != WeapType_HandToHand)
                 targetWeapon = *weaponSlot;
-        }
+        }*/
 
         bool targetUsesRanged = false;
         float rangeAttackOfTarget = ActionWeapon(targetWeapon).getCombatRange(targetUsesRanged);

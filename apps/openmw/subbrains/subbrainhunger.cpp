@@ -24,6 +24,11 @@ MWBase::SubBrainHunger::SubBrainHunger(MWBase::Life * life)
 void MWBase::SubBrainHunger::calculate(MWBase::Awareness * awareness)
 {
 	mHungerDesire->mIntensity = mOwnerLife->mVitals.mHunger;
+	//if (mHungerDesire->mIsIntention)
+	//{
+	//	if (!mOwnerLife->mCurrentSpeech)
+	//		mOwnerLife->say("I'm hungry");
+	//}
 }
 
 std::string MWBase::SubBrainHunger::getID()
