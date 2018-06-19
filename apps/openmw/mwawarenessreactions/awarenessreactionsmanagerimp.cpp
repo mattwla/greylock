@@ -159,11 +159,11 @@ namespace MWAwarenessReactions
 
 			else
 			{
-				if (MWBase::Environment::get().getWorld()->hasClearLOS(observer, ptr))
+			/*	if (MWBase::Environment::get().getWorld()->hasClearLOS(observer, ptr))
 					return true;
 				else
 					return false;
-
+*/
 				if (MWBase::Environment::get().getWorld()->getPlayerPtr() == ptr)
 				{
 					if (!MWBase::Environment::get().getWorld()->getLOS(observer, ptr))
