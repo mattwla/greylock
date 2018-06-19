@@ -46,7 +46,7 @@ void MWBase::Awareness::getDebugInfo()
 	std::cout << "I am aware of..." << std::endl;
 	unsigned int itx = 0;
 	
-	for (auto i : mSensoryLinkStore->mSensoryLinks)
+	for (auto i : mSensoryLinksThisFrame->mSensoryLinks)
 	{
 		std::cout << i.second.mSEInstance->getPtr().getCellRef().getRefId() << std::endl;
 	}

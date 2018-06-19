@@ -311,6 +311,10 @@ namespace MWBase
 	{
 
 		MWBase::MetaBrainManager * mMetaBrainManager = 0;
+
+		int mLastUpdatedIndex = 0;
+
+		bool updatethisframe = true;
 		
 	public:
 

@@ -59,6 +59,11 @@ namespace MWBase
 
 	void Life::getDebugInfo()
 	{
+		std::cout << "I AM AWARE OF" << std::endl;
+		mAwareness->getDebugInfo();
+
+
+
 		std::cout << mId << std::endl;
 		std::cout << "Hunger: " + std::to_string(mVitals.mHunger) << std::endl;
 		std::cout << "Sleepiness: " + std::to_string(mVitals.mSleepiness) << std::endl;
@@ -89,9 +94,21 @@ namespace MWBase
 
 	void Life::update(float duration)
 	{
+		
+
+	//goal for frequency NPC gets AI updates
+	//every .25
+	//speed for one revolution
+	//lifespersecond * amount of lives
+
+
+
 
 		MWWorld::TimeStamp currenttime = MWBase::Environment::get().getWorld()->getTimeStamp();
 		double timepassed = currenttime - mTimeOfLastUpdate;
+
+
+
 	//	std::cout << timepassed << std::endl;
 
 		//If you were talking, and are now done talking, destroy the speech object
@@ -313,27 +330,89 @@ namespace MWBase
 		mMetaBrainManager->newGame();
 	}
 
+	//MWX Fix me why is this in different namespace?
+	//OpenMWX
 	void MWBase::LifeManager::update(float duration, bool paused)
 	{
+		//AI RUNS ON SEPERATE THREAD?
+		if (!updatethisframe)
+		{
+			updatethisframe = true;
+			return;
+		}
+		updatethisframe = false;
+
+
+		//desired updates per second
+		float dUPS = 30.f;
+		float desiredcycletime = .25;
+		float lpsthisframe;
+		float thisframetime = duration;
+		float updatesthisframe = dUPS / duration;
+		int totallives = mLifeList.size();
+		float currentfps = 1.f / duration;
+		//std::cout << currentfps << std::endl;
+		lpsthisframe = totallives / desiredcycletime;
+		int amounttoupdate = lpsthisframe / currentfps;
+		//in
+		//if (amounttoupdate < 1)
+			amounttoupdate = 1;
+
+		//std::cout << amounttoupdate << std::endl;
+
+		while (amounttoupdate > 0)
+		{
+			mLastUpdatedIndex += 1;
+			amounttoupdate -= 1;
+			if (mLastUpdatedIndex >= mLifeList.size())
+				mLastUpdatedIndex = 0;
+
+			if (inActiveRange(mLifeList[mLastUpdatedIndex]->mPtr))
+			{
+				mLifeList[mLastUpdatedIndex]->update(duration);
+			}
+
+		}
+	
+		
+
+		//total lives
+		//lifespersecond
+		//time for loop = totalives/livespersecond 
+		//goal time for loop = .3
+		//.3 = totallives / livespersecond
+		// .3 = 30 / livespersecond
+		// how many needed = totalives
+		// .25 = totallives / livespersecond
+		// totallives = livespersecond * .25
+		// totallives / .25 = livespersecond
+
+		// lps/1 = x / (1/fps)
+
+		//lps / currentflps
+
+
+
+
 		mMetaBrainManager->update(duration);
 
-		unsigned int itx = 0;
-		while (itx < mLifeList.size())
-		{
-			MWBase::Life * currentLife = mLifeList[itx];
-			if (inActiveRange(currentLife->mPtr))
-			{
-				currentLife->update(duration);
-				//currentLife->mAwareness->refresh();
-				//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
-			}
-			else
-			{
-				//	currentLife->update(duration);
-				//currentLife->inactiveUpdate();
-			}
-			itx++;
-		}
+		//unsigned int itx = 0;
+		//while (itx < mLifeList.size())
+		//{
+		//	MWBase::Life * currentLife = mLifeList[itx];
+		//	if (inActiveRange(currentLife->mPtr))
+		//	{
+		//		currentLife->update(duration);
+		//		//currentLife->mAwareness->refresh();
+		//		//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
+		//	}
+		//	else
+		//	{
+		//		//	currentLife->update(duration);
+		//		//currentLife->inactiveUpdate();
+		//	}
+		//	itx++;
+		//}
 	}
 
 

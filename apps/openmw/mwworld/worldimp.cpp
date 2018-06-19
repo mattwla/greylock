@@ -1725,10 +1725,13 @@ namespace MWWorld
 	const bool World::hasClearLOS(const MWWorld::Ptr & observer, const MWWorld::Ptr & target)
 	{
 		osg::Vec3f origin = observer.getRefData().getPosition().asVec3();
+		//correct for head
+		origin.z() += 100.0f;
 		osg::Vec3f dest = target.getRefData().getPosition().asVec3();
+		//dest.z() += 50.0f;
 		//MWRender::RenderingManager::RayResult result2 = mRendering->castRay(origin, dest, false, false);
 
-		int collisionTypes = MWPhysics::CollisionType_World | MWPhysics::CollisionType_HeightMap | MWPhysics::CollisionType_Door;
+		int collisionTypes = MWPhysics::CollisionType_World | MWPhysics::CollisionType_HeightMap | MWPhysics::CollisionType_Door | MWPhysics::CollisionType_Actor;
 		collisionTypes |= MWPhysics::CollisionType_Water;
 		
 		MWPhysics::PhysicsSystem::RayResult result = mPhysics->castRay(origin, dest, MWWorld::Ptr(), std::vector<MWWorld::Ptr>(), collisionTypes);
@@ -3897,6 +3900,8 @@ namespace MWWorld
 		//	life->mAwareness->getDebugInfo();
 			//osg::Vec3f pos = life->mPtr.getRefData().getPosition().asVec3();
 			std::cout << "ActorID: " + std::to_string(object.getClass().getCreatureStats(object).getActorId()) << std::endl;
+			auto life = MWBase::Environment::get().getLifeManager()->getLifeFromID(object.getCellRef().getRefId());
+			life->getDebugInfo();
 			return;
 		}
 
