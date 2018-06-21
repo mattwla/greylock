@@ -9,6 +9,11 @@
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/drawstate.hpp"
+#include "../mwbase/inputmanager.hpp"
+
+#include "../mwmechanics/movement.hpp"
+#include "../mwmechanics/npcstats.hpp"
+#include "../mwmechanics/creaturestats.hpp"
 
 MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 {
@@ -186,7 +191,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("People in the village use them as decorations. They have horrible taste.");
+			life->say("Rich folk in the village use these ugly things as decorations.");
 			mStage += 1;
 		}
 	}
@@ -199,7 +204,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("You'll have to 'acquire' them from houses in the village.");
+			life->say("Look for the yellow houses. Oh? Remember how to get there?");
 			mStage += 1;
 		}
 	}
@@ -212,7 +217,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isNadia)
 		{
-			life->say("To get there I would hop off this cliff, and glide down to the bounce shroom. (tap control while in air to glide).");
+			life->say("You can use the Bounceshroom at the bottom of the cliff, or take the fast travel sign nearby.");
 			mStage += 1;
 		}
 	}
@@ -223,22 +228,23 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	}
 	else if (mStage == 15)
 	{
-		if (isNadia)
+		if (isArx)
 		{
-			life->say("Give the bounce shroom a good punch, and it'll launch you in the air. Use the height to glide to the village.");
+			life->say("On the topic of shrooms, I detected some Fireshrooms under a bridge in the village, those will certainly be useful.");
 			mStage += 1;
 		}
 	}
 	else if (mStage == 16)
 	{
-		if (isNadia && life->mCurrentSpeech == 0)
+		
+		if (isArx && life->mCurrentSpeech == 0)
 			mStage += 1;
 	}
 	else if (mStage == 17)
 	{
 		if (isNadia)
 		{
-			life->say("Oh, and I left some fire shrooms and float shrooms by our campfire, they might be of use.");
+			life->say("Try not to burn anyone who doesn't deserve it. I'm not judging though.");
 			mStage += 1;
 		}
 		/*mArxDesire->mIntensity = 0;
@@ -256,7 +262,7 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 	{
 		if (isArx)
 		{
-			life->say("Good luck!");
+			life->say("Good luck! Don't forget press control in air to activate your glider.");
 			mStage += 1;
 		}
 		

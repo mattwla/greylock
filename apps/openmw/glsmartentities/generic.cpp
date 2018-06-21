@@ -10,6 +10,7 @@
 SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 {
 	mIngameIDs.push_back("battery1_pack");
+	mIngameIDs.push_back("cargoxtestgreen");
 }
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::getInstance(const MWWorld::Ptr & ptr)
@@ -41,6 +42,7 @@ void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance *
 
 	themap["in_velothismall_ndoor_01"] = { MWBase::IsFlammable };
 	themap["gl_sitting_stump"] = { MWBase::IsFlammable };
+	themap["cargoxtestgreen"] = { MWBase::NotClimbable };
 
 	if (!themap.count(sei->getRefId()))
 		return;

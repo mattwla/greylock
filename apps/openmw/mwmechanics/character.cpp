@@ -2336,7 +2336,24 @@ MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, f
 
 bool CharacterController::checkCanWallJump()
 {
+	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
+	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
+	osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
+	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
+	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
 
+	auto result = MWBase::Environment::get().getWorld()->getResultsOfNearestRayHit(listenerPos, lat, 200, false);
+
+	if (result.mHit)
+	{
+		//std::cout << "=====hit=======" << std::endl;
+		auto hitptr = result.mHitObject;
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(hitptr, true);
+		if (sei->getStatusManager()->hasStatus(MWBase::NotClimbable))
+		{
+			return false;
+		}
+	}
 
 	if (mCurrentAction || (MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !MWBase::Environment::get().getWorld()->isOnSlope(mPtr))|| mWallJumpCooldown != 0.0f)
 		return false;
