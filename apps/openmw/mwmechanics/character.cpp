@@ -1861,16 +1861,17 @@ void CharacterController::update(float duration)
 		
 
         }
-        else if(vec.z() > 0.0f && mJumpState != JumpState_InAir) //vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
+
+
+
+
+
+
+        else if((vec.z() > 0.0f && mJumpState != JumpState_InAir) || sei->getStatusManager()->hasStatus(MWBase::BounceShroomLaunch)) //vec.z() > 0.0f && (mJumpState == JumpState_None || mJumpState == JumpState_Landing))
         {
             // Started a jump.
             float z = cls.getJump(mPtr);
-			if (sei->getStatusManager()->hasStatus(MWBase::BounceShroomLaunch))
-			{
-				z = 6000.0f;
-				sei->getStatusManager()->removeStatus(MWBase::BounceShroomLaunch);
-				mPtr.getClass().getCreatureStats(mPtr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, false);
-			}
+		
             if (z > 0)
             {
                 if(vec.x() == 0 && vec.y() == 0)
@@ -1899,6 +1900,14 @@ void CharacterController::update(float duration)
                     fatigue.setCurrent(fatigue.getCurrent() - fatigueDecrease);
                     cls.getCreatureStats(mPtr).setFatigue(fatigue);
                 }
+
+				if (sei->getStatusManager()->hasStatus(MWBase::BounceShroomLaunch))
+				{
+				/*	vec.z() = 6000.0f;
+					sei->getStatusManager()->removeStatus(MWBase::BounceShroomLaunch);*/
+					mPtr.getClass().getCreatureStats(mPtr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, false);
+				}
+
             }
         }
         else if(mJumpState == JumpState_InAir && !inwater && !flying)

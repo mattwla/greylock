@@ -124,5 +124,6 @@ void MWBase::ThiefStatusObject::init()
 void MWBase::ThiefStatusObject::end()
 {
 	std::cout << "thief over" << std::endl;
+	mDone = true;
 	mSEI->getStatusManager()->removeStatus(MWBase::Thief);
 }

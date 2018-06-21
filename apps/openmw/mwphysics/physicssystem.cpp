@@ -336,6 +336,7 @@ namespace MWPhysics
 			bool inGlideDescent = false;
 			bool chargingImpulseShroom = false;
 			bool releasingImpulseShroom = false;
+			bool bounceShroomed = false;
 			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr);
 			if (sei)
 			{
@@ -346,6 +347,7 @@ namespace MWPhysics
 				inGlideDescent = sei->getStatusManager()->hasStatus(MWBase::InGlideDescent);
 				chargingImpulseShroom = sei->getStatusManager()->hasStatus(MWBase::ChargingImpulseShroom);
 				releasingImpulseShroom = sei->getStatusManager()->hasStatus(MWBase::ReleasedImpulseShroom);
+				bounceShroomed = sei->getStatusManager()->hasStatus(MWBase::BounceShroomLaunch);
 
 			}
 
@@ -365,7 +367,14 @@ namespace MWPhysics
 					sei->getStatusManager()->removeStatus(MWBase::InWallJump);
 				}
 				else if (velocity.z() > 0.f && physicActor->getOnGround())
+				{
 					inertia = velocity;
+					if (bounceShroomed)
+					{
+						inertia.z() = 6000.f;
+						sei->getStatusManager()->removeStatus(MWBase::BounceShroomLaunch);
+					}
+				}
 				else if ((!physicActor->getOnGround() || physicActor->getOnSlope()) && !inWallHold)
 				{
 					if(!inClimb && !physicActor->getOnSlope())

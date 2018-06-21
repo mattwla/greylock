@@ -76,8 +76,8 @@ void SmartEntityBounceShroomInstance::onImpact(MWWorld::Ptr impactwith)
 	if (standingon)
 		std::cout << "LAUNCH PLAYER" << std::endl;
 
-	playerptr.getClass().getMovementSettings(playerptr).mAttemptJump = true;
-	playerptr.getClass().getMovementSettings(playerptr).mPosition[2] = 1.0;
+	//playerptr.getClass().getMovementSettings(playerptr).mAttemptJump = true;
+	//playerptr.getClass().getMovementSettings(playerptr).mPosition[2] = 1.0;
 	playerptr.getClass().getCreatureStats(playerptr).setMovementFlag(MWMechanics::CreatureStats::Flag_ForceJump, true);
 	
 	//MWBase::Environment::get().getStatusManager()->giveStatus(MWBase::Environment::get().getWorld()->getPlayerPtr(), MWBase::BounceShroomLaunch);
