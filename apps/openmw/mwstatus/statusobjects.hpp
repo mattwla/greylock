@@ -150,6 +150,59 @@ namespace MWBase
 	};
 
 
+	//ON FIRE STATUS OBJECT
+
+	class ThiefStatusObject : public StatusObject
+	{
+
+		float mTotalTime = 0.0f;
+		MWWorld::Ptr thiefptr;
+
+
+	public:
+
+		ThiefStatusObject(MWBase::SmartEntityInstance * sei)
+		{
+			mSEI = sei;
+		}
+
+		static StatusObjectConstructor * getConstuctor()
+		{
+			class ThiefStatusConstructor : public StatusObjectConstructor
+			{
+			public:
+
+				virtual StatusObject * getObject(MWBase::SmartEntityInstance * sei)
+				{
+
+					return new ThiefStatusObject(sei);
+				}
+
+				virtual MWBase::Status getStatusEnum()
+				{
+					return MWBase::Thief;
+				}
+			};
+
+			std::cout << "===========================returning float status constructor===================" << std::endl;
+			return new ThiefStatusConstructor();
+		}
+
+		virtual MWBase::Status getStatusEnum()
+		{
+			return MWBase::Thief;
+		}
+
+		virtual void update(float duration);
+
+		virtual void init();
+
+		virtual void end();
+	};
+
+
+
+
 }
 
 

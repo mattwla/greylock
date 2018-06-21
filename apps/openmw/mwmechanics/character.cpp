@@ -2976,6 +2976,9 @@ ActionState MWMechanics::Climb::getType()
 
 bool MWMechanics::Climb::update(float duration)
 {
+	if (duration > .1)
+		return true;
+
 	float rotatestrength = .3 / (.75 / duration);
 
 	

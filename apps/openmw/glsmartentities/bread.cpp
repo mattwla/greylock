@@ -7,6 +7,7 @@
 SmartEntityBreadTemplate::SmartEntityBreadTemplate()
 {
 	mIngameIDs.push_back("god_loaf");
+	mIngameIDs.push_back("zeatshroom");
 }
 
 MWBase::SmartEntityInstance * SmartEntityBreadTemplate::getInstance(const MWWorld::Ptr &ptr)

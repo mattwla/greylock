@@ -51,6 +51,7 @@ public:
 		MWBase::SmartEntityInstance * mHomeSEI;
 		MWBase::BehaviorObject * mConfrontTrespasserBO;
 		std::shared_ptr<MWBase::GOAPDesire> mRemovePersonDesire = 0;
+		std::shared_ptr<MWBase::GOAPDesire> mKillThiefDesire = 0;
 		bool mWasInHomeLastUpdate = true;
 	
 		public:
@@ -118,7 +119,7 @@ public:
 		{
 			mStopRequested = true;
 			//by default no stop logic;
-			std::cout << "BO with no stop logic recieved stop request - BOEAT" << std::endl;
+			//std::cout << "BO with no stop logic recieved stop request - BOEAT" << std::endl;
 			return true;
 		};
 

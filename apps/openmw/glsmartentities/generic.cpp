@@ -9,6 +9,7 @@
 
 SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 {
+	mIngameIDs.push_back("battery1_pack");
 }
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::getInstance(const MWWorld::Ptr & ptr)

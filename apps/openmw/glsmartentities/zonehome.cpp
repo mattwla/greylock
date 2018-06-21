@@ -9,6 +9,7 @@
 SmartZoneHomeTemplate::SmartZoneHomeTemplate()
 {
 	mIngameIDs.push_back("cargo_container");
+	mIngameIDs.push_back("cargoxtestyellow");
 	//mIngameIDs.push_back("z_cave");
 }
 
@@ -114,13 +115,39 @@ void HomeSubBrain::calculate(MWBase::Awareness * awareness)
 
 		for (linklist::iterator it = currentlinks.begin(); it != currentlinks.end(); it++)
 		{
+
+			
+			if (mKillThiefDesire)
+				return;
+
+			//check for thief!
+			if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::Thief))
+			{
+				mOwnerLife->say("DIE THIEF!!!");
+				MWBase::GOAPStatus desirestatus(MWBase::VITALS, "health", -1, it->second.mSEInstance);
+				std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 600);
+				mOwnerLife->submitDesirePtr(pDesire);
+				mKillThiefDesire = pDesire;
+				
+			}
+
+
 			if (mHomeSEI->containsPtr(it->second.mSEInstance->getPtr()))
 			{
 				if (it->second.mSEInstance->isHumanLife())
 				{
 					bool allowed = mHomeSEI->isAllowedTerritory(it->second.mSEInstance->getLife());
+
+					
+
 					if (!allowed && !mRemovePersonDesire)
 					{
+						bool lodcheck = MWBase::Environment::get().getWorld()->hasClearLOS(mOwnerLife->mPtr, it->second.mSEInstance->getPtr());
+							
+						if(!lodcheck)
+							continue;
+
+
 						MWBase::GOAPStatus desirestatus(MWBase::REMOVE_PERSON_FROM_ZONE, "", 1, it->second.mSEInstance);
 						std::shared_ptr<MWBase::GOAPDesire> pDesire = std::make_shared<MWBase::GOAPDesire>(desirestatus, 500);
 						mOwnerLife->submitDesirePtr(pDesire);
@@ -197,6 +224,8 @@ void BOConfrontHomeTrespasser::getDebugInfo()
 
 MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr ownerptr)
 {
+	
+
 	MWBase::SmartEntityInstance * sei = mOwnerLife->mAwareness->getSensoryLinkStore()->mSensoryLinks[mTargetRefNum].mSEInstance;
 	MWWorld::Ptr ownerPtr = mOwnerLife->mPtr;
 	MWMechanics::AiSequence& seq = ownerPtr.getClass().getCreatureStats(ownerPtr).getAiSequence();
@@ -204,6 +233,13 @@ MWBase::BOReturn BOConfrontHomeTrespasser::update(float time, MWWorld::Ptr owner
 	{
 		
 	}
+
+	if (mStopRequested)
+	{
+		seq.clear();
+		return MWBase::STOPPED;
+	}
+
 
 	if (!mOwnerLife->mCurrentSpeech)
 	{

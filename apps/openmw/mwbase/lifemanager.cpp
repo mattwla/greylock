@@ -360,19 +360,19 @@ namespace MWBase
 
 		//std::cout << amounttoupdate << std::endl;
 
-		while (amounttoupdate > 0)
-		{
-			mLastUpdatedIndex += 1;
-			amounttoupdate -= 1;
-			if (mLastUpdatedIndex >= mLifeList.size())
-				mLastUpdatedIndex = 0;
+		//while (amounttoupdate > 0)
+		//{
+		//	mLastUpdatedIndex += 1;
+		//	amounttoupdate -= 1;
+		//	if (mLastUpdatedIndex >= mLifeList.size())
+		//		mLastUpdatedIndex = 0;
 
-			if (inActiveRange(mLifeList[mLastUpdatedIndex]->mPtr))
-			{
-				mLifeList[mLastUpdatedIndex]->update(duration);
-			}
+		//	if (inActiveRange(mLifeList[mLastUpdatedIndex]->mPtr))
+		//	{
+		//		mLifeList[mLastUpdatedIndex]->update(duration);
+		//	}
 
-		}
+		//}
 	
 		
 
@@ -396,23 +396,23 @@ namespace MWBase
 
 		mMetaBrainManager->update(duration);
 
-		//unsigned int itx = 0;
-		//while (itx < mLifeList.size())
-		//{
-		//	MWBase::Life * currentLife = mLifeList[itx];
-		//	if (inActiveRange(currentLife->mPtr))
-		//	{
-		//		currentLife->update(duration);
-		//		//currentLife->mAwareness->refresh();
-		//		//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
-		//	}
-		//	else
-		//	{
-		//		//	currentLife->update(duration);
-		//		//currentLife->inactiveUpdate();
-		//	}
-		//	itx++;
-		//}
+		unsigned int itx = 0;
+		while (itx < mLifeList.size())
+		{
+			MWBase::Life * currentLife = mLifeList[itx];
+			if (inActiveRange(currentLife->mPtr))
+			{
+				currentLife->update(duration);
+				//currentLife->mAwareness->refresh();
+				//currentLife->mSubBrainsManager->calculate(currentLife->mAwareness);
+			}
+			else
+			{
+				//	currentLife->update(duration);
+				//currentLife->inactiveUpdate();
+			}
+			itx++;
+		}
 	}
 
 

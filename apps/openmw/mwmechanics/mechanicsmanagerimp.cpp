@@ -1236,6 +1236,23 @@ namespace MWMechanics
         MWWorld::Ptr victim;
 
         bool isAllowed = true;
+
+
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item);
+		if (sei)
+		{
+			bool owned = sei->isManagedBySmartZone();
+			if (owned)
+			{
+				MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr)->getStatusManager()->giveStatus(MWBase::Thief);
+				std::cout << "THIEF" << std::endl;
+				return;
+			}
+		}
+
+		//isAllowed = 
+
+
         const MWWorld::CellRef* ownerCellRef = &item.getCellRef();
         if (!container.isEmpty())
         {

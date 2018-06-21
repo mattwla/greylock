@@ -58,6 +58,9 @@ void MWBase::SmartEntitiesManager::gatherSmartEntityTemplates()
 
 	it = new SmartEntityImpulseShroomTemplate();
 	addTemplateToMap(it);
+
+	it = new SmartEntityGenericTemplate();
+	addTemplateToMap(it);
 }
 
 void MWBase::SmartEntitiesManager::addTemplateToMap(SmartEntityTemplate * set)
