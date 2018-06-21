@@ -2334,10 +2334,10 @@ MWPhysics::PhysicsSystem::RayResult CharacterController::getRayResult(float z, f
 		/*return false;*/
 }
 
-bool CharacterController::checkCanWallJump()
+bool CharacterController::isFacedObjectClimbable(MWWorld::Ptr & ptr)
 {
-	const ESM::Position& refpos = getPlayer().getRefData().getPosition();
-	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(mPtr).z());
+	const ESM::Position& refpos = ptr.getRefData().getPosition();
+	auto listenerPos = refpos.asVec3() + osg::Vec3f(0, 0, 1.85f * MWBase::Environment::get().getWorld()->getHalfExtents(ptr).z());
 	osg::Quat listenerOrient = osg::Quat(refpos.rot[1], osg::Vec3f(0, -1, 0)) * osg::Quat(refpos.rot[0], osg::Vec3f(-1, 0, 0)) * osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1));
 	osg::Vec3f forward = listenerOrient * osg::Vec3f(0, 1, 0);
 	osg::Vec3f lat(forward.x(), forward.y(), 0.0f);
@@ -2353,8 +2353,19 @@ bool CharacterController::checkCanWallJump()
 		{
 			return false;
 		}
+		return true;
 	}
 
+	return true;
+
+}
+
+bool CharacterController::checkCanWallJump()
+{
+
+	if (!isFacedObjectClimbable(mPtr))
+		return false;
+	
 	if (mCurrentAction || (MWBase::Environment::get().getWorld()->isOnGround(mPtr) && !MWBase::Environment::get().getWorld()->isOnSlope(mPtr))|| mWallJumpCooldown != 0.0f)
 		return false;
 
@@ -3373,6 +3384,10 @@ bool MWMechanics::WallHold::update(float duration)
 	else if (mWallHoldIdx == 1)//Loop here while holding, player can let go to leap or use movement to shuffle around.
 	{
 		bool obstructed = MWBase::Environment::get().getWorld()->checkForObstruction(mPtr, 100.0f, 100.0f);
+		if (!CharacterController::isFacedObjectClimbable(mPtr))
+			obstructed = false;
+
+
 		if (mPtr.getClass().getMovementSettings(mPtr).mJumpReleased)
 		{
 			mWallHoldIdx = 2;	

@@ -440,6 +440,8 @@ public:
 
 	MWPhysics::PhysicsSystem::RayResult getRayResult(float z, float distance, osg::Vec3f position, RayDirection = RayDirection::forward);
 
+	static bool isFacedObjectClimbable(MWWorld::Ptr & ptr);
+
 	//bool checkForObstruction(float z, float distance);
 
 	bool checkCanWallJump();
