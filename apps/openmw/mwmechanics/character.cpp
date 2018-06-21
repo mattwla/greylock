@@ -2346,6 +2346,8 @@ bool CharacterController::isFacedObjectClimbable(MWWorld::Ptr & ptr)
 
 	if (result.mHit)
 	{
+		if(!result.mHitObject)
+			return true;
 		//std::cout << "=====hit=======" << std::endl;
 		auto hitptr = result.mHitObject;
 		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(hitptr, true);
@@ -2353,7 +2355,7 @@ bool CharacterController::isFacedObjectClimbable(MWWorld::Ptr & ptr)
 		{
 			return false;
 		}
-		return true;
+		
 	}
 
 	return true;
