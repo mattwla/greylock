@@ -339,7 +339,7 @@ MWBase::ArxDemoQuestBO::ArxDemoQuestBO()
 MWBase::BOReturn MWBase::ArxDemoQuestBO::update(float time, MWWorld::Ptr ownerptr)
 {
 	if (mStopRequested)
-		return MWBase::COMPLETE;
+		return MWBase::STOPPED;
 	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
 
 	return MWBase::IN_PROGRESS;
@@ -365,7 +365,7 @@ MWBase::BOReturn MWBase::NadiaDemoQuestBO::update(float time, MWWorld::Ptr owner
 {
 
 	if (mStopRequested)
-		return MWBase::COMPLETE;
+		return MWBase::STOPPED;
 
 	mParentSubBrain->getMetaBrain()->behaviorUpdate(mOwnerLife);
 

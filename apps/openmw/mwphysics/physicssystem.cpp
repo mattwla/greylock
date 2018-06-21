@@ -588,7 +588,7 @@ namespace MWPhysics
 					else
 					{
 						if (inertia.z() < -800.0f)
-							inertia.z() += time * 1200.7; //-627.2f; //gravity?
+							inertia.z() += time * 5200.7; //-627.2f; //gravity?
 						else if (inertia.z() > -1010.0f)
 							inertia.z() += time * -580.7;
 					}

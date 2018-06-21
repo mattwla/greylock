@@ -116,6 +116,7 @@ namespace MWInput
 		
 
         virtual void keyPressed(const SDL_KeyboardEvent &arg );
+		virtual void resetSneak();
         virtual void keyReleased( const SDL_KeyboardEvent &arg );
         virtual void textInput (const SDL_TextInputEvent &arg);
 

@@ -803,6 +803,11 @@ namespace MWInput
         mJoystickLastUsed = false;
     }
 
+	void InputManager::resetSneak()
+	{
+		mSneaking = false;
+	}
+
     void InputManager::textInput(const SDL_TextInputEvent &arg)
     {
         MyGUI::UString ustring(&arg.text[0]);

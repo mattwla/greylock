@@ -235,7 +235,7 @@ namespace MWWorld
         MWWorld::Ptr ptr = getPlayer();
 		ptr.getClass().getMovementSettings(ptr).mAttemptSneak = sneak;
         ptr.getClass().getCreatureStats(ptr).setMovementFlag(MWMechanics::CreatureStats::Flag_Sneak, sneak);
-		MWBase::Environment::get().getWindowManager()->activateSneakOverlay(false, sneak);
+		//MWBase::Environment::get().getWindowManager()->activateSneakOverlay(false, sneak);
 	
     }
 

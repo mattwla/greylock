@@ -34,6 +34,7 @@
 #include "../mwbase/soundmanager.hpp"
 #include "../mwbase/windowmanager.hpp"
 #include "../mwbase/statusmanager.hpp"
+#include "../mwbase/inputmanager.hpp"
 
 #include "../mwworld/class.hpp"
 #include "../mwworld/inventorystore.hpp"
@@ -3098,6 +3099,14 @@ Glide::~Glide()
 {
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	sei->getStatusManager()->removeStatus(MWBase::InGlide);
+
+
+	mPtr.getClass().getMovementSettings(mPtr).mAttemptSneak = false;
+	MWBase::Environment::get().getInputManager()->resetSneak();
+	mPtr.getClass().getCreatureStats(mPtr).setMovementFlag(MWMechanics::CreatureStats::Flag_Sneak, false);
+
+
+	//make player no crouch
 }
 
 bool Glide::update(float duration)
@@ -3224,9 +3233,9 @@ bool Glide::update(float duration)
 		if (mTiltState == RANDOM_DRIFT)
 		{
 			if (camroll > mTargetRoll)
-				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength/4, true);
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength/8, true);
 			if (camroll < mTargetRoll)
-				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength/4, true);
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength/8, true);
 			if (abs(mTargetRoll - camroll) < .01f)
 			{
 				mTiltState = RANDOM_DRIFT_RETURN;
@@ -3236,9 +3245,9 @@ bool Glide::update(float duration)
 		if (mTiltState == RANDOM_DRIFT_RETURN)
 		{
 			if (camroll > 0)
-				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength / 4, true);
+				MWBase::Environment::get().getWorld()->rollCamera(-rotatestrength / 8, true);
 			if (camroll < 0)
-				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength / 4, true);
+				MWBase::Environment::get().getWorld()->rollCamera(rotatestrength / 8, true);
 			if (abs(camroll) < .01f)
 			{
 				if (mDriftTimer > 0.0f)

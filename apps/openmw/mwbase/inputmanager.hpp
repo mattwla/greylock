@@ -42,6 +42,8 @@ namespace MWBase
 
             virtual void update(float dt, bool disableControls, bool disableEvents=false) = 0;
 
+			virtual void resetSneak() = 0;
+
             virtual void changeInputMode(bool guiMode) = 0;
 			virtual void dialogueChunkMode(bool chunk) = 0;
 			virtual void dialogueGoMode(bool go) = 0;
