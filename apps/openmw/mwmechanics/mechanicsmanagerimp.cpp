@@ -427,10 +427,16 @@ namespace MWMechanics
 
         mActors.update(duration, paused);
         mObjects.update(duration, paused);
-		MWBase::Environment::get().getSmartEntitiesManager()->onFrameUpdate(duration);
-		mLifeManager = MWBase::Environment::get().getLifeManager();
-		mLifeManager->update(duration, paused);
-    }
+
+		if (!paused)
+		{
+			MWBase::Environment::get().getSmartEntitiesManager()->onFrameUpdate(duration);
+			mLifeManager = MWBase::Environment::get().getLifeManager();
+			mLifeManager->update(duration, paused);
+		}
+    
+
+}
 
     bool MechanicsManager::isActorDetected(const MWWorld::Ptr& actor, const MWWorld::Ptr& observer)
     {
@@ -1574,7 +1580,7 @@ namespace MWMechanics
 
     bool MechanicsManager::actorAttacked(const MWWorld::Ptr &target, const MWWorld::Ptr &attacker)
     {
-		return true; //mwx lobotomy
+		//return true; //mwx lobotomy
 
         if (target == getPlayer() || !attacker.getClass().isActor())
             return false;
@@ -1607,10 +1613,15 @@ namespace MWMechanics
             }
         }
 
-        if (target.getClass().isNpc() && !attacker.isEmpty() && !seq.isInCombat(attacker)
-                && !isAggressive(target, attacker) && !isFightingNpc
-                && !target.getClass().getCreatureStats(target).getAiSequence().hasPackage(AiPackage::TypeIdPursue))
-            commitCrime(attacker, target, MWBase::MechanicsManager::OT_Assault);
+		if (target.getClass().isNpc() && !attacker.isEmpty() && !seq.isInCombat(attacker)
+			&& !isAggressive(target, attacker) && !isFightingNpc
+			&& !target.getClass().getCreatureStats(target).getAiSequence().hasPackage(AiPackage::TypeIdPursue))
+		{
+			commitCrime(attacker, target, MWBase::MechanicsManager::OT_Assault);
+			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(attacker);
+			sei->getStatusManager()->giveStatus(MWBase::Assaulter);
+			//std::cout << "ASSAULT" << std::endl;
+		}
 
         if (!attacker.isEmpty() && (attacker.getClass().getCreatureStats(attacker).getAiSequence().isInCombat(target)
                                     || attacker == getPlayer())
@@ -1618,8 +1629,8 @@ namespace MWMechanics
         {
             // Attacker is in combat with us, but we are not in combat with the attacker yet. Time to fight back.
             // Note: accidental or collateral damage attacks are ignored.
-            if (!target.getClass().getCreatureStats(target).getAiSequence().hasPackage(AiPackage::TypeIdPursue))
-                startCombat(target, attacker);
+            /*if (!target.getClass().getCreatureStats(target).getAiSequence().hasPackage(AiPackage::TypeIdPursue))
+                startCombat(target, attacker);*/
         }
 
         return true;

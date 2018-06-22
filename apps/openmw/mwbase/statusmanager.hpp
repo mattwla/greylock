@@ -77,7 +77,9 @@ namespace MWBase
 		EquippedImpulseShroom = 19,
 		Fleeing = 20,
 		Thief = 21,
-		SmallWooden = 22
+		SmallWooden = 22,
+		Assaulter = 23
+
 	};
 
 

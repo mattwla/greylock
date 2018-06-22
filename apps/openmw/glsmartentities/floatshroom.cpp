@@ -6,6 +6,7 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwworld/class.hpp"
+#include "../mwworld/containerstore.hpp"
 
 
 
@@ -85,8 +86,11 @@ void SmartEntityFloatShroomInstance::onImpact(MWWorld::Ptr impactwith)
 				{
 					std::cout << "gave float status" << std::endl;
 					auto dropped = MWBase::Environment::get().getWorld()->dropObjectOnGround(sei->getPtr(), inhandsei->getPtr(), 1);
+					sei->getPtr().getClass().getNpcStats(sei->getPtr()).setDrawState(MWMechanics::DrawState_Nothing);
+					sei->getPtr().getClass().getContainerStore(sei->getPtr()).remove(dropped, 1, sei->getPtr());
 					auto dsei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(dropped);
 					dsei->getStatusManager()->giveStatus(MWBase::FloatShroomPowdered);
+					sei->getLife()->say("My weapon!!!");
 				}
 			}
 		}
