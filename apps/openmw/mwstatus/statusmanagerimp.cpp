@@ -57,6 +57,10 @@ namespace MWStatus
 		c = MWBase::ThiefStatusObject::getConstuctor();
 
 		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()] = c;
+
+		c = MWBase::AssaultStatusObject::getConstuctor();
+
+		MWStatus::StatusManager::mStatusToConstructor[c->getStatusEnum()] = c;
 	}
 
 

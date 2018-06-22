@@ -1620,6 +1620,8 @@ namespace MWMechanics
 			commitCrime(attacker, target, MWBase::MechanicsManager::OT_Assault);
 			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(attacker);
 			sei->getStatusManager()->giveStatus(MWBase::Assaulter);
+			sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(target);
+			sei->getStatusManager()->giveStatus(MWBase::Assaulted);
 			//std::cout << "ASSAULT" << std::endl;
 		}
 

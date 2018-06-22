@@ -49,6 +49,14 @@ namespace MWBase
 
 	void Life::say(std::string speech)
 	{
+		if (mCurrentSpeech)
+		{
+			if (speech == mCurrentSpeech->mText)
+				return;
+		}
+
+
+
 		bool dead = mPtr.getClass().getNpcStats(mPtr).isDead();
 		if (dead)
 			return;

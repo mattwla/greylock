@@ -127,3 +127,23 @@ void MWBase::ThiefStatusObject::end()
 	mDone = true;
 	mSEI->getStatusManager()->removeStatus(MWBase::Thief);
 }
+
+void MWBase::AssaultStatusObject::update(float duration)
+{
+
+	mTotalTime += duration;
+	if (mTotalTime > 1.f)
+		end();
+}
+
+void MWBase::AssaultStatusObject::init()
+{
+	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::Assaulter);
+}
+
+void MWBase::AssaultStatusObject::end()
+{
+	std::cout << "assaulter over" << std::endl;
+	mDone = true;
+	mSEI->getStatusManager()->removeStatus(MWBase::Assaulter);
+}

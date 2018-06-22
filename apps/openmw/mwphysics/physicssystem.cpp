@@ -1679,7 +1679,7 @@ namespace MWPhysics
             bool wasOnGround = physicActor->getOnGround();
             osg::Vec3f position = physicActor->getPosition();
             float oldHeight = position.z();
-            bool positionChanged = false;
+            bool positionChanged = false; //mwx was false
             for (int i=0; i<numSteps; ++i)
             {
                 position = MovementSolver::move(position, physicActor->getPtr(), physicActor, iter->second, mPhysicsDt,

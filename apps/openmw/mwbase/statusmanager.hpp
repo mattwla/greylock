@@ -78,7 +78,8 @@ namespace MWBase
 		Fleeing = 20,
 		Thief = 21,
 		SmallWooden = 22,
-		Assaulter = 23
+		Assaulter = 23,
+		Assaulted = 24
 
 	};
 

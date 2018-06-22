@@ -17,6 +17,7 @@ namespace MWBase {
 
 	void MWBase::SubBrainFightOrFlight::calculate(MWBase::Awareness * awareness)
 	{
+		bool sawassault = false;
 		typedef std::unordered_map<ESM::RefNum, MWBase::SensoryLink> linklist;
 		auto list = awareness->getSensoryLinksThisFrame()->mSensoryLinks;
 		for (linklist::iterator it = list.begin(); it != list.end(); it++)
@@ -31,17 +32,36 @@ namespace MWBase {
 				std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
 				mOwnerLife->submitDesirePtr(desire);
 			}
+
+			if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::Assaulter))
+			{
+				if (!MWBase::Environment::get().getWorld()->hasClearLOS(mOwnerLife->mPtr, it->second.mSEInstance->getPtr()))
+					continue;
+
+				sawassault = true;
+				MWBase::GOAPStatus status(MWBase::VITALS, "health", -1, it->second.mSEInstance);
+				std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
+				mOwnerLife->submitDesirePtr(desire);
+				
+				mOwnerLife->say("You'll pay for that!");
+			}
 		}
 	
 
 
 		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mOwnerLife->mPtr);
 		bool onfire = sei->getStatusManager()->hasStatus(MWBase::OnFire);
+		bool assaulted = sei->getStatusManager()->hasStatus(MWBase::Assaulted);
 		if (onfire)
 		{
 			MWBase::GOAPStatus status(MWBase::RUNNING_BEHAVIOR_OBJECT, "flee", 1);
 			std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
 			mOwnerLife->submitDesirePtr(desire);
+		}
+		if (assaulted && !sawassault)
+		{
+			mOwnerLife->mPtr.getClass().getNpcStats(mOwnerLife->mPtr).setFatigue(0);
+			sei->getStatusManager()->removeStatus(MWBase::Assaulted);
 		}
 	}
 
