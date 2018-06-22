@@ -560,9 +560,27 @@ namespace MWClass
         MWWorld::InventoryStore &inv = getInventoryStore(ptr);
         MWWorld::ContainerStoreIterator weaponslot = inv.getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
         MWWorld::Ptr weapon = ((weaponslot != inv.end()) ? *weaponslot : MWWorld::Ptr());
-        if(!weapon.isEmpty() && weapon.getTypeName() != typeid(ESM::Weapon).name())
+		bool seilogic = false;
+		
+		MWBase::SmartEntityInstance * wsei;
+			
+	
+		if (!weapon.isEmpty())
+		{
+			wsei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(weapon, true);
+			if (wsei)
+			{
+				std::cout << "hit em with sei" << std::endl;
+				seilogic = true;
+				
+				
+			}
+		}
+		
+		
+		if(!weapon.isEmpty() && weapon.getTypeName() != typeid(ESM::Weapon).name())
             weapon = MWWorld::Ptr();
-
+		
         MWMechanics::applyFatigueLoss(ptr, weapon, attackStrength);
 
         const float fCombatDistance = store.find("fCombatDistance")->getFloat();
@@ -582,13 +600,23 @@ namespace MWClass
         if(victim.isEmpty()) // Didn't hit anything
             return;
 
+		auto refpos = ptr.getRefData().getPosition();
+
+		auto inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * osg::Vec3f(0, 400, 200);
+
+		//auto badptr = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr)->getPtr();//mwx a sinful hack
+		MWBase::Environment::get().getWorld()->addIntertia(victim, inertia);
+
+		
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(victim);
         const MWWorld::Class &othercls = victim.getClass();
 		if (!othercls.isActor()) // Can't hit non-actors
 		{
-			auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(victim);
+			
 			if (sei)
 			{
 				sei->onImpact();
+				//seilogic = true;
 			}
 			
 
@@ -597,6 +625,10 @@ namespace MWClass
 			//see if smartent
 			return;
 		}
+
+	
+
+
         MWMechanics::CreatureStats &otherstats = othercls.getCreatureStats(victim);
         if(otherstats.isDead()) // Can't hit dead actors
             return;
@@ -676,16 +708,17 @@ namespace MWClass
         MWMechanics::diseaseContact(victim, ptr);
 
         othercls.onHit(victim, damage, healthdmg, weapon, ptr, hitPosition, true);
+		if (seilogic)
+		{
+			wsei->onImpact(victim);
+
+			
+		}
     }
 
     void Npc::onHit(const MWWorld::Ptr &ptr, float damage, bool ishealth, const MWWorld::Ptr &object, const MWWorld::Ptr &attacker, const osg::Vec3f &hitPosition, bool successful) const
     {
-		auto refpos = attacker.getRefData().getPosition();
-		
-		auto inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * osg::Vec3f(0, 400, 200);
-
-		auto badptr = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr)->getPtr();//mwx a sinful hack
-		MWBase::Environment::get().getWorld()->addIntertia(badptr, inertia);
+	
 
 
         MWBase::SoundManager *sndMgr = MWBase::Environment::get().getSoundManager();

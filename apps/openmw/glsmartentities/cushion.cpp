@@ -148,7 +148,7 @@ MWBase::BOReturn BOCushionSit::update(float time, MWWorld::Ptr ownerptr)
 MWBase::BOReturn BOCushionSit::start()
 {
 	std::cout << "start was called " << std::endl;
-	float zoffset = 100.0;
+	float zoffset = 20.0;
 	MWWorld::Ptr marker = mSEITarget->getPtr();
 	MWWorld::Ptr npc = mOwnerLife->mPtr;
 	ESM::Position markerPos = marker.getRefData().getPosition();

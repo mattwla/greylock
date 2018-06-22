@@ -134,6 +134,19 @@ namespace MWBase {
 		seq.clear();
 		seq.stack(MWMechanics::AiCombat(mSEITarget->getPtr()), mOwnerLife->mPtr);
 		std::cout << "startin a fight" << std::endl;
+
+		std::cout << "looking for a weapon..." << std::endl;
+		//look for plan to get misc item or weapon nearby
+		//if cost below X, do it first
+		MWBase::GOAPStatus status(MWBase::HAS_OBJECT_STATUS_IN_INVENTORY, "holdable", 1);
+		std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
+			//std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
+		auto plan = mOwnerLife->selectIntentionPlan(desire);
+		//MWBase::Life::selectIntentionPlan(status);
+		//MWBase::GOAPDesire()
+		
+
+
 		return IN_PROGRESS;
 	}
 
@@ -174,6 +187,9 @@ namespace MWBase {
 		seq.stack(MWMechanics::AiCombat(mSEITarget->getPtr()), mOwnerLife->mPtr);
 		std::cout << "startin a flee" << std::endl;
 		return IN_PROGRESS;
+
+
+
 
 		//return BOReturn();
 	}
