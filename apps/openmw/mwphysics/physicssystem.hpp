@@ -153,6 +153,8 @@ namespace MWPhysics
             /// Clear the queued movements list without applying.
             void clearQueuedMovement();
 
+			void addInertia(MWWorld::Ptr & ptr, osg::Vec3f vec);
+
             /// Return true if \a actor has been standing on \a object in this frame
             /// This will trigger whenever the object is directly below the actor.
             /// It doesn't matter if the actor is stationary or moving.

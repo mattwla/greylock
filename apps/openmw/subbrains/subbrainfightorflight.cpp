@@ -60,7 +60,7 @@ namespace MWBase {
 		}
 		if (assaulted && !sawassault)
 		{
-			mOwnerLife->mPtr.getClass().getNpcStats(mOwnerLife->mPtr).setFatigue(0);
+			//mOwnerLife->mPtr.getClass().getNpcStats(mOwnerLife->mPtr).setFatigue(0);
 			sei->getStatusManager()->removeStatus(MWBase::Assaulted);
 		}
 	}

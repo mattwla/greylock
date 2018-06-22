@@ -127,6 +127,8 @@ namespace MWBase
 			
 			virtual void useDeathCamera() = 0;
 
+			virtual void addIntertia(MWWorld::Ptr & ptr, osg::Vec3f vec) = 0;
+
             virtual void setWaterHeight(const float height) = 0;
 
             virtual bool toggleWater() = 0;

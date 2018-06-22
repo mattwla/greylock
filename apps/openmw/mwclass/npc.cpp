@@ -680,6 +680,14 @@ namespace MWClass
 
     void Npc::onHit(const MWWorld::Ptr &ptr, float damage, bool ishealth, const MWWorld::Ptr &object, const MWWorld::Ptr &attacker, const osg::Vec3f &hitPosition, bool successful) const
     {
+		auto refpos = attacker.getRefData().getPosition();
+		
+		auto inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * osg::Vec3f(0, 400, 200);
+
+		auto badptr = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr)->getPtr();//mwx a sinful hack
+		MWBase::Environment::get().getWorld()->addIntertia(badptr, inertia);
+
+
         MWBase::SoundManager *sndMgr = MWBase::Environment::get().getSoundManager();
         MWMechanics::CreatureStats& stats = ptr.getClass().getCreatureStats(ptr);
         bool wasDead = stats.isDead();

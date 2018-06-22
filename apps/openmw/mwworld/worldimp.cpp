@@ -2717,12 +2717,19 @@ namespace MWWorld
         return !actors.empty();
     }
 
+	void World::addIntertia(MWWorld::Ptr & ptr, osg::Vec3f vec)
+	{
+		mPhysics->addInertia(ptr, vec);
+	}
+
     void World::hurtStandingActors(const ConstPtr &object, float healthPerSecond)
     {
         if (MWBase::Environment::get().getWindowManager()->isGuiMode())
             return;
 
         std::vector<MWWorld::Ptr> actors;
+		
+
         mPhysics->getActorsStandingOn(object, actors);
         for (std::vector<MWWorld::Ptr>::iterator it = actors.begin(); it != actors.end(); ++it)
         {

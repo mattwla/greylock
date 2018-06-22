@@ -1618,6 +1618,20 @@ namespace MWPhysics
         mStandingCollisions.clear();
     }
 
+	void PhysicsSystem::addInertia(MWWorld::Ptr & ptr, osg::Vec3f vec)
+	{
+		ActorMap::iterator found = mActors.find(ptr);
+		if (found == mActors.end())
+			return;
+		
+		auto refpos = ptr.getRefData().getPosition();
+		auto inertia = (osg::Quat(refpos.rot[2], osg::Vec3f(0, 0, -1))) * vec;
+
+		found->second->setInertialForce(vec);
+
+	}
+
+
     const PtrVelocityList& PhysicsSystem::applyQueuedMovement(float dt)
     {
         mMovementResults.clear();
@@ -1711,6 +1725,8 @@ namespace MWPhysics
 
         return mMovementResults;
     }
+
+
 
     void PhysicsSystem::stepSimulation(float dt)
     {

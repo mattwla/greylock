@@ -567,6 +567,7 @@ namespace MWWorld
             bool getActorStandingOn (const MWWorld::ConstPtr& object) override; ///< @return true if any actor is standing on \a object
             bool getPlayerCollidingWith(const MWWorld::ConstPtr& object) override; ///< @return true if the player is colliding with \a object
             bool getActorCollidingWith (const MWWorld::ConstPtr& object) override; ///< @return true if any actor is colliding with \a object
+			void addIntertia(MWWorld::Ptr & ptr, osg::Vec3f vec) override;
             void hurtStandingActors (const MWWorld::ConstPtr& object, float dmgPerSecond) override;
             ///< Apply a health difference to any actors standing on \a object.
             /// To hurt actors, healthPerSecond should be a positive value. For a negative value, actors will be healed.
