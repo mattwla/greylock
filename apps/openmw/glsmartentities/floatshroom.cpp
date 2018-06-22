@@ -75,9 +75,23 @@ void SmartEntityFloatShroomInstance::onImpact(MWWorld::Ptr impactwith)
 		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith, true);
 		if (sei)
 		{
-			sei->getStatusManager()->giveStatus(MWBase::FloatShroomPowdered);
+			if (sei->getStatusManager()->hasStatus(MWBase::SmallWooden))
+				sei->getStatusManager()->giveStatus(MWBase::FloatShroomPowdered);
+		
+			if (sei->isHumanLife())
+			{
+				auto inhandsei = MWBase::Environment::get().getSmartEntitiesManager()->getSEIInHand(sei->getPtr());
+				if (inhandsei && inhandsei->getStatusManager()->hasStatus(MWBase::SmallWooden))
+				{
+					std::cout << "gave float status" << std::endl;
+					auto dropped = MWBase::Environment::get().getWorld()->dropObjectOnGround(sei->getPtr(), inhandsei->getPtr(), 1);
+					auto dsei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(dropped);
+					dsei->getStatusManager()->giveStatus(MWBase::FloatShroomPowdered);
+				}
+			}
 		}
-		std::cout << "gave float status" << std::endl;
+		
+		
 	
 		disable();
 	}

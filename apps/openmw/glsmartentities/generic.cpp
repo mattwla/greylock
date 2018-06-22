@@ -11,6 +11,7 @@ SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 {
 	mIngameIDs.push_back("battery1_pack");
 	mIngameIDs.push_back("cargoxtestgreen");
+	mIngameIDs.push_back("wooden staff");
 }
 
 MWBase::SmartEntityInstance * SmartEntityGenericTemplate::getInstance(const MWWorld::Ptr & ptr)
@@ -45,6 +46,9 @@ void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance *
 	themap["cargoxtestgreen"] = { MWBase::NotClimbable };
 	themap["cargoxtestblue"] = { MWBase::NotClimbable };
 	themap["cargoxtestred"] = { MWBase::NotClimbable };
+	themap["furn_com_r_table_01"] = { MWBase::SmallWooden };
+	themap["wooden staff"] = { MWBase::SmallWooden };
+
 
 	if (!themap.count(sei->getRefId()))
 		return;

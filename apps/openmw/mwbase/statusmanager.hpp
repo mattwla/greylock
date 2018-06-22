@@ -76,7 +76,8 @@ namespace MWBase
 		RequiresUpdate = 18,
 		EquippedImpulseShroom = 19,
 		Fleeing = 20,
-		Thief = 21
+		Thief = 21,
+		SmallWooden = 22
 	};
 
 

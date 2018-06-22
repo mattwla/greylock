@@ -15,7 +15,7 @@ void MWBase::FloatStatusObject::update(float duration)
 
 	mTotalTime += duration;
 
-	if (mTotalTime > 7.0)
+	if (mTotalTime > 30.0)
 	{
 		end();
 		return;

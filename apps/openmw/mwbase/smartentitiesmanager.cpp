@@ -27,6 +27,9 @@
 #include "../mwworld/class.hpp"
 #include "../mwworld/inventorystore.hpp"
 #include "../mwworld/esmstore.hpp"
+#include "../mwworld/ptr.hpp"
+#include "../mwmechanics/creaturestats.hpp"
+#include "../mwmechanics/npcstats.hpp"
 
 
 
@@ -243,8 +246,13 @@ MWBase::SmartEntityInstance * MWBase::SmartEntitiesManager::refnumFetch(ESM::Ref
 
 MWBase:: SmartEntityInstance * MWBase::SmartEntitiesManager::getSEIInHand(MWWorld::Ptr ptr)
 {
+	bool armed = ptr.getClass().getNpcStats(ptr).getDrawState();
+	if (armed != MWMechanics::DrawState_Weapon)
+	{
+		return nullptr;
+	}
 
-	MWWorld::ConstContainerStoreIterator equipped = ptr.getClass().getInventoryStore(ptr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
+	MWWorld::ContainerStoreIterator equipped = ptr.getClass().getInventoryStore(ptr).getSlot(MWWorld::InventoryStore::Slot_CarriedRight);
 
 	if (equipped != ptr.getClass().getInventoryStore(ptr).end())
 	{
@@ -253,6 +261,10 @@ MWBase:: SmartEntityInstance * MWBase::SmartEntitiesManager::getSEIInHand(MWWorl
 		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->refnumFetch(refnum);
 		if (sei)
 		{
+			//MWWorld::Ptr(();
+		
+	
+			sei->updatePtr((*equipped));
 			return sei;
 		}
 	}
