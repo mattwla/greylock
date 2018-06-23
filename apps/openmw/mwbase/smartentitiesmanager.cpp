@@ -658,12 +658,13 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 
 void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 {
+
 	std::cout << "default impact for all SEIS" << std::endl;
 	if (impactwith)
 	{
 		MWBase::SoundManager *sndMgr = MWBase::Environment::get().getSoundManager();
 		sndMgr->playSound3D(impactwith, "Light Armor Hit", 1.0f, 1.0f);
-		if (MWBase::Environment::get().getWorld()->getPlayerPtr() != impactwith)
+		if (MWBase::Environment::get().getWorld()->getPlayerPtr() != impactwith && impactwith.getClass().isActor())
 			impactwith.getClass().getNpcStats(impactwith).setFatigue(0);
 		
 		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith);
@@ -672,6 +673,7 @@ void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 			sei->getLife()->say("Ow.");
 		}
 	}
+
 }
 
 bool MWBase::SmartEntityInstance::isAllowedTerritory(MWBase::Life * life)

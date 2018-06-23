@@ -615,7 +615,7 @@ namespace MWClass
 			
 			if (sei)
 			{
-				sei->onImpact();
+				//sei->onImpact();
 				//seilogic = true;
 			}
 			
@@ -1037,7 +1037,7 @@ namespace MWClass
 			moveSpeed = swimSpeed;
 		}
 		else if (running && !sneaking)
-			moveSpeed = runSpeed;
+			moveSpeed = 500;//runSpeed;
 		else if (isPlayer)
 			moveSpeed = 500; //MWX
 		else

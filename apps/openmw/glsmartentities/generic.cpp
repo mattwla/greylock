@@ -46,8 +46,8 @@ void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance *
 	themap["cargoxtestgreen"] = { MWBase::NotClimbable };
 	themap["cargoxtestblue"] = { MWBase::NotClimbable };
 	themap["cargoxtest"] = { MWBase::NotClimbable };
-	themap["furn_com_r_table_01"] = { MWBase::SmallWooden };
-	themap["wooden staff"] = { MWBase::SmallWooden };
+	themap["furn_com_r_table_01"] = { MWBase::SmallWooden, MWBase::IsFlammable};
+	themap["wooden staff"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
 
 
 	if (!themap.count(sei->getRefId()))

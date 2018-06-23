@@ -106,6 +106,7 @@ namespace MWBase
 
 		float mTotalTime = 0.0f;
 		MWWorld::Ptr fireptr;
+		MWBase::SmartEntityInstance * mFireSEI;
 
 
 	public:

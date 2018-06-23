@@ -1512,6 +1512,7 @@ namespace MWPhysics
         ObjectMap::const_iterator found = mObjects.find(ptr);
         if (found != mObjects.end())
             return found->second;
+
         return NULL;
     }
 

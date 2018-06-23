@@ -72,7 +72,11 @@ void MWBase::OnFireStatusObject::update(float duration)
 	}
 	//MWBase::Environment::get().getWorld()->obje
 	auto pos = mSEI->getPtr().getRefData().getPosition().pos;
-	MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]+150);
+	MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+
+	//get fire bounding box
+	//see if anything in it
+	//if in it, give it fire status
 }
 
 void MWBase::OnFireStatusObject::init()
@@ -97,6 +101,8 @@ void MWBase::OnFireStatusObject::init()
 	MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), "light_fire_300", 1);
 	auto actor = mSEI->getPtr();
 	fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
+	
+	//MWBase::Environment::get().getWorld()->enableActorCollision(fireptr, false);
 	
 }
 

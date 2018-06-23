@@ -53,7 +53,10 @@ namespace MWBase
 		{
 			if (speech == mCurrentSpeech->mText)
 				return;
+
+			mCurrentSpeech->mDone = true;
 		}
+	
 
 
 
