@@ -25,6 +25,10 @@
 #include <boost/filesystem/path.hpp>
 #include <vector>
 
+#include <osg/Group>
+#include <osg/ComputeBoundsVisitor>
+#include <components/sceneutil/positionattitudetransform.hpp>
+
 namespace osg
 {
 	class Vec3f;
@@ -217,7 +221,14 @@ namespace MWBase
 		//Get bounding box of item, used for smartzones
 		virtual void buildBoundingBox()
 		{
-			std::cout << "Something that is not a smartzone had a request to build a bounding box" << std::endl;
+			//std::cout << "Something that is not a smartzone had a request to build a bounding box" << std::endl;
+		
+			std::cout << "building bbox" << std::endl;
+			osg::ComputeBoundsVisitor computeBounds;
+
+			mPtr.getRefData().getBaseNode()->accept(computeBounds);
+			mBoundingBox = computeBounds.getBoundingBox();
+		
 		}
 
 		virtual bool isSmartZone()
@@ -233,6 +244,12 @@ namespace MWBase
 		//Is the given ptr in this smartzones bounding box?
 		virtual bool containsPtr(MWWorld::Ptr ptr)
 		{
+			
+			osg::Vec3f pos = ptr.getRefData().getPosition().asVec3();
+
+			return mBoundingBox.contains(pos);
+			
+			
 			std::cout << "warning: asked not a smartzone if it contained something" << std::endl;
 			return false;
 		}

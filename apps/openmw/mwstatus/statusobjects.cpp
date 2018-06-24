@@ -47,15 +47,7 @@ void MWBase::OnFireStatusObject::update(float duration)
 	{
 		if (mSEI->isHumanLife())
 		{
-
-			
-
 			auto mPtr = mSEI->getPtr();
-
-
-
-
-
 			MWMechanics::CreatureStats& stats = mPtr.getClass().getCreatureStats(mPtr);
 			MWMechanics::DynamicStat<float> health(mPtr.getClass().getCreatureStats(mPtr).getHealth());
 			health.setCurrent(health.getCurrent() - 100.0f);
@@ -64,25 +56,47 @@ void MWBase::OnFireStatusObject::update(float duration)
 		}
 		else if (mSEI->getPtr().getClass().isDoor())
 		{
-
 			//MWBase::Environment::get().getWorld()->disable(mSEI->getPtr());
 			mSEI->disable();
 			end();
 		}
 	}
+
+	MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mSEI->getPtr());
+
+	const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+	int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+	const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+
+
+	animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
+
+
 	//MWBase::Environment::get().getWorld()->obje
 	auto pos = mSEI->getPtr().getRefData().getPosition().pos;
 	MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
 
 
-	MWWorld::ConstPtr constactor = mSEI->getPtr();
+	//MWWorld::ConstPtr constactor = mSEI->getPtr();
 	//fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
 
-	std::vector<MWWorld::Ptr> out;
-	MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
+	//std::vector<MWWorld::Ptr> out;
+	//MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
 
-	if (out.size() > 0)
-		std::cout << "spread fire" << std::endl;
+	auto seilist = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
+
+	for (MWBase::SmartInstanceMap::iterator it = seilist.begin(); it != seilist.end(); it++)
+	{
+		if (it->second->getStatusManager()->hasStatus(MWBase::IsFlammable))
+		{
+			if (mSEI->containsPtr(it->second->getPtr()))
+				it->second->getStatusManager()->giveStatus(MWBase::OnFire);
+		}
+	}
+
+
+	//if (out.size() > 0)
+	//	std::cout << "spread fire" << std::endl;
 
 
 
@@ -117,6 +131,8 @@ void MWBase::OnFireStatusObject::init()
 	
 	std::vector<MWWorld::Ptr> out;
 	MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
+
+	mSEI->buildBoundingBox();
 
 
 	//MWBase::Environment::get().getWorld()->enableActorCollision(fireptr, false);
