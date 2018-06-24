@@ -1777,6 +1777,12 @@ namespace MWPhysics
         out.insert(out.end(), collisions.begin(), collisions.end());
     }
 
+	void PhysicsSystem::getObjectsCollidingWith(const MWWorld::ConstPtr &object, std::vector<MWWorld::Ptr> &out) const
+	{
+		std::vector<MWWorld::Ptr> collisions = getCollisions(object, CollisionType_World | CollisionType_Actor, CollisionType_Actor | CollisionType_World);
+		out.insert(out.end(), collisions.begin(), collisions.end());
+	}
+
     void PhysicsSystem::disableWater()
     {
         if (mWaterEnabled)

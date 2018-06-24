@@ -1298,6 +1298,11 @@ namespace MWWorld
         }
     }
 
+	void World::getCollidingObjects(MWWorld::ConstPtr & object, std::vector<MWWorld::Ptr>& out)
+	{
+		mPhysics->getObjectsCollidingWith(object, out);
+	}
+
     MWWorld::Ptr World::moveObject(const Ptr &ptr, CellStore* newCell, float x, float y, float z, bool movePhysics)
     {
         ESM::Position pos = ptr.getRefData().getPosition();

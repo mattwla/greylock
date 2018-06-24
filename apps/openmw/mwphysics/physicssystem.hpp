@@ -170,6 +170,8 @@ namespace MWPhysics
             /// Get the handle of all actors colliding with \a object in this frame.
             void getActorsCollidingWith(const MWWorld::ConstPtr& object, std::vector<MWWorld::Ptr>& out) const;
 
+			void getObjectsCollidingWith(const MWWorld::ConstPtr & object, std::vector<MWWorld::Ptr>& out) const;
+
             bool toggleDebugRendering();
 
             /// Mark the given object as a 'non-solid' object. A non-solid object means that

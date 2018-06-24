@@ -377,6 +377,8 @@ namespace MWWorld
 
             void undeleteObject (const Ptr& ptr) override;
 
+			virtual void getCollidingObjects(MWWorld::ConstPtr& object, std::vector<MWWorld::Ptr> &out) override;
+
             MWWorld::Ptr moveObject (const Ptr& ptr, float x, float y, float z) override;
             ///< @return an updated Ptr in case the Ptr's cell changes
 

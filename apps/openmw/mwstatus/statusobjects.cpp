@@ -74,6 +74,18 @@ void MWBase::OnFireStatusObject::update(float duration)
 	auto pos = mSEI->getPtr().getRefData().getPosition().pos;
 	MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
 
+
+	MWWorld::ConstPtr constactor = mSEI->getPtr();
+	//fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
+
+	std::vector<MWWorld::Ptr> out;
+	MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
+
+	if (out.size() > 0)
+		std::cout << "spread fire" << std::endl;
+
+
+
 	//get fire bounding box
 	//see if anything in it
 	//if in it, give it fire status
@@ -99,9 +111,14 @@ void MWBase::OnFireStatusObject::init()
 
 	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::OnFire);
 	MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), "light_fire_300", 1);
-	auto actor = mSEI->getPtr();
+	MWWorld::Ptr actor = mSEI->getPtr();
+	MWWorld::ConstPtr constactor = mSEI->getPtr();
 	fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
 	
+	std::vector<MWWorld::Ptr> out;
+	MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
+
+
 	//MWBase::Environment::get().getWorld()->enableActorCollision(fireptr, false);
 	
 }
