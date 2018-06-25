@@ -709,6 +709,15 @@ int MWWorld::InventoryStore::remove(const Ptr& item, int count, const Ptr& actor
 {
     int retCount = ContainerStore::remove(item, count, actor);
 
+
+
+	
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(item);
+	if (sei)
+	{
+
+		sei->removeFromInventory();
+	}
     bool wasEquipped = false;
     if (!item.getRefData().getCount())
     {

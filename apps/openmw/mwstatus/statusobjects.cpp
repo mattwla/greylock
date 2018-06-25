@@ -119,11 +119,7 @@ void MWBase::OnFireStatusObject::update(float duration)
 	}
 	else
 	{
-		if (!fireptr.getRefData().isDeleted())
-		{
-			MWBase::Environment::get().getWorld()->deleteObject(fireptr);
-		}
-
+		
 		if (mSEI->getInInventorySEI())
 		{
 			auto invptr = mSEI->getInInventorySEI()->getPtr();
@@ -133,9 +129,27 @@ void MWBase::OnFireStatusObject::update(float duration)
 			int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
 			const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
 
+			auto pos = mSEI->getInInventorySEI()->getPtr().getRefData().getPosition().pos;
+			auto actor = mSEI->getInInventorySEI()->getPtr();
+			if (!fireptr || fireptr.getRefData().isDeleted())
+			{
+				
+				fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
+			}
+			else
+				MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+
 
 			animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
 
+
+		}
+		else
+		{
+			if (!fireptr.getRefData().isDeleted())
+			{
+				MWBase::Environment::get().getWorld()->deleteObject(fireptr);
+			}
 
 		}
 		//mSEI->getPtr().mContainerStore->
