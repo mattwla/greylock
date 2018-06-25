@@ -645,7 +645,11 @@ void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr ptr)
 {
 	//MWX fix me this happens way too much for moving npcs.
 	//std::cout << "updated ptr" << std::endl;
+	
 	mPtr = ptr;
+
+	//buildBoundingBox();
+
 }
 
 void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
@@ -658,6 +662,7 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 
 void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 {
+	buildBoundingBox();
 
 	std::cout << "default impact for all SEIS" << std::endl;
 	if (impactwith)
@@ -672,6 +677,12 @@ void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 		{
 			sei->getLife()->say("Ow.");
 		}
+
+		if (getStatusManager()->hasStatus(MWBase::OnFire) && sei->getStatusManager()->hasStatus(MWBase::IsFlammable))
+		{
+			sei->getStatusManager()->giveStatus(MWBase::OnFire);
+		}
+
 	}
 
 }

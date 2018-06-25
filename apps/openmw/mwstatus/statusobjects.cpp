@@ -8,7 +8,8 @@
 #include "../mwmechanics/npcstats.hpp"
 #include "../mwclass/npc.hpp"
 #include "../mwrender/animation.hpp"
-
+#include "../mwworld/cellstore.hpp"
+#include "../mwworld/containerstore.hpp"
 
 void MWBase::FloatStatusObject::update(float duration)
 {
@@ -42,6 +43,10 @@ void MWBase::FloatStatusObject::end()
 
 void MWBase::OnFireStatusObject::update(float duration)
 {
+
+	if (MWBase::Environment::get().getWorld()->isInitializingWorld())
+		return;
+	
 	mTotalTime += duration;
 	if (mTotalTime > 5.0)
 	{
@@ -59,23 +64,61 @@ void MWBase::OnFireStatusObject::update(float duration)
 			//MWBase::Environment::get().getWorld()->disable(mSEI->getPtr());
 			mSEI->disable();
 			end();
+			return;
 		}
 	}
 
-	MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mSEI->getPtr());
-
-	const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
-	int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
-	const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
-
-
-	animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
-
-
+	
+	
 	//MWBase::Environment::get().getWorld()->obje
-	auto pos = mSEI->getPtr().getRefData().getPosition().pos;
-	MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+	
 
+	
+	if (mSEI->getPtr().isInCell())
+	{
+		MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mSEI->getPtr());
+
+		const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+		int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+		const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+
+
+		animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
+
+
+
+
+		auto pos = mSEI->getPtr().getRefData().getPosition().pos;
+		MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+		auto seilist = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
+
+		for (MWBase::SmartInstanceMap::iterator it = seilist.begin(); it != seilist.end(); it++)
+		{
+			if (it->second->getStatusManager()->hasStatus(MWBase::IsFlammable))
+			{
+				if (mSEI->containsPtr(it->second->getPtr()))
+					it->second->getStatusManager()->giveStatus(MWBase::OnFire);
+			}
+		}
+
+	
+	
+	}
+	else
+	{
+
+
+		//mSEI->getPtr().mContainerStore->
+		//MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mUserLife->mPtr);
+
+		//const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+		//int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+		//const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
+
+		//animation->addSpellCastGlow(effect, duration);
+		////isReady = true;
+	}
+	
 
 	//MWWorld::ConstPtr constactor = mSEI->getPtr();
 	//fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
@@ -83,21 +126,11 @@ void MWBase::OnFireStatusObject::update(float duration)
 	//std::vector<MWWorld::Ptr> out;
 	//MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
 
-	auto seilist = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
-
-	for (MWBase::SmartInstanceMap::iterator it = seilist.begin(); it != seilist.end(); it++)
-	{
-		if (it->second->getStatusManager()->hasStatus(MWBase::IsFlammable))
-		{
-			if (mSEI->containsPtr(it->second->getPtr()))
-				it->second->getStatusManager()->giveStatus(MWBase::OnFire);
-		}
-	}
-
+	
 
 	//if (out.size() > 0)
 	//	std::cout << "spread fire" << std::endl;
-
+	
 
 
 	//get fire bounding box
@@ -107,7 +140,11 @@ void MWBase::OnFireStatusObject::update(float duration)
 
 void MWBase::OnFireStatusObject::init()
 {
+	
 	bool burnglow = true;
+
+	if (MWBase::Environment::get().getWorld()->isInitializingWorld())
+		burnglow = false;
 
 	if (burnglow)
 	{
