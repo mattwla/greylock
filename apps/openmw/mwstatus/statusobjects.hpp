@@ -4,6 +4,7 @@
 
 #include "../mwbase/statusmanager.hpp"
 #include "../mwworld/ptr.hpp"
+#include "../mwworld/manualref.hpp"
 
 namespace MWBase
 {
@@ -107,6 +108,7 @@ namespace MWBase
 		float mTotalTime = 0.0f;
 		MWWorld::Ptr fireptr;
 		MWBase::SmartEntityInstance * mFireSEI;
+		MWWorld::ManualRef * mFireRef;
 
 
 	public:

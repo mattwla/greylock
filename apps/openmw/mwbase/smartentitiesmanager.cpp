@@ -641,6 +641,22 @@ MWWorld::Ptr & MWBase::SmartEntityInstance::getPtr()
 	return mPtr; //one day, build one dynamically?
 }
 
+void MWBase::SmartEntityInstance::setInInventory(MWWorld::Ptr ptr)
+{
+	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(ptr, true);
+	mInInventorySEI = sei;
+}
+
+void MWBase::SmartEntityInstance::removeFromInventory()
+{
+	mInInventorySEI = 0;
+}
+
+MWBase::SmartEntityInstance * MWBase::SmartEntityInstance::getInInventorySEI()
+{
+	return mInInventorySEI;
+}
+
 void MWBase::SmartEntityInstance::updatePtr(MWWorld::Ptr ptr)
 {
 	//MWX fix me this happens way too much for moving npcs.

@@ -1,7 +1,7 @@
 #include "statusobjects.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
 #include "../mwbase/world.hpp"
-#include "../mwworld/manualref.hpp"
+
 #include "../mwworld/esmstore.hpp"
 #include "../mwmechanics/creaturestats.hpp"
 #include "../mwworld/class.hpp"
@@ -89,7 +89,20 @@ void MWBase::OnFireStatusObject::update(float duration)
 
 
 		auto pos = mSEI->getPtr().getRefData().getPosition().pos;
-		MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+		auto actor = mSEI->getPtr();
+
+		if (fireptr.getRefData().isDeleted())
+		{
+			fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
+		}
+		else
+			MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
+
+
+
+		//MWBase::Environment::get().getWorld()->deleteObject(fireptr);
+	
+	
 		auto seilist = MWBase::Environment::get().getSmartEntitiesManager()->getLiveSmartInstances();
 
 		for (MWBase::SmartInstanceMap::iterator it = seilist.begin(); it != seilist.end(); it++)
@@ -106,8 +119,25 @@ void MWBase::OnFireStatusObject::update(float duration)
 	}
 	else
 	{
+		if (!fireptr.getRefData().isDeleted())
+		{
+			MWBase::Environment::get().getWorld()->deleteObject(fireptr);
+		}
+
+		if (mSEI->getInInventorySEI())
+		{
+			auto invptr = mSEI->getInInventorySEI()->getPtr();
+			MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(invptr);
+
+			const MWWorld::ESMStore& store = MWBase::Environment::get().getWorld()->getStore();
+			int index = ESM::MagicEffect::effectStringToId("sEffectTelekinesis");
+			const ESM::MagicEffect *effect = store.get<ESM::MagicEffect>().find(index);
 
 
+			animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
+
+
+		}
 		//mSEI->getPtr().mContainerStore->
 		//MWRender::Animation* animation = MWBase::Environment::get().getWorld()->getAnimation(mUserLife->mPtr);
 
@@ -161,13 +191,14 @@ void MWBase::OnFireStatusObject::init()
 	}
 
 	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::OnFire);
-	MWWorld::ManualRef ref(MWBase::Environment::get().getWorld()->getStore(), "light_fire_300", 1);
+	mFireRef = new MWWorld::ManualRef(MWBase::Environment::get().getWorld()->getStore(), "light_fire_300", 1);
+	//mFireRef = ref;
 	MWWorld::Ptr actor = mSEI->getPtr();
-	MWWorld::ConstPtr constactor = mSEI->getPtr();
-	fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(ref.getPtr(), actor, actor.getCell(), 0, 0);
+	//MWWorld::ConstPtr constactor = mSEI->getPtr();
+	fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
 	
-	std::vector<MWWorld::Ptr> out;
-	MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
+	//std::vector<MWWorld::Ptr> out;
+	//MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
 
 	mSEI->buildBoundingBox();
 
@@ -180,6 +211,7 @@ void MWBase::OnFireStatusObject::end()
 {
 	MWBase::Environment::get().getWorld()->disable(fireptr);
 	mSEI->getStatusManager()->removeStatus(MWBase::OnFire);
+	delete mFireRef;
 	mDone = true;
 }
 

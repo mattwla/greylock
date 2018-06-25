@@ -108,6 +108,8 @@ namespace MWBase
 		
 		int mPingCount;
 
+		MWBase::SmartEntityInstance * mInInventorySEI = 0;
+
 	public :
 		
 		virtual float getActivationDistance() {
@@ -155,6 +157,12 @@ namespace MWBase
 		
 		//returns the ptr of SEI
 		MWWorld::Ptr & getPtr();
+
+		void setInInventory(MWWorld::Ptr ptr);
+
+		void removeFromInventory();
+
+		MWBase::SmartEntityInstance * getInInventorySEI();
 		
 		//let SEI know if its new ptr
 		void updatePtr(MWWorld::Ptr ptr);
@@ -440,6 +448,7 @@ namespace MWBase
 		
 		
 	};
+
 
 
 }
