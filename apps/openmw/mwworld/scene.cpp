@@ -94,7 +94,8 @@ namespace
 		{
 			MWBase::SmartEntityInstance * instance = sem->getSmartEntityInstance(ptr);
 			sem->addSmartInstanceToScene(ptr);
-			instance->updatePtr(ptr);		
+			instance->updatePtr(ptr);
+			instance->buildBoundingBox();
 		}
 		else
 		{

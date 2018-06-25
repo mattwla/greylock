@@ -678,7 +678,7 @@ void MWBase::SmartEntityInstance::registerHomeCell(const ESM::Cell * cell)
 
 void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 {
-	buildBoundingBox();
+	
 
 	std::cout << "default impact for all SEIS" << std::endl;
 	if (impactwith)
