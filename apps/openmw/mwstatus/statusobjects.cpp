@@ -91,7 +91,7 @@ void MWBase::OnFireStatusObject::update(float duration)
 		auto pos = mSEI->getPtr().getRefData().getPosition().pos;
 		auto actor = mSEI->getPtr();
 
-		if (fireptr.getRefData().isDeleted())
+		if (!fireptr || fireptr.getRefData().isDeleted())
 		{
 			fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
 		}
@@ -195,12 +195,14 @@ void MWBase::OnFireStatusObject::init()
 	//mFireRef = ref;
 	MWWorld::Ptr actor = mSEI->getPtr();
 	//MWWorld::ConstPtr constactor = mSEI->getPtr();
-	fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
+
+
+	//fireptr = MWBase::Environment::get().getWorld()->safePlaceObject(mFireRef->getPtr(), actor, actor.getCell(), 0, 0);
 	
 	//std::vector<MWWorld::Ptr> out;
 	//MWBase::Environment::get().getWorld()->getCollidingObjects(constactor, out);
 
-	mSEI->buildBoundingBox();
+//	mSEI->buildBoundingBox();
 
 
 	//MWBase::Environment::get().getWorld()->enableActorCollision(fireptr, false);

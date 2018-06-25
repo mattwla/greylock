@@ -58,7 +58,7 @@ void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance *
 	themap["misc_de_drum_01"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
 	themap["misc_de_drum_02"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
 	themap["misc_com_broom_01"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
-	//themap["furn_de_firepit"] = { MWBase::OnFire };
+	themap["furn_de_firepit"] = { MWBase::OnFire };
 	
 
 

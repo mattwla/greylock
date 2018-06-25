@@ -688,12 +688,12 @@ void MWBase::SmartEntityInstance::onImpact(MWWorld::Ptr impactwith)
 		if (MWBase::Environment::get().getWorld()->getPlayerPtr() != impactwith && impactwith.getClass().isActor())
 			impactwith.getClass().getNpcStats(impactwith).setFatigue(0);
 		
-		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith);
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(impactwith, true);
 		if (sei && sei->mIsLife)
 		{
 			sei->getLife()->say("Ow.");
 		}
-
+		//mwx fix me soo hacky.
 		if (getStatusManager()->hasStatus(MWBase::OnFire) && sei->getStatusManager()->hasStatus(MWBase::IsFlammable))
 		{
 			sei->getStatusManager()->giveStatus(MWBase::OnFire);
