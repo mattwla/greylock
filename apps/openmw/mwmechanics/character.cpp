@@ -3133,6 +3133,8 @@ Glide::Glide(MWWorld::Ptr ptr)
 
 Glide::~Glide()
 {
+	MWBase::Environment::get().getWorld()->deleteObject(mGliderPtr);
+	delete mGliderRef;
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	sei->getStatusManager()->removeStatus(MWBase::InGlide);
 
