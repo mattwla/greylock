@@ -2182,6 +2182,8 @@ void CharacterController::update(float duration)
 		checkActions();
 		if (mCurrentAction != 0)
 		{
+			mAnimation->setAlpha(0);
+
 			mCurrentAction->update(duration);
 			if (mCurrentAction->mDone)
 			{
@@ -2193,6 +2195,7 @@ void CharacterController::update(float duration)
 		}
 		else
 		{
+			mAnimation->setAlpha(100);
 			if (!(movement.x() == 0 && movement.y() == 0 && movement.z() == 0)) //get our last movement before it cuts to 0
 			{
 				mWallJumpOriginalVelocity = movement;

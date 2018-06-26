@@ -140,7 +140,7 @@ void MWBase::OnFireStatusObject::update(float duration)
 				MWBase::Environment::get().getWorld()->moveObject(fireptr, pos[0], pos[1], pos[2]);
 
 
-			animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
+			//animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
 
 
 		}
@@ -201,7 +201,7 @@ void MWBase::OnFireStatusObject::init()
 		
 
 		animation->addSpellCastGlow(effect, 5); // 1 second glow to match the time taken for a door opening or closing
-
+		
 	}
 
 	mSEI->getStatusManager()->mStatusMap.push_back(MWBase::OnFire);
