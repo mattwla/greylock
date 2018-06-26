@@ -22,7 +22,7 @@ namespace MWBase {
 		auto list = awareness->getSensoryLinksThisFrame()->mSensoryLinks;
 		for (linklist::iterator it = list.begin(); it != list.end(); it++)
 		{
-			if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::OnFire))
+			/*if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::OnFire))
 			{
 				if (!MWBase::Environment::get().getWorld()->hasClearLOS(mOwnerLife->mPtr, it->second.mSEInstance->getPtr()))
 					continue;
@@ -31,7 +31,7 @@ namespace MWBase {
 				MWBase::GOAPStatus status(MWBase::RUNNING_BEHAVIOR_OBJECT, "flee", 1);
 				std::shared_ptr<MWBase::GOAPDesire> desire = std::make_shared<MWBase::GOAPDesire>(status, 99999);
 				mOwnerLife->submitDesirePtr(desire);
-			}
+			}*/
 
 			if (it->second.mSEInstance->getStatusManager()->hasStatus(MWBase::Assaulter))
 			{

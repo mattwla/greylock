@@ -615,7 +615,7 @@ namespace MWClass
 			
 			if (sei)
 			{
-				//sei->onImpact();
+				sei->onImpact();
 				//seilogic = true;
 			}
 			

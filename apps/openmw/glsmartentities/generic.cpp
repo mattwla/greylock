@@ -14,6 +14,8 @@ SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 	mIngameIDs.push_back("wooden staff");
 	mIngameIDs.push_back("furn_de_firepit");
 	mIngameIDs.push_back("in_velothismall_ndoor_01");
+	//mIngameIDs.push_back("light_logpile_177");
+	mIngameIDs.push_back("light_fire");
 
 }
 
@@ -58,7 +60,11 @@ void SmartEntityGenericTemplate::giveGenericStatus(MWBase::SmartEntityInstance *
 	themap["misc_de_drum_01"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
 	themap["misc_de_drum_02"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
 	themap["misc_com_broom_01"] = { MWBase::SmallWooden,  MWBase::IsFlammable };
-	themap["furn_de_firepit"] = { MWBase::OnFire };
+	//themap["furn_de_firepit"] = { MWBase::OnFire };
+	//themap["light_logpile_177"] = { MWBase::OnFire };
+	themap["misc_de_muck_shovel_01"] = { MWBase::IsFlammable };
+	themap["misc_de_basket_01"] = { MWBase::IsFlammable };
+	themap["light_fire"] = { MWBase::OnFire };
 	
 
 
