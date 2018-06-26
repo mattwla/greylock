@@ -107,6 +107,9 @@ void MWBase::OnFireStatusObject::update(float duration)
 
 		for (MWBase::SmartInstanceMap::iterator it = seilist.begin(); it != seilist.end(); it++)
 		{
+			if (it->second->getPtr() == MWBase::Environment::get().getWorld()->getPlayerPtr())
+				continue;
+
 			if (it->second->getStatusManager()->hasStatus(MWBase::IsFlammable))
 			{
 				if (mSEI->containsPtr(it->second->getPtr()))

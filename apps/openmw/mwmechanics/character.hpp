@@ -13,6 +13,7 @@
 #include "../mwphysics/physicssystem.hpp"
 #include "../mwphysics/actor.hpp"
 #include "../mwphysics/collisiontype.hpp"
+#include "../mwworld/manualref.hpp"
 
 
 namespace MWWorld
@@ -226,6 +227,10 @@ public:
 
 class Glide : public MWMechanics::CharacterAction
 {
+
+	MWWorld::ManualRef * mGliderRef;
+	MWWorld::Ptr mGliderPtr;
+
 	enum TiltState
 	{
 		PLAYER_CONTROLLED = 0,

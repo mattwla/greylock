@@ -49,6 +49,9 @@ SmartEntityBedrollInstance::SmartEntityBedrollInstance(const MWWorld::Ptr &ptr)
 	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, mPtr.getCellRef().getRefNum(), 1, "cusion node"));
 	mGOAPNodeData.push_back(node);
+
+	ensureStatusManager();
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 }
 
 SmartEntityBedrollInstance::SmartEntityBedrollInstance(std::string refid, ESM::RefNum refnum, int pings)
@@ -61,6 +64,9 @@ SmartEntityBedrollInstance::SmartEntityBedrollInstance(std::string refid, ESM::R
 	MWBase::GOAPStatus input(MWBase::STATUS_VOID, "void", 0);
 	std::shared_ptr<MWBase::GOAPNodeData> node(new MWBase::GOAPNodeData(input, output, 0, refnum, 1, "bedroll node"));
 	mGOAPNodeData.push_back(node);
+
+	ensureStatusManager();
+	mStatusManager->giveStatus(MWBase::IsFlammable);
 }
 
 std::string SmartEntityBedrollInstance::getSaveString()

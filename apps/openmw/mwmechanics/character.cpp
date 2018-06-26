@@ -3125,6 +3125,9 @@ Glide::Glide(MWWorld::Ptr ptr)
 	mDriftTimer = 10.0;
 	mPitchCounter = 0.0;
 	mLastFrameWasDescending = false;
+	mGliderRef = new MWWorld::ManualRef(MWBase::Environment::get().getWorld()->getStore(), "umbrella", 1);
+	mGliderPtr = MWBase::Environment::get().getWorld()->safePlaceObject(mGliderRef->getPtr(), mPtr, mPtr.getCell(), 0, 0);
+	
 
 }
 
@@ -3132,6 +3135,9 @@ Glide::~Glide()
 {
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
 	sei->getStatusManager()->removeStatus(MWBase::InGlide);
+
+
+
 
 
 	mPtr.getClass().getMovementSettings(mPtr).mAttemptSneak = false;
@@ -3144,9 +3150,19 @@ Glide::~Glide()
 
 bool Glide::update(float duration)
 {
+
+
+
+
+
+
 	mPtr.getClass().getCreatureStats(mPtr).land();
 	//cls.getCreatureStats(mPtr).land();
 	auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+
+	MWBase::Environment::get().getWorld()->deleteObject(mGliderPtr);
+	mGliderPtr = MWBase::Environment::get().getWorld()->safePlaceObject(mGliderRef->getPtr(), mPtr, mPtr.getCell(), 0, 0);
+
 	float camroll = MWBase::Environment::get().getWorld()->getCameraRoll();
 	float rotatestrength = .1 / (.16 / duration);
 	float forwardstrength = 0.0f;
