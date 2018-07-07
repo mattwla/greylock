@@ -45,7 +45,7 @@ namespace MWWorld
 		MWBase::Environment::get().getMechanicsManager()->itemTaken(
 			actor, getTarget(), MWWorld::Ptr(), getTarget().getRefData().getCount());
 		MWWorld::Ptr newitem = *actor.getClass().getContainerStore(actor).add(getTarget(), getTarget().getRefData().getCount(), actor);
-		MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget().getBase());
+		MWBase::SmartEntityInstance * sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getTarget().getBase(), true);
 		if (sei)
 		{
 			sei->updatePtr(newitem);

@@ -558,7 +558,13 @@ namespace MWWorld
 				sei->getPtr().getRefData().getBaseNode()->setAttitude(throwOrient);
 				if (result.mHitObject)
 				{
-					sei->onImpact(result.mHitObject);
+					auto hitsei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(result.mHitObject);
+					
+					if (hitsei && hitsei->isHumanLife())
+					{
+						MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(caster)->getStatusManager()->giveStatus(MWBase::Assaulter);
+					}
+						sei->onImpact(result.mHitObject);
 				}
 				else
 				{

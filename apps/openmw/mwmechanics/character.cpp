@@ -2382,8 +2382,17 @@ bool CharacterController::checkCanWallJump()
 
 ClimbData CharacterController::checkCanClimb()
 {
+
+	
+	
+
 	ClimbData cd;
 	cd.mFound = false;
+
+	auto obj = MWBase::Environment::get().getWorld()->getFacedObject();
+
+	if (obj && obj.getClass().isDoor())
+		return cd;
 
 	if (mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
 		return cd;
@@ -2523,9 +2532,20 @@ bool CharacterController::checkActions() //checks if wall jumpable or climbable,
 	}
 
 	if (canClimb && canWallJump)
-		MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb Space) Walljump");
+		MWBase::Environment::get().getWindowManager()->BodyContext("E) Mount HOLD SPACE) Grab onto surface");
 	else if (canClimb)
-		MWBase::Environment::get().getWindowManager()->BodyContext("E) Climb");
+		MWBase::Environment::get().getWindowManager()->BodyContext("E) Mount");
+	else if (mCurrentAction && mCurrentAction->getType() == ActionState_WallHolding || mCurrentAction && mCurrentAction->getType() == ActionState_Climbing)
+		MWBase::Environment::get().getWindowManager()->BodyContext("W/S) Up/Down A/D) Left/Right");
+	else if (mCurrentAction && mCurrentAction->getType() == ActionState_Gliding)
+		MWBase::Environment::get().getWindowManager()->BodyContext("CTRL) Deactivate glider W/A/D) Steer");
+	else if (!MWBase::Environment::get().getWorld()->isOnGround(mPtr))
+		MWBase::Environment::get().getWindowManager()->BodyContext("CTRL) Activate glider");
+	else if (MWBase::Environment::get().getSmartEntitiesManager()->getSEIInHand(mPtr))
+		MWBase::Environment::get().getWindowManager()->BodyContext("LMB) Swing RMB) Throw");
+	
+	
+
 
 	return true;
 }
@@ -3189,7 +3209,7 @@ bool Glide::update(float duration)
 		
 		
 		mLastDescentSpeed = forwardstrength;
-		std::cout << forwardstrength << std::endl;
+		//std::cout << forwardstrength << std::endl;
 		
 		sei->getStatusManager()->giveStatus(MWBase::InGlideDescent);
 		inDescent = true;

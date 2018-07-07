@@ -51,6 +51,7 @@ MWBase::DemoQuestMetaBrain::DemoQuestMetaBrain()
 
 void MWBase::DemoQuestMetaBrain::update(float duration)
 {
+	std::cout << "updatint dqmb" << std::endl;
 }
 
 std::vector<std::shared_ptr<MWBase::GOAPNodeData>> MWBase::DemoQuestMetaBrain::requestDesire(MWBase::Life * life)
@@ -277,8 +278,12 @@ void MWBase::DemoQuestMetaBrain::behaviorUpdate(MWBase::Life * life)
 			mArxDesire->mIntensity = 0;
 			mNadiaDesire->mIntensity = 0;
 		}
+		mStage += 1;
 	}
-
+	else if (mStage == 21)
+	{
+		
+	}
 
 
 	//replace above with ConversationObject
@@ -311,10 +316,19 @@ bool MWBase::DemoQuestMetaBrain::turnTo(MWWorld::Ptr actor, MWWorld::Ptr target)
 
 MWBase::SubBrainDemoQuest::SubBrainDemoQuest(MWBase::Life * life)
 {
+	mOwnerLife = life;
 }
 
 void MWBase::SubBrainDemoQuest::calculate(MWBase::Awareness * awareness)
 {
+	auto playerptr = MWBase::Environment::get().getWorld()->getPlayerPtr();
+	MWWorld::InventoryStore &inventoryStore = playerptr.getClass().getInventoryStore(playerptr);
+	int count = inventoryStore.count("battery1_pack");
+	if (count >= 3)
+	{
+		if (!mOwnerLife->mCurrentSpeech)
+			mOwnerLife->say("YOU DID IT");
+	}
 }
 
 std::string MWBase::SubBrainDemoQuest::getID()

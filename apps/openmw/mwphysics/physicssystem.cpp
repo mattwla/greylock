@@ -580,20 +580,24 @@ namespace MWPhysics
 				{
 					if (!inGlideDescent)
 					{
-						if (inertia.z() < -200.0f)
+						if (inertia.z() < -2000.0f)
+						{
+							inertia.z() += time * 10000.f;
+						}
+						else if (inertia.z() < -1000.0f)
 							inertia.z() += time * 1400.7; //-627.2f; //gravity?
 						else if (inertia.z() > -210.0f)
 							inertia.z() += time * -980.7;
 					}
 					else
 					{
-
-						if (inertia.z() < -1000.f)
-							inertia.z() += time * 10000;
-						else if (inertia.z() < -800.0f)
-							inertia.z() += time * 5200.7; //-627.2f; //gravity?
-						else if (inertia.z() > -1010.0f)
-							inertia.z() += time * -580.7;
+						//std::cout << inertia.z() << std::endl;
+						if (inertia.z() > -600.f)
+							inertia.z() -= time * 1000;
+						else if (inertia.z() < -600.0f)
+							inertia.z() += time * 10200.7; //-627.2f; //gravity?
+						/*else if (inertia.z() > -1010.0f)
+							inertia.z() += time * -580.7;*/
 					}
 					inertia.x() = 0.0f;
 					inertia.y() = 0.0f;

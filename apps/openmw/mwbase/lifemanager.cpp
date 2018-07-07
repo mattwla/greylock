@@ -49,6 +49,11 @@ namespace MWBase
 
 	void Life::say(std::string speech)
 	{
+		auto sei = MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(mPtr);
+
+		//if (sei->getStatusManager()->hasStatus(MWBase::Asle))
+
+
 		if (mCurrentSpeech)
 		{
 			if (speech == mCurrentSpeech->mText)

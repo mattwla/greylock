@@ -16,6 +16,7 @@ SmartEntityGenericTemplate::SmartEntityGenericTemplate()
 	mIngameIDs.push_back("in_velothismall_ndoor_01");
 	//mIngameIDs.push_back("light_logpile_177");
 	mIngameIDs.push_back("light_fire");
+	mIngameIDs.push_back("furn_com_r_table_01");
 
 }
 
