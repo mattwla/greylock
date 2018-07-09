@@ -133,6 +133,8 @@ struct Land
 		// <x,<y,z>>
 		static std::map<float, std::map<float, int>> testmap;
 
+		static std::vector < std::vector<std::pair<float, float>> sLandHeights;
+
 		static void buildLand();
 
 		//float lands[LAND_SIZE];

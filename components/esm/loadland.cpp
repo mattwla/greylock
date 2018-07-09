@@ -408,7 +408,7 @@ namespace ESM
 
 		LAND_SIZE;
 
-		std::ifstream in("terrain/terrain.xyz");
+		std::ifstream in("terrain/testrange.xyz");
 
 		if (!in.is_open())
 			std::cout << "-----=====TERRAIN NOT OPEN====-----" << std::endl;
@@ -422,23 +422,91 @@ namespace ESM
 
 
 		int count = 0;
+		float prevy = 0;
+		float currenty = 0;
+
+		std::vector<std::vector<std::pair<float, float>>> grid;
+		std::vector<std::pair<float, float>> currentxrow;
+		bool firstiter = true;
 		while (getline(in, line))
 		{
 			
+
 			Tokenizer tok(line, sep);
+			int itx = 0;
+			float x;
+			float y;
+			float z;
 			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
 			{
-
-				std::cout << *it << std::endl;
+				if (itx == 0)
+				{
+					x = std::stof(*it);
+				}
+				else if (itx == 1)
+				{
+					y = std::stof(*it);
+				}
+				else
+				{
+					z = std::stof(*it);
+				}
+			
+				itx += 1;
+				// std::cout << *it << std::endl;
 
 			}
-			std::cout << "end line" << std::endl;
+			/*std::cout << x << std::endl;
+			std::cout << y << std::endl;*/
+
+			auto xzpair = std::make_pair(x, z);
+			currenty = y;
+			
+			if (firstiter)
+			{
+				prevy = currenty;
+				firstiter = false;
+			}
+			if (prevy == currenty)
+			{
+				currentxrow.push_back(xzpair);
+			}
+			else
+			{
+				std::cout << "y changed" << std::endl;
+				grid.push_back(currentxrow);
+				currentxrow.clear();
+				currentxrow.push_back(xzpair);
+				prevy = currenty;
+			}
 			
 		}
 
+		grid.push_back(currentxrow);
+
 		std::cout << "--===COUNT IS====----" << std::endl;
 		std::cout << count << std::endl;
-		testmap;
+
+		std::cout << "--===Y COUNT IS====----" << std::endl;
+		std::cout << grid.size() << std::endl;
+
+		std::cout << "--===Y SIZE IS===---" << std::endl;
+		std::cout << grid.size() * 5 << " meters" << std::endl;
+		
+		std::cout << "--===X COUNT IS====----" << std::endl;
+		std::cout << grid.back().size() << std::endl;
+
+		std::cout << "--===X COUNT IS====----" << std::endl;
+		std::cout << grid.back().size() * 5 << " meters" << std::endl;
+		
+
+
+
+
+
+		sLandHeights = grid;
+
+		//testmap;
 		//open thing.
 
 
@@ -446,7 +514,40 @@ namespace ESM
 
 	std::vector<float> Land::GreylockLand::getfloats(int x, int y, int numperside)
 	{
-		return std::vector<float>();
+		//get center of slandheights
+
+		LAND_SIZE;
+		int totalpoints = LAND_SIZE * LAND_SIZE;
+
+		int xcenter = sLandHeights.back().size() / 2;
+		int ycenter = sLandHeights.size() / 2;
+
+		int celllength = LAND_SIZE;
+		int yleft = celllength;
+
+		std::vector<float> result;
+
+		while (yleft > 0)
+		{
+			int currentrow = celllength - yleft;
+			std::vector<std::pair<float, float>> rowvec = sLandHeights[currentrow];
+			for (std::vector<std::pair<float, float>>::iterator it = rowvec.begin(); it != rowvec.end(); it++)
+			{
+				result.push_back((*it).second);
+				result.push_back((*it).second);
+				result.push_back((*it).second);
+			}
+			yleft -= 1;
+
+
+		}
+
+
+
+
+
+
+		return result;
 	}
 
 }
