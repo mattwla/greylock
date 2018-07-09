@@ -470,8 +470,9 @@ namespace MWWorld
         ESM::Land *ptr = new ESM::Land();
         bool isDeleted = false;
 		//mwx land initial load
-		ESM::Land::GreylockLand::buildLand();
-        ptr->load(esm, isDeleted);
+		//ESM::Land::GreylockLand::buildLand();
+        
+		ptr->load(esm, isDeleted);
 
         // Same area defined in multiple plugins? -> last plugin wins
         // Can't use search() because we aren't sorted yet - is there any other way to speed this up?

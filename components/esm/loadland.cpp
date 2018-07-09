@@ -5,6 +5,9 @@
 #include "esmreader.hpp"
 #include "esmwriter.hpp"
 #include "defs.hpp"
+#include <boost/tokenizer.hpp>
+#include <iostream>
+#include <fstream>
 
 namespace ESM
 {
@@ -402,6 +405,40 @@ namespace ESM
 
 	void Land::GreylockLand::buildLand()
 	{
+
+		LAND_SIZE;
+
+		std::ifstream in("terrain/terrain.xyz");
+
+		if (!in.is_open())
+			std::cout << "-----=====TERRAIN NOT OPEN====-----" << std::endl;
+		else
+			std::cout << "----=====TERRAIN OPEN======------" << std::endl;
+
+		std::string line;
+
+		typedef boost::tokenizer<boost::char_separator<char>> Tokenizer;
+		boost::char_separator<char> sep("\t");
+
+
+		int count = 0;
+		while (getline(in, line))
+		{
+			
+			Tokenizer tok(line, sep);
+			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
+			{
+
+				std::cout << *it << std::endl;
+
+			}
+			std::cout << "end line" << std::endl;
+			
+		}
+
+		std::cout << "--===COUNT IS====----" << std::endl;
+		std::cout << count << std::endl;
+		testmap;
 		//open thing.
 
 

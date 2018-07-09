@@ -67,6 +67,9 @@ void ESMStore::load(ESM::ESMReader &esm, Loading::Listener* listener)
         mast.index = index;
     }
 
+	//built Greylock's terrain here.
+	ESM::Land::GreylockLand::buildLand();
+
     // Loop through all records
     while(esm.hasMoreRecs())
     {
