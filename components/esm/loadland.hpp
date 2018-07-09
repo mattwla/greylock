@@ -2,8 +2,10 @@
 #define OPENMW_ESM_LAND_H
 
 #include <stdint.h>
+#include <vector>
 
 #include "esmcommon.hpp"
+#include <map>
 
 namespace ESM
 {
@@ -125,6 +127,23 @@ struct Land
      * If target is NULL, assumed target is mLandData
      */
     void loadData(int flags, LandData* target = NULL) const;
+
+	struct GreylockLand {
+
+		// <x,<y,z>>
+		static std::map<float, std::map<float, int>> testmap;
+
+		static void buildLand();
+
+		//float lands[LAND_SIZE];
+
+		std::vector<float> getfloats(int x, int y, int numperside);
+
+
+
+	};
+
+	static GreylockLand sGreylockLand;
 
     /**
      * Frees memory allocated for mLandData

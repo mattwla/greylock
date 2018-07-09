@@ -469,7 +469,8 @@ namespace MWWorld
     {
         ESM::Land *ptr = new ESM::Land();
         bool isDeleted = false;
-
+		//mwx land initial load
+		ESM::Land::GreylockLand::buildLand();
         ptr->load(esm, isDeleted);
 
         // Same area defined in multiple plugins? -> last plugin wins
@@ -484,6 +485,8 @@ namespace MWWorld
             }
         }
 
+
+		
         mStatic.push_back(ptr);
 
         return RecordId("", isDeleted);
