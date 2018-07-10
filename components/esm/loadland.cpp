@@ -424,6 +424,10 @@ namespace ESM
 		//assumes rectangle
 		//auto sampleyrange = sLandHeights.begin()->second;
 		
+		//69.99
+
+		float cellwidth = 8192 / 69.99 * 2;
+
 		float ycenter = sCenterY;
 
 		//std::cout << "center is" << sCenterY << std::endl;
@@ -438,9 +442,10 @@ namespace ESM
 		float targety = index / (LAND_SIZE);
 		float targetx = index % (LAND_SIZE);
 		
+
 		
-		float xmeteroffset = cellx * 117 + xcenter;
-		float ymeteroffset = celly * 117 + ycenter;
+		float xmeteroffset = cellx * cellwidth + xcenter;
+		float ymeteroffset = celly * cellwidth + ycenter;
 		//std::cout << targety << std::endl;
 		ymeteroffset += targety * 3.65;
 		xmeteroffset += targetx * 3.65;
@@ -466,11 +471,50 @@ namespace ESM
 			t2--;
 		}
 		//std::cout << t2->second << std::endl;
-		return t2->second * 60.f;
+		//return t2->second * 60.f;
 		//return (*sLandHeights.lower_bound(xmeteroffset)).second.lower_bound(ymeteroffset)->second * 60;
 		
+		auto bound1 = sLandHeights.lower_bound(xmeteroffset);
+		if (bound1 == sLandHeights.end())
+			bound1--;
+		auto bound1b = bound1->second.lower_bound(ymeteroffset);
+		if (bound1b == bound1->second.end())
+			bound1b--;
+
+		float x1 = bound1->first;
+		float y1 = bound1b->first;
+		float z1 = bound1b->second;
+
+		auto bound2 = bound1++;
+
+		float x2 = bound1->first;
+
+		bound1b = bound1->second.lower_bound(ymeteroffset);
+		auto bound2b = bound1b++;
+		float y2 = bound1b->first;
+		float z2 = bound1b->second;
 
 
+		/*std::cout << "X1 = " << x1 << std::endl;
+		std::cout << "X2 = " << x2 << std::endl;
+		std::cout << "Y1 = " << y1 << std::endl;
+		std::cout << "Y2 = " << y2 << std::endl;
+*/
+		//return z2 * 60;
+
+	
+
+
+
+
+
+	/*	float x2 = sLandHeights.lower_bound(xmeteroffset)++->first;
+		float y2 = sLandHeights.lower_bound(xmeteroffset)++->second.lower_bound(ymeteroffset)->first;
+		float z2 = sLandHeights.lower_bound(xmeteroffset)++->second.lower_bound(ymeteroffset)->second;*/
+
+
+
+/*
 
 
 		auto xlb = sLandHeights.lower_bound(xmeteroffset);
@@ -485,48 +529,45 @@ namespace ESM
 		float lowx = xlb->first;
 		float hix = xub->first;
 		float hiy = yub->first;
-		float lowy = ylb->first;
+		float lowy = ylb->first;*/
 
 
 
-		osg::Vec3f v0(lowx, lowy, sLandHeights[lowy][lowx]);
-		osg::Vec3f v1(hix, lowy, sLandHeights[lowy][hix]);
-		osg::Vec3f v2(hix, hiy, sLandHeights[hiy][hix]);
-		osg::Vec3f v3(lowx, hiy, sLandHeights[hiy][lowx]);
+		osg::Vec3f v0(x1, y1, sLandHeights[x1][y1]);
+		osg::Vec3f v1(x2, y1, sLandHeights[x2][y1]);
+		osg::Vec3f v2(x2, y2, sLandHeights[x2][y2]);
+		osg::Vec3f v3(x1, y2, sLandHeights[x1][y2]);
 		//std::cout << "--====SAMPLE HEIGHT" << sLandHeights[hiy][lowx] << std::endl;
 
 
 
 
-		int cellxindex = xmeteroffset / 5;
-		int cellyindex = ymeteroffset / 5;
-		
-
-
-		
+		//int cellxindex = xmeteroffset / 5;
+		//int cellyindex = ymeteroffset / 5;
+		//
 
 		//get normalized position in cell
 
-		float nY = targety / LAND_SIZE;
-		float nX = targetx / LAND_SIZE;
+		float nY = ymeteroffset;//targety / LAND_SIZE;
+		float nX = xmeteroffset;//targetx / LAND_SIZE;
 
 		float factor = ESM::Land::LAND_SIZE - 1.0f;
 		float invFactor = 1.0f / factor;
 
-		float xParam = (nX - lowx) * factor;
-		float yParam = (nY - lowy) * factor;
+		float xParam = (nX - x1) * factor;
+		float yParam = (nY - y1) * factor;
 
 		osg::Plane plane;
 		// FIXME: deal with differing triangle alignment
-		if (true)
-		{
+	/*	if (true)
+		{*/
 			// odd row
 			bool secondTri = ((1.0 - yParam) > xParam);
 			if (secondTri)
 				plane = osg::Plane(v0, v1, v3);
 			else
 				plane = osg::Plane(v1, v2, v3);
-		}
+		//}
 		/*
 		else
 		{
@@ -542,7 +583,7 @@ namespace ESM
 		// Solve plane equation for z
 		float z = (-plane.getNormal().x() * nX
 			- plane.getNormal().y() * nY
-			- plane[3]) / plane.getNormal().z() *8192;
+			- plane[3]) / plane.getNormal().z() * 60;
 
 	//std::cout << "--====RETURNING: " << z << std::endl;
 
@@ -655,8 +696,12 @@ namespace ESM
 		std::cout << "--===X COUNT IS====----" << std::endl;
 		std::cout << grid.back().size() * 5 << " meters" << std::endl;
 		*/
+		std::cout << "MIN Y   " << miny << std::endl;
+
+		std::cout << "BIG Y   " << biggesty << std::endl;
 
 		sCenterY = (biggesty + miny) / 2.0;
+		//sCenterY += .5;
 
 
 
