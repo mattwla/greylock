@@ -9,6 +9,8 @@
 #include <iostream>
 #include <fstream>
 
+std::vector<std::vector<std::pair<float, float>>> ESM::Land::GreylockLand::sLandHeights;
+
 namespace ESM
 {
     unsigned int Land::sRecordId = REC_LAND;
@@ -504,7 +506,7 @@ namespace ESM
 
 
 
-		sLandHeights = grid;
+		 sLandHeights = grid;
 
 		//testmap;
 		//open thing.
@@ -531,6 +533,7 @@ namespace ESM
 		{
 			int currentrow = celllength - yleft;
 			std::vector<std::pair<float, float>> rowvec = sLandHeights[currentrow];
+			//23 real world readings are needed to fill in 63 points in the terrain. Use each reading 3 times
 			for (std::vector<std::pair<float, float>>::iterator it = rowvec.begin(); it != rowvec.end(); it++)
 			{
 				result.push_back((*it).second);

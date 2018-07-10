@@ -131,15 +131,15 @@ struct Land
 	struct GreylockLand {
 
 		// <x,<y,z>>
-		static std::map<float, std::map<float, int>> testmap;
+		//static std::map<float, std::map<float, int>> testmap;
 
-		static std::vector < std::vector<std::pair<float, float>> sLandHeights;
+		static std::vector<std::vector<std::pair<float, float>>> sLandHeights;
 
 		static void buildLand();
 
 		//float lands[LAND_SIZE];
 
-		std::vector<float> getfloats(int x, int y, int numperside);
+		static std::vector<float> getfloats(int x, int y, int numperside);
 
 
 
