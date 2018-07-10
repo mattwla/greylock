@@ -9,8 +9,11 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <osg/Plane>
 
 std::map<float, std::map<float, float>> ESM::Land::GreylockLand::sLandHeights;
+
+float ESM::Land::GreylockLand::sCenterY;
 
 namespace ESM
 {
@@ -278,6 +281,7 @@ namespace ESM
                     rowOffset += vhgt.mHeightData[y * LAND_SIZE];
 
 					target->mHeights[y * LAND_SIZE] = rowOffset * HEIGHT_SCALE;
+					target->mHeights[y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, y*LAND_SIZE);
                     if (rowOffset * HEIGHT_SCALE > target->mMaxHeight)
                         target->mMaxHeight = rowOffset * HEIGHT_SCALE;
                     if (rowOffset * HEIGHT_SCALE < target->mMinHeight)
@@ -287,6 +291,7 @@ namespace ESM
                     for (int x = 1; x < LAND_SIZE; x++) {
                         colOffset += vhgt.mHeightData[y * LAND_SIZE + x];
 						target->mHeights[x + y * LAND_SIZE] = colOffset * HEIGHT_SCALE;
+						target->mHeights[x + y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, x + y*LAND_SIZE);
 
                         if (colOffset * HEIGHT_SCALE > target->mMaxHeight)
                             target->mMaxHeight = colOffset * HEIGHT_SCALE;
@@ -407,9 +412,22 @@ namespace ESM
 
 	float Land::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
 	{
+		
+		
 		//first find center of terrain.
-		int ycenter = sLandHeights.size() / 2;
-		int xcenter = sLandHeights[0].size() / 2;
+		float xcenter = (sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
+		/*
+		auto sampleyrange = sLandHeights.rbegin()->second;
+		return 0;
+		float ycenter = (sampleyrange.begin()->first + sampleyrange.rbegin()->first) / 2.0f;*/
+		
+		//assumes rectangle
+		//auto sampleyrange = sLandHeights.begin()->second;
+		
+		float ycenter = sCenterY;
+
+		//std::cout << "center is" << sCenterY << std::endl;
+		
 
 		//how many meters is a cell?
 		//117 meters per side
@@ -417,10 +435,65 @@ namespace ESM
 
 		//find where on map cellx and celly are
 
-		int xmeteroffset = cellx * 117 + xcenter;
-		int ymeteroffset = celly * 117 + ycenter;
+		float targety = index / (LAND_SIZE);
+		float targetx = index % (LAND_SIZE);
+		
+		
+		float xmeteroffset = cellx * 117 + xcenter;
+		float ymeteroffset = celly * 117 + ycenter;
+		//std::cout << targety << std::endl;
+		ymeteroffset += targety * 3.65;
+		xmeteroffset += targetx * 3.65;
 
-		sLandHeights;
+
+		//std::cout << "X IS..." << xmeteroffset << std::endl;
+		//std::cout << "Y IS..." << ymeteroffset << std::endl;
+
+
+
+
+		//get closest bounds we can find on terrain map
+		//return 0;
+
+		auto t1 = sLandHeights.lower_bound(xmeteroffset);
+		if (t1 == sLandHeights.end())
+		{
+			t1--;
+		}
+		auto t2 = t1->second.lower_bound(ymeteroffset);
+		if (t2 == t1->second.end())
+		{
+			t2--;
+		}
+		//std::cout << t2->second << std::endl;
+		return t2->second * 60.f;
+		//return (*sLandHeights.lower_bound(xmeteroffset)).second.lower_bound(ymeteroffset)->second * 60;
+		
+
+
+
+
+		auto xlb = sLandHeights.lower_bound(xmeteroffset);
+		auto xub = sLandHeights.upper_bound(xmeteroffset);
+
+
+		auto ylb = sLandHeights.lower_bound(ymeteroffset);
+		ylb--;
+		auto yub = sLandHeights.upper_bound(ymeteroffset);
+		
+
+		float lowx = xlb->first;
+		float hix = xub->first;
+		float hiy = yub->first;
+		float lowy = ylb->first;
+
+
+
+		osg::Vec3f v0(lowx, lowy, sLandHeights[lowy][lowx]);
+		osg::Vec3f v1(hix, lowy, sLandHeights[lowy][hix]);
+		osg::Vec3f v2(hix, hiy, sLandHeights[hiy][hix]);
+		osg::Vec3f v3(lowx, hiy, sLandHeights[hiy][lowx]);
+		//std::cout << "--====SAMPLE HEIGHT" << sLandHeights[hiy][lowx] << std::endl;
 
 
 
@@ -430,8 +503,7 @@ namespace ESM
 		
 
 
-		float targety = index / LAND_SIZE;
-		float targetx = index & LAND_SIZE;
+		
 
 		//get normalized position in cell
 
@@ -441,45 +513,72 @@ namespace ESM
 		float factor = ESM::Land::LAND_SIZE - 1.0f;
 		float invFactor = 1.0f / factor;
 
+		float xParam = (nX - lowx) * factor;
+		float yParam = (nY - lowy) * factor;
 
+		osg::Plane plane;
+		// FIXME: deal with differing triangle alignment
+		if (true)
+		{
+			// odd row
+			bool secondTri = ((1.0 - yParam) > xParam);
+			if (secondTri)
+				plane = osg::Plane(v0, v1, v3);
+			else
+				plane = osg::Plane(v1, v2, v3);
+		}
+		/*
+		else
+		{
+		// even row
+		bool secondTri = (yParam > xParam);
+		if (secondTri)
+		plane.redefine(v0, v2, v3);
+		else
+		plane.redefine(v0, v1, v2);
+		}
+		*/
 
+		// Solve plane equation for z
+		float z = (-plane.getNormal().x() * nX
+			- plane.getNormal().y() * nY
+			- plane[3]) / plane.getNormal().z() *8192;
 
+	//std::cout << "--====RETURNING: " << z << std::endl;
 
-		return 0;
+	return z;
+
+		
 	}
 	
 
 	void Land::GreylockLand::buildLand()
 	{
 
-
-
-		LAND_SIZE;
+		//check if already built
+		if (sLandHeights.size() > 0)
+			return;
 
 		std::ifstream in("terrain/testrange.xyz");
-
 		if (!in.is_open())
 			std::cout << "-----=====TERRAIN NOT OPEN====-----" << std::endl;
 		else
 			std::cout << "----=====TERRAIN OPEN======------" << std::endl;
-
 		std::string line;
-
 		typedef boost::tokenizer<boost::char_separator<char>> Tokenizer;
 		boost::char_separator<char> sep("\t");
-
-
+		
 		int count = 0;
 		float prevy = 0;
 		float currenty = 0;
-
 		std::map<float, std::map<float, float>> grid;
 		std::map<float, float> currentxrow;
+		
 		bool firstiter = true;
+		float biggesty = 0;
+		float miny = 0;
 		while (getline(in, line))
 		{
-			
-
 			Tokenizer tok(line, sep);
 			int itx = 0;
 			float x;
@@ -499,45 +598,47 @@ namespace ESM
 				{
 					z = std::stof(*it);
 				}
-			
 				itx += 1;
-				// std::cout << *it << std::endl;
-
 			}
-			/*std::cout << x << std::endl;
-			std::cout << y << std::endl;*/
-
-			auto xzpair = std::make_pair(x, z);
 			currenty = y;
+			//parsing assumes Y axis is grouped together. 
 			
+			sLandHeights[x][y] = z;
+
+			if (y < miny)
+				miny = y;
+			if (y > biggesty)
+				biggesty = y;
+
+
 			if (firstiter)
 			{
-				prevy = currenty;
+				miny = y;
+				biggesty = y;
 				firstiter = false;
 			}
-			if (prevy == currenty)
-			{
-				//currentxrow.push_back(xzpair);
-				currentxrow[x] = z;
-			}
-			else
-			{
-				std::cout << "y changed" << std::endl;
-				grid[prevy] = currentxrow;
-				currentxrow.clear();
-				
-				//grid.push_back(currentxrow);
-				
-				
-				
-				currentxrow[x] = z;
-				prevy = currenty;
-			}
-			
+			//if (prevy == currenty)
+			//{
+			//	currentxrow[x] = z;
+			//}
+			//else
+			//{
+			//	//std::cout << "y changed" << std::endl;
+			//	grid[prevy] = currentxrow;
+			//	currentxrow.clear();
+			//	
+			//	//grid.push_back(currentxrow);
+			//	
+			//	
+			//	
+			//	currentxrow[x] = z;
+			//	prevy = currenty;
+			//}
+			//
 		}
 
 		//grid.push_back(currentxrow);
-		grid[prevy] = currentxrow;
+		//grid[prevy] = currentxrow;
 
 		std::cout << "--===COUNT IS====----" << std::endl;
 		std::cout << count << std::endl;
@@ -555,11 +656,11 @@ namespace ESM
 		std::cout << grid.back().size() * 5 << " meters" << std::endl;
 		*/
 
+		sCenterY = (biggesty + miny) / 2.0;
 
 
 
-
-		 sLandHeights = grid;
+		// sLandHeights = grid;
 
 		//testmap;
 		//open thing.
