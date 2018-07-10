@@ -487,9 +487,14 @@ namespace ESM
 
 		auto bound2 = bound1++;
 
+		if (bound1 == sLandHeights.end())
+			return 0;
+
 		float x2 = bound1->first;
 
 		bound1b = bound1->second.lower_bound(ymeteroffset);
+		if (bound1b == bound1->second.end())
+			return 0;
 		auto bound2b = bound1b++;
 		float y2 = bound1b->first;
 		float z2 = bound1b->second;
@@ -600,7 +605,7 @@ namespace ESM
 		if (sLandHeights.size() > 0)
 			return;
 
-		std::ifstream in("terrain/testrange.xyz");
+		std::ifstream in("terrain/reasonabletest.xyz");
 		if (!in.is_open())
 			std::cout << "-----=====TERRAIN NOT OPEN====-----" << std::endl;
 		else
