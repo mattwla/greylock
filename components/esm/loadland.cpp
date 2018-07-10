@@ -8,8 +8,9 @@
 #include <boost/tokenizer.hpp>
 #include <iostream>
 #include <fstream>
+#include <map>
 
-std::vector<std::vector<std::pair<float, float>>> ESM::Land::GreylockLand::sLandHeights;
+std::map<float, std::map<float, float>> ESM::Land::GreylockLand::sLandHeights;
 
 namespace ESM
 {
@@ -406,7 +407,9 @@ namespace ESM
 
 	float Land::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
 	{
-		sLandHeights;
+		//first find center of terrain.
+		int ycenter = sLandHeights.size() / 2;
+		int xcenter = sLandHeights[0].size() / 2;
 
 		//how many meters is a cell?
 		//117 meters per side
@@ -414,13 +417,35 @@ namespace ESM
 
 		//find where on map cellx and celly are
 
-		int xoffset = cellx * 117;
-		int yoffset = celly * 117;
+		int xmeteroffset = cellx * 117 + xcenter;
+		int ymeteroffset = celly * 117 + ycenter;
+
+		sLandHeights;
+
+
+
+
+		int cellxindex = xmeteroffset / 5;
+		int cellyindex = ymeteroffset / 5;
+		
 
 
 		float targety = index / LAND_SIZE;
 		float targetx = index & LAND_SIZE;
 
+		//get normalized position in cell
+
+		float nY = targety / LAND_SIZE;
+		float nX = targetx / LAND_SIZE;
+
+		float factor = ESM::Land::LAND_SIZE - 1.0f;
+		float invFactor = 1.0f / factor;
+
+
+
+
+
+		return 0;
 	}
 	
 
@@ -448,8 +473,8 @@ namespace ESM
 		float prevy = 0;
 		float currenty = 0;
 
-		std::vector<std::vector<std::pair<float, float>>> grid;
-		std::vector<std::pair<float, float>> currentxrow;
+		std::map<float, std::map<float, float>> grid;
+		std::map<float, float> currentxrow;
 		bool firstiter = true;
 		while (getline(in, line))
 		{
@@ -492,20 +517,27 @@ namespace ESM
 			}
 			if (prevy == currenty)
 			{
-				currentxrow.push_back(xzpair);
+				//currentxrow.push_back(xzpair);
+				currentxrow[x] = z;
 			}
 			else
 			{
 				std::cout << "y changed" << std::endl;
-				grid.push_back(currentxrow);
+				grid[prevy] = currentxrow;
 				currentxrow.clear();
-				currentxrow.push_back(xzpair);
+				
+				//grid.push_back(currentxrow);
+				
+				
+				
+				currentxrow[x] = z;
 				prevy = currenty;
 			}
 			
 		}
 
-		grid.push_back(currentxrow);
+		//grid.push_back(currentxrow);
+		grid[prevy] = currentxrow;
 
 		std::cout << "--===COUNT IS====----" << std::endl;
 		std::cout << count << std::endl;
@@ -516,12 +548,12 @@ namespace ESM
 		std::cout << "--===Y SIZE IS===---" << std::endl;
 		std::cout << grid.size() * 5 << " meters" << std::endl;
 		
-		std::cout << "--===X COUNT IS====----" << std::endl;
+		/*std::cout << "--===X COUNT IS====----" << std::endl;
 		std::cout << grid.back().size() << std::endl;
 
 		std::cout << "--===X COUNT IS====----" << std::endl;
 		std::cout << grid.back().size() * 5 << " meters" << std::endl;
-		
+		*/
 
 
 
@@ -539,38 +571,38 @@ namespace ESM
 	{
 		//get center of slandheights
 
-		LAND_SIZE;
-		int totalpoints = LAND_SIZE * LAND_SIZE;
+		//LAND_SIZE;
+		//int totalpoints = LAND_SIZE * LAND_SIZE;
 
-		int xcenter = sLandHeights.back().size() / 2;
-		int ycenter = sLandHeights.size() / 2;
+		//int xcenter = sLandHeights.back().size() / 2;
+		//int ycenter = sLandHeights.size() / 2;
 
-		int celllength = LAND_SIZE;
-		int yleft = celllength;
+		//int celllength = LAND_SIZE;
+		//int yleft = celllength;
+
+		//std::vector<float> result;
+
+		//while (yleft > 0)
+		//{
+		//	int currentrow = celllength - yleft;
+		//	std::vector<std::pair<float, float>> rowvec = sLandHeights[currentrow];
+		//	//23 real world readings are needed to fill in 63 points in the terrain. Use each reading 3 times
+		//	for (std::vector<std::pair<float, float>>::iterator it = rowvec.begin(); it != rowvec.end(); it++)
+		//	{
+		//		result.push_back((*it).second);
+		//		result.push_back((*it).second);
+		//		result.push_back((*it).second);
+		//	}
+		//	yleft -= 1;
+
+
+		//}
+
+
+
+
 
 		std::vector<float> result;
-
-		while (yleft > 0)
-		{
-			int currentrow = celllength - yleft;
-			std::vector<std::pair<float, float>> rowvec = sLandHeights[currentrow];
-			//23 real world readings are needed to fill in 63 points in the terrain. Use each reading 3 times
-			for (std::vector<std::pair<float, float>>::iterator it = rowvec.begin(); it != rowvec.end(); it++)
-			{
-				result.push_back((*it).second);
-				result.push_back((*it).second);
-				result.push_back((*it).second);
-			}
-			yleft -= 1;
-
-
-		}
-
-
-
-
-
-
 		return result;
 	}
 

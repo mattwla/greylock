@@ -133,7 +133,9 @@ struct Land
 		// <x,<y,z>>
 		//static std::map<float, std::map<float, int>> testmap;
 
-		static std::vector<std::vector<std::pair<float, float>>> sLandHeights;
+		static std::map<float, std::map<float, float>> sLandHeights;
+
+		static float getHeightAtIndex(int cellx, int celly, int index);
 
 		static void buildLand();
 
