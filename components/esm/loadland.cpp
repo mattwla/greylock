@@ -401,10 +401,31 @@ namespace ESM
         }
     }
 
+
+	float Land::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
+	{
+		sLandHeights;
+
+		//how many meters is a cell?
+		//117 meters per side
+		//aka 128 yards
+
+		//find where on map cellx and celly are
+
+		int xoffset = cellx * 117;
+		int yoffset = celly * 117;
+
+
+		float targety = index / LAND_SIZE;
+		float targetx = index & LAND_SIZE;
+
+	}
 	
 
 	void Land::GreylockLand::buildLand()
 	{
+
+
 
 		LAND_SIZE;
 
