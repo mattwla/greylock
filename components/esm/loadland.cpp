@@ -15,6 +15,7 @@ std::map<float, std::map<float, float>> ESM::Land::GreylockLand::sLandHeights;
 
 float ESM::Land::GreylockLand::sCenterY;
 float ESM::Land::GreylockLand::sCenterX;
+std::map<int, std::map<int, std::vector<float>>> ESM::Land::GreylockLand::sCellHeightsMap;
 
 namespace ESM
 {
@@ -262,6 +263,7 @@ namespace ESM
 
         if (reader.isNextSub("VHGT")) {
             VHGT vhgt;
+
             //actually get vhgt from looking up my csv
 			//greylock terrain object
 
@@ -273,34 +275,75 @@ namespace ESM
 			//give column
 			//gives back MW friendly value
 			
+			//check if we have a cached land for this
+			//
+			
 			
 			if (condLoad(reader, flags, target->mDataLoaded, DATA_VHGT, &vhgt, sizeof(vhgt))) {
                 target->mMinHeight = FLT_MAX;
                 target->mMaxHeight = -FLT_MAX;
                 float rowOffset = vhgt.mHeightOffset;
-                for (int y = 0; y < LAND_SIZE; y++) {
-                    rowOffset += vhgt.mHeightData[y * LAND_SIZE];
+				bool needtocache = true;
+				if (ESM::Land::GreylockLand::isLandCached(mX, mY))
+				{
+					needtocache = false;
+					auto terrain = ESM::Land::GreylockLand::sCellHeightsMap[mX][mY];
+					
+					int itx = 0;
+					while (itx < (LAND_SIZE * LAND_SIZE) && itx < terrain.size())
+					{
+						target->mHeights[itx] = terrain[itx];
+						itx += 1;
+					}
+				}
+				else
+				{
 
-					target->mHeights[y * LAND_SIZE] = rowOffset * HEIGHT_SCALE;
-					target->mHeights[y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, y*LAND_SIZE);
-                    if (rowOffset * HEIGHT_SCALE > target->mMaxHeight)
-                        target->mMaxHeight = rowOffset * HEIGHT_SCALE;
-                    if (rowOffset * HEIGHT_SCALE < target->mMinHeight)
-                        target->mMinHeight = rowOffset * HEIGHT_SCALE;
-					//mwx height
-                    float colOffset = rowOffset;
-                    for (int x = 1; x < LAND_SIZE; x++) {
-                        colOffset += vhgt.mHeightData[y * LAND_SIZE + x];
-						target->mHeights[x + y * LAND_SIZE] = colOffset * HEIGHT_SCALE;
-						target->mHeights[x + y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, x + y*LAND_SIZE);
 
-                        if (colOffset * HEIGHT_SCALE > target->mMaxHeight)
-                            target->mMaxHeight = colOffset * HEIGHT_SCALE;
-                        if (colOffset * HEIGHT_SCALE < target->mMinHeight)
-                            target->mMinHeight = colOffset * HEIGHT_SCALE;
-                    }
-                }
-                target->mUnk1 = vhgt.mUnk1;
+
+					for (int y = 0; y < LAND_SIZE; y++) {
+						rowOffset += vhgt.mHeightData[y * LAND_SIZE];
+
+						target->mHeights[y * LAND_SIZE] = rowOffset * HEIGHT_SCALE;
+						target->mHeights[y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, y*LAND_SIZE);
+						if (rowOffset * HEIGHT_SCALE > target->mMaxHeight)
+							target->mMaxHeight = rowOffset * HEIGHT_SCALE;
+						if (rowOffset * HEIGHT_SCALE < target->mMinHeight)
+							target->mMinHeight = rowOffset * HEIGHT_SCALE;
+						//mwx height
+						float colOffset = rowOffset;
+						for (int x = 1; x < LAND_SIZE; x++) {
+							colOffset += vhgt.mHeightData[y * LAND_SIZE + x];
+							target->mHeights[x + y * LAND_SIZE] = colOffset * HEIGHT_SCALE;
+							target->mHeights[x + y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, x + y*LAND_SIZE);
+
+							if (colOffset * HEIGHT_SCALE > target->mMaxHeight)
+								target->mMaxHeight = colOffset * HEIGHT_SCALE;
+							if (colOffset * HEIGHT_SCALE < target->mMinHeight)
+								target->mMinHeight = colOffset * HEIGHT_SCALE;
+						}
+					}
+				}
+				
+				
+				int itx = 0;
+				if (needtocache)
+				{
+					std::vector<float> emptyvec;
+					ESM::Land::GreylockLand::sCellHeightsMap[mX][mY] = emptyvec;
+
+					while (itx < (LAND_SIZE * LAND_SIZE))
+					{
+					
+					
+						ESM::Land::GreylockLand::sCellHeightsMap[mX][mY].push_back(target->mHeights[itx]);
+						itx += 1;
+					}
+				}
+                
+				
+				
+				target->mUnk1 = vhgt.mUnk1;
                 target->mUnk2 = vhgt.mUnk2;
             }
         }
@@ -418,7 +461,7 @@ namespace ESM
 		//first find center of terrain.
 		float xcenter = sCenterX;//(sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
 		float ycenter = sCenterY;
-		float cellwidth = (8192 / 69.99);
+		float cellwidth = (8192 / 69.99) / 2.f;
 
 
 		//assumes rectangle
@@ -432,8 +475,8 @@ namespace ESM
 		float targetx = index % (LAND_SIZE);
 		float xmeteroffset = cellx * cellwidth + xcenter;
 		float ymeteroffset = celly * cellwidth + ycenter;
-		ymeteroffset += targety * 3.65 / 2.f;
-		xmeteroffset += targetx * 3.65 / 2.f;
+		ymeteroffset += targety * 3.65 / 4.f;
+		xmeteroffset += targetx * 3.65 / 4.f;
 		//get closest bounds we can find on terrain map
 		auto t1 = sLandHeights.lower_bound(xmeteroffset);
 		if (t1 == sLandHeights.end())
@@ -504,6 +547,17 @@ namespace ESM
 		
 	}
 	
+
+	bool Land::GreylockLand::isLandCached(int x, int y)
+	{
+		if (sCellHeightsMap.count(x) == 0)
+			return false;
+		if (sCellHeightsMap[x].count(y) == 0)
+			return false;
+
+		return true;
+
+	}
 
 	void Land::GreylockLand::buildLand()
 	{

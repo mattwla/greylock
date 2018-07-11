@@ -140,12 +140,15 @@ struct Land
 
 		static float getHeightAtIndex(int cellx, int celly, int index);
 
+		static bool isLandCached(int x, int y);
+
 		static void buildLand();
 
 		//float lands[LAND_SIZE];
 
 		static std::vector<float> getfloats(int x, int y, int numperside);
 
+		static std::map<int, std::map<int, std::vector<float>>> sCellHeightsMap;
 
 
 	};
