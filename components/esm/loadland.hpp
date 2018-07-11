@@ -135,7 +135,7 @@ struct Land
 
 
 		static float sCenterY;
-
+		static float sCenterX;
 		static std::map<float, std::map<float, float>> sLandHeights;
 
 		static float getHeightAtIndex(int cellx, int celly, int index);

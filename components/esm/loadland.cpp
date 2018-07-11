@@ -14,6 +14,7 @@
 std::map<float, std::map<float, float>> ESM::Land::GreylockLand::sLandHeights;
 
 float ESM::Land::GreylockLand::sCenterY;
+float ESM::Land::GreylockLand::sCenterX;
 
 namespace ESM
 {
@@ -415,51 +416,25 @@ namespace ESM
 		
 		
 		//first find center of terrain.
-		float xcenter = (sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
-		/*
-		auto sampleyrange = sLandHeights.rbegin()->second;
-		return 0;
-		float ycenter = (sampleyrange.begin()->first + sampleyrange.rbegin()->first) / 2.0f;*/
-		
-		//assumes rectangle
-		//auto sampleyrange = sLandHeights.begin()->second;
-		
-		//69.99
-
-		float cellwidth = 8192 / 69.99 * 2;
-
+		float xcenter = sCenterX;//(sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
 		float ycenter = sCenterY;
+		float cellwidth = (8192 / 69.99);
 
-		//std::cout << "center is" << sCenterY << std::endl;
+
+		//assumes rectangle
+	
 		
-
 		//how many meters is a cell?
 		//117 meters per side
 		//aka 128 yards
-
 		//find where on map cellx and celly are
-
 		float targety = index / (LAND_SIZE);
 		float targetx = index % (LAND_SIZE);
-		
-
-		
 		float xmeteroffset = cellx * cellwidth + xcenter;
 		float ymeteroffset = celly * cellwidth + ycenter;
-		//std::cout << targety << std::endl;
-		ymeteroffset += targety * 3.65;
-		xmeteroffset += targetx * 3.65;
-
-
-		//std::cout << "X IS..." << xmeteroffset << std::endl;
-		//std::cout << "Y IS..." << ymeteroffset << std::endl;
-
-
-
-
+		ymeteroffset += targety * 3.65 / 2.f;
+		xmeteroffset += targetx * 3.65 / 2.f;
 		//get closest bounds we can find on terrain map
-		//return 0;
-
 		auto t1 = sLandHeights.lower_bound(xmeteroffset);
 		if (t1 == sLandHeights.end())
 		{
@@ -470,10 +445,7 @@ namespace ESM
 		{
 			t2--;
 		}
-		//std::cout << t2->second << std::endl;
-		//return t2->second * 60.f;
-		//return (*sLandHeights.lower_bound(xmeteroffset)).second.lower_bound(ymeteroffset)->second * 60;
-		
+	
 		auto bound1 = sLandHeights.lower_bound(xmeteroffset);
 		if (bound1 == sLandHeights.end())
 			bound1--;
@@ -499,58 +471,11 @@ namespace ESM
 		float y2 = bound1b->first;
 		float z2 = bound1b->second;
 
-
-		/*std::cout << "X1 = " << x1 << std::endl;
-		std::cout << "X2 = " << x2 << std::endl;
-		std::cout << "Y1 = " << y1 << std::endl;
-		std::cout << "Y2 = " << y2 << std::endl;
-*/
-		//return z2 * 60;
-
-	
-
-
-
-
-
-	/*	float x2 = sLandHeights.lower_bound(xmeteroffset)++->first;
-		float y2 = sLandHeights.lower_bound(xmeteroffset)++->second.lower_bound(ymeteroffset)->first;
-		float z2 = sLandHeights.lower_bound(xmeteroffset)++->second.lower_bound(ymeteroffset)->second;*/
-
-
-
-/*
-
-
-		auto xlb = sLandHeights.lower_bound(xmeteroffset);
-		auto xub = sLandHeights.upper_bound(xmeteroffset);
-
-
-		auto ylb = sLandHeights.lower_bound(ymeteroffset);
-		ylb--;
-		auto yub = sLandHeights.upper_bound(ymeteroffset);
-		
-
-		float lowx = xlb->first;
-		float hix = xub->first;
-		float hiy = yub->first;
-		float lowy = ylb->first;*/
-
-
-
 		osg::Vec3f v0(x1, y1, sLandHeights[x1][y1]);
 		osg::Vec3f v1(x2, y1, sLandHeights[x2][y1]);
 		osg::Vec3f v2(x2, y2, sLandHeights[x2][y2]);
 		osg::Vec3f v3(x1, y2, sLandHeights[x1][y2]);
-		//std::cout << "--====SAMPLE HEIGHT" << sLandHeights[hiy][lowx] << std::endl;
-
-
-
-
-		//int cellxindex = xmeteroffset / 5;
-		//int cellyindex = ymeteroffset / 5;
-		//
-
+	
 		//get normalized position in cell
 
 		float nY = ymeteroffset;//targety / LAND_SIZE;
@@ -563,35 +488,17 @@ namespace ESM
 		float yParam = (nY - y1) * factor;
 
 		osg::Plane plane;
-		// FIXME: deal with differing triangle alignment
-	/*	if (true)
-		{*/
-			// odd row
+		
 			bool secondTri = ((1.0 - yParam) > xParam);
 			if (secondTri)
 				plane = osg::Plane(v0, v1, v3);
 			else
 				plane = osg::Plane(v1, v2, v3);
-		//}
-		/*
-		else
-		{
-		// even row
-		bool secondTri = (yParam > xParam);
-		if (secondTri)
-		plane.redefine(v0, v2, v3);
-		else
-		plane.redefine(v0, v1, v2);
-		}
-		*/
-
+	
 		// Solve plane equation for z
 		float z = (-plane.getNormal().x() * nX
 			- plane.getNormal().y() * nY
-			- plane[3]) / plane.getNormal().z() * 60;
-
-	//std::cout << "--====RETURNING: " << z << std::endl;
-
+			- plane[3]) / plane.getNormal().z() * 160 ;
 	return z;
 
 		
@@ -706,6 +613,7 @@ namespace ESM
 		std::cout << "BIG Y   " << biggesty << std::endl;
 
 		sCenterY = (biggesty + miny) / 2.0;
+		sCenterX = (sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
 		//sCenterY += .5;
 
 
