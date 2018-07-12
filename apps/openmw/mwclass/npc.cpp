@@ -1037,9 +1037,9 @@ namespace MWClass
 			moveSpeed = swimSpeed;
 		}
 		else if (running && !sneaking)
-			moveSpeed = 5000;//runSpeed;
+			moveSpeed = 10000;//runSpeed;
 		else if (isPlayer)
-			moveSpeed = 5000; //MWX
+			moveSpeed = 10000; //MWX
 		else
 			moveSpeed = walkSpeed;
         if(getMovementSettings(ptr).mPosition[0] != 0 && getMovementSettings(ptr).mPosition[1] == 0)

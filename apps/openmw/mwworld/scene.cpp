@@ -306,9 +306,17 @@ namespace MWWorld
                 int cellY = cell->getCell()->getGridY();
                 osg::ref_ptr<const ESMTerrain::LandObject> land = mRendering.getLandManager()->getLand(cellX, cellY);
                 const ESM::Land::LandData* data = land ? land->getData(ESM::Land::DATA_VHGT) : 0;
-                if (data)
+				auto heightvec = MWBase::Environment::get().getWorld()->getCellHeights(cellX, cellY);
+				float heights[65*65];
+				int itx = 0;
+				while (itx < heightvec.size())
+				{
+					heights[itx] = heightvec[itx];
+					itx += 1;
+				}
+				if (data)
                 {
-                    mPhysics->addHeightField (data->mHeights, cellX, cell->getCell()->getGridY(), worldsize / (verts-1), verts, data->mMinHeight, data->mMaxHeight, land.get());
+                    mPhysics->addHeightField (heights, cellX, cell->getCell()->getGridY(), worldsize / (verts-1), verts, data->mMinHeight, data->mMaxHeight, land.get());
                 }
                 else
                 {

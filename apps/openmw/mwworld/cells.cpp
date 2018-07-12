@@ -93,6 +93,12 @@ MWWorld::Cells::Cells (const MWWorld::ESMStore& store, std::vector<ESM::ESMReade
   mIdCacheIndex (0)
 {}
 
+void MWWorld::Cells::insertExterior(int x, int y, const ESM::Cell * record)
+{
+	mExteriors.insert(std::make_pair(
+		std::make_pair(x, y), CellStore(record, mStore, mReader))).first;
+}
+
 MWWorld::CellStore *MWWorld::Cells::getExterior (int x, int y)
 {
     std::map<std::pair<int, int>, CellStore>::iterator result =
@@ -105,6 +111,7 @@ MWWorld::CellStore *MWWorld::Cells::getExterior (int x, int y)
         if (!cell)
         {
             // Cell isn't predefined. Make one on the fly.
+			//MWX how to make cell on the fly
             ESM::Cell record;
             record.mCellId.mWorldspace = ESM::CellId::sDefaultWorldspace;
             record.mCellId.mPaged = true;

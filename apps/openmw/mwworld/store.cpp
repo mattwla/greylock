@@ -785,6 +785,7 @@ namespace MWWorld
     }
     ESM::Cell *Store<ESM::Cell>::insert(const ESM::Cell &cell)
     {
+
         if (search(cell) != 0) {
             std::ostringstream msg;
             msg << "Failed to create ";

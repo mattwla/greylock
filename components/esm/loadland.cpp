@@ -10,12 +10,9 @@
 #include <fstream>
 #include <map>
 #include <osg/Plane>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
 
-std::map<float, std::map<float, float>> ESM::Land::GreylockLand::sLandHeights;
-
-float ESM::Land::GreylockLand::sCenterY;
-float ESM::Land::GreylockLand::sCenterX;
-std::map<int, std::map<int, std::vector<float>>> ESM::Land::GreylockLand::sCellHeightsMap;
 
 namespace ESM
 {
@@ -284,7 +281,7 @@ namespace ESM
                 target->mMaxHeight = -FLT_MAX;
                 float rowOffset = vhgt.mHeightOffset;
 				bool needtocache = true;
-				if (ESM::Land::GreylockLand::isLandCached(mX, mY))
+				/*if (ESM::Land::GreylockLand::isLandCached(mX, mY))
 				{
 					needtocache = false;
 					auto terrain = ESM::Land::GreylockLand::sCellHeightsMap[mX][mY];
@@ -297,7 +294,7 @@ namespace ESM
 					}
 				}
 				else
-				{
+				{*/
 
 
 
@@ -305,7 +302,7 @@ namespace ESM
 						rowOffset += vhgt.mHeightData[y * LAND_SIZE];
 
 						target->mHeights[y * LAND_SIZE] = rowOffset * HEIGHT_SCALE;
-						target->mHeights[y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, y*LAND_SIZE);
+						//target->mHeights[y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, y*LAND_SIZE);
 						if (rowOffset * HEIGHT_SCALE > target->mMaxHeight)
 							target->mMaxHeight = rowOffset * HEIGHT_SCALE;
 						if (rowOffset * HEIGHT_SCALE < target->mMinHeight)
@@ -315,7 +312,7 @@ namespace ESM
 						for (int x = 1; x < LAND_SIZE; x++) {
 							colOffset += vhgt.mHeightData[y * LAND_SIZE + x];
 							target->mHeights[x + y * LAND_SIZE] = colOffset * HEIGHT_SCALE;
-							target->mHeights[x + y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, x + y*LAND_SIZE);
+							//target->mHeights[x + y * LAND_SIZE] = ESM::Land::GreylockLand::getHeightAtIndex(mX, mY, x + y*LAND_SIZE);
 
 							if (colOffset * HEIGHT_SCALE > target->mMaxHeight)
 								target->mMaxHeight = colOffset * HEIGHT_SCALE;
@@ -325,7 +322,7 @@ namespace ESM
 					}
 				}
 				
-				
+			/*	
 				int itx = 0;
 				if (needtocache)
 				{
@@ -340,13 +337,13 @@ namespace ESM
 						itx += 1;
 					}
 				}
-                
+                */
 				
 				
 				target->mUnk1 = vhgt.mUnk1;
                 target->mUnk2 = vhgt.mUnk2;
             }
-        }
+        //}
 
         if (reader.isNextSub("WNAM"))
             reader.skipHSub();
@@ -452,271 +449,5 @@ namespace ESM
             }
         }
     }
-
-
-	float Land::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
-	{
-		
-		
-		//first find center of terrain.
-		float xcenter = sCenterX;//(sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
-		float ycenter = sCenterY;
-		float cellwidth = (8192 / 69.99) / 2.f;
-
-
-		//assumes rectangle
 	
-		
-		//how many meters is a cell?
-		//117 meters per side
-		//aka 128 yards
-		//find where on map cellx and celly are
-		float targety = index / (LAND_SIZE);
-		float targetx = index % (LAND_SIZE);
-		float xmeteroffset = cellx * cellwidth + xcenter;
-		float ymeteroffset = celly * cellwidth + ycenter;
-		ymeteroffset += targety * 3.65 / 4.f;
-		xmeteroffset += targetx * 3.65 / 4.f;
-		//get closest bounds we can find on terrain map
-		auto t1 = sLandHeights.lower_bound(xmeteroffset);
-		if (t1 == sLandHeights.end())
-		{
-			t1--;
-		}
-		auto t2 = t1->second.lower_bound(ymeteroffset);
-		if (t2 == t1->second.end())
-		{
-			t2--;
-		}
-	
-		auto bound1 = sLandHeights.lower_bound(xmeteroffset);
-		if (bound1 == sLandHeights.end())
-			bound1--;
-		auto bound1b = bound1->second.lower_bound(ymeteroffset);
-		if (bound1b == bound1->second.end())
-			bound1b--;
-
-		float x1 = bound1->first;
-		float y1 = bound1b->first;
-		float z1 = bound1b->second;
-
-		auto bound2 = bound1++;
-
-		if (bound1 == sLandHeights.end())
-			return 0;
-
-		float x2 = bound1->first;
-
-		bound1b = bound1->second.lower_bound(ymeteroffset);
-		if (bound1b == bound1->second.end())
-			return 0;
-		auto bound2b = bound1b++;
-		float y2 = bound1b->first;
-		float z2 = bound1b->second;
-
-		osg::Vec3f v0(x1, y1, sLandHeights[x1][y1]);
-		osg::Vec3f v1(x2, y1, sLandHeights[x2][y1]);
-		osg::Vec3f v2(x2, y2, sLandHeights[x2][y2]);
-		osg::Vec3f v3(x1, y2, sLandHeights[x1][y2]);
-	
-		//get normalized position in cell
-
-		float nY = ymeteroffset;//targety / LAND_SIZE;
-		float nX = xmeteroffset;//targetx / LAND_SIZE;
-
-		float factor = ESM::Land::LAND_SIZE - 1.0f;
-		float invFactor = 1.0f / factor;
-
-		float xParam = (nX - x1) * factor;
-		float yParam = (nY - y1) * factor;
-
-		osg::Plane plane;
-		
-			bool secondTri = ((1.0 - yParam) > xParam);
-			if (secondTri)
-				plane = osg::Plane(v0, v1, v3);
-			else
-				plane = osg::Plane(v1, v2, v3);
-	
-		// Solve plane equation for z
-		float z = (-plane.getNormal().x() * nX
-			- plane.getNormal().y() * nY
-			- plane[3]) / plane.getNormal().z() * 160 ;
-	return z;
-
-		
-	}
-	
-
-	bool Land::GreylockLand::isLandCached(int x, int y)
-	{
-		if (sCellHeightsMap.count(x) == 0)
-			return false;
-		if (sCellHeightsMap[x].count(y) == 0)
-			return false;
-
-		return true;
-
-	}
-
-	void Land::GreylockLand::buildLand()
-	{
-
-		//check if already built
-		if (sLandHeights.size() > 0)
-			return;
-
-		std::ifstream in("terrain/reasonabletest.xyz");
-		if (!in.is_open())
-			std::cout << "-----=====TERRAIN NOT OPEN====-----" << std::endl;
-		else
-			std::cout << "----=====TERRAIN OPEN======------" << std::endl;
-		std::string line;
-		typedef boost::tokenizer<boost::char_separator<char>> Tokenizer;
-		boost::char_separator<char> sep("\t");
-		
-		int count = 0;
-		float prevy = 0;
-		float currenty = 0;
-		std::map<float, std::map<float, float>> grid;
-		std::map<float, float> currentxrow;
-		
-		bool firstiter = true;
-		float biggesty = 0;
-		float miny = 0;
-		while (getline(in, line))
-		{
-			Tokenizer tok(line, sep);
-			int itx = 0;
-			float x;
-			float y;
-			float z;
-			for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
-			{
-				if (itx == 0)
-				{
-					x = std::stof(*it);
-				}
-				else if (itx == 1)
-				{
-					y = std::stof(*it);
-				}
-				else
-				{
-					z = std::stof(*it);
-				}
-				itx += 1;
-			}
-			currenty = y;
-			//parsing assumes Y axis is grouped together. 
-			
-			sLandHeights[x][y] = z;
-
-			if (y < miny)
-				miny = y;
-			if (y > biggesty)
-				biggesty = y;
-
-
-			if (firstiter)
-			{
-				miny = y;
-				biggesty = y;
-				firstiter = false;
-			}
-			//if (prevy == currenty)
-			//{
-			//	currentxrow[x] = z;
-			//}
-			//else
-			//{
-			//	//std::cout << "y changed" << std::endl;
-			//	grid[prevy] = currentxrow;
-			//	currentxrow.clear();
-			//	
-			//	//grid.push_back(currentxrow);
-			//	
-			//	
-			//	
-			//	currentxrow[x] = z;
-			//	prevy = currenty;
-			//}
-			//
-		}
-
-		//grid.push_back(currentxrow);
-		//grid[prevy] = currentxrow;
-
-		std::cout << "--===COUNT IS====----" << std::endl;
-		std::cout << count << std::endl;
-
-		std::cout << "--===Y COUNT IS====----" << std::endl;
-		std::cout << grid.size() << std::endl;
-
-		std::cout << "--===Y SIZE IS===---" << std::endl;
-		std::cout << grid.size() * 5 << " meters" << std::endl;
-		
-		/*std::cout << "--===X COUNT IS====----" << std::endl;
-		std::cout << grid.back().size() << std::endl;
-
-		std::cout << "--===X COUNT IS====----" << std::endl;
-		std::cout << grid.back().size() * 5 << " meters" << std::endl;
-		*/
-		std::cout << "MIN Y   " << miny << std::endl;
-
-		std::cout << "BIG Y   " << biggesty << std::endl;
-
-		sCenterY = (biggesty + miny) / 2.0;
-		sCenterX = (sLandHeights.begin()->first + sLandHeights.rbegin()->first) / 2.0;
-		//sCenterY += .5;
-
-
-
-		// sLandHeights = grid;
-
-		//testmap;
-		//open thing.
-
-
-	}
-
-	std::vector<float> Land::GreylockLand::getfloats(int x, int y, int numperside)
-	{
-		//get center of slandheights
-
-		//LAND_SIZE;
-		//int totalpoints = LAND_SIZE * LAND_SIZE;
-
-		//int xcenter = sLandHeights.back().size() / 2;
-		//int ycenter = sLandHeights.size() / 2;
-
-		//int celllength = LAND_SIZE;
-		//int yleft = celllength;
-
-		//std::vector<float> result;
-
-		//while (yleft > 0)
-		//{
-		//	int currentrow = celllength - yleft;
-		//	std::vector<std::pair<float, float>> rowvec = sLandHeights[currentrow];
-		//	//23 real world readings are needed to fill in 63 points in the terrain. Use each reading 3 times
-		//	for (std::vector<std::pair<float, float>>::iterator it = rowvec.begin(); it != rowvec.end(); it++)
-		//	{
-		//		result.push_back((*it).second);
-		//		result.push_back((*it).second);
-		//		result.push_back((*it).second);
-		//	}
-		//	yleft -= 1;
-
-
-		//}
-
-
-
-
-
-		std::vector<float> result;
-		return result;
-	}
-
 }

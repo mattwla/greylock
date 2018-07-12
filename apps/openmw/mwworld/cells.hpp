@@ -51,6 +51,10 @@ namespace MWWorld
 
             Cells (const MWWorld::ESMStore& store, std::vector<ESM::ESMReader>& reader);
 
+			void insertExterior(int x, int y, const ESM::Cell * record);
+
+			//void insertExterior(int x, int y, ESM::Cell record);
+
             CellStore *getExterior (int x, int y);
 
             CellStore *getInterior (const std::string& name);

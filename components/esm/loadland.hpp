@@ -128,33 +128,6 @@ struct Land
      */
     void loadData(int flags, LandData* target = NULL) const;
 
-	struct GreylockLand {
-
-		// <x,<y,z>>
-		//static std::map<float, std::map<float, int>> testmap;
-
-
-		static float sCenterY;
-		static float sCenterX;
-		static std::map<float, std::map<float, float>> sLandHeights;
-
-		static float getHeightAtIndex(int cellx, int celly, int index);
-
-		static bool isLandCached(int x, int y);
-
-		static void buildLand();
-
-		//float lands[LAND_SIZE];
-
-		static std::vector<float> getfloats(int x, int y, int numperside);
-
-		static std::map<int, std::map<int, std::vector<float>>> sCellHeightsMap;
-
-
-	};
-
-	static GreylockLand sGreylockLand;
-
     /**
      * Frees memory allocated for mLandData
      */

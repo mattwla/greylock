@@ -275,6 +275,8 @@ namespace MWBase
 
             virtual float getMaxActivationDistance() = 0;
 
+			virtual std::vector<float> getCellHeights(int x, int y) = 0;
+
             /// Returns a pointer to the object the provided object would hit (if within the
             /// specified distance), and the point where the hit occurs. This will attempt to
             /// use the "Head" node, or alternatively the "Bip01 Head" node as a basis.

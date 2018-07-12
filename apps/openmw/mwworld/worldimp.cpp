@@ -61,6 +61,7 @@
 #include "actionteleport.hpp"
 #include "projectilemanager.hpp"
 #include "weather.hpp"
+#include "worldgen.hpp"
 #include "../mwmechanics/actorutil.hpp"
 
 #include "contentloader.hpp"
@@ -240,6 +241,8 @@ namespace MWWorld
         // Note that if reset later, the initial ChangeWeather that the chargen script calls will be lost.
         delete mWeatherManager;
         mWeatherManager = new MWWorld::WeatherManager(*mRendering, mFallback, mStore);
+
+		
 
         if (!bypass)
         {
@@ -714,32 +717,19 @@ namespace MWWorld
 
 	void World::preloadAll()
 	{
-		int cellsloaded = 0;
-		/*const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
-		MWWorld::Store<ESM::Cell>::iterator iter;*/
-		int xload = -19;
-		int yload = 7;
-		while (xload <= -11)
+		mWorldGen = new MWWorld::WorldGen();
+		mWorldGen->startNewGame();
+
+
+
+		//bool loaded = ESM::Land::GreylockLand::loadCellHeights();
+		/*if (!loaded)
 		{
-			while (yload <= 12)
-			{
-				ESM::Position pos;
-				indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
-				changeToExteriorCell(pos, false);
 
-				//SEManager inits smartzones here.
-				MWBase::Environment::get().getSmartEntitiesManager()->initializeActiveCell();
-
-
-				yload += 1;
-				cellsloaded += 1;
-			}
-
-			yload = 7;
-			xload += 1;
-
-
-		}
+		
+			ESM::Land::GreylockLand::buildLand();
+		}*/
+		
 
 
 		//for (iter = cells.extBegin(); iter != cells.extEnd(); ++iter)
@@ -761,8 +751,12 @@ namespace MWWorld
 		//	
 		//}
 
-		std::cout << "==============cells loaded =========" << std::endl;
-		std::cout << cellsloaded << std::endl;
+		//std::cout << "==============cells loaded =========" << std::endl;
+		//std::cout << cellsloaded << std::endl;
+	/*	if (!loaded)
+		{
+			ESM::Land::GreylockLand::saveCellHeights();
+		}*/
 		
 
 		//mCells.PreloadAll();
@@ -1163,6 +1157,11 @@ namespace MWWorld
         mWorldScene->changeToExteriorCell(position, adjustPlayerPos, changeEvent);
         addContainerScripts(getPlayerPtr(), getPlayerPtr().getCell());
     }
+
+	std::vector<float> World::getCellHeights(int x, int y)
+	{
+		return mWorldGen->getCellHeights(x, y);
+	}
 
     void World::changeToCell (const ESM::CellId& cellId, const ESM::Position& position, bool adjustPlayerPos, bool changeEvent)
     {

@@ -64,6 +64,7 @@ struct ContentLoader;
 namespace MWWorld
 {
     class WeatherManager;
+	class WorldGen;
     class Player;
     class ProjectileManager;
 
@@ -77,6 +78,7 @@ namespace MWWorld
             MWRender::RenderingManager* mRendering;
 
             MWWorld::WeatherManager* mWeatherManager;
+			MWWorld::WorldGen* mWorldGen;
 
             MWWorld::Scene *mWorldScene;
             MWWorld::Player *mPlayer;
@@ -351,6 +353,8 @@ namespace MWWorld
             ///< @param changeEvent If false, do not trigger cell change flag or detect worldspace changes
 
             void changeToExteriorCell (const ESM::Position& position, bool adjustPlayerPos, bool changeEvent = true) override;
+
+			std::vector<float> getCellHeights(int x, int y) override;
             ///< Move to exterior cell.
             ///< @param changeEvent If false, do not trigger cell change flag or detect worldspace changes
 
