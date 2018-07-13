@@ -260,6 +260,15 @@ namespace ESM
 
         if (reader.isNextSub("VHGT")) {
             VHGT vhgt;
+		
+			
+
+
+
+
+
+
+
 
             //actually get vhgt from looking up my csv
 			//greylock terrain object
@@ -276,11 +285,15 @@ namespace ESM
 			//
 			
 			
-			if (condLoad(reader, flags, target->mDataLoaded, DATA_VHGT, &vhgt, sizeof(vhgt))) {
+ 			if (condLoad(reader, flags, target->mDataLoaded, DATA_VHGT, &vhgt, sizeof(vhgt))) {
                 target->mMinHeight = FLT_MAX;
                 target->mMaxHeight = -FLT_MAX;
                 float rowOffset = vhgt.mHeightOffset;
 				bool needtocache = true;
+
+			
+
+
 				/*if (ESM::Land::GreylockLand::isLandCached(mX, mY))
 				{
 					needtocache = false;
@@ -342,6 +355,16 @@ namespace ESM
 				
 				target->mUnk1 = vhgt.mUnk1;
                 target->mUnk2 = vhgt.mUnk2;
+
+				std::vector<float> heights = ESM::Land::sTestMap[mX][mY];
+
+				int itx = 0;
+				while (itx < heights.size())
+				{
+					target->mHeights[itx] = heights[itx];
+					itx += 1;
+				}
+
             }
         //}
 

@@ -48,6 +48,8 @@ struct Land
         DATA_VTEX = 16
     };
 
+	static std::map<int, std::map<int, std::vector<float>>> sTestMap;
+
     // default height to use in case there is no Land record
     static const int DEFAULT_HEIGHT = -2048;
 

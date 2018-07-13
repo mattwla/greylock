@@ -92,6 +92,12 @@ void TerrainGrid::unloadCell(int x, int y)
     mGrid.erase(it);
 }
 
+void TerrainGrid::storeTerrain(int x, int y, std::vector<float>)
+{
+
+	
+}
+
 View *TerrainGrid::createView()
 {
     return new MyView;

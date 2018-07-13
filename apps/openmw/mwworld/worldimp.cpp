@@ -66,7 +66,10 @@
 
 #include "contentloader.hpp"
 #include "esmloader.hpp"
+#include <components/esm/loadland.hpp>
 
+
+static std::map<int, std::map<int, std::vector<float>>> sTestMap;
 
 namespace
 {
@@ -719,6 +722,8 @@ namespace MWWorld
 	{
 		mWorldGen = new MWWorld::WorldGen();
 		mWorldGen->startNewGame();
+
+
 
 
 

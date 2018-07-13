@@ -6,6 +6,7 @@
 #include <osg/Vec3f>
 
 #include <memory>
+#include <vector>
 
 #include "defs.hpp"
 
@@ -75,6 +76,8 @@ namespace Terrain
         /// @note Not thread safe.
         /// @note May be ignored by derived implementations that don't organize the terrain into cells.
         virtual void loadCell(int x, int y) {}
+
+		virtual void storeTerrain(int x, int y, std::vector<float>) {}
 
         /// Remove the cell from the scene graph.
         /// @note Not thread safe.

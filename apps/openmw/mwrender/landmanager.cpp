@@ -34,6 +34,7 @@ osg::ref_ptr<ESMTerrain::LandObject> LandManager::getLand(int x, int y)
         if (!land)
             return NULL;
         osg::ref_ptr<ESMTerrain::LandObject> landObj (new ESMTerrain::LandObject(land, mLoadFlags));
+		
         mCache->addEntryToObjectCache(idstr, landObj.get());
         return landObj;
     }

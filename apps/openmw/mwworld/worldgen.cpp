@@ -10,8 +10,11 @@
 #include "../mwbase/environment.hpp"
 #include "../mwbase/world.hpp"
 #include "../mwbase/smartentitiesmanager.hpp"
+#include <components/esm/loadland.hpp>
 
 
+
+std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
 
 
 float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
@@ -191,6 +194,8 @@ std::vector<float> MWWorld::WorldGen::GreylockLand::getCellHeights(int x, int y)
 
 std::vector<float> MWWorld::WorldGen::GreylockLand::buildCellHeights(int x, int y)
 {
+
+	ESM::Land;
 	int count = 65 * 65;
 	int itx = 0;
 	std::vector<float> result;
@@ -318,14 +323,20 @@ bool MWWorld::WorldGen::startNewGame()
 		while (yload <= 22)
 		{
 			ESM::Position pos;
+			//ESM::Land::sTestMap;
 			
 		
 			
 			auto heights = mLand->buildCellHeights(xload, yload);
-			mLand->mCellHeightsMap[xload][yload] = heights;
+			
+			
+			mLand->mCellHeightsMap[xload][yload+1] = heights;
+			
+			
+			ESM::Land::sTestMap[xload][yload+1] = heights;
 			//mLand->saveCellHeights();
 
-			MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
+		MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
 			MWBase::Environment::get().getWorld()->changeToExteriorCell(pos, false);
 
 			//saveCellTerrain

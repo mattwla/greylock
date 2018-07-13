@@ -25,6 +25,8 @@ namespace Terrain
         /// @note Not thread safe.
         virtual void unloadCell(int x, int y);
 
+		virtual void storeTerrain(int x, int y, std::vector<float>);
+
         View* createView();
 
     private:
