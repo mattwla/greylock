@@ -316,7 +316,7 @@ namespace MWWorld
 				}
 				if (data)
                 {
-                    mPhysics->addHeightField (heights, cellX, cell->getCell()->getGridY(), worldsize / (verts-1), verts, data->mMinHeight, data->mMaxHeight, land.get());
+                    mPhysics->addHeightField (data->mHeights, cellX, cell->getCell()->getGridY(), worldsize / (verts-1), verts, data->mMinHeight, data->mMaxHeight, land.get());
                 }
                 else
                 {

@@ -13,6 +13,9 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
+
+
 
 namespace ESM
 {
@@ -260,15 +263,6 @@ namespace ESM
 
         if (reader.isNextSub("VHGT")) {
             VHGT vhgt;
-		
-			
-
-
-
-
-
-
-
 
             //actually get vhgt from looking up my csv
 			//greylock terrain object
@@ -357,11 +351,26 @@ namespace ESM
                 target->mUnk2 = vhgt.mUnk2;
 
 				std::vector<float> heights = ESM::Land::sTestMap[mX][mY];
-
+				if (heights.size() > 0)
+				{
+					target->mMinHeight = FLT_MAX;
+					target->mMaxHeight = -FLT_MAX;
+				}
 				int itx = 0;
 				while (itx < heights.size())
 				{
 					target->mHeights[itx] = heights[itx];
+					
+					if (heights[itx] > target->mMaxHeight)
+					{
+						target->mMaxHeight = heights[itx];
+					}
+					if (heights[itx] < target->mMinHeight)
+					{
+						target->mMinHeight = heights[itx];
+					}
+
+
 					itx += 1;
 				}
 

@@ -6,8 +6,17 @@
 #include <map>
 #include <vector>
 
+namespace osg
+{
+	class Vec3f;
+	class Vec2f;
+}
+
+
 namespace MWWorld
 {
+
+
 
 	class WorldGen
 	{
@@ -18,7 +27,9 @@ namespace MWWorld
 
 			float mCenterX;
 
-			std::map<float, std::map<float, float>> mLandHeights;
+			std::map<float, std::map<float, float>> mGISMap;
+
+			osg::Vec2f terrainIndexToXYZ(int cellx, int celly, int index);
 
 			float getHeightAtIndex(int cellx, int celly, int index);
 

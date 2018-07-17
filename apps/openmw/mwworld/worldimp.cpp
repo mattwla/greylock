@@ -315,7 +315,7 @@ namespace MWWorld
 		MWBase::Environment::get().getSmartEntitiesManager()->getSmartEntityInstance(getPlayerPtr());
 		MWBase::Environment::get().getSmartEntitiesManager()->addSmartInstanceToScene(getPlayerPtr());
 
-
+		toggleCollisionMode();
 		
     }
 

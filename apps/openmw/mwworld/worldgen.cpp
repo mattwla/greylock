@@ -12,14 +12,16 @@
 #include "../mwbase/smartentitiesmanager.hpp"
 #include <components/esm/loadland.hpp>
 
-
+//TERMS
+//terrain index: the OpenMW style of storing terrains height in a cell, 65*65, with an associated world X and Y
+//gismap: the xyz stored into a map in memory
+//gissource: the .xyz file
 
 std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
 
-
-float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
+osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int celly, int index)
 {
-	//first find center of terrain.
+
 	float xcenter = mCenterX;
 	float ycenter = mCenterY;
 	float cellwidth = (8192 / 69.99) / 4.f;
@@ -39,49 +41,67 @@ float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, in
 	float targetx = index % 65;//(LAND_SIZE);
 	ymeteroffset += targety * 3.65 / 8.f;
 	xmeteroffset += targetx * 3.65 / 8.f;
+	return osg::Vec2f(xmeteroffset, ymeteroffset);
 
+
+
+}
+
+
+
+float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
+{
+	//first find center of terrain.
+	
+	osg::Vec2f xy = terrainIndexToXYZ(cellx, celly, index);
+	float xmeteroffset = xy.x();
+	float ymeteroffset = xy.y();
 
 	//get closest bounds we can find on terrain map
-	auto t1 = mLandHeights.lower_bound(xmeteroffset);
-	if (t1 == mLandHeights.end())
+	auto xBound1 = mGISMap.lower_bound(xmeteroffset);
+	if (xBound1 == mGISMap.end())
 	{
-		t1--;
+		xBound1--;
 	}
-	auto t2 = t1->second.lower_bound(ymeteroffset);
-	if (t2 == t1->second.end())
+	auto yBound1 = xBound1->second.lower_bound(ymeteroffset);
+	if (yBound1 == xBound1->second.end())
 	{
-		t2--;
+		yBound1--;
 	}
 
-	auto bound1 = mLandHeights.lower_bound(xmeteroffset);
-	if (bound1 == mLandHeights.end())
+	/*auto bound1 = mGISMap.lower_bound(xmeteroffset);
+	if (bound1 == mGISMap.end())
 		bound1--;
 	auto bound1b = bound1->second.lower_bound(ymeteroffset);
 	if (bound1b == bound1->second.end())
-		bound1b--;
+		bound1b--;*/
 
-	float x1 = bound1->first;
-	float y1 = bound1b->first;
-	float z1 = bound1b->second;
+	float x1 = xBound1->first;
+	float y1 = yBound1->first;
+	float z1 = yBound1->second;
 
-	auto bound2 = bound1++;
+	//auto xBound2 = 
+	xBound1++;
 
-	if (bound1 == mLandHeights.end())
+	if (xBound1 == mGISMap.end())
 		return 0;
 
-	float x2 = bound1->first;
+	float x2 = xBound1->first;
 
-	bound1b = bound1->second.lower_bound(ymeteroffset);
-	if (bound1b == bound1->second.end())
+	auto yBound2 = xBound1->second.lower_bound(ymeteroffset);
+	if (yBound2 == xBound1->second.end())
 		return 0;
-	auto bound2b = bound1b++;
-	float y2 = bound1b->first;
-	float z2 = bound1b->second;
 
-	osg::Vec3f v0(x1, y1, mLandHeights[x1][y1]);
-	osg::Vec3f v1(x2, y1, mLandHeights[x2][y1]);
-	osg::Vec3f v2(x2, y2, mLandHeights[x2][y2]);
-	osg::Vec3f v3(x1, y2, mLandHeights[x1][y2]);
+	yBound2++;
+
+	//auto bound2b = bound1b++;
+	float y2 = yBound2->first;
+	float z2 = yBound2->second;
+
+	osg::Vec3f v0(x1, y1, mGISMap[x1][y1]);
+	osg::Vec3f v1(x2, y1, mGISMap[x2][y1]);
+	osg::Vec3f v2(x2, y2, mGISMap[x2][y2]);
+	osg::Vec3f v3(x1, y2, mGISMap[x1][y2]);
 
 	//get normalized position in cell
 
@@ -212,7 +232,7 @@ std::vector<float> MWWorld::WorldGen::GreylockLand::buildCellHeights(int x, int 
 
 void MWWorld::WorldGen::GreylockLand::buildLand()
 {
-	if (mLandHeights.size() > 0)
+	if (mGISMap.size() > 0)
 		return;
 	//check if cached version available:
 	std::ifstream inc(TERRAIN_PATH + ".gll");
@@ -228,7 +248,7 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 			float y;
 			float z;
 			inc >> x >> y >> z;
-			mLandHeights[x][y] = z;
+			mGISMap[x][y] = z;
 			if (y < miny)
 				miny = y;
 			if (y > biggesty)
@@ -241,7 +261,7 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 			}
 		}
 		mCenterY = (biggesty + miny) / 2.0;
-		mCenterX = (mLandHeights.begin()->first + mLandHeights.rbegin()->first) / 2.0;
+		mCenterX = (mGISMap.begin()->first + mGISMap.rbegin()->first) / 2.0;
 		return;
 	}
 
@@ -285,7 +305,7 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 		}
 		currenty = y;
 		filestream << x << std::endl << y << std::endl << z << std::endl;
-		mLandHeights[x][y] = z;
+		mGISMap[x][y] = z;
 		if (y < miny)
 			miny = y;
 		if (y > biggesty)
@@ -298,7 +318,7 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 		}
 	}
 	mCenterY = (biggesty + miny) / 2.0;
-	mCenterX = (mLandHeights.begin()->first + mLandHeights.rbegin()->first) / 2.0;
+	mCenterX = (mGISMap.begin()->first + mGISMap.rbegin()->first) / 2.0;
 }
 
 
@@ -316,11 +336,11 @@ bool MWWorld::WorldGen::startNewGame()
 	int cellsloaded = 0;
 	/*const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
 	MWWorld::Store<ESM::Cell>::iterator iter;*/
-	int xload = -22;
-	int yload = -22;
-	while (xload <= 22)
+	int xload = -52;
+	int yload = -52;
+	while (xload <= 52)
 	{
-		while (yload <= 22)
+		while (yload <= 52)
 		{
 			ESM::Position pos;
 			//ESM::Land::sTestMap;
@@ -337,7 +357,7 @@ bool MWWorld::WorldGen::startNewGame()
 			//mLand->saveCellHeights();
 
 		MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
-			MWBase::Environment::get().getWorld()->changeToExteriorCell(pos, false);
+			//MWBase::Environment::get().getWorld()->changeToExteriorCell(pos, false);
 
 			//saveCellTerrain
 
@@ -351,7 +371,7 @@ bool MWWorld::WorldGen::startNewGame()
 			cellsloaded += 1;
 		}
 
-		yload = -22;
+		yload = -52;
 		xload += 1;
 
 
