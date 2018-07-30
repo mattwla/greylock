@@ -16,12 +16,12 @@ namespace osg
 namespace MWWorld
 {
 
-
+	static const float CELL_WIDTH = (8192 / 69.99) / 4.f;
 
 	class WorldGen
 	{
 
-		static const int CELL_WIDTH = (8192 / 69.99) / 4.f;
+		
 
 		struct GreylockLand {
 
