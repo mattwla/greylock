@@ -16,15 +16,13 @@
 //terrain index: the OpenMW style of storing terrains height in a cell, 65*65, with an associated world X and Y
 //gismap: the xyz stored into a map in memory
 //gissource: the .xyz file
-
 std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
 
 osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int celly, int index)
 {
-
 	float xcenter = mCenterX;
 	float ycenter = mCenterY;
-	float cellwidth = (8192 / 69.99) / 4.f;
+	//float cellwidth = (8192 / 69.99) / 4.f;
 
 	//assumes rectangle
 	//how many meters is a cell?
@@ -32,27 +30,22 @@ osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int cel
 	//aka 128 yards
 	//find where on map cellx and celly are
 
-
-	float xmeteroffset = cellx * cellwidth + xcenter;
-	float ymeteroffset = celly * cellwidth + ycenter;
+	float xmeteroffset = cellx * CELL_WIDTH + xcenter;
+	float ymeteroffset = celly * CELL_WIDTH + ycenter;
 
 	//figure out where in cell to take measurement of height
-	float targety = index / 65;//(LAND_SIZE);
-	float targetx = index % 65;//(LAND_SIZE);
+	float targety = index / ESM::Land::LAND_SIZE;//(LAND_SIZE);
+	float targetx = index % ESM::Land::LAND_SIZE;//(LAND_SIZE);
 	ymeteroffset += targety * 3.65 / 8.f;
 	xmeteroffset += targetx * 3.65 / 8.f;
 	return osg::Vec2f(xmeteroffset, ymeteroffset);
-
-
-
 }
 
 
 
 float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, int index)
 {
-	//first find center of terrain.
-	
+	//use cell x, y, and index to figure out where on GIS map we are sampling
 	osg::Vec2f xy = terrainIndexToXYZ(cellx, celly, index);
 	float xmeteroffset = xy.x();
 	float ymeteroffset = xy.y();
@@ -69,32 +62,18 @@ float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, in
 		yBound1--;
 	}
 
-	/*auto bound1 = mGISMap.lower_bound(xmeteroffset);
-	if (bound1 == mGISMap.end())
-		bound1--;
-	auto bound1b = bound1->second.lower_bound(ymeteroffset);
-	if (bound1b == bound1->second.end())
-		bound1b--;*/
-
 	float x1 = xBound1->first;
 	float y1 = yBound1->first;
 	float z1 = yBound1->second;
-
-	//auto xBound2 = 
 	xBound1++;
-
 	if (xBound1 == mGISMap.end())
 		return 0;
-
 	float x2 = xBound1->first;
-
 	auto yBound2 = xBound1->second.lower_bound(ymeteroffset);
 	if (yBound2 == xBound1->second.end())
 		return 0;
-
 	yBound2++;
 
-	//auto bound2b = bound1b++;
 	float y2 = yBound2->first;
 	float z2 = yBound2->second;
 
@@ -103,12 +82,13 @@ float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, in
 	osg::Vec3f v2(x2, y2, mGISMap[x2][y2]);
 	osg::Vec3f v3(x1, y2, mGISMap[x1][y2]);
 
-	//get normalized position in cell
+
+	
 
 	float nY = ymeteroffset;//targety / LAND_SIZE;
 	float nX = xmeteroffset;//targetx / LAND_SIZE;
 
-	float factor = 65.0;//ESM::Land::LAND_SIZE - 1.0f;
+	float factor = ESM::Land::LAND_SIZE;;//ESM::Land::LAND_SIZE - 1.0f;
 	float invFactor = 1.0f / factor;
 
 	float xParam = (nX - x1); //* factor;
@@ -125,7 +105,7 @@ float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, in
 	// Solve plane equation for z
 	float z = (-plane.getNormal().x() * nX
 		- plane.getNormal().y() * nY
-		- plane[3]) / plane.getNormal().z() * 160 * 4;
+		- plane[3]) / plane.getNormal().z();// *160 * 2;// *4;
 	return z;
 }
 
@@ -304,6 +284,7 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 			itx += 1;
 		}
 		currenty = y;
+		z = z * 360;
 		filestream << x << std::endl << y << std::endl << z << std::endl;
 		mGISMap[x][y] = z;
 		if (y < miny)
@@ -328,6 +309,10 @@ bool MWWorld::WorldGen::startNewGame()
 	/*if (mLand)
 		delete mLand;*/
 	
+	const int yrange = 100;
+	const int xrange = 100;
+
+
 	mLand = new GreylockLand;
 
 	mLand->buildLand();
@@ -336,11 +321,11 @@ bool MWWorld::WorldGen::startNewGame()
 	int cellsloaded = 0;
 	/*const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
 	MWWorld::Store<ESM::Cell>::iterator iter;*/
-	int xload = -52;
-	int yload = -52;
-	while (xload <= 52)
+	int xload = -xrange;
+	int yload = -yrange;
+	while (xload <= xrange)
 	{
-		while (yload <= 52)
+		while (yload <= yrange)
 		{
 			ESM::Position pos;
 			//ESM::Land::sTestMap;
@@ -371,7 +356,7 @@ bool MWWorld::WorldGen::startNewGame()
 			cellsloaded += 1;
 		}
 
-		yload = -52;
+		yload = -yrange;
 		xload += 1;
 
 
