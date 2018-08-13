@@ -307,6 +307,12 @@ namespace ESMTerrain
 
                         color.a() = 1;
 
+						color.r() = .5;
+						color.g() = .5;
+						color.b() = .5;
+
+
+
                         (*colours)[static_cast<unsigned int>(vertX*numVerts + vertY)] = color;
 
                         ++vertX;
