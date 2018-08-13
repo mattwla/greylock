@@ -402,7 +402,8 @@ namespace ESM
     bool Land::condLoad(ESM::ESMReader& reader, int flags, int& targetFlags, int dataFlag, void *ptr, unsigned int size) const
     {
         if ((targetFlags & dataFlag) == 0 && (flags & dataFlag) != 0) {
-            reader.getHExact(ptr, size);
+            //mwx vnml
+			reader.getHExact(ptr, size);
             targetFlags |= dataFlag;
             return true;
         }

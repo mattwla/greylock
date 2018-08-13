@@ -44,8 +44,8 @@ namespace ESMTerrain
 
     const ESM::Land::LandData *LandObject::getData(int flags) const
     {
-        if ((mData.mDataLoaded & flags) != flags)
-            return NULL;
+      /*  if ((mData.mDataLoaded & flags) != flags)
+            return NULL;*/
         return &mData;
     }
 
@@ -132,6 +132,7 @@ namespace ESMTerrain
 
         const LandObject* land = getLand(cellX, cellY, cache);
         const ESM::Land::LandData* data = land ? land->getData(ESM::Land::DATA_VNML) : 0;
+		//MWX NORMALS
         if (data)
         {
             normal.x() = data->mNormals[col*ESM::Land::LAND_SIZE*3+row*3];
@@ -221,7 +222,7 @@ namespace ESMTerrain
                 const ESM::Land::LandData *normalData = 0;
                 const ESM::Land::LandData *colourData = 0;
                 if (land)
-                {
+                {//mwx land
                     heightData = land->getData(ESM::Land::DATA_VHGT);
                     normalData = land->getData(ESM::Land::DATA_VNML);
                     colourData = land->getData(ESM::Land::DATA_VCLR);
@@ -265,24 +266,24 @@ namespace ESMTerrain
                             = osg::Vec3f((vertX / float(numVerts - 1) - 0.5f) * size * 8192,
                                          (vertY / float(numVerts - 1) - 0.5f) * size * 8192,
                                          height);
-
-                        if (normalData)
+						//mwx normals
+                       /* if (normalData)
                         {
                             for (int i=0; i<3; ++i)
                                 normal[i] = normalData->mNormals[srcArrayIndex+i];
 
                             normal.normalize();
                         }
-                        else
+                        else*/
                             normal = osg::Vec3f(0,0,1);
 
                         // Normals apparently don't connect seamlessly between cells
-                        if (col == ESM::Land::LAND_SIZE-1 || row == ESM::Land::LAND_SIZE-1)
-                            fixNormal(normal, cellX, cellY, col, row, cache);
+                        /*if (col == ESM::Land::LAND_SIZE-1 || row == ESM::Land::LAND_SIZE-1)
+                            fixNormal(normal, cellX, cellY, col, row, cache);*/
 
                         // some corner normals appear to be complete garbage (z < 0)
-                        if ((row == 0 || row == ESM::Land::LAND_SIZE-1) && (col == 0 || col == ESM::Land::LAND_SIZE-1))
-                            averageNormal(normal, cellX, cellY, col, row, cache);
+                       /* if ((row == 0 || row == ESM::Land::LAND_SIZE-1) && (col == 0 || col == ESM::Land::LAND_SIZE-1))
+                            averageNormal(normal, cellX, cellY, col, row, cache);*/
 
                         //assert(normal.z() > 0);
 
@@ -361,9 +362,14 @@ namespace ESMTerrain
 
     std::string Storage::getTextureName(UniqueTextureId id)
     {
+
+
+
         static const std::string defaultTexture = "textures\\_land_default.dds";
         if (id.first == 0)
             return defaultTexture; // Not sure if the default texture really is hardcoded?
+
+		return defaultTexture;
 
         // NB: All vtex ids are +1 compared to the ltex ids
         const ESM::LandTexture* ltex = getLandTexture(id.first-1, id.second);
@@ -373,8 +379,13 @@ namespace ESMTerrain
             return defaultTexture;
         }
 
+		
+
         // this is needed due to MWs messed up texture handling
         std::string texture = Misc::ResourceHelpers::correctTexturePath(ltex->mTexture, mVFS);
+
+		//mwx ltex
+		//return defaultTexture;
 
         return texture;
     }

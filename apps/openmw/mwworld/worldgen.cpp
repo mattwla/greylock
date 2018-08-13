@@ -36,8 +36,9 @@ osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int cel
 	//figure out where in cell to take measurement of height
 	float targety = index / ESM::Land::LAND_SIZE;//(LAND_SIZE);
 	float targetx = index % ESM::Land::LAND_SIZE;//(LAND_SIZE);
-	ymeteroffset += targety * 3.65 / 8.f;
-	xmeteroffset += targetx * 3.65 / 8.f;
+	float multiplier = 65.f / ESM::Land::LAND_SIZE;
+	ymeteroffset += (targety * 3.65 / 8.f) * multiplier;
+	xmeteroffset += (targetx * 3.65 / 8.f) * multiplier;
 	return osg::Vec2f(xmeteroffset, ymeteroffset);
 }
 
@@ -88,7 +89,7 @@ float MWWorld::WorldGen::GreylockLand::getHeightAtIndex(int cellx, int celly, in
 	float nY = ymeteroffset;//targety / LAND_SIZE;
 	float nX = xmeteroffset;//targetx / LAND_SIZE;
 
-	float factor = ESM::Land::LAND_SIZE;;//ESM::Land::LAND_SIZE - 1.0f;
+	float factor = ESM::Land::LAND_SIZE;//ESM::Land::LAND_SIZE - 1.0f;
 	float invFactor = 1.0f / factor;
 
 	float xParam = (nX - x1); //* factor;
@@ -195,8 +196,8 @@ std::vector<float> MWWorld::WorldGen::GreylockLand::getCellHeights(int x, int y)
 std::vector<float> MWWorld::WorldGen::GreylockLand::buildCellHeights(int x, int y)
 {
 
-	ESM::Land;
-	int count = 65 * 65;
+	//ESM::Land;
+	int count = ESM::Land::LAND_SIZE * ESM::Land::LAND_SIZE;
 	int itx = 0;
 	std::vector<float> result;
 	while (itx < count)
@@ -309,8 +310,8 @@ bool MWWorld::WorldGen::startNewGame()
 	/*if (mLand)
 		delete mLand;*/
 	
-	const int yrange = 100;
-	const int xrange = 100;
+	const int yrange = 30;
+	const int xrange = 30;
 
 
 	mLand = new GreylockLand;
