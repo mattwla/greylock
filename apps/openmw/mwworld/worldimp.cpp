@@ -69,7 +69,7 @@
 #include <components/esm/loadland.hpp>
 
 
-static std::map<int, std::map<int, std::vector<float>>> sTestMap;
+static std::map<int, std::map<int, std::vector<float>>> sPreparedHeightMap;
 
 namespace
 {

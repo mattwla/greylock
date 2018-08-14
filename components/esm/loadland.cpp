@@ -13,7 +13,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
+std::map<int, std::map<int, std::vector<float>>> ESM::Land::sPreparedHeightMap;
 
 
 
@@ -350,7 +350,7 @@ namespace ESM
 				target->mUnk1 = vhgt.mUnk1;
                 target->mUnk2 = vhgt.mUnk2;
 
-				std::vector<float> heights = ESM::Land::sTestMap[mX][mY];
+				std::vector<float> heights = ESM::Land::sPreparedHeightMap[mX][mY];
 				if (heights.size() > 0)
 				{
 					target->mMinHeight = FLT_MAX;

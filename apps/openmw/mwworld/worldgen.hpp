@@ -21,13 +21,7 @@ namespace MWWorld
 	class WorldGen
 	{
 
-		
-
 		struct GreylockLand {
-
-			
-
-
 
 			float mCenterY;
 
@@ -43,7 +37,9 @@ namespace MWWorld
 
 			void buildLand();
 
-			//std::vector<float> getfloats(int x, int y, int numperside);
+			bool savePreparedHeights();
+
+			bool loadPreparedHeights();
 
 			std::map<int, std::map<int, std::vector<float>>> mCellHeightsMap;
 
@@ -57,24 +53,17 @@ namespace MWWorld
 
 			std::vector<float> buildCellHeights(int x, int y);
 
-
-
 		};
-
-		//static GreylockLand sGreylockLand;
 
 		GreylockLand * mLand = 0;
 
 	public:
 
-
 		bool startNewGame();
-
-		std::vector<float> getCellHeights(int x, int y);
-
 
 	
 
+		std::vector<float> getCellHeights(int x, int y);
 
 	};
 
@@ -84,3 +73,4 @@ namespace MWWorld
 
 
 #endif // GAME_MWWORLD_CELLGEN_H
+

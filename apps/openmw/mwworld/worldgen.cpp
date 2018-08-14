@@ -16,7 +16,8 @@
 //terrain index: the OpenMW style of storing terrains height in a cell, 65*65, with an associated world X and Y
 //gismap: the xyz stored into a map in memory
 //gissource: the .xyz file
-std::map<int, std::map<int, std::vector<float>>> ESM::Land::sTestMap;
+//cellsamples. set up and ready to go heightmap, already interpolated for the given resolution.
+std::map<int, std::map<int, std::vector<float>>> ESM::Land::sPreparedHeightMap;
 
 osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int celly, int index)
 {
@@ -261,46 +262,46 @@ void MWWorld::WorldGen::GreylockLand::buildLand()
 	std::map<float, std::map<float, float>> grid;
 	std::map<float, float> currentxrow;
 	boost::filesystem::ofstream filestream(TERRAIN_PATH + ".gll", std::ios::binary);
-	while (getline(in, line))
+while (getline(in, line))
+{
+	Tokenizer tok(line, sep);
+	int itx = 0;
+	float x;
+	float y;
+	float z;
+	for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
 	{
-		Tokenizer tok(line, sep);
-		int itx = 0;
-		float x;
-		float y;
-		float z;
-		for (Tokenizer::iterator it(tok.begin()), end(tok.end()); it != end; ++it) //iterate through the line, values seperated by commas
+		if (itx == 0)
 		{
-			if (itx == 0)
-			{
-				x = std::stof(*it);
-			}
-			else if (itx == 1)
-			{
-				y = std::stof(*it);
-			}
-			else
-			{
-				z = std::stof(*it);
-			}
-			itx += 1;
+			x = std::stof(*it);
 		}
-		currenty = y;
-		z = z * 360;
-		filestream << x << std::endl << y << std::endl << z << std::endl;
-		mGISMap[x][y] = z;
-		if (y < miny)
-			miny = y;
-		if (y > biggesty)
-			biggesty = y;
-		if (firstiter)
+		else if (itx == 1)
 		{
-			miny = y;
-			biggesty = y;
-			firstiter = false;
+			y = std::stof(*it);
 		}
+		else
+		{
+			z = std::stof(*it);
+		}
+		itx += 1;
 	}
-	mCenterY = (biggesty + miny) / 2.0;
-	mCenterX = (mGISMap.begin()->first + mGISMap.rbegin()->first) / 2.0;
+	currenty = y;
+	z = z * 360;
+	filestream << x << std::endl << y << std::endl << z << std::endl;
+	mGISMap[x][y] = z;
+	if (y < miny)
+		miny = y;
+	if (y > biggesty)
+		biggesty = y;
+	if (firstiter)
+	{
+		miny = y;
+		biggesty = y;
+		firstiter = false;
+	}
+}
+mCenterY = (biggesty + miny) / 2.0;
+mCenterX = (mGISMap.begin()->first + mGISMap.rbegin()->first) / 2.0;
 }
 
 
@@ -309,68 +310,119 @@ bool MWWorld::WorldGen::startNewGame()
 {
 	/*if (mLand)
 		delete mLand;*/
-	
+
 	const int yrange = 30;
 	const int xrange = 30;
 
 
 	mLand = new GreylockLand;
-
-	mLand->buildLand();
-
-
-	int cellsloaded = 0;
-	/*const MWWorld::Store<ESM::Cell> &cells = mCells.getExteriorStore();
-	MWWorld::Store<ESM::Cell>::iterator iter;*/
-	int xload = -xrange;
-	int yload = -yrange;
-	while (xload <= xrange)
+	bool loaded = mLand->loadPreparedHeights();
+	
+	if (!loaded)
 	{
-		while (yload <= yrange)
+		mLand->buildLand();
+
+
+		int cellsloaded = 0;
+
+		int xload = -xrange;
+		int yload = -yrange;
+		while (xload <= xrange)
 		{
-			ESM::Position pos;
-			//ESM::Land::sTestMap;
-			
-		
-			
-			auto heights = mLand->buildCellHeights(xload, yload);
-			
-			
-			mLand->mCellHeightsMap[xload][yload+1] = heights;
-			
-			
-			ESM::Land::sTestMap[xload][yload+1] = heights;
-			//mLand->saveCellHeights();
-
-		MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
-			//MWBase::Environment::get().getWorld()->changeToExteriorCell(pos, false);
-
-			//saveCellTerrain
-
-			//SEManager inits smartzones here.
-			
-			
-			MWBase::Environment::get().getSmartEntitiesManager()->initializeActiveCell();
-
-
-			yload += 1;
-			cellsloaded += 1;
+			while (yload <= yrange)
+			{
+				ESM::Position pos;
+				auto heights = mLand->buildCellHeights(xload, yload);
+				mLand->mCellHeightsMap[xload][yload + 1] = heights;
+				ESM::Land::sPreparedHeightMap[xload][yload + 1] = heights;
+				MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
+				MWBase::Environment::get().getSmartEntitiesManager()->initializeActiveCell();
+				yload += 1;
+				cellsloaded += 1;
+			}
+			yload = -yrange;
+			xload += 1;
 		}
 
-		yload = -yrange;
-		xload += 1;
+
+		mLand->savePreparedHeights();
+
 
 
 	}
+	//save prepared heights
+	return true;
+
+}
+
+bool MWWorld::WorldGen::GreylockLand::savePreparedHeights()
+{
+
+	std::cout << "writing prepared heights..." << std::endl;
 
 
+	boost::filesystem::ofstream filestream(TERRAIN_PATH + ".psh", std::ios::binary);
+	typedef std::map<int, std::map<int, std::vector<float>>> landmap;
+	ESM::Land::sPreparedHeightMap;
+	for (landmap::iterator itx = ESM::Land::sPreparedHeightMap.begin(); itx != ESM::Land::sPreparedHeightMap.end(); itx++)
+	{
+		for (std::map<int, std::vector<float>>::iterator ity = (*itx).second.begin(); ity != (*itx).second.end(); ity++)
+		{
+			filestream << itx->first << std::endl << ity->first << std::endl;
+			for (std::vector<float>::iterator itz = ity->second.begin(); itz != ity->second.end(); itz++)
+			{
+				filestream << (*itz) << std::endl;
+			}
+		}
+	}
 
 
+	filestream.close();
+	return true;
 
+	//filestream << x << std::endl << y << std::endl << z << std::endl;
 
+}
+
+bool MWWorld::WorldGen::GreylockLand::loadPreparedHeights()
+{
+	std::ifstream inc(TERRAIN_PATH + ".psh");
+
+	if (inc.is_open())
+	{
+		std::cout << "loading prepared land heights....." << std::endl;
+		while (!inc.eof())
+		{
+			
+			
+			float x;
+			float y;
+			inc >> x >> y;
+			std::vector<float> zlist;
+			int itx = 0;
+			while (itx < ESM::Land::LAND_SIZE*ESM::Land::LAND_SIZE)
+			{
+				float z;
+				inc >> z;
+				zlist.push_back(z);
+				itx += 1;
+			}
+		
+			ESM::Land::sPreparedHeightMap[x][y] = zlist;
+
+		
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	
 
 
 	return true;
+
 
 }
 
