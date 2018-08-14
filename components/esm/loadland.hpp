@@ -54,7 +54,7 @@ struct Land
     static const int DEFAULT_HEIGHT = -2048;
 
     // number of vertices per side
-    static const int LAND_SIZE = 17;
+    static const int LAND_SIZE = 33;
 
     // cell terrain size in world coords
     static const int REAL_SIZE = 8192;
@@ -65,7 +65,7 @@ struct Land
     static const int HEIGHT_SCALE = 8;
 
     //number of textures per side of land
-    static const int LAND_TEXTURE_SIZE = 33;
+    static const int LAND_TEXTURE_SIZE = 16;
 
     //total number of textures per land
     static const int LAND_NUM_TEXTURES = LAND_TEXTURE_SIZE * LAND_TEXTURE_SIZE;

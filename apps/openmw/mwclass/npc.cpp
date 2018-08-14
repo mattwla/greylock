@@ -1050,7 +1050,7 @@ namespace MWClass
 
 
 	
-
+		moveSpeed = 500;
         return moveSpeed;
     }
 

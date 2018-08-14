@@ -21,8 +21,7 @@ std::map<int, std::map<int, std::vector<float>>> ESM::Land::sPreparedHeightMap;
 
 osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int celly, int index)
 {
-	float xcenter = mCenterX;
-	float ycenter = mCenterY;
+
 	//float cellwidth = (8192 / 69.99) / 4.f;
 
 	//assumes rectangle
@@ -31,15 +30,26 @@ osg::Vec2f MWWorld::WorldGen::GreylockLand::terrainIndexToXYZ(int cellx, int cel
 	//aka 128 yards
 	//find where on map cellx and celly are
 
-	float xmeteroffset = cellx * CELL_WIDTH + xcenter;
-	float ymeteroffset = celly * CELL_WIDTH + ycenter;
+	float dist_per_index = CELL_WIDTH / float(ESM::Land::LAND_SIZE - 1);
+
+
+	float xmeteroffset = float(cellx) * CELL_WIDTH + mCenterX;
+	float ymeteroffset = float(celly) * CELL_WIDTH + mCenterY;
+
+	
+	int y_index = index / ESM::Land::LAND_SIZE;//(LAND_SIZE);
+	int x_index = index % ESM::Land::LAND_SIZE;//(LAND_SIZE);
+
+	xmeteroffset += x_index * dist_per_index;
+	ymeteroffset += y_index * dist_per_index;
+
+
 
 	//figure out where in cell to take measurement of height
-	float targety = index / ESM::Land::LAND_SIZE;//(LAND_SIZE);
-	float targetx = index % ESM::Land::LAND_SIZE;//(LAND_SIZE);
-	float multiplier = 65.f / ESM::Land::LAND_SIZE;
+	
+	/*float multiplier = 65.f / ESM::Land::LAND_SIZE;
 	ymeteroffset += (targety * 3.65 / 8.f) * multiplier;
-	xmeteroffset += (targetx * 3.65 / 8.f) * multiplier;
+	xmeteroffset += (targetx * 3.65 / 8.f) * multiplier;*/
 	return osg::Vec2f(xmeteroffset, ymeteroffset);
 }
 
@@ -311,8 +321,8 @@ bool MWWorld::WorldGen::startNewGame()
 	/*if (mLand)
 		delete mLand;*/
 
-	const int yrange = 30;
-	const int xrange = 30;
+	const int yrange = 20;
+	const int xrange = 20;
 
 
 	mLand = new GreylockLand;
@@ -333,8 +343,8 @@ bool MWWorld::WorldGen::startNewGame()
 			{
 				ESM::Position pos;
 				auto heights = mLand->buildCellHeights(xload, yload);
-				mLand->mCellHeightsMap[xload][yload + 1] = heights;
-				ESM::Land::sPreparedHeightMap[xload][yload + 1] = heights;
+				mLand->mCellHeightsMap[xload][yload] = heights;
+				ESM::Land::sPreparedHeightMap[xload][yload] = heights;
 				MWBase::Environment::get().getWorld()->indexToPosition(xload, yload, pos.pos[0], pos.pos[1], true);
 				MWBase::Environment::get().getSmartEntitiesManager()->initializeActiveCell();
 				yload += 1;
@@ -378,6 +388,7 @@ bool MWWorld::WorldGen::GreylockLand::savePreparedHeights()
 
 
 	filestream.close();
+	std::cout << "...done" << std::endl;
 	return true;
 
 	//filestream << x << std::endl << y << std::endl << z << std::endl;
